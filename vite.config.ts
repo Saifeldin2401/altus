@@ -7,7 +7,7 @@ const securityHeaders = {
   'Content-Security-Policy': [
     "default-src 'self'",
     // blob: lets the ffmpeg.wasm worker importScripts() its (jsdelivr-fetched) core blob — see src/editor/utils/videoCompression.ts
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://phg-connect.com https://www.phg-connect.com https://altus-connect.com https://www.altus-connect.com https://altus-advisory.com https://www.altus-advisory.com https://va.vercel-scripts.com https://*.vercel-scripts.com",
+    "script-src 'self' 'wasm-unsafe-eval' 'unsafe-inline' blob: https://phg-connect.com https://www.phg-connect.com https://altus-connect.com https://www.altus-connect.com https://altus-advisory.com https://www.altus-advisory.com https://va.vercel-scripts.com https://*.vercel-scripts.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com", // Needed for Tailwind and Google Fonts
     "img-src 'self' data: https:",
     "font-src 'self' https://fonts.gstatic.com",
@@ -59,6 +59,16 @@ export default defineConfig({
           next()
         })
       }
+    },
+    // The production CSP (index.html meta, vercel.json, netlify.toml) allows no
+    // inline scripts. The dev server injects one (React Fast Refresh preamble),
+    // so the meta policy is relaxed for `vite dev` only - never in a build.
+    {
+      name: 'dev-csp-refresh-preamble',
+      apply: 'serve',
+      transformIndexHtml(html) {
+        return html.replace(/'self' 'wasm-unsafe-eval'/g, "'self' 'wasm-unsafe-eval' 'unsafe-inline'")
+      },
     },
     ...(enableSentryUpload ? [
       sentryVitePlugin({

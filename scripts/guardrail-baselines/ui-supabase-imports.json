@@ -60,10 +60,6 @@
     "src/pages/training/components/builder/KBSidebarPanel.tsx",
     "src/pages/training/components/builder/StepStructure.tsx",
     "src/pages/training/components/builder/VersionHistoryCard.tsx",
-    "src/pages/training/components/instructor/CreateAssessmentModal.tsx",
-    "src/pages/training/components/instructor/PracticalEvaluationModal.tsx",
-    "src/pages/training/components/instructor/RegisterLearnerModal.tsx",
-    "src/pages/training/components/instructor/ScheduleSessionModal.tsx",
     "src/pages/training/contexts/TrainingAssignmentsContext.tsx",
     "src/pages/training/contexts/TrainingBuilderContext.tsx"
   ]
