@@ -13,14 +13,17 @@ const shouldEnableVercelInsights = () => {
   if (typeof window === 'undefined') return false
 
   const host = window.location.hostname
-  return (
-    host.endsWith('vercel.app') ||
+  const isVercelHost = host.endsWith('vercel.app')
+  const isCustomDomain = 
     host === 'altus-advisory.com' ||
     host === 'www.altus-advisory.com' ||
     host === 'connect.altusadvisory.com' ||
     host === 'phg-connect.com' ||
-    host === 'www.phg-connect.com'
-  )
+    host === 'www.phg-connect.com' ||
+    host === 'altus-connect.com' ||
+    host === 'www.altus-connect.com'
+
+  return isVercelHost || isCustomDomain
 }
 
 const hasPendingAppUpdate = () => {
