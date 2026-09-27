@@ -1,48 +1,36 @@
 /**
  * My day - the Learn workspace home.
  *
- * Answers one question: "What must I do now?" In order: required now
- * (overdue and mandatory work), continue where I left off, due soon, then
- * saved knowledge and certificates. Every item leads to an action and every
- * number comes from the member's own data - nothing decorative or invented.
- * The momentum strip (level, streak, next badge) and the leaderboard are
- * derived on the server from the same learning records.
+ * Answers one question: "What must I do now?" Continue where you left off,
+ * what is required (overdue or mandatory), then something new to learn; the
+ * side column shows momentum (level, points, streak) and the leaderboard.
+ * Every number and every course comes from the member's own data - nothing
+ * decorative or invented. Points, levels and the leaderboard are derived on
+ * the server from the same learning records.
  */
 
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { Award, BookMarked, BookOpen, CheckCircle2, ChevronRight, FileCheck2, FileQuestion, PlayCircle } from 'lucide-react'
+import { Award, BookOpen, CheckCircle2, ChevronRight, FileCheck2, FileQuestion } from 'lucide-react'
 
 import { useAuth } from '@/hooks/useAuth'
 import { useMyCertificates } from '@/hooks/useCertificates'
-import { useAccountContext } from '@/hooks/useAccountContext'
-import { useArticles, useBookmarks, useRequiredReading } from '@/hooks/useKnowledge'
+import { useRequiredReading } from '@/hooks/useKnowledge'
 import { useTenant } from '@/contexts/TenantContext'
 import { useLearningProgress } from '@/hooks/useLearningProgress'
 import { useMyAssignments } from '@/hooks/useTraining'
 import type { LearningAssignment } from '@/types/learning'
-import { cn } from '@/lib/utils'
 import { Celebration, useMilestones } from '@/features/learn/gamification/components/Celebration'
-import { CourseCover } from '@/features/learn/gamification/components/CourseCover'
 import { FirstRunWelcomeModal } from '@/features/learn/gamification/components/FirstRunWelcomeModal'
 import { LeaderboardPanel } from '@/features/learn/gamification/components/LeaderboardPanel'
-import { MomentumPanel } from '@/features/learn/gamification/components/MomentumPanel'
 import { useMyLearningStats, useWelcomeSeen } from '@/features/learn/gamification/gamificationHooks'
 import { LearningPageHero } from '@/features/learn/components/LearningPageHero'
 import { LearningStatusCard } from '@/features/learn/components/LearningStatusCard'
-import {
-    ActionQueue,
-    EmptyState,
-    ErrorState,
-    ProgressBar,
-    SectionHeader,
-    Skeleton,
-    type ActionQueueItem,
-} from '@/ui'
-
-const DUE_SOON_DAYS = 14
-const DAY_MS = 24 * 60 * 60 * 1000
+import { CompactCourseCard, FeatureCourseCard, RichCourseCard } from '@/features/learn/components/CourseCards'
+import { TodaysFocusCard, YourProgressCard } from '@/features/learn/components/ProgressSidebarCards'
+import { selectRecommended, useCatalog } from '@/features/learn/catalogHooks'
+import { ActionQueue, EmptyState, ErrorState, Skeleton, type ActionQueueItem } from '@/ui'
 
 function assignmentHref(a: LearningAssignment): string {
     return a.content_type === 'quiz'
@@ -50,11 +38,19 @@ function assignmentHref(a: LearningAssignment): string {
         : `/learn/player/${a.content_id}?assignment=${a.id}`
 }
 
-function SectionSkeleton() {
+function SectionTitle({ id, title, subtitle, href, linkLabel }: { id: string; title: string; subtitle?: string; href?: string; linkLabel?: string }) {
     return (
-        <div className="space-y-2.5" aria-hidden="true">
-            <Skeleton variant="card" className="h-16" />
-            <Skeleton variant="card" className="h-16" />
+        <div className="flex items-end justify-between gap-4">
+            <div>
+                <h2 id={id} className="font-editorial text-[23px] font-semibold leading-tight text-ds-ink">{title}</h2>
+                {subtitle && <p className="mt-0.5 text-sm text-ds-muted">{subtitle}</p>}
+            </div>
+            {href && linkLabel && (
+                <Link to={href} className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-ds-brass hover:underline">
+                    {linkLabel}
+                    <ChevronRight aria-hidden="true" className="h-4 w-4 rtl:rotate-180" />
+                </Link>
+            )}
         </div>
     )
 }
@@ -62,8 +58,7 @@ function SectionSkeleton() {
 export default function LearnerHome() {
     const { t, i18n } = useTranslation(['training', 'common'])
     const { user, profile } = useAuth()
-    const locale = i18n.language?.startsWith('ar') ? 'ar-SA' : 'en-US'
-    const isRTL = i18n.dir() === 'rtl'
+    const locale = i18n.language?.startsWith('ar') ? 'ar-SA' : 'en-GB'
 
     // Captured once so "overdue" does not shift during a render pass.
     const [now] = useState(() => Date.now())
@@ -71,54 +66,30 @@ export default function LearnerHome() {
     const progressQuery = useLearningProgress({ userId: user?.id ?? null })
     const assignmentsQuery = useMyAssignments()
     const certificatesQuery = useMyCertificates()
-    const bookmarksQuery = useBookmarks()
     const readingQuery = useRequiredReading()
-    const account = useAccountContext()
+    const catalogQuery = useCatalog()
     const { currentOrganization } = useTenant()
-    const departmentId = account.tenantMemberships.find(
-        (m) => m.organization_id === currentOrganization?.id,
-    )?.department_id ?? undefined
-    const roleArticlesQuery = useArticles({ departmentId, limit: 5 })
     const statsQuery = useMyLearningStats()
     const milestones = useMilestones(statsQuery.data, user?.id, currentOrganization?.id)
     const welcomeSeenQuery = useWelcomeSeen()
     const [welcomeDismissed, setWelcomeDismissed] = useState(false)
     const showWelcome = !welcomeDismissed && welcomeSeenQuery.isSuccess && welcomeSeenQuery.data === false
 
-    const formatDate = (iso: string) =>
-        new Date(iso).toLocaleDateString(locale, { month: 'short', day: 'numeric' })
+    const formatDate = (iso: string) => new Date(iso).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' })
 
+    const catalogById = useMemo(() => new Map((catalogQuery.data ?? []).map((c) => [c.id, c])), [catalogQuery.data])
     const open = useMemo(
         () => (assignmentsQuery.data ?? []).filter((a) => a.progress?.status !== 'completed'),
         [assignmentsQuery.data],
     )
 
-    // Required now: overdue, or mandatory for compliance.
-    const requiredNow = useMemo<ActionQueueItem[]>(() => {
-        return open
-            .map((a) => ({ a, due: a.due_date ? Date.parse(a.due_date) : Number.POSITIVE_INFINITY }))
-            .filter(({ a, due }) => due < now || a.priority === 'compliance')
-            .sort((x, y) => x.due - y.due)
-            .map(({ a, due }) => {
-                const overdue = due < now
-                const started = a.progress?.status === 'in_progress'
-                return {
-                    id: a.id,
-                    title: a.content_title ?? t('training:untitledAssignment', 'Untitled item'),
-                    description: overdue
-                        ? t('training:myDay.overdueSince', 'Overdue since {{date}}', { date: formatDate(a.due_date!) })
-                        : a.due_date
-                            ? t('training:myDay.dueOn', 'Due {{date}}', { date: formatDate(a.due_date) })
-                            : undefined,
-                    meta: t('training:mandatory', 'Mandatory'),
-                    tone: overdue ? 'urgent' : 'attention',
-                    icon: a.content_type === 'quiz' ? FileQuestion : BookOpen,
-                    href: assignmentHref(a),
-                    actionLabel: started ? t('training:myDay.resume', 'Resume') : t('training:myDay.start', 'Start'),
-                } satisfies ActionQueueItem
-            })
-        // eslint-disable-next-line react-hooks/exhaustive-deps -- formatDate only depends on locale
-    }, [open, now, t, locale])
+    // Required: overdue, or mandatory for compliance - most urgent first.
+    const required = useMemo(
+        () => open
+            .filter((a) => (a.due_date && Date.parse(a.due_date) < now) || a.priority === 'compliance')
+            .sort((x, y) => (x.due_date ? Date.parse(x.due_date) : Infinity) - (y.due_date ? Date.parse(y.due_date) : Infinity)),
+        [open, now],
+    )
 
     const readingToAcknowledge = useMemo<ActionQueueItem[]>(
         () => (readingQuery.data ?? [])
@@ -134,25 +105,7 @@ export default function LearnerHome() {
             } satisfies ActionQueueItem)),
         [readingQuery.data, t],
     )
-    const attention = useMemo(() => [...requiredNow, ...readingToAcknowledge], [requiredNow, readingToAcknowledge])
-
-    // Due soon: everything else with a due date inside the window.
-    const dueSoon = useMemo<ActionQueueItem[]>(() => {
-        const requiredIds = new Set(requiredNow.map((i) => i.id))
-        return open
-            .filter((a) => !requiredIds.has(a.id) && a.due_date && Date.parse(a.due_date) - now < DUE_SOON_DAYS * DAY_MS)
-            .sort((x, y) => Date.parse(x.due_date!) - Date.parse(y.due_date!))
-            .map((a) => ({
-                id: a.id,
-                title: a.content_title ?? t('training:untitledAssignment', 'Untitled item'),
-                description: t('training:myDay.dueOn', 'Due {{date}}', { date: formatDate(a.due_date!) }),
-                tone: 'standard',
-                icon: a.content_type === 'quiz' ? FileQuestion : BookOpen,
-                href: assignmentHref(a),
-                actionLabel: a.progress?.status === 'in_progress' ? t('training:myDay.resume', 'Resume') : t('training:myDay.start', 'Start'),
-            } satisfies ActionQueueItem))
-        // eslint-disable-next-line react-hooks/exhaustive-deps -- formatDate only depends on locale
-    }, [open, requiredNow, now, t, locale])
+    const requiredCount = required.length + readingToAcknowledge.length
 
     // Continue: the course touched most recently and not yet finished.
     const continueLearning = useMemo(() => {
@@ -161,14 +114,16 @@ export default function LearnerHome() {
             .sort((a, b) => Date.parse(b.last_accessed_at ?? '0') - Date.parse(a.last_accessed_at ?? '0'))[0]
     }, [progressQuery.data])
 
-    const completedCount = useMemo(
-        () => (progressQuery.data ?? []).filter((p) => p.status === 'completed').length,
-        [progressQuery.data],
-    )
-    const inProgressCount = useMemo(
-        () => (progressQuery.data ?? []).filter((p) => p.status === 'in_progress').length,
-        [progressQuery.data],
-    )
+    const completedCount = useMemo(() => (progressQuery.data ?? []).filter((p) => p.status === 'completed').length, [progressQuery.data])
+    const inProgressCount = useMemo(() => (progressQuery.data ?? []).filter((p) => p.status === 'in_progress').length, [progressQuery.data])
+
+    const recommended = useMemo(() => {
+        const touched = new Set<string>([
+            ...(progressQuery.data ?? []).map((p) => p.content_id),
+            ...(assignmentsQuery.data ?? []).map((a) => a.content_id),
+        ])
+        return selectRecommended(catalogQuery.data, touched, 3)
+    }, [catalogQuery.data, progressQuery.data, assignmentsQuery.data])
 
     const firstName = profile?.full_name?.split(' ')[0]
     const hour = new Date(now).getHours()
@@ -178,265 +133,159 @@ export default function LearnerHome() {
             ? t('training:myDay.goodAfternoon', 'Good afternoon')
             : t('training:myDay.goodEvening', 'Good evening')
     const today = new Date(now).toLocaleDateString(locale, { weekday: 'long', month: 'long', day: 'numeric' })
-
-    const bookmarks = bookmarksQuery.data ?? []
     const certificates = certificatesQuery.data ?? []
 
+    const continueCourse = continueLearning ? catalogById.get(continueLearning.content_id) : undefined
+    const continuePct = continueLearning?.progress_percentage ?? 0
+    const remainingMinutes = continueCourse?.estimated_duration_minutes
+        ? Math.max(1, Math.round(continueCourse.estimated_duration_minutes * (1 - continuePct / 100)))
+        : null
+
     return (
-        <div className="mx-auto max-w-6xl space-y-6">
+        <div className="mx-auto max-w-7xl">
             <LearningPageHero
                 eyebrow={today}
-                title={firstName ? `${greeting}, ${firstName}` : greeting}
-                description={
-                    <span aria-live="polite">
-                        {assignmentsQuery.isLoading
-                            ? '\u00a0'
-                            : attention.length > 0
-                                ? t('training:myDay.attentionCount', '{{count}} actions need your attention', { count: attention.length })
-                                : t('training:myDay.attentionNone', 'Nothing needs your attention right now.')}
-                    </span>
-                }
+                title={firstName ? `${greeting}, ${firstName}.` : `${greeting}.`}
+                description={<span className="font-editorial text-[22px] text-ds-ink sm:text-[26px]">{t('training:myDay.heroSubtitle', "Here's what matters today.")}</span>}
                 quote={<>Learn.<br />Perform.<br />Grow.<br />Belong.</>}
+                className="pb-24 sm:pb-28"
             />
 
-            <section aria-label={t('training:myDay.learningSummary', 'Your learning summary')} className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                <LearningStatusCard
-                    title={t('training:myDay.inProgress', 'In progress')}
-                    value={progressQuery.isLoading ? '–' : inProgressCount}
-                    detail={t('training:myDay.courses', 'courses')}
-                    href="/learn/my"
-                    icon={BookOpen}
-                    tone="gold"
-                />
-                <LearningStatusCard
-                    title={t('training:myDay.required', 'Required')}
-                    value={assignmentsQuery.isLoading ? '–' : attention.length}
-                    detail={t('training:myDay.actions', 'actions to complete')}
-                    href="/learn/my"
-                    icon={FileQuestion}
-                    tone="rose"
-                />
-                <LearningStatusCard
-                    title={t('training:completed', 'Completed')}
-                    value={progressQuery.isLoading ? '–' : completedCount}
-                    detail={t('training:myDay.courses', 'courses')}
-                    href="/learn/my"
-                    icon={CheckCircle2}
-                    tone="green"
-                />
-                <LearningStatusCard
-                    title={t('training:certificates', 'Certificates')}
-                    value={certificatesQuery.isLoading ? '–' : certificates.length}
-                    detail={t('training:myDay.earned', 'earned')}
-                    href="/learn/certificates"
-                    icon={Award}
-                    tone="blue"
-                />
+            {/* Summary - overlaps the hero's lower edge as in the design */}
+            <section aria-label={t('training:myDay.learningSummary', 'Your learning summary')} className="relative z-10 -mt-16 grid gap-3 px-3 sm:grid-cols-2 sm:px-5 xl:grid-cols-4">
+                <LearningStatusCard title={t('training:myDay.inProgress', 'In progress')} value={progressQuery.isLoading ? '–' : inProgressCount} detail={t('training:myDay.courses', 'courses')} href="/learn/my" icon={BookOpen} tone="gold" />
+                <LearningStatusCard title={t('training:myDay.required', 'Required')} value={assignmentsQuery.isLoading ? '–' : requiredCount} detail={t('training:myDay.courses', 'courses')} href="/learn/my" icon={FileQuestion} tone="rose" />
+                <LearningStatusCard title={t('training:completed', 'Completed')} value={progressQuery.isLoading ? '–' : completedCount} detail={t('training:myDay.courses', 'courses')} href="/learn/my" icon={CheckCircle2} tone="green" />
+                <LearningStatusCard title={t('training:certificates', 'Certificates')} value={certificatesQuery.isLoading ? '–' : certificates.length} detail={t('training:myDay.earned', 'earned')} href="/learn/certificates" icon={Award} tone="gold" />
             </section>
 
-            <div className="grid gap-8 lg:grid-cols-12 items-start">
-                <div className="lg:col-span-8 space-y-8">
-                    {/* 1. Required now */}
-                    <section aria-labelledby="my-day-required" className="space-y-3">
-                        <SectionHeader
-                            headingId="my-day-required"
-                            title={t('training:myDay.requiredNow', 'Required now')}
-                            subtitle={t('training:myDay.requiredNowHint', 'Overdue and mandatory training, most urgent first')}
-                        />
-                        {assignmentsQuery.isLoading ? (
-                            <SectionSkeleton />
-                        ) : assignmentsQuery.isError ? (
-                            <ErrorState
-                                message={t('training:myDay.loadError', 'Your assignments could not be loaded.')}
-                                onRetry={() => void assignmentsQuery.refetch()}
+            <div className="mt-8 grid items-start gap-8 lg:grid-cols-12">
+                <div className="space-y-9 lg:col-span-8">
+                    {/* 1. Continue where you left off */}
+                    <section aria-labelledby="my-day-continue" className="space-y-3">
+                        <SectionTitle id="my-day-continue" title={t('training:myDay.continue', 'Continue where you left off')} href="/learn/my" linkLabel={t('training:myDay.viewAll', 'View all')} />
+                        {progressQuery.isLoading ? (
+                            <Skeleton variant="card" className="h-60" />
+                        ) : continueLearning ? (
+                            <FeatureCourseCard
+                                href={`/learn/player/${continueLearning.content_id}`}
+                                course={{
+                                    id: continueLearning.content_id,
+                                    title: continueLearning.courses?.title ?? continueCourse?.title ?? t('training:untitledAssignment', 'Untitled item'),
+                                    description: continueCourse?.description,
+                                    durationMinutes: continueCourse?.estimated_duration_minutes,
+                                    level: continueCourse?.difficulty_level,
+                                    certificate: continueCourse?.certificate_enabled,
+                                    category: continueCourse?.category,
+                                }}
+                                progress={continuePct}
+                                badgeLabel={t('training:explore.filter.in_progress', 'In progress')}
+                                remainingLabel={remainingMinutes ? t('training:myDay.minutesRemaining', '{{count}} min remaining', { count: remainingMinutes }) : undefined}
+                                actionLabel={t('training:explore.continue', 'Continue learning')}
                             />
                         ) : (
-                            <ActionQueue
-                                items={attention}
-                                emptyTitle={t('training:myDay.nothingRequired', 'Nothing required right now')}
-                                emptyDescription={t('training:myDay.nothingRequiredHint', 'You have no overdue or mandatory training.')}
+                            <EmptyState
+                                illustration="courses"
+                                title={t('training:myDay.nothingInProgress', 'Nothing in progress')}
+                                description={t('training:myDay.nothingInProgressHint', 'Start a required course below, or explore the catalog.')}
+                                action={<Link to="/learn/courses" className="text-sm font-semibold text-ds-accent hover:underline">{t('training:plan.explore', 'Explore courses')}</Link>}
                             />
                         )}
                     </section>
 
-                    {/* 2. Continue */}
-                    {continueLearning && (
-                        <section aria-labelledby="my-day-continue" className="space-y-3">
-                            <SectionHeader
-                            headingId="my-day-continue" title={t('training:myDay.continue', 'Continue where you left off')} />
-                            <div className="group flex flex-col gap-4 rounded-xl border border-ds-border bg-ds-surface p-3 shadow-[0_12px_32px_rgb(21_33_46/0.04)] sm:flex-row sm:items-center">
-                                <CourseCover
-                                    course={{ id: continueLearning.content_id, title: continueLearning.courses?.title }}
-                                    className="h-36 w-full rounded-lg sm:h-44 sm:w-72"
-                                >
-                                    <span className="absolute inset-0 flex items-center justify-center">
-                                        <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-ds-surface/90 text-ds-accent shadow">
-                                            <PlayCircle className="h-5 w-5" aria-hidden="true" />
-                                        </span>
-                                    </span>
-                                </CourseCover>
-                                <div className="min-w-0 flex-1 space-y-3">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ds-muted">{t('training:myDay.course', 'Course')}</p>
-                                    <p className="line-clamp-2 font-editorial text-[23px] font-semibold leading-tight text-ds-ink">
-                                        {continueLearning.courses?.title ?? t('training:untitledAssignment', 'Untitled item')}
-                                    </p>
-                                    <ProgressBar
-                                        value={continueLearning.progress_percentage ?? 0}
-                                        label={t('training:myDay.progress', 'Progress')}
-                                        showPercentage
-                                        size="sm"
-                                    />
-                                </div>
-                                <Link
-                                    to={`/learn/player/${continueLearning.content_id}`}
-                                    className="inline-flex min-h-[44px] items-center justify-center gap-1 rounded-lg bg-ds-ink px-4 text-sm font-semibold text-ds-on-ink hover:bg-ds-ink/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent focus-visible:ring-offset-2"
-                                >
-                                    {t('training:myDay.resume', 'Resume')}
-                                    <ChevronRight className={cn('h-4 w-4', isRTL && 'rotate-180')} aria-hidden="true" />
-                                </Link>
+                    {/* 2. Required for you */}
+                    <section aria-labelledby="my-day-required" className="space-y-3">
+                        <SectionTitle
+                            id="my-day-required"
+                            title={t('training:myDay.requiredForYou', 'Required for you ({{count}})', { count: requiredCount })}
+                            href="/learn/my"
+                            linkLabel={t('training:myDay.viewAll', 'View all')}
+                        />
+                        {assignmentsQuery.isLoading ? (
+                            <div className="grid gap-3 xl:grid-cols-2"><Skeleton variant="card" className="h-44" /><Skeleton variant="card" className="h-44" /></div>
+                        ) : assignmentsQuery.isError ? (
+                            <ErrorState message={t('training:myDay.loadError', 'Your assignments could not be loaded.')} onRetry={() => void assignmentsQuery.refetch()} />
+                        ) : requiredCount === 0 ? (
+                            <p className="flex items-center gap-2 rounded-xl border border-ds-border bg-ds-surface px-4 py-5 text-sm text-ds-ink-secondary">
+                                <CheckCircle2 aria-hidden="true" className="h-5 w-5 text-ds-success" />
+                                {t('training:myDay.nothingRequiredHint', 'You have no overdue or mandatory training.')}
+                            </p>
+                        ) : (
+                            <div className="space-y-3">
+                                {required.length > 0 && (
+                                    <ul className="grid gap-3 xl:grid-cols-2">
+                                        {required.slice(0, 4).map((a) => {
+                                            const course = catalogById.get(a.content_id)
+                                            const overdue = !!a.due_date && Date.parse(a.due_date) < now
+                                            return (
+                                                <li key={a.id}>
+                                                    <RichCourseCard
+                                                        href={assignmentHref(a)}
+                                                        course={{
+                                                            id: a.content_id,
+                                                            title: a.content_title ?? t('training:untitledAssignment', 'Untitled item'),
+                                                            description: course?.description ?? a.content_metadata?.description,
+                                                            durationMinutes: course?.estimated_duration_minutes ?? a.content_metadata?.duration,
+                                                            level: course?.difficulty_level,
+                                                            certificate: course?.certificate_enabled,
+                                                            category: course?.category,
+                                                        }}
+                                                        badge={{ label: t('training:myDay.requiredBadge', 'Required'), tone: 'required' }}
+                                                        due={a.due_date ? {
+                                                            label: overdue
+                                                                ? t('training:myDay.overdueSince', 'Overdue since {{date}}', { date: formatDate(a.due_date) })
+                                                                : t('training:myDay.dueOn', 'Due {{date}}', { date: formatDate(a.due_date) }),
+                                                            overdue,
+                                                        } : undefined}
+                                                        actionLabel={a.progress?.status === 'in_progress' ? t('training:explore.continue', 'Continue learning') : t('training:explore.start', 'Start course')}
+                                                    />
+                                                </li>
+                                            )
+                                        })}
+                                    </ul>
+                                )}
+                                {readingToAcknowledge.length > 0 && <ActionQueue items={readingToAcknowledge} emptyTitle="" emptyDescription="" />}
                             </div>
+                        )}
+                    </section>
+
+                    {/* 3. Recommended for you */}
+                    {recommended.length > 0 && (
+                        <section aria-labelledby="my-day-recommended" className="space-y-3">
+                            <SectionTitle
+                                id="my-day-recommended"
+                                title={t('training:explore.recommended', 'Recommended for you')}
+                                subtitle={t('training:myDay.recommendedHint', 'Based on your role, department and learning activity.')}
+                                href="/learn/courses"
+                                linkLabel={t('training:myDay.viewAll', 'View all')}
+                            />
+                            <ul className="grid gap-3 md:grid-cols-3">
+                                {recommended.map((c) => (
+                                    <li key={c.id}>
+                                        <CompactCourseCard href={`/learn/courses/${c.id}`} course={{ id: c.id, title: c.title, category: c.category, description: c.description, durationMinutes: c.estimated_duration_minutes, level: c.difficulty_level }} />
+                                    </li>
+                                ))}
+                            </ul>
                         </section>
                     )}
-
-                    {/* 3. Due soon */}
-                    <section aria-labelledby="my-day-due" className="space-y-3">
-                        <SectionHeader
-                            headingId="my-day-due"
-                            title={t('training:dueSoon', 'Due soon')}
-                            subtitle={t('training:myDay.dueSoonHint', 'Due in the next two weeks')}
-                            action={
-                                <Link to="/learn/my" className="text-xs font-semibold text-ds-accent hover:underline">
-                                    {t('training:myDay.allMyLearning', 'All my learning')}
-                                </Link>
-                            }
-                        />
-                        {assignmentsQuery.isLoading ? (
-                            <SectionSkeleton />
-                        ) : (
-                            <ActionQueue
-                                items={dueSoon}
-                                emptyTitle={t('training:myDay.nothingDueSoon', 'Nothing else due soon')}
-                                emptyDescription={t('training:myDay.nothingDueSoonHint', 'Browse the course catalog to keep learning.')}
-                            />
-                        )}
-                    </section>
                 </div>
 
-                <aside className="lg:col-span-4 space-y-6">
-                    {!statsQuery.isError && <MomentumPanel stats={statsQuery.data} isLoading={statsQuery.isLoading} />}
-                    <section aria-labelledby="my-day-board" className="space-y-3">
-                        <SectionHeader
-                            headingId="my-day-board"
-                            title={t('training:game.board.title', 'Leaderboard')}
-                            action={
-                                <Link to="/learn/achievements" className="text-xs font-semibold text-ds-accent hover:underline">
-                                    {t('training:game.board.seeAll', 'See all')}
-                                </Link>
-                            }
-                        />
+                <aside className="space-y-5 lg:col-span-4">
+                    {!statsQuery.isError && <YourProgressCard stats={statsQuery.data} isLoading={statsQuery.isLoading} />}
+                    <TodaysFocusCard
+                        urgentTitle={required[0]?.content_title}
+                        urgentHref={required[0] ? assignmentHref(required[0]) : undefined}
+                        streak={statsQuery.data?.streak_current}
+                    />
+                    <section aria-labelledby="my-day-board" className="space-y-3 rounded-2xl border border-ds-border bg-ds-surface p-5 shadow-[0_12px_32px_rgb(21_33_46/0.04)]">
+                        <div className="flex items-center justify-between">
+                            <h2 id="my-day-board" className="font-editorial text-[21px] font-semibold text-ds-ink">{t('training:game.board.title', 'Leaderboard')}</h2>
+                            <Link to="/learn/achievements" className="inline-flex items-center gap-1 text-xs font-semibold text-ds-accent hover:underline">
+                                {t('training:game.board.seeAll', 'See all')}
+                                <ChevronRight aria-hidden="true" className="h-3.5 w-3.5 rtl:rotate-180" />
+                            </Link>
+                        </div>
                         <LeaderboardPanel compact />
-                    </section>
-
-                    <section aria-labelledby="my-day-role-knowledge" className="space-y-3">
-                        <SectionHeader
-                            headingId="my-day-role-knowledge"
-                            title={departmentId
-                                ? t('training:myDay.roleKnowledge', 'Knowledge for your role')
-                                : t('training:myDay.latestKnowledge', 'Latest knowledge')}
-                            action={
-                                <Link to="/knowledge" className="text-xs font-semibold text-ds-accent hover:underline">
-                                    {t('common:browse', 'Browse')}
-                                </Link>
-                            }
-                        />
-                        {roleArticlesQuery.isLoading ? (
-                            <SectionSkeleton />
-                        ) : (roleArticlesQuery.data ?? []).length > 0 ? (
-                            <ul className="divide-y divide-ds-border overflow-hidden rounded-[6px] border border-ds-border bg-ds-surface">
-                                {(roleArticlesQuery.data ?? []).slice(0, 5).map((a) => (
-                                    <li key={a.id}>
-                                        <Link
-                                            to={`/knowledge/${a.id}`}
-                                            className="flex min-h-[52px] flex-col justify-center px-3 py-2 hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ds-accent"
-                                        >
-                                            <span className="truncate text-sm font-medium text-ds-ink">{(isRTL && a.title_ar) || a.title}</span>
-                                            <span className="truncate text-xs text-ds-muted">
-                                                {[a.sop_code || a.code, t(`knowledge:types.${a.content_type}`, a.content_type)].filter(Boolean).join(' · ')}
-                                            </span>
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <EmptyState
-                                illustration="knowledge"
-                                title={t('training:myDay.noRoleKnowledge', 'No articles for your department yet')}
-                                description={t('training:myDay.noRoleKnowledgeHint', 'Your knowledge manager publishes SOPs here. Search the knowledge base in the meantime.')}
-                            />
-                        )}
-                    </section>
-
-                    {/* 4. Saved knowledge */}
-                    <section aria-labelledby="my-day-knowledge" className="space-y-3">
-                        <SectionHeader
-                            headingId="my-day-knowledge"
-                            title={t('training:savedKnowledge', 'Saved knowledge')}
-                            action={
-                                <Link to="/knowledge" className="text-xs font-semibold text-ds-accent hover:underline">
-                                    {t('common:browse', 'Browse')}
-                                </Link>
-                            }
-                        />
-                        {bookmarksQuery.isLoading ? (
-                            <SectionSkeleton />
-                        ) : bookmarks.length > 0 ? (
-                            <ul className="space-y-2">
-                                {bookmarks.slice(0, 5).map((b) => (
-                                    <li key={b.document_id}>
-                                        <Link
-                                            to={`/knowledge/${b.document_id}`}
-                                            className="flex min-h-[44px] items-center gap-2.5 rounded-lg border border-ds-border bg-ds-surface px-3 text-sm text-ds-ink hover:border-ds-accent/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent"
-                                        >
-                                            <BookMarked className="h-4 w-4 shrink-0 text-ds-accent" aria-hidden="true" />
-                                            <span className="truncate">{b.article?.title ?? t('training:savedArticle', 'Saved article')}</span>
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <EmptyState
-                                illustration="saved"
-                                title={t('training:myDay.noSaved', 'No saved articles')}
-                                description={t('training:myDay.noSavedHint', 'Save the SOPs you use most to find them here.')}
-                            />
-                        )}
-                    </section>
-
-                    {/* 5. Completed and certified */}
-                    <section aria-labelledby="my-day-record" className="space-y-3">
-                        <SectionHeader
-                            headingId="my-day-record" title={t('training:myDay.record', 'Your record')} />
-                        <dl className="grid grid-cols-2 gap-3">
-                            <div className="rounded-lg border border-ds-border bg-ds-surface p-3">
-                                <dt className="text-xs text-ds-muted">{t('training:completed', 'Completed')}</dt>
-                                <dd className="mt-1 font-mono text-2xl font-bold text-ds-ink">
-                                    {progressQuery.isLoading ? '–' : completedCount}
-                                </dd>
-                            </div>
-                            <div className="rounded-lg border border-ds-border bg-ds-surface p-3">
-                                <dt className="text-xs text-ds-muted">{t('training:certificates', 'Certificates')}</dt>
-                                <dd className="mt-1 font-mono text-2xl font-bold text-ds-ink">
-                                    {certificatesQuery.isLoading ? '–' : certificates.length}
-                                </dd>
-                            </div>
-                        </dl>
-                        <Link
-                            to="/learn/certificates"
-                            className="inline-flex min-h-[44px] items-center gap-1.5 text-sm font-semibold text-ds-accent hover:underline"
-                        >
-                            <Award className="h-4 w-4" aria-hidden="true" />
-                            {t('training:myDay.viewCertificates', 'View certificates')}
-                        </Link>
                     </section>
                 </aside>
             </div>

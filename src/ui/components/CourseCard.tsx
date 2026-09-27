@@ -21,7 +21,7 @@ export interface CourseCardProps {
 
 export const CourseCard: React.FC<CourseCardProps> = ({
   title,
-  imageUrl = '/assets/altus/course-guest-service.jpg',
+  imageUrl = '/assets/photos/front-desk.webp',
   status,
   statusVariant = 'neutral',
   lessonCount,

@@ -1,17 +1,21 @@
 /**
- * Course cover art.
+ * Course and article cover art.
  *
- * Courses have no uploaded image, so each one gets a photograph from the Altus
- * library chosen by what the course is about (category, English and Arabic keywords),
- * rotating deterministically through category pools so sibling courses within the
- * same category look diverse and visually balanced, while never assigning completely
- * unrelated covers (like a valet car for an HR course).
+ * Courses usually have no uploaded image, so each gets a photograph from the
+ * Altus photo library (public/assets/photos, Unsplash License) chosen by what
+ * it is about: English and Arabic keywords in the title and description first,
+ * then the course category. Each topic maps to a small pool and siblings
+ * rotate deterministically through it (hash of the id), so a row of courses on
+ * the same topic does not repeat one photo - while never picking an unrelated
+ * image. An uploaded cover_image_url always wins.
  */
 
-const COVERS = [
-  'hospitality-welcome', 'reception-desk', 'concierge-frontdesk', 'vip-butler', 'housekeeping-suite',
-  'culinary-fnb', 'chef-mastery', 'afternoon-tea', 'spa-wellness', 'hotel-security', 'valet-fleet',
-  'luggage-trolley', 'sop-checklist', 'hafawah-hospitality', 'mobile-learning', 'accreditation-seal',
+export const COVERS = [
+  'front-desk', 'hotel-lobby', 'concierge-desk', 'telephone', 'housekeeping', 'guest-room',
+  'restaurant-service', 'chef-kitchen', 'arabic-coffee', 'saudi-hospitality', 'guest-conversation',
+  'service-counter', 'team-meeting', 'training-session', 'handshake', 'family-travel', 'elderly-guests',
+  'accessibility', 'diverse-guests', 'security-cctv', 'emergency-exit', 'first-aid', 'wellbeing',
+  'work-stress', 'luggage', 'lost-valuables', 'checklist', 'certificate', 'mobile-learning',
 ] as const
 
 export type CoverName = (typeof COVERS)[number]
@@ -25,166 +29,53 @@ export interface CourseCoverTarget {
 }
 
 /**
- * Curated photo pools per operational department/domain.
- * Sibling courses within a pool rotate based on hash(course.id) so neighbours
- * never repeat the identical photograph side-by-side.
+ * Topic rules, most specific first. The first rule whose words appear in the
+ * title/description decides the pool. Arabic words cover the Arabic course
+ * titles actually in the catalog (e.g. "التعامل مع النزيل غير الراضي").
  */
-export const CATEGORY_POOLS = {
-  // Food & Beverage, Culinary, Dining, Kitchen
-  culinary: ['culinary-fnb', 'chef-mastery', 'afternoon-tea'] as const,
-
-  // Front Office, Reception, Check-in, Telephone
-  front_office: ['reception-desk', 'concierge-frontdesk', 'hospitality-welcome', 'luggage-trolley'] as const,
-
-  // Concierge, Bell Desk, Luggage, Guest Inquiries
-  concierge: ['concierge-frontdesk', 'luggage-trolley', 'hospitality-welcome'] as const,
-
-  // Housekeeping, Room Care, Linen, Laundry, Cleaning
-  housekeeping: ['housekeeping-suite', 'sop-checklist', 'hospitality-welcome'] as const,
-
-  // Security, Fire, Life Safety, Crisis, Emergency
-  security: ['hotel-security', 'sop-checklist'] as const,
-
-  // Spa, Wellness, Wellbeing, Relaxation
-  wellness: ['spa-wellness', 'hospitality-welcome'] as const,
-
-  // Valet Parking, Fleet, Transportation, Drivers
-  valet_transport: ['valet-fleet', 'luggage-trolley'] as const,
-
-  // Saudi Hospitality, Hafawah, Karam, Cultural Heritage
-  culture_hafawah: ['hafawah-hospitality', 'vip-butler', 'hospitality-welcome'] as const,
-
-  // VIP, Butler Service, Executive Suites, Luxury
-  vip_luxury: ['vip-butler', 'hafawah-hospitality', 'accreditation-seal'] as const,
-
-  // Compliance, SOPs, Quality Audits, Standards, Regulatory
-  compliance_sop: ['sop-checklist', 'accreditation-seal', 'mobile-learning'] as const,
-
-  // Safe fallback pool for general leadership, HR, IT, and uncategorized topics.
-  // Specialized operational photos (valet cars, luggage carts, kitchen cookware)
-  // are STRICTLY excluded from the fallback pool.
-  general: ['hospitality-welcome', 'accreditation-seal', 'mobile-learning', 'hafawah-hospitality'] as const,
-} as const
-
-export type CategoryKey = keyof typeof CATEGORY_POOLS
-
-/**
- * High-precision exact matches: when a title or keyword mentions a specific sub-discipline,
- * we map directly to that exact image rather than pool rotation.
- */
-const SPECIFIC_RULES: { cover: CoverName; words: string[] }[] = [
-  // Fire and emergency safety -> hotel-security
-  {
-    cover: 'hotel-security',
-    words: [
-      'fire', 'emergency', 'evacuat', 'extinguish', 'first aid', 'crisis',
-      'حريق', 'طوارئ', 'إخلاء', 'اخلاء', 'إسعافات', 'اسعافات', 'اطفاء', 'أمن وحماية'
-    ]
-  },
-  // Chef, kitchen cook -> chef-mastery
-  {
-    cover: 'chef-mastery',
-    words: ['chef', 'cook', 'baker', 'butchery', 'pastry', 'knife skill', 'شيف', 'طهي', 'طباخ', 'مخبوزات']
-  },
-  // Tea, coffee, barista, beverage -> afternoon-tea
-  {
-    cover: 'afternoon-tea',
-    words: ['afternoon tea', 'barista', 'coffee', 'tea service', 'beverage', 'شاي', 'قهوة', 'مشروبات', 'باريستا']
-  },
-  // Valet and driving -> valet-fleet
-  {
-    cover: 'valet-fleet',
-    words: ['valet', 'parking', 'chauffeur', 'limousine', 'صف السيارات', 'مواقف', 'سائق']
-  },
-  // Luggage and porter -> luggage-trolley
-  {
-    cover: 'luggage-trolley',
-    words: ['luggage', 'bellboy', 'bellhop', 'porter', 'trolley', 'حقائب', 'أمتعة', 'الامتعة', 'حامل الحقائب']
-  },
-  // Telephone & PBX -> reception-desk
-  {
-    cover: 'reception-desk',
-    words: ['telephone', 'phone call', 'switchboard', 'call handling', 'هاتف', 'الرد على الهاتف', 'مكالمات']
-  },
-  // Spa & wellness -> spa-wellness
-  {
-    cover: 'spa-wellness',
-    words: ['spa', 'massage', 'wellness', 'wellbeing', 'well-being', 'relaxation', 'سبا', 'مساج', 'استرخاء', 'عافية']
-  },
-  // VIP & butler -> vip-butler
-  {
-    cover: 'vip-butler',
-    words: ['butler', 'vip', 'presidential', 'royal suite', 'نخبوي', 'بتلر', 'كبار الشخصيات', 'جناح ملكي']
-  },
-  // Saudi Hafawah & culture -> hafawah-hospitality
-  {
-    cover: 'hafawah-hospitality',
-    words: ['hafawah', 'karam', 'saudi culture', 'saudi heritage', 'dallah', 'حفاوة', 'كرم الضيافة', 'الضيافة السعودية', 'تراث']
-  },
+export const TOPIC_RULES: { topic: string; pool: readonly CoverName[]; words: string[] }[] = [
+  { topic: 'emergency', pool: ['emergency-exit', 'security-cctv'], words: ['evacuat', 'emergency', 'fire', 'إخلاء', 'اخلاء', 'طوارئ', 'حريق'] },
+  { topic: 'medical', pool: ['first-aid'], words: ['first aid', 'sick', 'injur', 'medical', 'المريض', 'المصاب', 'إسعاف', 'اسعاف'] },
+  { topic: 'missing-person', pool: ['family-travel'], words: ['lost child', 'missing person', 'التائه', 'الشخص المفقود'] },
+  { topic: 'lost-property', pool: ['lost-valuables'], words: ['lost and found', 'lost & found', 'valuables', 'lost property', 'المفقودات', 'الثمينة'] },
+  { topic: 'security', pool: ['security-cctv'], words: ['security', 'suspici', 'surveillance', 'safety', 'أمن', 'امن', 'الاشتباه', 'سلامة'] },
+  { topic: 'accessibility', pool: ['accessibility'], words: ['disabilit', 'wheelchair', 'accessib', 'people of determination', 'ذوي الهمم', 'الإعاقة', 'الاعاقة'] },
+  { topic: 'elderly', pool: ['elderly-guests'], words: ['elderly', 'senior', 'كبار السن', 'المسنين'] },
+  { topic: 'children', pool: ['family-travel'], words: ['child', 'kids', 'family', 'الاطفال', 'الأطفال', 'العائلات', 'طفل'] },
+  { topic: 'culture', pool: ['diverse-guests', 'saudi-hospitality'], words: ['culture', 'cultural', 'language', 'diversity', 'الثقافات', 'اللغة', 'ثقافة'] },
+  { topic: 'saudi', pool: ['saudi-hospitality', 'arabic-coffee'], words: ['hafawah', 'karam', 'saudi', 'arabic coffee', 'dallah', 'حفاوة', 'كرم', 'القهوة العربية', 'السعودية', 'مرحبا'] },
+  { topic: 'telephone', pool: ['telephone'], words: ['telephone', 'phone', 'call handling', 'switchboard', 'الهاتف', 'هاتف', 'مكالمات'] },
+  { topic: 'stress', pool: ['work-stress', 'wellbeing'], words: ['stress', 'burnout', 'pressure', 'ضغوطات', 'ضغط', 'الإجهاد'] },
+  { topic: 'wellbeing', pool: ['wellbeing'], words: ['wellbeing', 'well-being', 'wellness', 'self-care', 'work-life', 'balance', 'spa', 'اعتني بنفسك', 'إعتني بنفسك', 'الرفاهية', 'التوازن', 'الصحة'] },
+  { topic: 'complaints', pool: ['service-counter', 'guest-conversation'], words: ['complaint', 'dissatisf', 'apolog', 'service recovery', 'unreasonable', 'الشكاوى', 'غير الراضي', 'الاعتذار', 'اللا معقولة', 'استعادة ثقة'] },
+  { topic: 'emotions', pool: ['guest-conversation', 'service-counter'], words: ['angry', 'impatient', 'anxious', 'empathy', 'listening', 'الغاضب', 'غير الصبور', 'القلق', 'التعاطف', 'الاستماع'] },
+  { topic: 'communication', pool: ['guest-conversation', 'handshake', 'team-meeting'], words: ['communicat', 'body language', 'courtes', 'etiquette', 'التواصل', 'لغة الجسد', 'المجاملات', 'تكييف'] },
+  { topic: 'teamwork', pool: ['team-meeting', 'checklist'], words: ['team', 'interdepart', 'priorit', 'responsib', 'الاقسام', 'الأقسام', 'الاولويات', 'الأولويات', 'المسؤولية', 'فريق'] },
+  { topic: 'presence', pool: ['handshake', 'front-desk'], words: ['confidence', 'deportment', 'grooming', 'presence', 'impression', 'الثقة بالنفس', 'الوقار', 'الحضور المهني', 'الانطباع'] },
+  { topic: 'requests', pool: ['concierge-desk', 'front-desk'], words: ['guest request', 'alternative', 'follow up', 'concierge', 'طلبات', 'البدائل', 'نتابع'] },
+  { topic: 'anticipation', pool: ['restaurant-service', 'concierge-desk'], words: ['anticipat', 'proactive', 'initiative', 'الاستباقية', 'المبادرة'] },
+  { topic: 'vip', pool: ['guest-room', 'hotel-lobby'], words: ['vip', 'repeat guest', 'loyal', 'butler', 'suite', 'المهمين', 'متكرري', 'كبار الشخصيات'] },
+  { topic: 'female-guests', pool: ['front-desk'], words: ['women guests', 'female guests', 'النزيلات'] },
+  { topic: 'outage', pool: ['front-desk', 'service-counter'], words: ['outage', 'disruption', 'تعطل'] },
+  { topic: 'housekeeping', pool: ['housekeeping', 'guest-room'], words: ['housekeeping', 'room cleaning', 'laundry', 'linen', 'turndown', 'inventory', 'تدبير', 'تنظيف', 'الغرف', 'بياضات'] },
+  { topic: 'kitchen', pool: ['chef-kitchen'], words: ['chef', 'kitchen', 'cook', 'culinary', 'haccp', 'food safety', 'مطبخ', 'طهي', 'شيف', 'سلامة الغذاء'] },
+  { topic: 'dining', pool: ['restaurant-service', 'arabic-coffee'], words: ['food', 'beverage', 'f&b', 'restaurant', 'dining', 'waiter', 'coffee', 'tea', 'مطعم', 'طعام', 'مشروبات', 'قهوة', 'شاي'] },
+  { topic: 'luggage', pool: ['luggage'], words: ['luggage', 'bell', 'porter', 'حقائب', 'أمتعة', 'الامتعة'] },
+  { topic: 'front-office', pool: ['front-desk', 'concierge-desk', 'hotel-lobby'], words: ['front office', 'front desk', 'reception', 'check-in', 'check in', 'checkout', 'arrival', 'استقبال', 'تسجيل'] },
+  { topic: 'compliance', pool: ['checklist', 'certificate'], words: ['compliance', 'sop', 'policy', 'audit', 'standard', 'procedure', 'امتثال', 'معايير', 'إجراءات', 'اجراءات', 'سياسات', 'تدقيق'] },
+  { topic: 'learning', pool: ['training-session', 'mobile-learning'], words: ['training', 'onboarding', 'induction', 'masterclass', 'master class', 'تدريب', 'تهيئة'] },
+  { topic: 'service', pool: ['front-desk', 'guest-conversation', 'hotel-lobby', 'restaurant-service'], words: ['guest', 'service', 'hospitality', 'welcome', 'نزيل', 'ضيف', 'الضيوف', 'خدمة', 'ضيافة'] },
 ]
 
-/**
- * Category/Department broad matches that map to multi-photo pools.
- * Courses in these pools rotate via hash(course.id) to prevent duplicate images.
- */
-const CATEGORY_MATCHERS: { pool: readonly CoverName[]; words: string[] }[] = [
-  {
-    pool: CATEGORY_POOLS.culinary,
-    words: [
-      'food', 'culinary', 'kitchen', 'restaurant', 'f&b', 'dining', 'menu', 'hygiene', 'haccp',
-      'طعام', 'مطبخ', 'مطعم', 'أغذية', 'اغذية', 'سلامة الغذاء', 'بوفيه'
-    ]
-  },
-  {
-    pool: CATEGORY_POOLS.security,
-    words: [
-      'security', 'safety', 'patrol', 'cctv', 'surveillance', 'loss prevention', 'suspici',
-      'أمن', 'امن', 'سلامة', 'حراسة', 'اشتباه', 'مراقبة'
-    ]
-  },
-  {
-    pool: CATEGORY_POOLS.housekeeping,
-    words: [
-      'housekeeping', 'room cleaning', 'laundry', 'linen', 'bed making', 'turndown', 'amenities',
-      'تدبير', 'تنظيف', 'غرف', 'الغرف', 'بياضات', 'مغسلة'
-    ]
-  },
-  {
-    pool: CATEGORY_POOLS.front_office,
-    words: [
-      'front office', 'front desk', 'reception', 'check-in', 'checkout', 'check out', 'reservation', 'guest arrival',
-      'استقبال', 'المكاتب الأمامية', 'تسجيل وصول', 'حجوزات'
-    ]
-  },
-  {
-    pool: CATEGORY_POOLS.concierge,
-    words: [
-      'concierge', 'guest request', 'lost and found', 'wayfinding',
-      'كونسيرج', 'إرشاد', 'طلبات النزلاء', 'مفقودات'
-    ]
-  },
-  {
-    pool: CATEGORY_POOLS.culture_hafawah,
-    words: [
-      'culture', 'heritage', 'tradition', 'saudi', 'arabic hospitality',
-      'ثقافة', 'تراث', 'تقاليد', 'عادات'
-    ]
-  },
-  {
-    pool: CATEGORY_POOLS.compliance_sop,
-    words: [
-      'compliance', 'sop', 'policy', 'standard', 'procedure', 'audit', 'regulation', 'quality',
-      'امتثال', 'معايير', 'إجراءات', 'اجراءات', 'سياسات', 'تدقيق', 'جودة'
-    ]
-  },
-  {
-    pool: CATEGORY_POOLS.front_office,
-    words: [
-      'guest', 'welcome', 'greet', 'complaint', 'service excellence', 'hospitality', 'satisfaction',
-      'نزيل', 'نزلاء', 'ضيف', 'ضيوف', 'ترحيب', 'خدمة', 'شكاوى', 'رضا'
-    ]
-  },
+/** When nothing in the text matches: the course category, then a neutral hospitality pool. */
+const CATEGORY_POOLS: { match: string[]; pool: readonly CoverName[] }[] = [
+  { match: ['food', 'f&b', 'culinary', 'dining'], pool: ['restaurant-service', 'chef-kitchen'] },
+  { match: ['front', 'reception'], pool: ['front-desk', 'concierge-desk'] },
+  { match: ['housekeep', 'room', 'laundry'], pool: ['housekeeping', 'guest-room'] },
+  { match: ['secur', 'safe'], pool: ['security-cctv', 'emergency-exit'] },
+  { match: ['compliance', 'sop', 'audit', 'standard'], pool: ['checklist', 'certificate'] },
 ]
+const GENERAL_POOL: readonly CoverName[] = ['hotel-lobby', 'front-desk', 'guest-conversation', 'training-session']
 
 function hash(text: string): number {
   let h = 2166136261
@@ -195,55 +86,21 @@ function hash(text: string): number {
   return h >>> 0
 }
 
-/**
- * Normalizes explicit category strings to one of our curated pool keys.
- */
-function poolForCategory(category?: string | null): readonly CoverName[] | null {
-  if (!category) return null
-  const c = category.toLowerCase().trim()
-  if (c.includes('food') || c.includes('f&b') || c.includes('culinary') || c.includes('dining')) return CATEGORY_POOLS.culinary
-  if (c.includes('front') || c.includes('reception')) return CATEGORY_POOLS.front_office
-  if (c.includes('concierge')) return CATEGORY_POOLS.concierge
-  if (c.includes('housekeep') || c.includes('room') || c.includes('laundry')) return CATEGORY_POOLS.housekeeping
-  if (c.includes('secur') || c.includes('safe') || c.includes('guard')) return CATEGORY_POOLS.security
-  if (c.includes('spa') || c.includes('wellness')) return CATEGORY_POOLS.wellness
-  if (c.includes('valet') || c.includes('transport')) return CATEGORY_POOLS.valet_transport
-  if (c.includes('culture') || c.includes('hafawah') || c.includes('heritage')) return CATEGORY_POOLS.culture_hafawah
-  if (c.includes('vip') || c.includes('butler') || c.includes('luxury')) return CATEGORY_POOLS.vip_luxury
-  if (c.includes('compliance') || c.includes('sop') || c.includes('audit') || c.includes('standard')) return CATEGORY_POOLS.compliance_sop
-  return null
-}
+const pick = (pool: readonly CoverName[], id: string) => pool[hash(id) % pool.length]
 
 export function coverFor(course: CourseCoverTarget): CoverName {
-  const title = (course.title ?? '').toLowerCase()
-  const desc = (course.description ?? '').toLowerCase()
-  const combined = `${title} ${desc}`
-
-  // 1. High-precision specific sub-topic matches
-  for (const rule of SPECIFIC_RULES) {
-    if (rule.words.some((w) => combined.includes(w))) return rule.cover
+  const text = `${course.title ?? ''} ${course.description ?? ''}`.toLowerCase()
+  for (const rule of TOPIC_RULES) {
+    if (rule.words.some((w) => text.includes(w))) return pick(rule.pool, course.id)
   }
-
-  // 2. Explicit course category match (rotates within the category pool)
-  const categoryPool = poolForCategory(course.category)
-  if (categoryPool && categoryPool.length > 0) {
-    return categoryPool[hash(course.id) % categoryPool.length]
+  const category = (course.category ?? '').toLowerCase()
+  for (const c of CATEGORY_POOLS) {
+    if (c.match.some((m) => category.includes(m))) return pick(c.pool, course.id)
   }
-
-  // 3. Broad topic/department matching (rotates within the pool to avoid duplicate images)
-  for (const matcher of CATEGORY_MATCHERS) {
-    if (matcher.words.some((w) => combined.includes(w))) {
-      return matcher.pool[hash(course.id) % matcher.pool.length]
-    }
-  }
-
-  // 4. Safe neutral fallback pool (general hospitality only; never niche photos like valet/chef)
-  return CATEGORY_POOLS.general[hash(course.id) % CATEGORY_POOLS.general.length]
+  return pick(GENERAL_POOL, course.id)
 }
 
 export function coverUrl(course: CourseCoverTarget): string {
-  if (course.cover_image_url && course.cover_image_url.trim().length > 0) {
-    return course.cover_image_url
-  }
-  return `/assets/altus/covers/${coverFor(course)}.webp`
+  if (course.cover_image_url && course.cover_image_url.trim().length > 0) return course.cover_image_url
+  return `/assets/photos/${coverFor(course)}.webp`
 }
