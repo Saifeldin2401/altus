@@ -155,3 +155,5 @@ find_dupes.py
 
 # Local scratch/working directory
 scratch/
+.vercel
+.env*
