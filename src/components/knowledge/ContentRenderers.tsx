@@ -163,6 +163,8 @@ function DirectVideoPlayer({ videoUrl, title }: VideoPlayerProps) {
     const [currentSrc, setCurrentSrc] = useState(videoUrl)
     const videoRef = useRef<HTMLVideoElement>(null)
     const hasAttemptedRefresh = useRef(false)
+    // Set when storage reports the object itself is gone - retrying cannot help.
+    const [fileMissing, setFileMissing] = useState(false)
 
     // Detect if URL is a Supabase storage URL that needs refreshing
     const isSupabaseStorageUrl = useCallback((url: string): boolean => {
@@ -328,7 +330,13 @@ function DirectVideoPlayer({ videoUrl, title }: VideoPlayerProps) {
 
             return null
         } catch (err) {
-            console.error('Failed to refresh signed URL:', err)
+            if (err instanceof Error && /not found/i.test(err.message)) {
+                // The article links to a file that no longer exists in storage.
+                setFileMissing(true)
+                console.warn('Video file missing from storage:', originalUrl)
+            } else {
+                console.error('Failed to refresh signed URL:', err)
+            }
             return null
         }
     }, [isPlainFilename])
@@ -348,7 +356,7 @@ function DirectVideoPlayer({ videoUrl, title }: VideoPlayerProps) {
                 }, 50)
             } else {
                 setVideoLoading(false)
-                setVideoError('Unable to load video. The file may be missing or access has expired.')
+                setVideoError('Unable to load video. Check your connection and try again.')
             }
             setRefreshingUrl(false)
         } else {
@@ -431,8 +439,12 @@ function DirectVideoPlayer({ videoUrl, title }: VideoPlayerProps) {
             {videoError && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-white/70 z-10 p-6 text-center">
                     <VideoIcon className="h-12 w-12 mb-3 opacity-50" />
-                    <span className="text-sm mb-2">{videoError}</span>
-                    <Button
+                    <span className="text-sm mb-2">
+                        {fileMissing
+                            ? 'This video is no longer available. The article author needs to upload it again.'
+                            : videoError}
+                    </span>
+                    {!fileMissing && <Button
                         variant="outline"
                         size="sm"
                         onClick={() => {
@@ -447,7 +459,7 @@ function DirectVideoPlayer({ videoUrl, title }: VideoPlayerProps) {
                         className="mt-2 border-white/30 text-white hover:bg-white/10"
                     >
                         Retry
-                    </Button>
+                    </Button>}
                 </div>
             )}
             <video

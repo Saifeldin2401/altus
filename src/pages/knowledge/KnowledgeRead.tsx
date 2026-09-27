@@ -102,10 +102,10 @@ import {
     Briefcase,
 } from 'lucide-react'
 import { marked } from 'marked'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type MutableRefObject, type RefObject } from 'react'
 import { ReadingProgress } from '@/features/knowledge/components/ReadingProgress'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
 interface TOCItem {
@@ -123,6 +123,7 @@ export default function KnowledgeRead() {
     const { hasPermission } = usePermissions()
     const contentRef = useRef<HTMLDivElement>(null)
     const mermaidRef = useRef<HTMLDivElement>(null)
+    const highlightDoneRef = useRef<string | null>(null)
 
     const [tocItems, setTocItems] = useState<TOCItem[]>([])
     const [activeSection, _setActiveSection] = useState<string>('')
@@ -807,6 +808,7 @@ export default function KnowledgeRead() {
             isFocusMode && (readerTheme === 'light' ? "bg-white" : "bg-[var(--kb-bg-main)]")
         )}>
             <ReadingProgress targetRef={contentRef} />
+            <HighlightPassage containerRef={contentRef} doneRef={highlightDoneRef} ready={!!article} />
             {/* Focus Mode Overlay */}
             <div className={cn("kb-focus-overlay", isFocusMode && "active")} />
 
@@ -2026,3 +2028,38 @@ export default function KnowledgeRead() {
     )
 }
 
+/**
+ * ?highlight=<first words of a passage> - set by "Ask the knowledge base"
+ * citations. Finds the first text node containing that phrase (or, failing
+ * that, its first three words), marks it and scrolls it into view once.
+ */
+function HighlightPassage({ containerRef, doneRef, ready }: { containerRef: RefObject<HTMLDivElement | null>; doneRef: MutableRefObject<string | null>; ready: boolean }) {
+    const location = useLocation()
+    useEffect(() => {
+        const phrase = new URLSearchParams(location.search).get('highlight')?.trim()
+        const root = containerRef.current
+        if (!ready || !phrase || !root || doneRef.current === phrase) return
+        const timer = window.setTimeout(() => {
+            const candidates = [phrase, phrase.split(/\s+/).slice(0, 3).join(' ')]
+            const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT)
+            for (const needle of candidates) {
+                walker.currentNode = root
+                let node = walker.nextNode()
+                while (node) {
+                    const text = node.textContent ?? ''
+                    const at = text.toLowerCase().indexOf(needle.toLowerCase())
+                    if (at >= 0 && node.parentElement) {
+                        const block = node.parentElement.closest('p, li, h1, h2, h3, h4, td, blockquote') ?? node.parentElement
+                        block.classList.add('kb-highlight')
+                        block.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                        doneRef.current = phrase
+                        return
+                    }
+                    node = walker.nextNode()
+                }
+            }
+        }, 300)
+        return () => window.clearTimeout(timer)
+    }, [location.search, containerRef, doneRef, ready])
+    return null
+}

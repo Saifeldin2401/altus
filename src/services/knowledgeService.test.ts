@@ -139,7 +139,7 @@ describe('knowledgeService', () => {
   describe('getArticleById', () => {
     it('should return article by id', async () => {
       const mockArticle = {
-        id: 'article-123',
+        id: '11111111-1111-4111-8111-111111111123',
         title: 'Test Article',
         status: 'PUBLISHED',
         is_deleted: false,
@@ -154,10 +154,10 @@ describe('knowledgeService', () => {
         }),
       }))
 
-      const result = await getArticleById('article-123')
+      const result = await getArticleById('11111111-1111-4111-8111-111111111123')
 
       expect(result).not.toBeNull()
-      expect(result?.id).toBe('article-123')
+      expect(result?.id).toBe('11111111-1111-4111-8111-111111111123')
     })
 
     it('should return null for non-existent article', async () => {
@@ -177,7 +177,7 @@ describe('knowledgeService', () => {
 
     it('should check acknowledgment status when userId provided', async () => {
       const mockArticle = {
-        id: 'article-123',
+        id: '11111111-1111-4111-8111-111111111123',
         title: 'Test Article',
         status: 'PUBLISHED',
         requires_acknowledgment: true,
@@ -208,7 +208,7 @@ describe('knowledgeService', () => {
         return asQueryMock({})
       }) as unknown as typeof supabase.from)
 
-      const result = await getArticleById('article-123', 'user-123')
+      const result = await getArticleById('11111111-1111-4111-8111-111111111123', 'user-123')
 
       expect(result?.is_acknowledged).toBe(true)
     })
@@ -219,10 +219,10 @@ describe('knowledgeService', () => {
       const mockRpc = vi.fn().mockResolvedValue({ error: null })
       vi.mocked(supabase.rpc).mockImplementation(mockRpc)
 
-      await incrementViewCount('article-123')
+      await incrementViewCount('11111111-1111-4111-8111-111111111123')
 
       expect(mockRpc).toHaveBeenCalledWith('increment_article_view_count', {
-        doc_id: 'article-123',
+        doc_id: '11111111-1111-4111-8111-111111111123',
       })
     })
 
@@ -232,7 +232,7 @@ describe('knowledgeService', () => {
       })
       vi.mocked(supabase.rpc).mockImplementation(mockRpc)
 
-      await expect(incrementViewCount('article-123')).resolves.not.toThrow()
+      await expect(incrementViewCount('11111111-1111-4111-8111-111111111123')).resolves.not.toThrow()
     })
   })
 
@@ -333,11 +333,11 @@ describe('knowledgeService', () => {
         upsert: mockUpsert,
       }))
 
-      await acknowledgeArticle('article-123', 'user-123')
+      await acknowledgeArticle('11111111-1111-4111-8111-111111111123', 'user-123')
 
       expect(mockUpsert).toHaveBeenCalledWith(
         expect.objectContaining({
-          document_id: 'article-123',
+          document_id: '11111111-1111-4111-8111-111111111123',
           user_id: 'user-123',
           acknowledged_at: expect.any(String),
         }),
@@ -352,7 +352,7 @@ describe('knowledgeService', () => {
         }),
       }))
 
-      await expect(acknowledgeArticle('article-123', 'user-123')).rejects.toThrow()
+      await expect(acknowledgeArticle('11111111-1111-4111-8111-111111111123', 'user-123')).rejects.toThrow()
     })
   })
 

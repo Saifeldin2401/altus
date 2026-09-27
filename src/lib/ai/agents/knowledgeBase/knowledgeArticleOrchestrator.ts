@@ -333,20 +333,9 @@ class KnowledgeArticleOrchestrator {
       suggested_tags: normalized.tags,
       checklist_items: normalized.checklist_items,
       faq_items: normalized.faq_items,
-      critical_control_points: [
-        'Mandatory verification of guest identification and preferences prior to service execution',
-        'Adherence to Balady sanitation standards and Saudi Civil Defense safety clearances',
-        'Immediate supervisory escalation via LAST protocol if service deviation exceeds 2 minutes',
-      ],
-      service_benchmarks: [
-        'Associate acknowledges guest warmly within 30 seconds using surname',
-        'Staff demonstrates intuitive anticipation of unstated guest requests',
-        'Workstation and associate presentation strictly conform to five-star grooming standards',
-      ],
-      contingency_protocols: [
-        'If PMS/POS system offline: Transition to manual triplicate vouchers and notify Duty Manager',
-        'If guest expresses dissatisfaction: Apply Listen, Apologize, Solve, Thank (LAST) framework with SAR 200 immediate empowerment limit',
-      ],
+      critical_control_points: normalized.critical_control_points,
+      service_benchmarks: normalized.service_benchmarks,
+      contingency_protocols: normalized.contingency_protocols,
       visual_asset: visualAsset,
       compliance_score: complianceScore,
       compliance_notes: complianceNotes,
@@ -373,164 +362,53 @@ class KnowledgeArticleOrchestrator {
       }
     }
 
-    const dept = fallbackConfig.department || 'Front Office'
-    const deptPrefix = dept.slice(0, 3).toUpperCase()
-    const defaultCode = `SOP-${deptPrefix}-${Math.floor(100 + Math.random() * 900)}`
+    const str = (...values: unknown[]): string => {
+      for (const v of values) if (typeof v === 'string' && v.trim()) return v.trim()
+      return ''
+    }
+    const list = (value: unknown): string[] =>
+      Array.isArray(value) ? value.filter((v): v is string => typeof v === 'string' && v.trim().length > 0) : []
 
-    const title = (data?.title && typeof data.title === 'string' && data.title.trim())
-      ? data.title.trim()
-      : fallbackConfig.title
-    const title_ar = data?.titleAr || data?.title_ar || `${title} (بالعربية)`
-    const description = data?.description || data?.desc || `Comprehensive operational standard for ${title}.`
-    const description_ar = data?.descriptionAr || data?.description_ar || `المعايير التشغيلية القياسية لـ ${title_ar}.`
-    const summary = data?.summary || data?.executive_summary || `five-star verified operational guidelines for ${title}.`
-    const summary_ar = data?.summaryAr || data?.summary_ar || `دليل المعايير التشغيلية الفندقية لـ ${title_ar}.`
-
-    let content_html = data?.contentHtml || data?.content_html || data?.content || ''
-    let content_html_ar = data?.contentHtmlAr || data?.content_html_ar || data?.content_ar || ''
-
-    // If content is somehow still empty, synthesize a 5-star HTML SOP directly
-    if (!content_html || typeof content_html !== 'string' || content_html.trim().length === 0) {
-      content_html = `
-<div class="space-y-6">
-  <section class="p-4 rounded-xl border bg-muted/20">
-    <h3 class="text-base font-bold text-foreground mb-2">1. Purpose & Strategic Importance</h3>
-    <p class="text-sm text-muted-foreground leading-relaxed">
-      To establish and uphold the highest five-star hospitality standard for <strong>${title}</strong> within ${dept}, ensuring seamless guest experiences and operational excellence.
-    </p>
-  </section>
-
-  <section class="space-y-3">
-    <h3 class="text-base font-bold text-foreground">2. Scope & Responsible Roles</h3>
-    <p class="text-sm text-muted-foreground">
-      This standard applies to ${fallbackConfig.targetAudience || 'all frontline personnel, shift supervisors, and duty managers'} across all properties.
-    </p>
-  </section>
-
-  <section class="space-y-3">
-    <h3 class="text-base font-bold text-foreground">3. Step-by-Step Execution Sequence</h3>
-    <ol class="list-decimal ps-5 space-y-2 text-sm text-muted-foreground">
-      <li><strong>Initial Preparation & Verification:</strong> Review guest profile notes, VIP preferences, and room status in PMS.</li>
-      <li><strong>Immediate Greeting & Engagement:</strong> Acknowledge guest within 30 seconds with warm eye contact, using the guest's surname.</li>
-      <li><strong>Flawless Service Execution:</strong> Follow the verified 5-star delivery sequence adhering to timing benchmarks.</li>
-      <li><strong>Closing & Confirmation:</strong> Confirm guest satisfaction, offer personalized assistance, and log all notes into PMS.</li>
-    </ol>
-  </section>
-
-  <section class="p-4 rounded-xl border border-amber-200 bg-amber-50/50 dark:bg-amber-950/20">
-    <h3 class="text-base font-bold text-amber-900 dark:text-amber-200 mb-2">4. Service Recovery (LAST Framework)</h3>
-    <p class="text-sm text-muted-foreground">
-      <strong>L</strong>isten attentively with empathy • <strong>A</strong>pologize sincerely without placing blame • <strong>S</strong>olve proactively within 10 minutes • <strong>T</strong>hank the guest for sharing their feedback.
-    </p>
-  </section>
-</div>`.trim()
+    // Only what the model actually returned. Nothing here is invented: a
+    // missing field stays empty so the author sees exactly what the AI wrote.
+    const content_html = str(data?.contentHtml, data?.content_html, data?.content)
+    if (!content_html) {
+      throw new Error('The AI did not return any article text. Nothing was created - try again, or add source material for it to work from.')
     }
 
-    if (!content_html_ar || typeof content_html_ar !== 'string' || content_html_ar.trim().length === 0) {
-      content_html_ar = `
-<div class="space-y-6" dir="rtl">
-  <section class="p-4 rounded-xl border bg-muted/20">
-    <h3 class="text-base font-bold text-foreground mb-2">١. الهدف والأهمية الاستراتيجية</h3>
-    <p class="text-sm text-muted-foreground leading-relaxed">
-      ترسيخ وتطبيق أعلى معايير الضيافة الفندقية الفاخرة (five-star) لـ <strong>${title_ar}</strong> في قسم ${dept} لضمان تجربة استثنائية للنزلاء.
-    </p>
-  </section>
-
-  <section class="space-y-3">
-    <h3 class="text-base font-bold text-foreground">٢. نطاق التطبيق والمسؤوليات</h3>
-    <p class="text-sm text-muted-foreground">
-      ينطبق هذا الإجراء على ${fallbackConfig.targetAudience || 'جميع موظفي الخطوط الأمامية والمشرفين ومدراء الفترات'}.
-    </p>
-  </section>
-
-  <section class="space-y-3">
-    <h3 class="text-base font-bold text-foreground">٣. خطوات التنفيذ المتسلسلة</h3>
-    <ol class="list-decimal ps-5 space-y-2 text-sm text-muted-foreground">
-      <li><strong>التحضير والفحص المسبق:</strong> مراجعة ملف النزيل وتفضيلاته الخاصة في النظام الفندقي (PMS).</li>
-      <li><strong>الاستقبال والترحيب الفوري:</strong> الترحيب بالنزيل خلال ٣٠ ثانية مع التواصل البصري وذكر اللقب الرسمي.</li>
-      <li><strong>التنفيذ الدقيق:</strong> تطبيق خطوات الخدمة بأعلى معايير الجودة والالتزام بالوقت المحدد.</li>
-      <li><strong>التأكيد والتوثيق:</strong> التأكد من رضا النزيل وتوثيق جميع الملاحظات في النظام.</li>
-    </ol>
-  </section>
-
-  <section class="p-4 rounded-xl border border-amber-200 bg-amber-50/50 dark:bg-amber-950/20">
-    <h3 class="text-base font-bold text-amber-900 dark:text-amber-200 mb-2">٤. معالجة الملاحظات (منهجية LAST)</h3>
-    <p class="text-sm text-muted-foreground">
-      <strong>الاستماع</strong> بتعاطف واهتمام • <strong>الاعتذار</strong> بمهنية دون لوم • <strong>الحل</strong> الفوري خلال ١٠ دقائق • <strong>الشكر</strong> للنزيل على تعاونه.
-    </p>
-  </section>
-</div>`.trim()
-    }
+    const title = str(data?.title) || fallbackConfig.title
+    const title_ar = str(data?.titleAr, data?.title_ar)
+    const description = str(data?.description, data?.desc)
+    const description_ar = str(data?.descriptionAr, data?.description_ar)
+    const summary = str(data?.summary, data?.executive_summary)
+    const summary_ar = str(data?.summaryAr, data?.summary_ar)
+    const content_html_ar = str(data?.contentHtmlAr, data?.content_html_ar, data?.content_ar)
 
     const rawChecklist = data?.checklistItems || data?.checklist_items || []
-    const checklist_items = Array.isArray(rawChecklist) && rawChecklist.length > 0
-      ? rawChecklist.map((c: any, i: number) => ({
-          id: c.id || `chk-${i + 1}`,
-          text: c.text || c.name || `Inspection point ${i + 1}`,
-          text_ar: c.text_ar || c.textAr || c.name_ar || `نقطة التدقيق ${i + 1}`,
-          category: c.category || 'Quality Verification',
-          required: Boolean(c.required !== false),
-          standardBenchmark: c.standardBenchmark || c.standard_benchmark || '100% Compliance',
-          responsibleRole: c.responsibleRole || c.responsible_role || 'Supervisor',
-        }))
-      : [
-          {
-            id: 'chk-1',
-            text: 'Pre-service workstation and personal grooming inspection verified',
-            text_ar: 'التحقق من جاهزية محطة العمل والهندام الشخصي',
-            category: 'Preparation',
-            required: true,
-            standardBenchmark: 'Zero deviations',
-            responsibleRole: 'Supervisor',
-          },
-          {
-            id: 'chk-2',
-            text: 'Guest greeted within 30 seconds with eye contact and surname',
-            text_ar: 'الترحيب بالنزيل خلال 30 ثانية مع ذكر اللقب والتواصل البصري',
-            category: 'Execution',
-            required: true,
-            standardBenchmark: '< 30 seconds',
-            responsibleRole: 'Frontline Associate',
-          },
-          {
-            id: 'chk-3',
-            text: 'All PMS profile updates and billing instructions logged accurately',
-            text_ar: 'توثيق تحديثات الملف والتعليمات المالية بدقة في النظام',
-            category: 'Documentation',
-            required: true,
-            standardBenchmark: '100% Accuracy',
-            responsibleRole: 'Frontline Associate',
-          },
-        ]
+    const checklist_items = (Array.isArray(rawChecklist) ? rawChecklist : [])
+      .filter((c: any) => str(c?.text, c?.name))
+      .map((c: any, i: number) => ({
+        id: c.id || `chk-${i + 1}`,
+        text: str(c.text, c.name),
+        text_ar: str(c.text_ar, c.textAr, c.name_ar),
+        category: str(c.category),
+        required: c.required !== false,
+        standardBenchmark: str(c.standardBenchmark, c.standard_benchmark),
+        responsibleRole: str(c.responsibleRole, c.responsible_role),
+      }))
 
     const rawFaq = data?.faqItems || data?.faq_items || []
-    const faq_items = Array.isArray(rawFaq) && rawFaq.length > 0
-      ? rawFaq.map((f: any, i: number) => ({
-          id: f.id || `faq-${i + 1}`,
-          question: f.question || 'Standard operational question',
-          question_ar: f.question_ar || f.questionAr || 'سؤال تشغيلي قياسي',
-          answer: f.answer || 'Detailed standard answer',
-          answer_ar: f.answer_ar || f.answerAr || 'إجابة تشغيلية مفصلة',
-          category: f.category || 'General Operations',
-          escalationPoint: f.escalationPoint || f.escalation_point || 'Duty Manager',
-        }))
-      : [
-          {
-            id: 'faq-1',
-            question: 'What should staff do if the guest requests early check-in before room is ready?',
-            question_ar: 'ما هو الإجراء المتبع عند طلب النزيل تسجيل وصول مبكر قبل جاهزية الغرفة؟',
-            answer: 'Offer immediate luggage holding, extend complimentary executive lounge access with beverage service, and prioritize housekeeping with an estimated readiness time within 20 minutes.',
-            answer_ar: 'عرض استلام الحقائب فوراً، وتقديم ضيافة بصالة كبار الشخصيات مع مشروب ترحيبي، وتحديد أولوية تنظيف الغرفة وتأكيد جاهزيتها خلال ٢٠ دقيقة.',
-            category: 'Front Office',
-            escalationPoint: 'Duty Manager',
-          },
-        ]
-
-    const sop_code = data?.sopCode || data?.sop_code || data?.policyCode || data?.policy_code || data?.code || defaultCode
-    const read_time = Number(data?.estimatedReadTimeMinutes || data?.estimated_read_time_minutes) || 5
-    const tags = Array.isArray(data?.suggestedTags || data?.suggested_tags)
-      ? data.suggestedTags || data.suggested_tags
-      : ['SOP', dept, '5-Star Standard', 'KSA Hospitality']
+    const faq_items = (Array.isArray(rawFaq) ? rawFaq : [])
+      .filter((f: any) => str(f?.question) && str(f?.answer))
+      .map((f: any, i: number) => ({
+        id: f.id || `faq-${i + 1}`,
+        question: str(f.question),
+        question_ar: str(f.question_ar, f.questionAr),
+        answer: str(f.answer),
+        answer_ar: str(f.answer_ar, f.answerAr),
+        category: str(f.category),
+        escalationPoint: str(f.escalationPoint, f.escalation_point),
+      }))
 
     return {
       title,
@@ -541,11 +419,14 @@ class KnowledgeArticleOrchestrator {
       summary_ar,
       content_html,
       content_html_ar,
-      sop_code,
-      read_time,
-      tags,
+      sop_code: str(data?.sopCode, data?.sop_code, data?.policyCode, data?.policy_code, data?.code),
+      read_time: Number(data?.estimatedReadTimeMinutes || data?.estimated_read_time_minutes) || Math.max(1, Math.round(content_html.replace(/<[^>]+>/g, ' ').split(/\s+/).length / 200)),
+      tags: list(data?.suggestedTags ?? data?.suggested_tags),
       checklist_items,
       faq_items,
+      critical_control_points: list(data?.criticalControlPoints ?? data?.critical_control_points),
+      service_benchmarks: list(data?.serviceBenchmarks ?? data?.service_benchmarks),
+      contingency_protocols: list(data?.contingencyProtocols ?? data?.contingency_protocols),
     }
   }
 }

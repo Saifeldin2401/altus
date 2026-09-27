@@ -59,7 +59,10 @@ import {
   Wand2,
   X,
   Zap,
+  AlertTriangle,
 } from 'lucide-react'
+import { extractTextFromFile } from '@/lib/documentText'
+import { useDepartments } from '@/hooks/useDepartments'
 import { cn } from '@/lib/utils'
 import { knowledgeArticleOrchestrator } from '@/lib/ai/agents/knowledgeBase/knowledgeArticleOrchestrator'
 import { VisualAssetEditorModal } from '@/components/training/ai-engine/VisualAssetEditorModal'
@@ -151,7 +154,7 @@ export function AIArticleStudioModal({
   onClose,
   onApplyArticle,
   defaultContentType = 'sop',
-  defaultDepartment = 'Front Office',
+  defaultDepartment = '',
 }: AIArticleStudioModalProps) {
   const { t, i18n } = useTranslation('knowledge')
   const isRTL = i18n.dir() === 'rtl'
@@ -193,6 +196,9 @@ export function AIArticleStudioModal({
 
   // Execution & Pipeline State
   const [isGenerating, setIsGenerating] = useState(false)
+  const [generationError, setGenerationError] = useState<string | null>(null)
+  const [fileStatus, setFileStatus] = useState<{ reading: boolean; error: string | null; words: number | null }>({ reading: false, error: null, words: null })
+  const { departments } = useDepartments()
   const [progressEvent, setProgressEvent] = useState<KnowledgePipelineProgressEvent | null>(null)
   const [generatedResult, setGeneratedResult] = useState<GeneratedKnowledgeArticle | null>(null)
   const [previewTab, setPreviewTab] = useState<'english' | 'arabic' | 'schematic' | 'checklist' | 'faq' | 'compliance'>('english')
@@ -223,28 +229,27 @@ export function AIArticleStudioModal({
   }
 
   // Handle PDF / Word / TXT / Markdown file upload
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
+    e.target.value = ''
     if (!file) return
 
     setUploadedFileName(file.name)
     setUploadedFileSize(`${(file.size / 1024).toFixed(1)} KB`)
-
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      const text = (event.target?.result as string) || ''
-      setSourceNotes(text)
-
-      // Auto-populate title if blank
+    setFileStatus({ reading: true, error: null, words: null })
+    try {
+      // PDF and Word files are parsed properly; reading them as plain text
+      // used to hand the AI binary noise as "source material".
+      const extracted = await extractTextFromFile(file)
+      setSourceNotes(extracted.text)
+      setFileStatus({ reading: false, error: null, words: extracted.wordCount })
       if (!title.trim()) {
-        const cleanName = file.name
-          .replace(/\.[^/.]+$/, '')
-          .replace(/[-_]/g, ' ')
-          .replace(/\b\w/g, (c) => c.toUpperCase())
-        setTitle(cleanName)
+        setTitle(file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').trim())
       }
+    } catch (err) {
+      setSourceNotes('')
+      setFileStatus({ reading: false, error: err instanceof Error ? err.message : 'This file could not be read.', words: null })
     }
-    reader.readAsText(file)
   }
 
   const handleApplyPreset = (preset: typeof LUXURY_KB_PRESETS[0]) => {
@@ -297,6 +302,7 @@ export function AIArticleStudioModal({
     if (!title.trim()) return
 
     setIsGenerating(true)
+    setGenerationError(null)
     setProgressEvent(null)
     setGeneratedResult(null)
 
@@ -332,6 +338,11 @@ export function AIArticleStudioModal({
       setPreviewTab('english')
     } catch (err) {
       console.error('Knowledge article generation failed:', err)
+      setGenerationError(
+        err instanceof Error && err.message
+          ? err.message
+          : 'The article could not be generated. Check your connection and try again.'
+      )
     } finally {
       setIsGenerating(false)
     }
@@ -358,9 +369,6 @@ export function AIArticleStudioModal({
                 <div>
                   <DialogTitle className="text-lg font-bold flex items-center gap-2">
                     <span>AI Document Creator</span>
-                    <Badge variant="secondary" className="text-[10px] bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300">
-                      five-star &amp; KSA Compliant
-                    </Badge>
                   </DialogTitle>
                   <DialogDescription className="text-xs text-muted-foreground">
                     {studioMode === 'fast'
@@ -414,6 +422,19 @@ export function AIArticleStudioModal({
 
           {/* Body Content */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            {generationError && !isGenerating && (
+              <div role="alert" className="flex items-start gap-3 rounded-xl border border-ds-danger/40 bg-ds-danger-soft p-4">
+                <AlertTriangle aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-ds-danger" />
+                <div className="min-w-0 flex-1 space-y-2">
+                  <p className="text-sm font-semibold text-ds-ink">{t('studio.failedTitle', 'The article was not created')}</p>
+                  <p className="text-sm text-ds-ink-secondary">{generationError}</p>
+                  <Button type="button" size="sm" onClick={handleGenerate} disabled={!title.trim()}>
+                    {t('studio.tryAgain', 'Try again')}
+                  </Button>
+                </div>
+              </div>
+            )}
+
             {!generatedResult && !isGenerating && (
               <div className="space-y-5">
                 {/* Mode: Fast Mode */}
@@ -468,7 +489,13 @@ export function AIArticleStudioModal({
                       </div>
                       <div>
                         <p className="text-xs font-bold text-foreground">
-                          {uploadedFileName ? `Ingested: ${uploadedFileName} (${uploadedFileSize})` : 'Upload Brand Standard, PDF Policy, or SOP Sheet'}
+                          {fileStatus.reading
+                            ? t('studio.readingFile', 'Reading {{name}}…', { name: uploadedFileName })
+                            : fileStatus.error
+                              ? fileStatus.error
+                              : uploadedFileName
+                                ? t('studio.fileRead', '{{name}} ({{size}}) - {{words}} words used as source', { name: uploadedFileName, size: uploadedFileSize, words: fileStatus.words ?? 0 })
+                                : t('studio.uploadPrompt', 'Upload a brand standard, policy or SOP to write from')}
                         </p>
                         <p className="text-[11px] text-muted-foreground">
                           Supports PDF, Word (.docx), Markdown (.md), and TXT files. AI extracts key operational directives automatically.
@@ -494,6 +521,7 @@ export function AIArticleStudioModal({
                               setUploadedFileName('')
                               setUploadedFileSize('')
                               setSourceNotes('')
+                              setFileStatus({ reading: false, error: null, words: null })
                             }}
                             className="h-7 text-xs text-red-500 hover:text-red-600"
                           >
@@ -534,21 +562,25 @@ export function AIArticleStudioModal({
 
                       <div className="space-y-1.5">
                         <Label className="text-xs font-semibold">Department Scope</Label>
-                        <Select value={department} onValueChange={setDepartment}>
-                          <SelectTrigger className="h-9 text-xs">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Front Office">Front Office & Concierge</SelectItem>
-                            <SelectItem value="Housekeeping">Housekeeping & Laundry</SelectItem>
-                            <SelectItem value="Food & Beverage">Food & Beverage Service</SelectItem>
-                            <SelectItem value="Culinary & Kitchen">Culinary & Kitchen (HACCP)</SelectItem>
-                            <SelectItem value="Engineering">Engineering & Safety</SelectItem>
-                            <SelectItem value="Human Resources">Human Resources & Talent</SelectItem>
-                            <SelectItem value="Finance">Finance & Purchasing</SelectItem>
-                            <SelectItem value="Security & Safety">Security & Civil Defense</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        {departments.length > 0 ? (
+                          <Select value={department || undefined} onValueChange={setDepartment}>
+                            <SelectTrigger className="h-9 text-xs">
+                              <SelectValue placeholder={t('studio.chooseDepartment', 'Choose a department')} />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {departments.map((d) => (
+                                <SelectItem key={d.id} value={d.name}>{d.name}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        ) : (
+                          <Input
+                            value={department}
+                            onChange={(e) => setDepartment(e.target.value)}
+                            placeholder={t('studio.departmentPlaceholder', 'e.g. Front Office')}
+                            className="h-9 text-xs"
+                          />
+                        )}
                       </div>
 
                       <div className="space-y-1.5 md:col-span-2">
@@ -626,7 +658,13 @@ export function AIArticleStudioModal({
                           </div>
                           <div>
                             <p className="text-xs font-bold text-foreground">
-                              {uploadedFileName ? `Ingested: ${uploadedFileName} (${uploadedFileSize})` : 'Upload Brand Standard, PDF Policy, or SOP Sheet'}
+                              {fileStatus.reading
+                            ? t('studio.readingFile', 'Reading {{name}}…', { name: uploadedFileName })
+                            : fileStatus.error
+                              ? fileStatus.error
+                              : uploadedFileName
+                                ? t('studio.fileRead', '{{name}} ({{size}}) - {{words}} words used as source', { name: uploadedFileName, size: uploadedFileSize, words: fileStatus.words ?? 0 })
+                                : t('studio.uploadPrompt', 'Upload a brand standard, policy or SOP to write from')}
                             </p>
                             <p className="text-[11px] text-muted-foreground">
                               Supports PDF, Word (.docx), Markdown (.md), and TXT files.
@@ -677,21 +715,25 @@ export function AIArticleStudioModal({
 
                           <div className="space-y-1.5">
                             <Label className="text-xs font-semibold">Department Scope</Label>
-                            <Select value={department} onValueChange={setDepartment}>
-                              <SelectTrigger className="h-9 text-xs">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="Front Office">Front Office & Concierge</SelectItem>
-                                <SelectItem value="Housekeeping">Housekeeping & Laundry</SelectItem>
-                                <SelectItem value="Food & Beverage">Food & Beverage Service</SelectItem>
-                                <SelectItem value="Culinary & Kitchen">Culinary & Kitchen (HACCP)</SelectItem>
-                                <SelectItem value="Engineering">Engineering & Safety</SelectItem>
-                                <SelectItem value="Human Resources">Human Resources & Talent</SelectItem>
-                                <SelectItem value="Finance">Finance & Purchasing</SelectItem>
-                                <SelectItem value="Security & Safety">Security & Civil Defense</SelectItem>
-                              </SelectContent>
-                            </Select>
+                            {departments.length > 0 ? (
+                          <Select value={department || undefined} onValueChange={setDepartment}>
+                            <SelectTrigger className="h-9 text-xs">
+                              <SelectValue placeholder={t('studio.chooseDepartment', 'Choose a department')} />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {departments.map((d) => (
+                                <SelectItem key={d.id} value={d.name}>{d.name}</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        ) : (
+                          <Input
+                            value={department}
+                            onChange={(e) => setDepartment(e.target.value)}
+                            placeholder={t('studio.departmentPlaceholder', 'e.g. Front Office')}
+                            className="h-9 text-xs"
+                          />
+                        )}
                           </div>
 
                           <div className="space-y-1.5 md:col-span-2">
@@ -961,7 +1003,7 @@ export function AIArticleStudioModal({
                   <div className="flex items-center gap-2">
                     <Badge className="bg-emerald-600 text-white text-xs font-semibold px-2.5 py-1">
                       <ShieldCheck className="w-3.5 h-3.5 me-1" />
-                      KSA Compliance: {generatedResult.compliance_score}/100
+                      {t('studio.keywordCheck', 'Keyword check')}: {generatedResult.compliance_score}/100
                     </Badge>
                   </div>
                 </div>
@@ -1082,11 +1124,17 @@ export function AIArticleStudioModal({
 
                   {/* Arabic Content */}
                   <TabsContent value="arabic" className="mt-3">
-                    <div
-                      className="p-5 rounded-xl border bg-card max-h-[380px] overflow-y-auto prose prose-sm dark:prose-invert max-w-none text-start space-y-4"
-                      dir="rtl"
-                      dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(generatedResult.content_html_ar) }}
-                    />
+                    {generatedResult.content_html_ar ? (
+                      <div
+                        className="p-5 rounded-xl border bg-card max-h-[380px] overflow-y-auto prose prose-sm dark:prose-invert max-w-none text-start space-y-4"
+                        dir="rtl"
+                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(generatedResult.content_html_ar) }}
+                      />
+                    ) : (
+                      <p className="rounded-xl border border-dashed p-5 text-sm text-muted-foreground">
+                        {t('studio.noArabic', 'The AI did not write an Arabic version this time. Regenerate, or add the Arabic text in the editor.')}
+                      </p>
+                    )}
                   </TabsContent>
 
                   {/* Vector Schematic Tab */}
@@ -1210,34 +1258,29 @@ export function AIArticleStudioModal({
 
                   {/* QA & Compliance Scorecard */}
                   <TabsContent value="compliance" className="mt-3 space-y-4 max-h-[380px] overflow-y-auto">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div className="p-4 rounded-xl border bg-card space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-foreground">KSA Regulatory Compliance</span>
-                          <Badge className="bg-emerald-600 text-white text-[11px]">
-                            {generatedResult.compliance_score}/100
-                          </Badge>
-                        </div>
-                        <p className="text-[11px] text-muted-foreground">
-                          Audited against Saudi Ministry of Tourism, Balady Health, and Civil Defense fire & life safety codes.
-                        </p>
+                    <div className="p-4 rounded-xl border bg-card space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-foreground">{t('studio.keywordCheck', 'Keyword check')}</span>
+                        <Badge variant="secondary" className="text-[11px] tabular-nums">
+                          {generatedResult.compliance_score}/100
+                        </Badge>
                       </div>
-
-                      <div className="p-4 rounded-xl border bg-card space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-foreground">Five-Star Service Benchmarks</span>
-                          <Badge variant="secondary" className="bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300 text-[11px]">
-                            100% Aligned
-                          </Badge>
-                        </div>
-                        <p className="text-[11px] text-muted-foreground">
-                          Includes surname greeting within 30 seconds, intuitive anticipation, and LAST service recovery framework.
-                        </p>
-                      </div>
+                      <p className="text-[11px] text-muted-foreground">
+                        {t('studio.keywordCheckHint', 'An automatic check for topics Saudi hospitality rules usually require (Ministry of Tourism, Balady, Civil Defense). It is not a legal or regulatory review - have a qualified person approve the article before publishing.')}
+                      </p>
                     </div>
 
+                    {generatedResult.service_benchmarks && generatedResult.service_benchmarks.length > 0 && (
+                      <div className="p-4 rounded-xl border bg-card space-y-2">
+                        <span className="text-xs font-bold text-foreground">{t('studio.serviceBenchmarks', 'Service standards in this article')}</span>
+                        <ul className="list-disc ps-5 text-xs text-muted-foreground space-y-1">
+                          {generatedResult.service_benchmarks.map((b, i) => <li key={i}>{b}</li>)}
+                        </ul>
+                      </div>
+                    )}
+
                     {/* Critical Control Points */}
-                    {generatedResult.critical_control_points && (
+                    {generatedResult.critical_control_points && generatedResult.critical_control_points.length > 0 && (
                       <div className="p-4 rounded-xl border bg-muted/20 space-y-2">
                         <h5 className="text-xs font-bold text-foreground flex items-center gap-1.5">
                           <ShieldAlert className="w-4 h-4 text-amber-600" />
@@ -1346,7 +1389,7 @@ export function AIArticleStudioModal({
                 <div>
                   <p className="font-bold text-foreground">{item.article.title}</p>
                   <p className="text-muted-foreground text-[11px]">
-                    {item.article.content_type.toUpperCase()} • Compliance: {item.article.compliance_score}/100 • {new Date(item.timestamp).toLocaleTimeString()}
+                    {item.article.content_type.toUpperCase()} • {t('studio.keywordCheck', 'Keyword check')}: {item.article.compliance_score}/100 • {new Date(item.timestamp).toLocaleTimeString()}
                   </p>
                 </div>
                 <Button

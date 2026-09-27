@@ -332,6 +332,15 @@ export default function KnowledgeAuthor() {
         }
     }, [location.search, id, isPlatformAdmin])
 
+    // "Write this article" from the knowledge hub's content-gap card: start a
+    // new article with the searched-for phrase as its working title.
+    useEffect(() => {
+        const title = new URLSearchParams(location.search).get('title')
+        if (title && !id) {
+            setFormData(prev => (prev.title ? prev : { ...prev, title: title.slice(0, 200) }))
+        }
+    }, [location.search, id])
+
     // Query deployment count for master SOP telemetry
     useEffect(() => {
         if (id && formData.is_master_template) {

@@ -147,6 +147,15 @@ function toRealUuid(value?: string): string | null {
     return value && value !== 'undefined' && value.length === 36 ? value : null
 }
 
+/**
+ * Validates if a string is a valid UUID format
+ * Returns true if the string matches UUID format (8-4-4-4-12 hex digits)
+ */
+function isValidUuid(value: string): boolean {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+    return uuidRegex.test(value)
+}
+
 // Fire-and-forget: records a zero-result KB search for content-gap analytics.
 // Never blocks or fails the search itself.
 function logFailedSearch(query: string, departmentId?: string): void {
@@ -317,6 +326,12 @@ export async function getArticles(
 
 export async function getArticleById(id: string, userId?: string): Promise<KnowledgeArticle | null> {
     try {
+        // Guard: validate UUID format before querying Postgres
+        if (!isValidUuid(id)) {
+            console.warn('getArticleById: invalid UUID format', id)
+            return null
+        }
+
         // sop_documents consolidated into documents (content_type='sop').
         // linked_training_id and linked_quiz_id are now direct columns on documents.
         const { data, error } = await supabase
@@ -809,6 +824,12 @@ export async function getContentTypeCounts(): Promise<Record<string, number>> {
 
 export async function getRelatedArticles(documentId: string): Promise<RelatedArticle[]> {
     try {
+        // Guard: validate UUID format before querying Postgres
+        if (!isValidUuid(documentId)) {
+            console.warn('getRelatedArticles: invalid UUID format', documentId)
+            return []
+        }
+
         const { data, error } = await supabase
             .from('related_articles')
             .select(`
