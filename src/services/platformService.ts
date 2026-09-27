@@ -1,3 +1,4 @@
+import { fetchPrivateProfiles, PUBLIC_PROFILE_COLUMNS } from '@/lib/profilePrivate'
 import { supabase } from '@/lib/supabase'
 import type { Json } from '@/types/database.generated'
 import type {
@@ -1423,12 +1424,16 @@ export const platformService = {
     const totalCount = Number(rows[0]?.total_count || rows.length)
 
     const userIds = rows.map((u: any) => u.id)
-    const { data: profileExtras } = await supabase
-      .from('profiles')
-      .select('id, account_status, suspend_reason, suspended_at, suspended_until, failed_login_attempts, locked_until, force_password_reset, job_title, phone, last_login_at')
-      .in('id', userIds)
+    const [{ data: profileExtras }, privateById] = await Promise.all([
+      supabase
+        .from('profiles')
+        .select('id, account_status, suspended_at, suspended_until, failed_login_attempts, locked_until, force_password_reset, job_title, last_login_at')
+        .in('id', userIds),
+      // phone and suspend_reason are column-restricted personal fields.
+      fetchPrivateProfiles(userIds),
+    ])
 
-    const extrasMap = new Map((profileExtras || []).map((p: any) => [p.id, p]))
+    const extrasMap = new Map((profileExtras || []).map((p: any) => [p.id, { ...p, ...(privateById.get(p.id) ?? {}) }]))
 
     const users = rows.map((u: any) => {
       const extra = extrasMap.get(u.id) || {}
@@ -1769,12 +1774,11 @@ export const platformService = {
     let auditLogs: any[] = []
 
     try {
-      const { data } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .maybeSingle()
-      profile = data
+      const [{ data }, privateById] = await Promise.all([
+        supabase.from('profiles').select(PUBLIC_PROFILE_COLUMNS).eq('id', userId).maybeSingle(),
+        fetchPrivateProfiles([userId]),
+      ])
+      profile = data ? { ...(data as unknown as Record<string, unknown>), ...(privateById.get(userId) ?? {}) } : data
     } catch (err) {
       console.warn('Failed to load profile in getUserSecurityProfile:', err)
     }

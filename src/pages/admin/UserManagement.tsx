@@ -36,6 +36,7 @@ import { WorkspaceHeader, headerActionClass } from '@/ui'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
+import { fetchPrivateProfiles, PUBLIC_PROFILE_COLUMNS } from '@/lib/profilePrivate'
 import { supabase } from '@/lib/supabase'
 import { membershipToAppRole } from '@/lib/membershipRoles'
 import { useTenant } from '@/contexts/TenantContext'
@@ -125,7 +126,7 @@ export default function UserManagement() {
           is_primary,
           is_active,
           created_at,
-          user:profiles!organization_memberships_user_id_fkey (*),
+          user:profiles!organization_memberships_user_id_fkey (${PUBLIC_PROFILE_COLUMNS}),
           department:departments!organization_memberships_department_id_fkey (
             id,
             name,
@@ -142,10 +143,14 @@ export default function UserManagement() {
 
       if (error) throw error
 
+      // Personal fields (phone, date of birth, ...) for the edit form. Returned
+      // only for users this admin may manage; absent for everyone else.
+      const privateById = await fetchPrivateProfiles((data || []).map((m: any) => m.user_id))
+
       return (data || [])
         .filter((m: any) => m.user)
         .map((m: any) => {
-          const p = m.user
+          const p = { ...m.user, ...(privateById.get(m.user_id) ?? {}) }
           const appRole = membershipToAppRole(m.role)
           const dept = m.department
             ? [

@@ -1,3 +1,4 @@
+import { fetchPrivateProfiles } from '@/lib/profilePrivate'
 import { supabase } from '@/lib/supabase'
 import { classifyAuthError } from '@/lib/authErrorUtils'
 import { appRolesFromMemberships } from '@/lib/membershipRoles'
@@ -133,7 +134,7 @@ export function useUserDataLoader(
         try {
           const profilePromise = supabase
             .from('profiles')
-            .select('id, email, full_name, phone, avatar_url, hire_date, job_title, staff_id, reporting_to, is_active, emergency_contact_name, emergency_contact_phone, nationality, blood_group, created_at, updated_at, date_of_birth, iqama_number, bio, organization_id')
+            .select('id, email, full_name, avatar_url, hire_date, job_title, staff_id, reporting_to, is_active, created_at, updated_at, bio, organization_id')
             .eq('id', userId)
             .limit(1)
 
@@ -153,8 +154,10 @@ export function useUserDataLoader(
             if (isStale()) { setRolesLoading(false); return }
             if (user) setProfile(buildFallbackProfile(user))
           } else if (profileData) {
+            // Personal fields are column-restricted; the member's own come from the RPC.
+            const privateFields = (await fetchPrivateProfiles([userId])).get(userId)
             if (isStale()) { setRolesLoading(false); return }
-            setProfile(profileData)
+            setProfile(privateFields ? { ...profileData, ...privateFields } : profileData)
           } else {
             // No profile row yet — use auth metadata
             const { data: { user } } = await supabase.auth.getUser()

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Award, ChevronDown, Compass, Crown, LogOut, Menu, PlayCircle, Search, Settings, Trophy, UserRound } from 'lucide-react'
@@ -29,6 +30,8 @@ export function TopBar({ onOpenSearch, onOpenContext, onOpenMobileMenu }: TopBar
   const { t } = useTranslation(['nav', 'common', 'wizard'])
   const navigate = useNavigate()
   const { user, profile, signOut } = useAuth()
+  // A missing or deleted image falls back to initials instead of a broken icon.
+  const [failedAvatar, setFailedAvatar] = useState<string | null>(null)
   const { openWhatCanIDo, startTour } = useWizard()
   const { isPlatformAdmin, returnToPlatformScope } = useTenant()
   const ctx = useShellContext()
@@ -123,14 +126,25 @@ export function TopBar({ onOpenSearch, onOpenContext, onOpenMobileMenu }: TopBar
             <button
               type="button"
               aria-label={t('user_menu', 'Account menu')}
-              className="ms-1 inline-flex h-11 items-center gap-2 rounded-full ps-1 pe-2 hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent"
+              className="ms-1 inline-flex h-11 items-center gap-2.5 rounded-full ps-1 pe-2 hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent"
             >
-              {profile?.avatar_url ? (
-                <img src={profile.avatar_url} alt="" className="h-8 w-8 rounded-full object-cover" />
+              {profile?.avatar_url && failedAvatar !== profile.avatar_url ? (
+                <img
+                  src={profile.avatar_url}
+                  alt=""
+                  onError={() => setFailedAvatar(profile.avatar_url ?? null)}
+                  className="h-8 w-8 rounded-full object-cover"
+                />
               ) : (
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ds-ink text-xs font-semibold text-ds-on-ink" aria-hidden="true">
                   {initials(displayName || 'U')}
                 </span>
+              )}
+              {displayName && (
+                <div className="hidden xl:flex flex-col text-start leading-tight">
+                  <span className="text-xs font-semibold text-ds-ink">{displayName}</span>
+                  {ctx.roleLabel && <span className="text-[11px] text-ds-muted">{ctx.roleLabel}</span>}
+                </div>
               )}
               <ChevronDown aria-hidden="true" className="hidden h-4 w-4 text-ds-muted sm:block" />
             </button>

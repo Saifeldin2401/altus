@@ -12,7 +12,8 @@ import * as QuestionService from '@/services/questionService'
 import type {
     AIQuestionGenerationRequest,
     AnswerSubmission,
-    QuestionFormData
+    QuestionFormData,
+    QuestionStatus
 } from '@/types/questions'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
@@ -96,6 +97,21 @@ export function useUpdateQuestion() {
             console.error('Update question error:', error)
             crudToasts.update.error('question')
         }
+    })
+}
+
+export function useSetQuestionStatus() {
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: ({ id, status }: { id: string; status: QuestionStatus }) => QuestionService.setQuestionStatus(id, status),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['questions'] })
+            queryClient.invalidateQueries({ queryKey: ['questions-pending-review'] })
+            crudToasts.update.success('Question')
+        },
+        onError: () => {
+            crudToasts.update.error('question')
+        },
     })
 }
 

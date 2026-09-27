@@ -264,6 +264,20 @@ export async function updateQuestion(
 }
 
 // Write directly to unified_questions
+/**
+ * Archive or restore a question. Archiving keeps the question (and its place
+ * in existing quizzes and attempt history) but removes it from the active bank;
+ * deleteQuestion is a permanent delete.
+ */
+export async function setQuestionStatus(id: string, status: QuestionStatus): Promise<void> {
+    const { error } = await supabase
+        .from('unified_questions')
+        .update({ status, updated_at: new Date().toISOString() })
+        .eq('id', id)
+
+    if (error) throw error
+}
+
 export async function deleteQuestion(id: string): Promise<void> {
     const { error } = await supabase
         .from('unified_questions')

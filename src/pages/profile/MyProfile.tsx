@@ -22,8 +22,6 @@ import { getReportingLineDisplay } from '@/lib/displayHelpers'
 import { cn } from '@/lib/utils'
 import { WorkspaceHeader, headerActionClass } from '@/ui'
 
-const PRESETS = ['/assets/altus/learner-female.jpg', '/assets/altus/learner-male.jpg']
-
 const fieldClass =
   'min-h-[44px] w-full rounded-md border border-ds-border bg-ds-surface px-3 text-sm text-ds-ink placeholder:text-ds-muted focus:border-ds-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent'
 
@@ -154,23 +152,6 @@ export default function MyProfile() {
           <p className="text-sm text-ds-muted">
             {[profile?.job_title, profile?.departments?.[0]?.name].filter(Boolean).join(' · ') || notSet}
           </p>
-          <div className="mt-3 flex items-center gap-2 text-xs text-ds-muted">
-            <span>{t('me.orPortrait', 'Or use an Altus portrait:')}</span>
-            {PRESETS.map((src) => (
-              <button
-                key={src}
-                type="button"
-                disabled={uploading}
-                onClick={() => changePhoto(undefined, src)}
-                aria-pressed={avatarUrl === src}
-                aria-label={t('me.usePortrait', 'Use this portrait')}
-                className={cn('h-8 w-8 overflow-hidden rounded-full border-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent',
-                  avatarUrl === src ? 'border-ds-accent' : 'border-transparent opacity-70 hover:opacity-100')}
-              >
-                <img src={src} alt="" className="h-full w-full object-cover" />
-              </button>
-            ))}
-          </div>
         </div>
       </section>
 

@@ -1720,3 +1720,11 @@ select:focus-visible {
 }
 
 
+
+/* Passage cited by "Ask the knowledge base" (KnowledgeRead ?highlight=). */
+.kb-highlight {
+  background: rgb(var(--ds-brass) / 0.16);
+  box-shadow: 0 0 0 6px rgb(var(--ds-brass) / 0.16);
+  border-radius: 4px;
+  transition: background-color 1.2s ease;
+}

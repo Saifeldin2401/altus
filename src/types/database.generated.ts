@@ -11197,6 +11197,26 @@ export type Database = {
         }
         Returns: Json
       }
+      get_profiles_private: {
+        Args: {
+          p_user_ids: string[]
+        }
+        Returns: {
+          id: string
+          phone: string | null
+          date_of_birth: string | null
+          emergency_contact_name: string | null
+          emergency_contact_phone: string | null
+          nationality: string | null
+          blood_group: string | null
+          iqama_number: string | null
+          iqama_expiry: string | null
+          national_id: string | null
+          salary_grade: string | null
+          contract_end_date: string | null
+          suspend_reason: string | null
+        }[]
+      }
       reset_training_progress_for_module: {
         Args: {
           p_training_module_id: string

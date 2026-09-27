@@ -424,7 +424,7 @@ export const learningService = {
     // QUIZZES
     // ==========================================
 
-    async getQuizzes(status?: QuestionStatus) {
+    async getQuizzes(status?: QuestionStatus, organizationId?: string | null) {
         let query = supabase
             .from('quizzes')
             .select(`
@@ -436,6 +436,11 @@ export const learningService = {
 
         if (status) {
             query = query.eq('status', status)
+        }
+        // Studio lists only the current organization's quizzes; RLS alone would
+        // show a platform operator every tenant's quizzes mixed together.
+        if (organizationId) {
+            query = query.eq('organization_id', organizationId)
         }
 
         const { data, error } = await query
