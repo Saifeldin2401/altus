@@ -5,13 +5,11 @@ export const DEFAULT_ALLOWED_ORIGINS = [
   "http://localhost:3000",
   "http://localhost:5173",
   "http://127.0.0.1:5173",
-  "https://altus-advisory.com",
-  "https://www.altus-advisory.com",
-  "https://connect.altusadvisory.com",
-  "https://prime-hotels-intranet.vercel.app",
   "https://altus-hospitality-erp.vercel.app",
   "https://www.phg-connect.com",
   "https://phg-connect.com",
+  "https://altus-connect.com",
+  "https://www.altus-connect.com",
 ] as const;
 
 export function getAllowedOrigins(): string[] {

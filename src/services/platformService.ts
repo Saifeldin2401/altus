@@ -9,6 +9,11 @@ import type {
 } from '@/lib/types/platform'
 import type { Organization, Subscription, SubscriptionPlan, TenantEmailContext } from '@/lib/types/tenant'
 
+export type OrganizationOwnerResult =
+  | { status: 'skipped' }
+  | { status: 'invited' | 'existing_user'; userId: string; email: string }
+  | { status: 'failed'; error: string }
+
 export interface MasterDeploymentProgress {
   orgId: string
   orgName?: string
@@ -250,72 +255,104 @@ export const platformService = {
     trialEndsAt?: string
     brandColors?: { primary: string; secondary: string; accent?: string }
     initialBrandName?: string
-    initialAdminEmail?: string
-    initialAdminName?: string
-    actorId?: string
-  }): Promise<Organization> {
-    const { data: org, error } = await supabase
-      .from('organizations')
-      .insert({
-        name: params.name.trim(),
-        name_ar: params.nameAr?.trim() || null,
-        slug: params.slug.trim().toLowerCase(),
-        industry: params.industry || 'hospitality',
-        is_active: params.lifecycleStatus !== 'suspended',
-        is_deleted: false,
-        lifecycle_status: (params.lifecycleStatus || 'active') as any,
-        trial_ends_at: params.trialEndsAt || null,
-        max_learners: params.maxLearners !== undefined ? params.maxLearners : 100,
-        max_storage_gb: params.maxStorageGb !== undefined ? params.maxStorageGb : 50,
-        max_ai_credits_monthly: params.maxAiCreditsMonthly !== undefined ? params.maxAiCreditsMonthly : 1000,
-        billing_email: params.billingEmail?.trim() || null,
-        brand_colors: params.brandColors || { primary: '#0f172a', secondary: '#2563eb', accent: '#d97706' }
-      })
-      .select()
-      .single()
-
-    if (error) throw error
-
-    // Create subscription if plan specified
-    if (params.planId) {
-      await supabase.from('subscriptions').insert({
-        organization_id: org.id,
-        plan_id: params.planId,
-        status: params.lifecycleStatus === 'trial' ? 'trialing' : 'active',
-        current_period_start: new Date().toISOString(),
-        current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
-      })
-    }
-
-    // Optional bootstrap: create an initial brand
-    if (params.initialBrandName?.trim()) {
-      await supabase
-        .from('brands')
-        .insert({
-          organization_id: org.id,
-          name: params.initialBrandName.trim(),
-          is_active: true,
-          is_deleted: false
-        })
-    }
-
-    // Audit log
-    await this.logPlatformAction({
-      action: 'create_organization',
-      resourceType: 'organization',
-      resourceId: org.id,
-      targetOrgId: org.id,
-      actorId: params.actorId,
-      metadata: {
-        name: params.name,
-        slug: params.slug,
-        planId: params.planId,
-        maxLearners: params.maxLearners,
-        lifecycleStatus: params.lifecycleStatus
-      }
+    ownerEmail?: string
+    ownerName?: string
+  }): Promise<{ organization: Organization; owner: OrganizationOwnerResult }> {
+    // Org, subscription, brand, standard departments, default category and
+    // certificate template, and the audit entry are created in one transaction.
+    const { data: org, error } = await supabase.rpc('provision_organization', {
+      p_name: params.name,
+      p_slug: params.slug,
+      p_name_ar: params.nameAr || undefined,
+      p_industry: params.industry || undefined,
+      p_lifecycle_status: params.lifecycleStatus || undefined,
+      p_trial_ends_at: params.trialEndsAt || undefined,
+      p_max_learners: params.maxLearners,
+      p_max_storage_gb: params.maxStorageGb,
+      p_max_ai_credits_monthly: params.maxAiCreditsMonthly,
+      p_billing_email: params.billingEmail || undefined,
+      p_brand_colors: params.brandColors,
+      p_plan_id: params.planId || undefined,
+      p_initial_brand_name: params.initialBrandName || undefined,
     })
 
-    return org as unknown as Organization
+    if (error) throw error
+    const organization = org as unknown as Organization
+
+    const ownerEmail = params.ownerEmail?.trim().toLowerCase()
+    if (!ownerEmail) return { organization, owner: { status: 'skipped' } }
+
+    try {
+      const result = await this.assignOrganizationOwner(organization.id, ownerEmail, params.ownerName)
+      return { organization, owner: result }
+    } catch (err) {
+      return {
+        organization,
+        owner: { status: 'failed', error: err instanceof Error ? err.message : String(err) },
+      }
+    }
+  },
+
+  /** Invites the owner if they have no account yet, then makes them organization_owner. */
+  async assignOrganizationOwner(
+    orgId: string,
+    email: string,
+    fullName?: string
+  ): Promise<OrganizationOwnerResult> {
+    const normalizedEmail = email.trim().toLowerCase()
+    let userId: string | undefined
+    let invited = false
+
+    const { data: existingProfile } = await supabase
+      .from('profiles')
+      .select('id')
+      .ilike('email', normalizedEmail)
+      .maybeSingle()
+
+    if (existingProfile?.id) {
+      userId = existingProfile.id
+    } else {
+      const appUrl = (import.meta.env.VITE_APP_URL || window.location.origin).replace(/\/$/, '')
+      // create-user caps at organization_admin; promotion to owner happens below.
+      const { data, error } = await supabase.functions.invoke('create-user', {
+        body: {
+          email: normalizedEmail,
+          fullName: fullName?.trim() || undefined,
+          role: 'administrator',
+          provisioningMethod: 'invite',
+          appUrl,
+          organizationId: orgId,
+        },
+      })
+
+      if (error || data?.error) {
+        let detail = data?.error || error?.message || 'Failed to invite the organization owner.'
+        const context = (error as { context?: { json?: () => Promise<{ error?: string }> } } | null)?.context
+        if (typeof context?.json === 'function') {
+          try {
+            const body = await context.json()
+            if (body?.error) detail = body.error
+          } catch {
+            // keep the generic message
+          }
+        }
+        throw new Error(detail)
+      }
+
+      userId = data?.userId
+      invited = true
+    }
+
+    if (!userId) throw new Error('Could not resolve the owner account.')
+
+    const { error: membershipError } = await supabase.rpc('platform_set_membership', {
+      p_org_id: orgId,
+      p_user_id: userId,
+      p_role: 'organization_owner',
+    })
+    if (membershipError) throw membershipError
+
+    return { status: invited ? 'invited' : 'existing_user', userId, email: normalizedEmail }
   },
 
   async updateOrganizationEntitlements(orgId: string, params: {
@@ -1297,18 +1334,17 @@ export const platformService = {
     actorId?: string | null
     metadata?: Record<string, unknown>
   }): Promise<void> {
-    try {
-      await supabase.from('platform_audit_logs').insert({
-        action: params.action,
-        resource_type: params.resourceType,
-        resource_id: params.resourceId || null,
-        target_organization_id: params.targetOrgId || null,
-        session_id: params.sessionId || null,
-        actor_id: params.actorId || null,
-        metadata: (params.metadata || {}) as Json
-      })
-    } catch (err) {
-      console.warn('Failed to write platform audit log:', err)
+    // actorId is not sent: the server records auth.uid() so the actor can't be spoofed.
+    const { error } = await supabase.rpc('log_platform_action', {
+      p_action: params.action,
+      p_resource_type: params.resourceType,
+      p_resource_id: params.resourceId || undefined,
+      p_target_org_id: params.targetOrgId || undefined,
+      p_session_id: params.sessionId || undefined,
+      p_metadata: (params.metadata || {}) as Json,
+    })
+    if (error) {
+      console.warn('Failed to write platform audit log:', error)
     }
   },
 

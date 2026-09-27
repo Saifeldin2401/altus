@@ -115,7 +115,9 @@ export default function OrganizationsHub() {
   const [newOrgStatus, setNewOrgStatus] = useState<'active' | 'trial' | 'onboarding' | 'prospect'>('active')
   const [newTrialEndsAt, setNewTrialEndsAt] = useState('')
   const [newBillingEmail, setNewBillingEmail] = useState('')
-  
+  const [ownerName, setOwnerName] = useState('')
+  const [ownerEmail, setOwnerEmail] = useState('')
+
   // Plan & Quota Fields
   const [selectedPlanId, setSelectedPlanId] = useState<string>('')
   const [maxLearners, setMaxLearners] = useState<number>(100)
@@ -176,9 +178,19 @@ export default function OrganizationsHub() {
       return
     }
 
+    const trimmedOwnerEmail = ownerEmail.trim()
+    if (trimmedOwnerEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedOwnerEmail)) {
+      toast({
+        title: t('common:error', 'Error'),
+        description: 'Please enter a valid owner email address.',
+        variant: 'destructive'
+      })
+      return
+    }
+
     setIsCreating(true)
     try {
-      await platformService.createOrganization({
+      const { owner } = await platformService.createOrganization({
         name: newOrgName,
         nameAr: newOrgNameAr,
         slug: newOrgSlug,
@@ -196,13 +208,28 @@ export default function OrganizationsHub() {
           accent: accentColor
         },
         initialBrandName: initialBrandName || undefined,
-        actorId: user?.id
+        ownerEmail: trimmedOwnerEmail || undefined,
+        ownerName: ownerName.trim() || undefined
       })
 
-      toast({
-        title: t('common:success', 'Success'),
-        description: t('admin:org_created_success', 'New customer organization provisioned with custom quotas.')
-      })
+      if (owner.status === 'failed') {
+        toast({
+          title: t('admin:org_created_owner_failed_title', 'Organization created, but the owner was not added'),
+          description: `${owner.error} You can invite the owner from the organization's user management.`,
+          variant: 'destructive'
+        })
+      } else {
+        const ownerNote =
+          owner.status === 'invited'
+            ? ` An invitation was sent to ${owner.email}.`
+            : owner.status === 'existing_user'
+              ? ` ${owner.email} already had an account and is now the owner.`
+              : ''
+        toast({
+          title: t('common:success', 'Success'),
+          description: t('admin:org_created_success', 'New customer organization provisioned with custom quotas.') + ownerNote
+        })
+      }
 
       setIsCreateOpen(false)
       // Reset form
@@ -210,6 +237,8 @@ export default function OrganizationsHub() {
       setNewOrgNameAr('')
       setNewOrgSlug('')
       setNewBillingEmail('')
+      setOwnerName('')
+      setOwnerEmail('')
       setInitialBrandName('')
       setCreateTab('identity')
       await loadData()
@@ -485,6 +514,42 @@ export default function OrganizationsHub() {
                         />
                       </div>
                     )}
+
+                    <div className="pt-3 border-t space-y-3">
+                      <div>
+                        <p className="text-xs font-semibold">Organization Owner</p>
+                        <p className="text-[11px] text-muted-foreground">
+                          Optional. New users get an invitation email; existing users become the owner right away.
+                        </p>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                          <Label htmlFor="owner-name" className="text-xs font-semibold">
+                            Owner Full Name
+                          </Label>
+                          <Input
+                            id="owner-name"
+                            value={ownerName}
+                            onChange={(e) => setOwnerName(e.target.value)}
+                            placeholder="e.g. Sara Al-Otaibi"
+                            className="h-9 text-xs"
+                          />
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label htmlFor="owner-email" className="text-xs font-semibold">
+                            Owner Email
+                          </Label>
+                          <Input
+                            id="owner-email"
+                            type="email"
+                            value={ownerEmail}
+                            onChange={(e) => setOwnerEmail(e.target.value)}
+                            placeholder="owner@hotelgroup.com"
+                            className="h-9 text-xs"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </TabsContent>
 
                   {/* TAB 2: PLAN & QUOTAS */}

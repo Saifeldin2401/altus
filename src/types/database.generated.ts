@@ -12618,6 +12618,17 @@ export type Database = {
             }
             Returns: undefined
           }
+      log_platform_action: {
+        Args: {
+          p_action: string
+          p_metadata?: Json
+          p_resource_id?: string
+          p_resource_type: string
+          p_session_id?: string
+          p_target_org_id?: string
+        }
+        Returns: undefined
+      }
       log_security_audit_event_v2: {
         Args: {
           p_action: string
@@ -12733,6 +12744,24 @@ export type Database = {
           p_visibility?: string
         }
         Returns: Json
+      }
+      provision_organization: {
+        Args: {
+          p_billing_email?: string
+          p_brand_colors?: Json
+          p_industry?: string
+          p_initial_brand_name?: string
+          p_lifecycle_status?: string
+          p_max_ai_credits_monthly?: number
+          p_max_learners?: number
+          p_max_storage_gb?: number
+          p_name: string
+          p_name_ar?: string
+          p_plan_id?: string
+          p_slug: string
+          p_trial_ends_at?: string
+        }
+        Returns: Database["public"]["Tables"]["organizations"]["Row"]
       }
       purge_archived_organizations: { Args: never; Returns: number }
       rebuild_document_search_index: { Args: never; Returns: number }

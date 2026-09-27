@@ -14,11 +14,9 @@ const adminClient = createClient(supabaseUrl, serviceRoleKey, {
 const DEFAULT_ALLOWED_ORIGINS = [
   "https://phg-connect.com",
   "https://www.phg-connect.com",
-  "https://prime-hotels-intranet.vercel.app",
+  "https://altus-connect.com",
+  "https://www.altus-connect.com",
   "https://altus-hospitality-erp.vercel.app",
-  "https://altus-advisory.com",
-  "https://www.altus-advisory.com",
-  "https://connect.altusadvisory.com",
   "http://localhost:5173",
   "http://127.0.0.1:5173",
   "http://localhost:3000",
