@@ -251,8 +251,8 @@ export function StudioInteractiveOutline({
                             {lesson.title}
                           </span>
                           {Boolean((lesson.visualAssets && lesson.visualAssets.length > 0) || (lesson as any).visualAsset) && (
-                            <Badge variant="outline" className="text-[8px] h-4 px-1 bg-orange-50 text-orange-700 dark:bg-orange-950/50 dark:text-orange-300 border-orange-200 gap-0.5">
-                              <ImageIcon className="w-2.5 h-2.5" /> Visual
+                            <Badge variant="outline" className="text-[9px] px-1.5 py-0.5 bg-orange-50 text-orange-700 dark:bg-orange-950/50 dark:text-orange-300 border-orange-200 gap-0.5 shrink-0 whitespace-nowrap">
+                              <ImageIcon className="w-2.5 h-2.5 shrink-0" /> Visual
                             </Badge>
                           )}
                         </div>
@@ -333,7 +333,7 @@ export function StudioInteractiveOutline({
                           {mod.moduleQuiz.title || `Module ${mIdx + 1} Knowledge Check`}
                         </span>
                       </div>
-                      <Badge className="bg-emerald-600 text-white text-[9px] h-4">
+                      <Badge className="bg-emerald-600 text-white text-[9px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
                         {mod.moduleQuiz.questions?.length || 0} Questions ({mod.moduleQuiz.passingScore || 80}% Pass)
                       </Badge>
                     </div>

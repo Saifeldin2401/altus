@@ -154,6 +154,7 @@ Deno.serve(async (req: Request) => {
     });
 
     let isAuthorizedTenantAdmin = !!isOp;
+    let callerAdminOrgIds: string[] = [];
 
     if (!isAuthorizedTenantAdmin) {
       // Verify caller and target user share an active organization where caller has administrative authority
@@ -163,7 +164,7 @@ Deno.serve(async (req: Request) => {
         .eq("user_id", user.id)
         .eq("is_active", true);
 
-      const adminOrgIds = (callerMemberships || [])
+      callerAdminOrgIds = (callerMemberships || [])
         .filter((m) =>
           [
             "organization_owner",
@@ -173,13 +174,13 @@ Deno.serve(async (req: Request) => {
         )
         .map((m) => m.organization_id);
 
-      if (adminOrgIds.length > 0) {
+      if (callerAdminOrgIds.length > 0) {
         const { data: targetMembership } = await adminClient
           .from("organization_memberships")
           .select("id")
           .eq("user_id", userIdRaw)
           .eq("is_active", true)
-          .in("organization_id", adminOrgIds)
+          .in("organization_id", callerAdminOrgIds)
           .limit(1)
           .maybeSingle();
 
@@ -212,6 +213,101 @@ Deno.serve(async (req: Request) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         },
       );
+    }
+
+    if (!isOp) {
+      // Tenant Admin Scope: Never unconditionally destroy auth.users across other tenants
+      const requestedOrgId = typeof body?.organizationId === "string" ? body.organizationId.trim() : "";
+      const orgsToRemove = requestedOrgId && callerAdminOrgIds.includes(requestedOrgId)
+        ? [requestedOrgId]
+        : callerAdminOrgIds;
+
+      // 1. Remove target user from caller's tenant organization(s)
+      const { error: memDeleteError } = await adminClient
+        .from("organization_memberships")
+        .delete()
+        .eq("user_id", userIdRaw)
+        .in("organization_id", orgsToRemove);
+
+      if (memDeleteError) {
+        return new Response(
+          JSON.stringify({ error: `Failed to remove organization membership: ${memDeleteError.message}` }),
+          {
+            status: 500,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
+      }
+
+      // 2. Check if the target user retains active memberships in other customer tenants
+      const { data: remainingMemberships } = await adminClient
+        .from("organization_memberships")
+        .select("id, organization_id")
+        .eq("user_id", userIdRaw)
+        .eq("is_active", true);
+
+      if (remainingMemberships && remainingMemberships.length > 0) {
+        // User is still active in other tenants; re-home their profile to an existing tenant
+        await adminClient
+          .from("profiles")
+          .update({ organization_id: remainingMemberships[0].organization_id })
+          .eq("id", userIdRaw)
+          .in("organization_id", orgsToRemove);
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            hardDeleted: false,
+            membershipRemoved: true,
+            remainingTenants: remainingMemberships.length,
+            userId: userIdRaw,
+            message: "User was removed from this organization. Account remains active in other organizations.",
+          }),
+          {
+            status: 200,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
+      }
+
+      // 3. User has zero memberships remaining anywhere on the platform; delete auth account
+      const { error: deleteError } = await adminClient.auth.admin.deleteUser(
+        userIdRaw,
+        false,
+      );
+      if (deleteError) {
+        return new Response(
+          JSON.stringify({
+            error: `Failed to hard delete user: ${deleteError.message}`,
+          }),
+          {
+            status: 500,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          hardDeleted: true,
+          membershipRemoved: true,
+          userId: userIdRaw,
+        }),
+        {
+          status: 200,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        },
+      );
+    }
+
+    // Platform Operator Scope: Can hard delete user globally or from a specific org
+    if (typeof body?.organizationId === "string" && isUuid(body.organizationId)) {
+      await adminClient
+        .from("organization_memberships")
+        .delete()
+        .eq("user_id", userIdRaw)
+        .eq("organization_id", body.organizationId);
     }
 
     const { error: deleteError } = await adminClient.auth.admin.deleteUser(

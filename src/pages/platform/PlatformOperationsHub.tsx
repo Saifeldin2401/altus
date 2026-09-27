@@ -90,12 +90,12 @@ export default function PlatformOperationsHub() {
           <Table>
             <TableHeader className="bg-muted/40">
               <TableRow>
-                <TableHead className="text-xs font-bold">Task Mode & ID</TableHead>
-                <TableHead className="text-xs font-bold">Models & Providers</TableHead>
-                <TableHead className="text-xs font-bold">Status</TableHead>
-                <TableHead className="text-xs font-bold">Duration</TableHead>
-                <TableHead className="text-xs font-bold">Dispatched</TableHead>
-                <TableHead className="text-xs font-bold text-end">Action</TableHead>
+                <TableHead className="text-xs font-bold min-w-[220px]">Task Mode & ID</TableHead>
+                <TableHead className="text-xs font-bold min-w-[180px]">Models & Providers</TableHead>
+                <TableHead className="text-xs font-bold min-w-[110px] whitespace-nowrap">Status</TableHead>
+                <TableHead className="text-xs font-bold min-w-[100px] whitespace-nowrap">Duration</TableHead>
+                <TableHead className="text-xs font-bold min-w-[130px] whitespace-nowrap">Dispatched</TableHead>
+                <TableHead className="text-xs font-bold min-w-[100px] text-end whitespace-nowrap">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -115,7 +115,7 @@ export default function PlatformOperationsHub() {
               ) : (
                 filteredJobs.map((j) => (
                   <TableRow key={j.id} className="hover:bg-muted/30">
-                    <TableCell>
+                    <TableCell className="min-w-[220px]">
                       <div className="font-semibold text-xs capitalize">{j.mode || 'AI Course Generation'}</div>
                       <div className="text-[10px] text-muted-foreground font-mono">{j.id}</div>
                       {j.error_message && (
@@ -125,44 +125,44 @@ export default function PlatformOperationsHub() {
                       )}
                     </TableCell>
 
-                    <TableCell>
+                    <TableCell className="min-w-[180px]">
                       <div className="flex flex-wrap gap-1">
                         {j.models_used && j.models_used.length > 0 ? (
                           j.models_used.map((m, idx) => (
-                            <Badge key={idx} variant="outline" className="text-[9px] font-mono">
+                            <Badge key={idx} variant="outline" className="text-[9px] font-mono whitespace-nowrap shrink-0">
                               {m}
                             </Badge>
                           ))
                         ) : (
-                          <span className="text-[10px] text-muted-foreground">Automated Cascade</span>
+                          <span className="text-[10px] text-muted-foreground whitespace-nowrap">Automated Cascade</span>
                         )}
                       </div>
                     </TableCell>
 
-                    <TableCell>
+                    <TableCell className="whitespace-nowrap">
                       <Badge
                         variant="outline"
-                        className={`text-[10px] capitalize ${
- j.status === 'completed' || j.status === 'success'
- ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
- : j.status === 'failed' || j.status === 'error'
- ? 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
- : 'bg-ds-warning-soft text-ds-warning border-ds-warning/30'
- }`}
+                        className={`text-[10px] capitalize whitespace-nowrap shrink-0 ${
+                          j.status === 'completed' || j.status === 'success'
+                            ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
+                            : j.status === 'failed' || j.status === 'error'
+                            ? 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
+                            : 'bg-ds-warning-soft text-ds-warning border-ds-warning/30'
+                        }`}
                       >
                         {j.status}
                       </Badge>
                     </TableCell>
 
-                    <TableCell className="text-xs font-mono">
+                    <TableCell className="text-xs font-mono whitespace-nowrap">
                       {j.duration_ms ? `${(j.duration_ms / 1000).toFixed(1)}s` : '—'}
                     </TableCell>
 
-                    <TableCell className="text-[11px] text-muted-foreground">
+                    <TableCell className="text-[11px] text-muted-foreground whitespace-nowrap">
                       {format(new Date(j.created_at), 'dd MMM HH:mm:ss')}
                     </TableCell>
 
-                    <TableCell className="text-end">
+                    <TableCell className="text-end whitespace-nowrap">
                       {(j.status === 'failed' || j.status === 'error') && (
                         <Button
                           size="sm"

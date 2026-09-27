@@ -7,9 +7,11 @@ import type { DocumentFolder } from './types'
 
 export function useDocumentFolders(parentId?: string | null) {
   const { primaryRole } = useAuth()
+  const { currentOrganization } = useTenant()
+  const orgId = currentOrganization?.id
 
   return useQuery({
-    queryKey: ['document-folders', parentId, primaryRole],
+    queryKey: ['document-folders', orgId, parentId, primaryRole],
     queryFn: async () => {
       let query = supabase
         .from('document_folders')
@@ -19,6 +21,10 @@ export function useDocumentFolders(parentId?: string | null) {
           document_count:documents(count)
         `)
         .order('name', { ascending: true })
+
+      if (orgId) {
+        query = query.eq('organization_id', orgId)
+      }
 
       if (parentId === null) {
         query = query.is('parent_id', null)

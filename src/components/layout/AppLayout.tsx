@@ -118,12 +118,12 @@ export function AppLayout({ children }: AppLayoutProps) {
 
         {/* Workspace rail (desktop) */}
         {!isImmersiveOrFocusedPage && (
-          <aside className="hidden lg:fixed lg:inset-y-0 lg:z-30 lg:flex lg:w-[264px] lg:flex-col">
+          <aside className="hidden lg:fixed lg:inset-y-0 lg:z-30 lg:flex lg:w-[240px] lg:flex-col">
             <ShellSidebar />
           </aside>
         )}
 
-        <div className={`flex min-w-0 w-full max-w-full flex-1 flex-col overflow-x-hidden ${!isImmersiveOrFocusedPage ? 'lg:ps-[264px]' : ''}`}>
+        <div className={`flex min-w-0 w-full max-w-full flex-1 flex-col overflow-x-hidden ${!isImmersiveOrFocusedPage ? 'lg:ps-[240px]' : ''}`}>
           <PlatformImpersonationBanner />
           <RoleChangeAlertBanner />
           <TopBar

@@ -53,7 +53,6 @@ export function StepPublish({
   publishTraining,
   auditResult,
   onOpenAuditModal,
-  isRTL,
 }: StepPublishProps) {
   const { t } = useTranslation('training')
 
@@ -96,7 +95,7 @@ export function StepPublish({
 
         <Card className="shadow-sm border-slate-200">
           <CardHeader>
-            <CardTitle className={cn("text-lg font-semibold", isRTL ? 'text-end' : 'text-start')}>{t('builder.publishTitle', 'Review & Publish Course')}</CardTitle>
+            <CardTitle className={cn("text-lg font-semibold", 'text-start')}>{t('builder.publishTitle', 'Review & Publish Course')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid md:grid-cols-3 gap-4">
@@ -129,7 +128,7 @@ export function StepPublish({
                 <div className="text-xs uppercase tracking-wide text-slate-500 font-bold">{t('builder.publishChecklist', 'Pre-Flight Checklist')}</div>
                 <div className="mt-3 space-y-2 text-sm">
                   {validationChecklist.map((item) => (
-                    <div key={item.key} className={cn("flex items-center justify-between gap-2", isRTL ? "flex-row-reverse" : "")}>
+                    <div key={item.key} className={cn("flex items-center justify-between gap-2")}>
                       <div className="flex items-center gap-2">
                         {item.ok ? (
                           <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
@@ -159,7 +158,7 @@ export function StepPublish({
               </div>
             </div>
 
-            <div className={cn("flex items-center justify-end gap-3", isRTL ? "flex-row-reverse" : "")}>
+            <div className={cn("flex items-center justify-end gap-3")}>
               <Button variant="outline" onClick={handleSave} disabled={builderBusy}>
                 {t('builder.saveDraft', 'Save Draft')}
               </Button>

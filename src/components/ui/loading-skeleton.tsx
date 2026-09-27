@@ -64,7 +64,7 @@ function LoadingSkeleton({
           <div className="space-y-2">
             <div className={cn(baseClasses, 'h-8 w-full')} />
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="flex space-x-4">
+              <div key={i} className="flex gap-x-4">
                 <div className={cn(baseClasses, 'h-8 w-16')} />
                 <div className={cn(baseClasses, 'h-8 w-32')} />
                 <div className={cn(baseClasses, 'h-8 w-24')} />

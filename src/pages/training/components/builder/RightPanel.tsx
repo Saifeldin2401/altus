@@ -88,11 +88,11 @@ export function RightPanel({
   // -------------------------------------------------------------------------
   if (builderStep === 'content') {
     return (
-      <div className={cn("p-3 space-y-3 w-full max-w-full box-border", isRTL ? "text-end" : "text-start")}>
+      <div className={cn("p-3 space-y-3 w-full max-w-full box-border", "text-start")}>
         {/* Course Health & Readiness Card */}
         <Card className="w-full shadow-xs border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden">
           <CardHeader className="pb-2 pt-3 px-3">
-            <div className={cn("flex items-center justify-between gap-1.5", isRTL ? "flex-row-reverse" : "")}>
+            <div className={cn("flex items-center justify-between gap-1.5")}>
               <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5 shrink-0">
                 <Target className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                 <span>{t('builder.courseReadiness', 'Course Health')}</span>
@@ -118,34 +118,34 @@ export function RightPanel({
         {/* Course Curriculum Snapshot */}
         <Card className="w-full shadow-xs border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden">
           <CardHeader className="pb-2 pt-3 px-3">
-            <CardTitle className={cn("text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5", isRTL ? 'flex-row-reverse' : '')}>
+            <CardTitle className={cn("text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5")}>
               <Layers className="w-3.5 h-3.5 text-slate-500 shrink-0" />
               <span>{t('builder.courseSnapshot', 'Curriculum Stats')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="px-3 pb-3 space-y-2 text-xs">
-            <div className={cn("flex items-center justify-between gap-1.5", isRTL ? "flex-row-reverse" : "")}>
+            <div className={cn("flex items-center justify-between gap-1.5")}>
               <span className="text-muted-foreground text-[11px]">{t('builder.sectionsCount', 'Sections')}</span>
-              <Badge variant="secondary" className="font-semibold text-[11px] h-5 px-1.5 bg-slate-100 dark:bg-slate-800">
+              <Badge variant="secondary" className="font-semibold text-[11px] px-2 py-0.5 shrink-0 whitespace-nowrap bg-slate-100 dark:bg-slate-800">
                 {sections.length}
               </Badge>
             </div>
-            <div className={cn("flex items-center justify-between gap-1.5", isRTL ? "flex-row-reverse" : "")}>
+            <div className={cn("flex items-center justify-between gap-1.5")}>
               <span className="text-muted-foreground text-[11px]">{t('builder.lessonsCount', 'Lesson Items')}</span>
-              <Badge variant="secondary" className="font-semibold text-[11px] h-5 px-1.5 bg-slate-100 dark:bg-slate-800">
+              <Badge variant="secondary" className="font-semibold text-[11px] px-2 py-0.5 shrink-0 whitespace-nowrap bg-slate-100 dark:bg-slate-800">
                 {totalItems}
               </Badge>
             </div>
-            <div className={cn("flex items-center justify-between gap-1.5", isRTL ? "flex-row-reverse" : "")}>
+            <div className={cn("flex items-center justify-between gap-1.5")}>
               <span className="text-muted-foreground text-[11px]">{t('builder.quizzesCount', 'Quiz Checkpoints')}</span>
-              <Badge variant="outline" className="font-semibold text-[11px] h-5 px-1.5 text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/50 border-purple-200">
+              <Badge variant="outline" className="font-semibold text-[11px] px-2 py-0.5 shrink-0 whitespace-nowrap text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/50 border-purple-200">
                 {totalQuizzes}
               </Badge>
             </div>
-            <div className={cn("flex items-center justify-between gap-1.5", isRTL ? "flex-row-reverse" : "")}>
+            <div className={cn("flex items-center justify-between gap-1.5")}>
               <span className="text-muted-foreground text-[11px]">{t('builder.estimatedTime', 'Est. Duration')}</span>
-              <Badge variant="secondary" className="font-semibold text-[11px] h-5 px-1.5 flex items-center gap-1 bg-slate-100 dark:bg-slate-800">
-                <Clock className="w-3 h-3 text-slate-400" />
+              <Badge variant="secondary" className="font-semibold text-[11px] px-2 py-0.5 shrink-0 whitespace-nowrap flex items-center gap-1 bg-slate-100 dark:bg-slate-800">
+                <Clock className="w-3 h-3 text-slate-400 shrink-0" />
                 <span>{displayDuration || calculatedDuration || 0}m</span>
               </Badge>
             </div>
@@ -155,14 +155,14 @@ export function RightPanel({
         {/* AI Quick Actions Card */}
         <Card className="w-full shadow-xs border-amber-200 dark:border-amber-900/60 bg-amber-50/50 dark:bg-amber-950/20 overflow-hidden">
           <CardHeader className="pb-2 pt-3 px-3">
-            <CardTitle className={cn("text-xs font-bold uppercase tracking-wider text-amber-900 dark:text-amber-300 flex items-center gap-1.5", isRTL ? 'flex-row-reverse' : '')}>
+            <CardTitle className={cn("text-xs font-bold uppercase tracking-wider text-amber-900 dark:text-amber-300 flex items-center gap-1.5")}>
               <Sparkles className="w-3.5 h-3.5 text-amber-600 shrink-0" />
               <span>{t('builder.smartAiAssistant', 'Smart AI Assistant')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="px-3 pb-3 space-y-2">
             <Button
-              className={cn("w-full bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-bold text-xs shadow-xs border-none h-8 px-2 flex items-center justify-center gap-1.5", isRTL ? "flex-row-reverse" : "")}
+              className={cn("w-full bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-bold text-xs shadow-xs border-none h-8 px-2 flex items-center justify-center gap-1.5")}
               onClick={() => setShowSmartWizard(true)}
             >
               <Sparkles className="w-3.5 h-3.5 shrink-0 text-slate-950" />
@@ -171,7 +171,7 @@ export function RightPanel({
             {setShowKBSidebar && (
               <Button
                 variant="outline"
-                className={cn("w-full border-emerald-200 dark:border-emerald-800/80 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-xs font-semibold h-8 px-2 flex items-center justify-center gap-1.5", isRTL ? "flex-row-reverse" : "")}
+                className={cn("w-full border-emerald-200 dark:border-emerald-800/80 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-xs font-semibold h-8 px-2 flex items-center justify-center gap-1.5")}
                 onClick={() => setShowKBSidebar(true)}
               >
                 <BookOpen className="w-3.5 h-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
@@ -190,8 +190,7 @@ export function RightPanel({
             <Card className="w-full shadow-xs border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden">
               <CardHeader className="pb-2 pt-3 px-3">
                 <CardTitle className={cn(
-                  'text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5',
-                  isRTL ? 'flex-row-reverse' : ''
+                  'text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5'
                 )}>
                   <Eye className="w-3.5 h-3.5 text-slate-500 shrink-0" />
                   <span className="truncate">{t('builder.inlinePreview.livePreview', 'Active Section Preview')}</span>
@@ -265,10 +264,10 @@ export function RightPanel({
   // -------------------------------------------------------------------------
   if (builderStep === 'rules') {
     return (
-      <div className={cn("p-3 space-y-3 w-full max-w-full box-border", isRTL ? "text-end" : "text-start")}>
+      <div className={cn("p-3 space-y-3 w-full max-w-full box-border", "text-start")}>
         <Card className="w-full shadow-xs border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden">
           <CardHeader className="pb-2 pt-3 px-3">
-            <CardTitle className={cn("text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5", isRTL ? 'flex-row-reverse' : '')}>
+            <CardTitle className={cn("text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5")}>
               <ShieldCheck className="w-3.5 h-3.5 text-amber-600 shrink-0" />
               <span>{t('builder.rulesSummary', 'Configured Rules Summary')}</span>
             </CardTitle>
@@ -294,7 +293,7 @@ export function RightPanel({
         {/* 5-Star Hotel Training Recommendations */}
         <Card className="w-full shadow-xs border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 overflow-hidden">
           <CardHeader className="pb-2 pt-3 px-3">
-            <CardTitle className={cn("text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5", isRTL ? 'flex-row-reverse' : '')}>
+            <CardTitle className={cn("text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5")}>
               <HelpCircle className="w-3.5 h-3.5 text-slate-400 shrink-0" />
               <span>{t('builder.bestPractices', 'ALTUS Guidelines')}</span>
             </CardTitle>
@@ -314,17 +313,17 @@ export function RightPanel({
   // -------------------------------------------------------------------------
   if (builderStep === 'preview' || builderStep === 'publish') {
     return (
-      <div className={cn("p-3 space-y-3 w-full max-w-full box-border", isRTL ? "text-end" : "text-start")}>
+      <div className={cn("p-3 space-y-3 w-full max-w-full box-border", "text-start")}>
         <Card className="w-full shadow-xs border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden">
           <CardHeader className="pb-2 pt-3 px-3">
-            <CardTitle className={cn("text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5", isRTL ? "flex-row-reverse" : "")}>
+            <CardTitle className={cn("text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5")}>
               <ListChecks className="w-3.5 h-3.5 text-amber-600 shrink-0" />
               <span>{t('builder.publishChecklist', 'Pre-Flight Checklist')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="px-3 pb-3 space-y-2 text-xs">
             {validationChecklist.map((item) => (
-              <div key={item.key} className={cn("flex items-center gap-2", isRTL ? "flex-row-reverse" : "")}>
+              <div key={item.key} className={cn("flex items-center gap-2")}>
                 {item.ok ? (
                   <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
                 ) : (

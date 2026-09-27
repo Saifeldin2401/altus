@@ -88,11 +88,10 @@ export const BuilderHeader = ({
   return (
     <header className="sticky top-0 z-50 w-full border-b border-ds-border bg-ds-surface text-ds-ink shadow-none">
       <div className={cn(
-        "px-3 lg:px-5 flex h-14 items-center justify-between gap-2.5",
-        isRTL ? "flex-row-reverse" : ""
+        "px-3 lg:px-5 flex h-14 items-center justify-between gap-2.5"
       )}>
         {/* Left Section: Back, Title & Status */}
-        <div className={cn("flex items-center gap-2 min-w-0 max-w-[420px] xl:max-w-[480px]", isRTL ? "flex-row-reverse" : "")}>
+        <div className={cn("flex items-center gap-2 min-w-0 max-w-[420px] xl:max-w-[480px]")}>
           <Button
             variant="ghost"
             size="icon"
@@ -103,7 +102,7 @@ export const BuilderHeader = ({
             <ChevronLeft className={cn("h-4 w-4", isRTL && "rotate-180")} />
           </Button>
 
-          <div className={cn("flex items-center gap-1.5 min-w-0 flex-1 flex-wrap sm:flex-nowrap", isRTL ? "flex-row-reverse text-end" : "text-start")}>
+          <div className={cn("flex items-center gap-1.5 min-w-0 flex-1 flex-wrap sm:flex-nowrap", "text-start")}>
             <div className={cn(
               "relative flex items-center w-full max-w-[240px] xl:max-w-[280px] rounded-md border transition-colors duration-150",
               !title.trim() || title === 'Untitled Module'
@@ -119,7 +118,7 @@ export const BuilderHeader = ({
                 placeholder={t('builder.nameYourCourse', 'Enter Course Title...')}
                 className={cn(
                   "h-8 border-none bg-transparent shadow-none px-1 text-xs font-bold text-foreground focus-visible:ring-0 truncate",
-                  isRTL ? "text-end" : "text-start"
+                  "text-start"
                 )}
                 title={t('builder.clickToRename', 'Click to edit course name')}
               />
@@ -141,13 +140,13 @@ export const BuilderHeader = ({
               />
             )}
             {isMasterTemplate && (
-              <Badge variant="outline" className="h-5 px-1.5 text-[10px] font-semibold bg-indigo-50 text-indigo-800 dark:bg-indigo-950/70 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800 shrink-0 flex items-center gap-1 rounded-sm">
-                <Crown className="w-3 h-3 text-indigo-600 dark:text-indigo-400" />
+              <Badge variant="outline" className="px-2 py-0.5 min-h-[20px] text-[10px] font-semibold bg-indigo-50 text-indigo-800 dark:bg-indigo-950/70 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800 shrink-0 whitespace-nowrap flex items-center gap-1 rounded-sm">
+                <Crown className="w-3 h-3 text-indigo-600 dark:text-indigo-400 shrink-0" />
                 <span className="hidden sm:inline">{t('builder.globalMasterTemplate', 'Global Master')}</span>
               </Badge>
             )}
             {hasUnsavedChanges && (
-              <Badge variant="outline" className="h-5 px-1.5 text-[9px] uppercase font-mono bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800 shrink-0 rounded-sm">
+              <Badge variant="outline" className="px-2 py-0.5 min-h-[20px] text-[9px] uppercase font-mono bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800 shrink-0 whitespace-nowrap rounded-sm">
                 {t('builder.unsaved', 'Unsaved')}
               </Badge>
             )}
@@ -157,8 +156,7 @@ export const BuilderHeader = ({
         {/* Center Section: Streamlined Step Navigation */}
         {steps && steps.length > 0 && onStepChange && (
           <nav className={cn(
-            "hidden md:flex items-center gap-1 p-1 rounded-md bg-ds-surface-subtle border border-ds-border",
-            isRTL ? "flex-row-reverse" : ""
+            "hidden md:flex items-center gap-1 p-1 rounded-md bg-ds-surface-subtle border border-ds-border"
           )}>
             {steps.map((step, index) => {
               const isActive = activeStep === step.key
@@ -199,10 +197,10 @@ export const BuilderHeader = ({
         )}
 
         {/* Right Section: Undo/Redo, Autosave, Tools & Actions */}
-        <div className={cn("flex items-center gap-1.5 shrink-0", isRTL ? "flex-row-reverse" : "")}>
+        <div className={cn("flex items-center gap-1.5 shrink-0")}>
           {/* Undo / Redo */}
           {onUndo && onRedo && (
-            <div className={cn("hidden lg:flex items-center gap-0.5 pe-1 border-e border-ds-border", isRTL ? "flex-row-reverse" : "")}>
+            <div className={cn("hidden lg:flex items-center gap-0.5 pe-1 border-e border-ds-border")}>
               <Button
                 variant="ghost"
                 size="icon"
@@ -257,7 +255,7 @@ export const BuilderHeader = ({
             )}
             title="Smart Course AI Generator (Ctrl+Shift+A)"
           >
-            <Wand2 className={cn("h-3.5 w-3.5 text-ds-brass", isRTL ? "ms-1.5" : "me-1.5")} />
+            <Wand2 className={cn("h-3.5 w-3.5 text-ds-brass", "me-1.5")} />
             <span>{t('builder.aiAssistant', 'AI Assistant')}</span>
           </Button>
 
@@ -265,10 +263,10 @@ export const BuilderHeader = ({
             variant="outline"
             size="sm"
             onClick={onPreview}
-            className={cn("h-8 px-2.5 text-xs font-semibold rounded-md border-ds-border", isRTL ? "flex-row-reverse" : "")}
+            className={cn("h-8 px-2.5 text-xs font-semibold rounded-md border-ds-border")}
             title="Preview Learner View (Ctrl+Shift+P)"
           >
-            <Eye className={cn("h-3.5 w-3.5", isRTL ? "ms-1.5" : "me-1.5")} />
+            <Eye className={cn("h-3.5 w-3.5", "me-1.5")} />
             <span>{t('preview', 'Preview')}</span>
           </Button>
 
@@ -277,15 +275,14 @@ export const BuilderHeader = ({
             onClick={onSave}
             disabled={isSaving}
             className={cn(
-              "h-8 px-3 text-xs font-semibold bg-ds-brass hover:bg-ds-accent-hover text-white rounded-md shadow-none",
-              isRTL ? "flex-row-reverse" : ""
+              "h-8 px-3 text-xs font-semibold bg-ds-brass hover:bg-ds-accent-hover text-white rounded-md shadow-none"
             )}
             title="Save Draft (Ctrl+S)"
           >
             {isSaving ? (
-              <Loader2 className={cn("h-3.5 w-3.5 animate-spin", isRTL ? "ms-1.5" : "me-1.5")} />
+              <Loader2 className={cn("h-3.5 w-3.5 animate-spin", "me-1.5")} />
             ) : (
-              <Save className={cn("h-3.5 w-3.5", isRTL ? "ms-1.5" : "me-1.5")} />
+              <Save className={cn("h-3.5 w-3.5", "me-1.5")} />
             )}
             <span>{t('save', 'Save')}</span>
           </Button>

@@ -2,6 +2,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { supabase } from '@/lib/supabase'
 import type { Document } from '@/lib/types'
 import type { DocumentStatus, DocumentVisibility } from '@/lib/constants'
+import { useTenant } from '@/contexts/TenantContext'
 import { secureSearchDocuments } from '@/lib/secureSearch'
 import { useQuery } from '@tanstack/react-query'
 import type { DocumentFilters } from './types'
@@ -9,9 +10,11 @@ import { saveRecentlyViewedDocument } from './utils'
 
 export function useDocuments(filters?: DocumentFilters) {
   const { primaryRole } = useAuth()
+  const { currentOrganization } = useTenant()
+  const orgId = currentOrganization?.id
 
   return useQuery({
-    queryKey: ['documents', filters, primaryRole],
+    queryKey: ['documents', orgId, filters, primaryRole],
     queryFn: async () => {
       let query = supabase
         .from('documents')
@@ -60,6 +63,10 @@ export function useDocuments(filters?: DocumentFilters) {
         .order(filters?.sort_by || 'created_at', {
           ascending: filters?.sort_order === 'asc'
         })
+
+      if (orgId) {
+        query = query.eq('organization_id', orgId)
+      }
 
       if (filters?.include_deleted) {
         query = query.eq('is_deleted', true)
@@ -157,7 +164,8 @@ export function useDocuments(filters?: DocumentFilters) {
           include_archived: filters.include_archived,
           sort_by: filters.sort_by,
           sort_order: filters.sort_order,
-          limit: 100
+          limit: 100,
+          organization_id: orgId
         })
 
         return secureData.map((doc: Record<string, unknown>) => {

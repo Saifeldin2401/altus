@@ -917,20 +917,20 @@ export function TrainingTrackCommandCenter({
                                         <AreaChart data={metrics.completionTrend} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                             <defs>
                                                 <linearGradient id="completedGrad" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.4}/>
-                                                    <stop offset="95%" stopColor="#10b981" stopOpacity={0.0}/>
+                                                    <stop offset="5%" stopColor="rgb(var(--ds-success))" stopOpacity={0.4}/>
+                                                    <stop offset="95%" stopColor="rgb(var(--ds-success))" stopOpacity={0.0}/>
                                                 </linearGradient>
                                                 <linearGradient id="startedGrad" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3}/>
-                                                    <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.0}/>
+                                                    <stop offset="5%" stopColor="rgb(var(--ds-warning))" stopOpacity={0.3}/>
+                                                    <stop offset="95%" stopColor="rgb(var(--ds-warning))" stopOpacity={0.0}/>
                                                 </linearGradient>
                                             </defs>
-                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                            <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#64748b' }} />
-                                            <YAxis tick={{ fontSize: 11, fill: '#64748b' }} allowDecimals={false} />
-                                            <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '8px', color: '#fff', fontSize: '12px' }} />
-                                            <Area type="monotone" dataKey="completed" name={isRTL ? 'مكتمل' : 'Completed'} stroke="#10b981" strokeWidth={2.5} fillOpacity={1} fill="url(#completedGrad)" />
-                                            <Area type="monotone" dataKey="started" name={isRTL ? 'بدأ التدريب' : 'Started'} stroke="#f59e0b" strokeWidth={2} strokeDasharray="4 4" fillOpacity={1} fill="url(#startedGrad)" />
+                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgb(var(--ds-border))" />
+                                            <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'rgb(var(--ds-muted))' }} />
+                                            <YAxis tick={{ fontSize: 11, fill: 'rgb(var(--ds-muted))' }} allowDecimals={false} />
+                                            <Tooltip contentStyle={{ backgroundColor: 'rgb(var(--ds-ink))', borderColor: 'rgb(var(--ds-border-strong))', borderRadius: '8px', color: 'rgb(var(--ds-on-ink))', fontSize: '12px' }} />
+                                            <Area type="monotone" dataKey="completed" name={isRTL ? 'مكتمل' : 'Completed'} stroke="rgb(var(--ds-success))" strokeWidth={2.5} fillOpacity={1} fill="url(#completedGrad)" />
+                                            <Area type="monotone" dataKey="started" name={isRTL ? 'بدأ التدريب' : 'Started'} stroke="rgb(var(--ds-warning))" strokeWidth={2} strokeDasharray="4 4" fillOpacity={1} fill="url(#startedGrad)" />
                                         </AreaChart>
                                     </ResponsiveContainer>
                                 </div>

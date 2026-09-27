@@ -6,7 +6,7 @@ function MotionAnimationComponent({ className }: MotionAnimationProps) {
   return (
     <div
       className={cn(
-        'relative w-full h-full overflow-hidden bg-[#0d1622] flex items-center justify-center',
+        'relative w-full h-full overflow-hidden bg-ds-chrome flex items-center justify-center',
         className
       )}
       aria-hidden="true"
@@ -24,9 +24,9 @@ function MotionAnimationComponent({ className }: MotionAnimationProps) {
       >
         <defs>
           <linearGradient id="brassLineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#b79a62" stopOpacity="0.1" />
-            <stop offset="50%" stopColor="#b79a62" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#b79a62" stopOpacity="0.2" />
+            <stop offset="0%" stopColor="rgb(var(--ds-chrome-accent))" stopOpacity="0.1" />
+            <stop offset="50%" stopColor="rgb(var(--ds-chrome-accent))" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="rgb(var(--ds-chrome-accent))" stopOpacity="0.2" />
           </linearGradient>
           <filter id="glow">
             <feGaussianBlur stdDeviation="3" result="coloredBlur" />
@@ -59,11 +59,11 @@ function MotionAnimationComponent({ className }: MotionAnimationProps) {
 
         {/* Dynamic Nodes representing Learning, Knowledge, Assessment, Certification, Performance */}
         <g filter="url(#glow)">
-          <circle cx="120" cy="420" r="5" fill="#b79a62" className="animate-pulse" />
-          <circle cx="260" cy="320" r="4" fill="#b79a62" opacity="0.7" />
-          <circle cx="400" cy="220" r="6" fill="#b79a62" className="animate-pulse" />
-          <circle cx="540" cy="290" r="4" fill="#b79a62" opacity="0.7" />
-          <circle cx="680" cy="360" r="5" fill="#b79a62" className="animate-pulse" />
+          <circle cx="120" cy="420" r="5" fill="rgb(var(--ds-chrome-accent))" className="animate-pulse" />
+          <circle cx="260" cy="320" r="4" fill="rgb(var(--ds-chrome-accent))" opacity="0.7" />
+          <circle cx="400" cy="220" r="6" fill="rgb(var(--ds-chrome-accent))" className="animate-pulse" />
+          <circle cx="540" cy="290" r="4" fill="rgb(var(--ds-chrome-accent))" opacity="0.7" />
+          <circle cx="680" cy="360" r="5" fill="rgb(var(--ds-chrome-accent))" className="animate-pulse" />
         </g>
       </svg>
     </div>

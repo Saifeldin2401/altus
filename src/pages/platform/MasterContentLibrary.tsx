@@ -61,8 +61,7 @@ export default function MasterContentLibrary() {
   const { user } = useAuth()
   const { toast } = useToast()
   const navigate = useNavigate()
-  const { t, i18n } = useTranslation(['admin', 'training', 'knowledge', 'common'])
-  const isRTL = i18n.dir() === 'rtl'
+  const { t } = useTranslation(['admin', 'training', 'knowledge', 'common'])
 
   const [activeTab, setActiveTab] = useState<'sops' | 'courses' | 'deployments'>('sops')
   const [masterSops, setMasterSops] = useState<any[]>([])
@@ -569,12 +568,12 @@ export default function MasterContentLibrary() {
 
           {activeTab !== 'deployments' && (
             <div className="relative w-full sm:w-72">
-              <Search className={cn("absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground", isRTL ? "end-3" : "start-3")} />
+              <Search className={cn("absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground", "start-3")} />
               <Input
                 placeholder={t('admin:search_master_content', 'Search master library...')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className={cn("h-9 text-xs", isRTL ? "pe-9" : "ps-9")}
+                className={cn("h-9 text-xs", "ps-9")}
               />
             </div>
           )}
@@ -587,11 +586,11 @@ export default function MasterContentLibrary() {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-muted/40">
-                    <TableHead>{t('admin:sop_title', 'Master SOP')}</TableHead>
-                    <TableHead>{t('admin:code', 'Code')}</TableHead>
-                    <TableHead>{t('admin:version', 'Master Version')}</TableHead>
-                    <TableHead>{t('admin:status', 'Status')}</TableHead>
-                    <TableHead className="text-end">{t('admin:actions', 'Actions')}</TableHead>
+                    <TableHead className="min-w-[320px]">{t('admin:sop_title', 'Master SOP')}</TableHead>
+                    <TableHead className="min-w-[130px] whitespace-nowrap">{t('admin:code', 'Code')}</TableHead>
+                    <TableHead className="min-w-[130px] whitespace-nowrap">{t('admin:version', 'Master Version')}</TableHead>
+                    <TableHead className="min-w-[110px] whitespace-nowrap">{t('admin:status', 'Status')}</TableHead>
+                    <TableHead className="min-w-[180px] text-end whitespace-nowrap">{t('admin:actions', 'Actions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -610,11 +609,11 @@ export default function MasterContentLibrary() {
 
                       return (
                         <TableRow key={sop.id} className="hover:bg-muted/30">
-                          <TableCell className="font-medium">
+                          <TableCell className="font-medium min-w-[320px]">
                             <div>
                               <div className="font-semibold text-foreground flex items-center gap-2">
-                                <span>{sop.title}</span>
-                                <Badge className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[10px] py-0 h-4">
+                                <span className="leading-snug">{sop.title}</span>
+                                <Badge className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[10px] px-2 py-0.5 shrink-0 whitespace-nowrap font-medium">
                                   Global Master
                                 </Badge>
                               </div>
@@ -624,11 +623,11 @@ export default function MasterContentLibrary() {
                               {/* Deployment Telemetry Badge */}
                               <div className="mt-1.5 flex items-center gap-2">
                                 {depList.length === 0 ? (
-                                  <Badge variant="outline" className="text-[10px] py-0 h-4 text-muted-foreground border-dashed">
+                                  <Badge variant="outline" className="text-[10px] px-2 py-0.5 shrink-0 whitespace-nowrap text-muted-foreground border-dashed">
                                     Not yet deployed
                                   </Badge>
                                 ) : (
-                                  <Badge variant="outline" className="text-[10px] py-0 h-4 border-ds-border bg-ds-surface-subtle">
+                                  <Badge variant="outline" className="text-[10px] px-2 py-0.5 shrink-0 whitespace-nowrap border-ds-border bg-ds-surface-subtle">
                                     Deployed to {depList.length} {depList.length === 1 ? 'hotel' : 'hotels'}
                                     {pendingCount > 0 ? (
                                       <span className="text-ds-warning font-bold ms-1">
@@ -644,22 +643,22 @@ export default function MasterContentLibrary() {
                               </div>
                             </div>
                           </TableCell>
-                          <TableCell>
-                            <Badge variant="outline" className="font-mono text-xs">
+                          <TableCell className="whitespace-nowrap">
+                            <Badge variant="outline" className="font-mono text-xs whitespace-nowrap shrink-0">
                               {sop.document_number || 'SOP-MST'}
                             </Badge>
                           </TableCell>
-                          <TableCell>
-                            <Badge variant="secondary" className="font-mono text-xs font-semibold">
+                          <TableCell className="whitespace-nowrap">
+                            <Badge variant="secondary" className="font-mono text-xs font-semibold whitespace-nowrap shrink-0">
                               v{ver}.0
                             </Badge>
                           </TableCell>
-                          <TableCell>
-                            <Badge variant="default" className="text-xs capitalize bg-ds-success">
+                          <TableCell className="whitespace-nowrap">
+                            <Badge variant="default" className="text-xs capitalize bg-ds-success whitespace-nowrap shrink-0">
                               {sop.status || 'Published'}
                             </Badge>
                           </TableCell>
-                          <TableCell className="text-end">
+                          <TableCell className="text-end whitespace-nowrap">
                             <div className="flex items-center justify-end gap-1.5">
                               <Button
                                 size="sm"
@@ -721,12 +720,12 @@ export default function MasterContentLibrary() {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-muted/40">
-                    <TableHead>{t('admin:course_title', 'Master Course')}</TableHead>
-                    <TableHead>{t('admin:category', 'Category')}</TableHead>
-                    <TableHead>{t('admin:level', 'Difficulty')}</TableHead>
-                    <TableHead>{t('admin:version', 'Version')}</TableHead>
-                    <TableHead>{t('admin:duration', 'Duration')}</TableHead>
-                    <TableHead className="text-end">{t('admin:actions', 'Actions')}</TableHead>
+                    <TableHead className="min-w-[320px]">{t('admin:course_title', 'Master Course')}</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap">{t('admin:category', 'Category')}</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap">{t('admin:level', 'Difficulty')}</TableHead>
+                    <TableHead className="min-w-[100px] whitespace-nowrap">{t('admin:version', 'Version')}</TableHead>
+                    <TableHead className="min-w-[100px] whitespace-nowrap">{t('admin:duration', 'Duration')}</TableHead>
+                    <TableHead className="min-w-[180px] text-end whitespace-nowrap">{t('admin:actions', 'Actions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -742,36 +741,36 @@ export default function MasterContentLibrary() {
                       const ver = Number((course.blueprint as any)?.version || course.current_version || 1)
                       return (
                         <TableRow key={course.id} className="hover:bg-muted/30">
-                          <TableCell className="font-medium">
+                          <TableCell className="font-medium min-w-[320px]">
                             <div>
                               <div className="font-semibold text-foreground flex items-center gap-2">
-                                <span>{course.title}</span>
-                                <Badge className="bg-ds-accent-soft text-ds-accent border-ds-accent/30 text-[10px] py-0 h-4">
+                                <span className="leading-snug">{course.title}</span>
+                                <Badge className="bg-ds-accent-soft text-ds-accent border-ds-accent/30 text-[10px] px-2 py-0.5 shrink-0 whitespace-nowrap font-medium">
                                   Global Master
                                 </Badge>
                               </div>
                               <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{course.description}</p>
                             </div>
                           </TableCell>
-                          <TableCell>
-                            <Badge variant="outline" className="capitalize text-xs">
+                          <TableCell className="whitespace-nowrap">
+                            <Badge variant="outline" className="capitalize text-xs whitespace-nowrap shrink-0">
                               {course.category || 'Hospitality'}
                             </Badge>
                           </TableCell>
-                          <TableCell>
-                            <Badge variant="secondary" className="capitalize text-xs">
+                          <TableCell className="whitespace-nowrap">
+                            <Badge variant="secondary" className="capitalize text-xs whitespace-nowrap shrink-0">
                               {course.difficulty_level || 'Intermediate'}
                             </Badge>
                           </TableCell>
-                          <TableCell>
-                            <Badge variant="secondary" className="font-mono text-xs font-semibold">
+                          <TableCell className="whitespace-nowrap">
+                            <Badge variant="secondary" className="font-mono text-xs font-semibold whitespace-nowrap shrink-0">
                               v{ver}.0
                             </Badge>
                           </TableCell>
-                          <TableCell className="text-xs text-muted-foreground font-mono">
+                          <TableCell className="text-xs text-muted-foreground font-mono whitespace-nowrap">
                             {course.estimated_duration_minutes ? `${course.estimated_duration_minutes} min` : '45 min'}
                           </TableCell>
-                          <TableCell className="text-end">
+                          <TableCell className="text-end whitespace-nowrap">
                             <div className="flex items-center justify-end gap-1.5">
                               <Button
                                 size="sm"
@@ -947,13 +946,13 @@ export default function MasterContentLibrary() {
                     <Table>
                       <TableHeader>
                         <TableRow className="bg-muted/40">
-                          <TableHead>Target Customer Tenant</TableHead>
-                          <TableHead>Content Type</TableHead>
-                          <TableHead>Deployed Version</TableHead>
-                          <TableHead>Master Version</TableHead>
-                          <TableHead>Sync Status</TableHead>
-                          <TableHead>Last Synced Date</TableHead>
-                          <TableHead className="text-end">Actions</TableHead>
+                          <TableHead className="min-w-[240px]">Target Customer Tenant</TableHead>
+                          <TableHead className="min-w-[130px] whitespace-nowrap">Content Type</TableHead>
+                          <TableHead className="min-w-[130px] whitespace-nowrap">Deployed Version</TableHead>
+                          <TableHead className="min-w-[130px] whitespace-nowrap">Master Version</TableHead>
+                          <TableHead className="min-w-[160px] whitespace-nowrap">Sync Status</TableHead>
+                          <TableHead className="min-w-[160px] whitespace-nowrap">Last Synced Date</TableHead>
+                          <TableHead className="min-w-[160px] text-end whitespace-nowrap">Actions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -969,9 +968,9 @@ export default function MasterContentLibrary() {
                             const hasUpdate = dep.has_update_available || dep.current_master_version > dep.deployed_version
                             return (
                               <TableRow key={dep.id} className="hover:bg-muted/30">
-                                <TableCell className="font-semibold text-foreground">
+                                <TableCell className="font-semibold text-foreground min-w-[240px]">
                                   <div>
-                                    <span>{dep.target_organization?.name || 'Customer Organization'}</span>
+                                    <span className="leading-snug">{dep.target_organization?.name || 'Customer Organization'}</span>
                                     {dep.target_organization?.slug && (
                                       <span className="text-xs text-muted-foreground font-mono block">
                                         @{dep.target_organization.slug}
@@ -979,8 +978,8 @@ export default function MasterContentLibrary() {
                                     )}
                                   </div>
                                 </TableCell>
-                                <TableCell>
-                                  <Badge variant="outline" className="capitalize text-xs flex items-center gap-1 w-fit">
+                                <TableCell className="whitespace-nowrap">
+                                  <Badge variant="outline" className="capitalize text-xs flex items-center gap-1 w-fit whitespace-nowrap shrink-0">
                                     {dep.content_type === 'document_sop' ? (
                                       <>
                                         <BookOpen className="h-3 w-3 text-ds-accent" />
@@ -994,30 +993,30 @@ export default function MasterContentLibrary() {
                                     )}
                                   </Badge>
                                 </TableCell>
-                                <TableCell>
-                                  <Badge variant="secondary" className="font-mono text-xs">
+                                <TableCell className="whitespace-nowrap">
+                                  <Badge variant="secondary" className="font-mono text-xs whitespace-nowrap shrink-0">
                                     v{dep.deployed_version || 1}.0
                                   </Badge>
                                 </TableCell>
-                                <TableCell>
-                                  <Badge variant="outline" className="font-mono text-xs font-bold">
+                                <TableCell className="whitespace-nowrap">
+                                  <Badge variant="outline" className="font-mono text-xs font-bold whitespace-nowrap shrink-0">
                                     v{dep.current_master_version || dep.deployed_version || 1}.0
                                   </Badge>
                                 </TableCell>
-                                <TableCell>
+                                <TableCell className="whitespace-nowrap">
                                   {hasUpdate ? (
-                                    <Badge className="bg-ds-warning hover:bg-ds-warning text-ds-ink font-bold text-xs gap-1">
+                                    <Badge className="bg-ds-warning hover:bg-ds-warning text-ds-ink font-bold text-xs gap-1 whitespace-nowrap shrink-0">
                                       <BellRing className="h-3 w-3 animate-bounce" />
                                       Update Available
                                     </Badge>
                                   ) : (
-                                    <Badge variant="secondary" className="bg-ds-success-soft text-ds-success border-ds-success/30 text-xs gap-1">
+                                    <Badge variant="secondary" className="bg-ds-success-soft text-ds-success border-ds-success/30 text-xs gap-1 whitespace-nowrap shrink-0">
                                       <CheckCircle2 className="h-3 w-3 text-ds-success" />
                                       In Sync
                                     </Badge>
                                   )}
                                 </TableCell>
-                                <TableCell className="text-xs text-muted-foreground font-mono">
+                                <TableCell className="text-xs text-muted-foreground font-mono whitespace-nowrap">
                                   {dep.last_synced_at
                                     ? new Date(dep.last_synced_at).toLocaleDateString(undefined, {
                                         year: 'numeric',
@@ -1026,7 +1025,7 @@ export default function MasterContentLibrary() {
                                       })
                                     : 'Initial'}
                                 </TableCell>
-                                <TableCell className="text-end">
+                                <TableCell className="text-end whitespace-nowrap">
                                   {hasUpdate ? (
                                     <Button
                                       size="sm"
@@ -1090,12 +1089,12 @@ export default function MasterContentLibrary() {
                 <>
                   <div className="flex items-center justify-between gap-2">
                     <div className="relative flex-1">
-                      <Search className={cn("absolute top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground", isRTL ? "end-2.5" : "start-2.5")} />
+                      <Search className={cn("absolute top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground", "start-2.5")} />
                       <Input
                         placeholder={t('admin:filter_tenants', 'Search customer tenants...')}
                         value={orgSearchQuery}
                         onChange={(e) => setOrgSearchQuery(e.target.value)}
-                        className={cn("h-8 text-xs", isRTL ? "pe-8" : "ps-8")}
+                        className={cn("h-8 text-xs", "ps-8")}
                       />
                     </div>
                     <Button variant="ghost" size="sm" onClick={selectAllOrgs} className="h-8 text-xs text-primary shrink-0">

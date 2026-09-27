@@ -10,14 +10,16 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { BookOpen, CheckCircle2, ChevronDown, ChevronRight, FileQuestion, Search, X } from 'lucide-react'
+import { AlertTriangle, BookOpen, CheckCircle2, ChevronDown, ChevronRight, FileQuestion, Search, X } from 'lucide-react'
 
 import { useMyAssignments } from '@/hooks/useTraining'
 import { cn } from '@/lib/utils'
 import type { LearningAssignment } from '@/types/learning'
-import { EmptyState, ErrorState, ProgressBar, Skeleton, WorkspaceHeader } from '@/ui'
+import { EmptyState, ErrorState, ProgressBar, Skeleton } from '@/ui'
 
 import { CourseCover } from '../gamification/components/CourseCover'
+import { LearningPageHero } from '../components/LearningPageHero'
+import { LearningStatusCard } from '../components/LearningStatusCard'
 
 type Filter = 'all' | 'mandatory' | 'courses' | 'quizzes'
 type Bucket = 'overdue' | 'week' | 'later' | 'undated'
@@ -133,16 +135,21 @@ export default function MyLearningPage() {
   ]
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8">
-      <WorkspaceHeader
+    <div className="mx-auto max-w-6xl space-y-6">
+      <LearningPageHero
         eyebrow={t('plan.eyebrow', 'Learn')}
-        title={t('plan.title', 'My learning')}
-        context={query.isLoading ? null : buckets.overdue.length > 0
-          ? t('plan.summaryOverdue', '{{open}} to do · {{overdue}} overdue', { open: openCount, overdue: buckets.overdue.length })
-          : t('plan.summary', '{{open}} to do · nothing overdue', { open: openCount })}
+        title={t('plan.heroTitle', 'Continue your learning')}
+        description={t('plan.heroDescription', 'Pick up where you left off and keep building your capabilities.')}
+        quote={<>Better.<br />People.<br />Brighter.<br />Experiences.</>}
       />
+      <section aria-label={t('plan.learningOverview', 'Your learning overview')} className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <LearningStatusCard title={t('plan.overdue', 'Overdue')} value={buckets.overdue.length} detail={t('plan.needsAttention', 'needs your attention')} href="/learn/my" icon={AlertTriangle} tone="rose" />
+        <LearningStatusCard title={t('plan.week', 'Due this week')} value={buckets.week.length} detail={t('plan.toComplete', 'to complete')} href="/learn/my" icon={FileQuestion} tone="gold" />
+        <LearningStatusCard title={t('plan.later', 'Later')} value={buckets.later.length + buckets.undated.length} detail={t('plan.inYourPlan', 'in your plan')} href="/learn/my" icon={BookOpen} tone="blue" />
+        <LearningStatusCard title={t('plan.completedTitle', 'Completed')} value={done.length} detail={t('plan.completedWork', 'finished work')} href="/learn/my" icon={CheckCircle2} tone="green" />
+      </section>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div className="flex flex-col gap-3 rounded-xl border border-ds-border bg-ds-surface p-3 shadow-[0_12px_32px_rgb(21_33_46/0.03)] sm:flex-row sm:items-center sm:p-4">
         <div role="search" className="relative flex-1">
           <label htmlFor="plan-search" className="sr-only">{t('plan.searchLabel', 'Search my learning')}</label>
           <Search aria-hidden="true" className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ds-muted" />

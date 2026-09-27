@@ -328,7 +328,7 @@ function QuestionsPanel() {
                     <TabsTrigger value="draft" className="text-xs font-bold">{t('question_library.tabs.drafts', 'Drafts')}</TabsTrigger>
                     <TabsTrigger value="pending_review" className="text-xs font-bold relative">
                         {t('question_library.tabs.pending_review', 'Pending Review')}
-                        {pendingData?.total ? <Badge className="ms-1.5 bg-ds-warning text-white text-[10px] h-4 px-1.5 py-0">{pendingData.total}</Badge> : null}
+                        {pendingData?.total ? <Badge className="ms-1.5 bg-ds-warning text-white text-[10px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">{pendingData.total}</Badge> : null}
                     </TabsTrigger>
                     <TabsTrigger value="published" className="text-xs font-bold">{t('question_library.tabs.published', 'Published')}</TabsTrigger>
                     <TabsTrigger value="archived" className="text-xs font-bold">{t('question_library.tabs.archived', 'Archived')}</TabsTrigger>
@@ -476,7 +476,7 @@ function QuestionsPanel() {
                                                         </div>
                                                     </div>
                                                     {option.is_correct && (
-                                                        <Badge className="bg-ds-success text-white text-[9px] uppercase font-bold h-4 px-1.5 py-0 shrink-0">
+                                                        <Badge className="bg-ds-success text-white text-[9px] uppercase font-bold px-1.5 py-0.5 shrink-0 whitespace-nowrap">
                                                             Correct
                                                         </Badge>
                                                     )}
@@ -647,16 +647,16 @@ function QuestionCard({ question, passRate, onPreview, onApprove, onDelete, isAp
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5 mb-2 flex-wrap">
-                            <Badge className={cn("text-[10px] font-bold uppercase tracking-wider border h-5 px-2 py-0", diffColors[question.difficulty_level] || diffColors.medium)}>
+                            <Badge className={cn("text-[10px] font-bold uppercase tracking-wider border px-2 py-0.5 shrink-0 whitespace-nowrap", diffColors[question.difficulty_level] || diffColors.medium)}>
                                 {difficultyConfig.label}
                             </Badge>
 
-                            <Badge variant="outline" className="text-[10px] font-semibold uppercase bg-ds-surface-subtle border-ds-border text-ds-ink h-5 px-2 py-0">
+                            <Badge variant="outline" className="text-[10px] font-semibold uppercase bg-ds-surface-subtle border-ds-border text-ds-ink px-2 py-0.5 shrink-0 whitespace-nowrap">
                                 {typeConfig.label}
                             </Badge>
 
                             <Badge className={cn(
-                                "text-[10px] font-bold uppercase tracking-wider h-5 px-2 py-0",
+                                "text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 shrink-0 whitespace-nowrap",
                                 question.status === 'published' ? "bg-ds-success text-white" :
                                 question.status === 'pending_review' ? "bg-ds-warning text-white animate-pulse" :
                                 "bg-ds-surface-subtle text-ds-ink border border-ds-border"
@@ -665,15 +665,15 @@ function QuestionCard({ question, passRate, onPreview, onApprove, onDelete, isAp
                             </Badge>
 
                             {question.is_master_template && (
-                                <Badge className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[10px] h-5 px-2 py-0 flex items-center gap-1 font-bold">
-                                    <Sparkles className="h-2.5 w-2.5 text-ds-warning" />
+                                <Badge className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[10px] px-2 py-0.5 flex items-center gap-1 font-bold shrink-0 whitespace-nowrap">
+                                    <Sparkles className="h-2.5 w-2.5 text-ds-warning shrink-0" />
                                     Master
                                 </Badge>
                             )}
 
                             {question.ai_generated && (
-                                <Badge className="bg-ds-accent-soft text-ds-accent border-ds-accent/30 text-[10px] h-5 px-2 py-0 font-semibold">
-                                    <Sparkles className="h-2.5 w-2.5 me-1 text-ds-accent" />
+                                <Badge className="bg-ds-accent-soft text-ds-accent border-ds-accent/30 text-[10px] px-2 py-0.5 font-semibold shrink-0 whitespace-nowrap">
+                                    <Sparkles className="h-2.5 w-2.5 me-1 text-ds-accent shrink-0" />
                                     AI
                                 </Badge>
                             )}
@@ -682,12 +682,12 @@ function QuestionCard({ question, passRate, onPreview, onApprove, onDelete, isAp
                                 <Badge
                                     variant="outline"
                                     className={cn(
-                                        "text-[10px] h-5 px-2 py-0 font-mono",
+                                        "text-[10px] px-2 py-0.5 font-mono shrink-0 whitespace-nowrap",
                                         isLowPassRate ? 'text-ds-danger border-ds-danger/30 bg-ds-danger-soft font-bold' : 'text-ds-muted border-ds-border'
                                     )}
                                     title={isLowPassRate ? t('question_library.low_pass_rate_hint', 'Low pass rate — may be ambiguous or require review') : undefined}
                                 >
-                                    {isLowPassRate && <AlertTriangle className="h-2.5 w-2.5 me-1 text-ds-danger" />}
+                                    {isLowPassRate && <AlertTriangle className="h-2.5 w-2.5 me-1 text-ds-danger shrink-0" />}
                                     {Math.round(passRate.accuracyRate)}% pass ({passRate.totalAttempts})
                                 </Badge>
                             )}

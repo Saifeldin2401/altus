@@ -140,6 +140,7 @@ function OrgTreeNodeItem({
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button
+                            aria-label={t('common:a11y.moreActions', 'More actions')}
                             variant="ghost"
                             size="icon-sm"
                             className="opacity-0 group-hover:opacity-100 hover:opacity-100"

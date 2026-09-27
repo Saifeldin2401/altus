@@ -238,7 +238,7 @@ export default function ChangePassword() {
                         <div className="space-y-2 bg-muted/50 p-3 rounded-md text-sm">
                             <p className="font-medium mb-2">Password Requirements:</p>
                             {requirements.map((req, index) => (
-                                <div key={index} className="flex items-center space-x-2">
+                                <div key={index} className="flex items-center gap-x-2">
                                     {req.valid ? (
                                         <Check className="w-4 h-4 text-ds-success" />
                                     ) : (

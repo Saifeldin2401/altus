@@ -142,7 +142,6 @@ function ForgotPasswordViewComponent({
           label={t('forgot_password.email_label', { defaultValue: 'Email address' })}
           icon={Mail}
           disabled={loading}
-          isRTL={isRTL}
           valid={emailValid}
           ariaDescribedBy={error ? 'forgot-error' : undefined}
           ariaInvalid={!!error}

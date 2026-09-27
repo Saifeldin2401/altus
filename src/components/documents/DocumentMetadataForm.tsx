@@ -590,7 +590,7 @@ export function DocumentMetadataForm({
               className={cn(
                 "flex items-start gap-3 p-3 rounded-lg border-2 text-start transition-all",
                 metadata.confidentiality === level.value
-                  ? "border-[#0B1C3E] bg-[#0B1C3E]/5"
+                  ? "border-ds-ink bg-ds-ink/5"
                   : "border-border hover:border-muted-foreground/50",
                 readOnly && "cursor-not-allowed opacity-60"
               )}
@@ -599,7 +599,7 @@ export function DocumentMetadataForm({
                 className={cn(
                   "w-4 h-4 rounded-full border-2 mt-0.5 flex items-center justify-center",
                   metadata.confidentiality === level.value
-                    ? "border-[#0B1C3E] bg-[#0B1C3E]"
+                    ? "border-ds-ink bg-ds-ink"
                     : "border-muted-foreground"
                 )}
               >
@@ -788,7 +788,7 @@ export function DocumentMetadataForm({
               <Button
                 type="button"
                 size="sm"
-                className="flex-1 bg-[#0B1C3E] hover:bg-[#1a3a6e]"
+                className="flex-1 bg-ds-ink hover:bg-ds-ink/90"
                 onClick={addCustomField}
                 disabled={!newFieldName.trim()}
               >

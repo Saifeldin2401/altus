@@ -36,8 +36,7 @@ interface ModuleSkillsEditorProps {
 }
 
 export function ModuleSkillsEditor({ moduleId, readonly = false }: ModuleSkillsEditorProps) {
-    const { t, i18n } = useTranslation('training')
-    const isRTL = i18n.dir() === 'rtl'
+    const { t } = useTranslation('training')
     const { toast } = useToast()
     const [moduleSkills, setModuleSkills] = useState<ModuleSkill[]>([])
     const [availableSkills, setAvailableSkills] = useState<Skill[]>([])
@@ -130,26 +129,26 @@ export function ModuleSkillsEditor({ moduleId, readonly = false }: ModuleSkillsE
         s => s?.id && !moduleSkills.some(ms => ms.skill_id === s.id)
     )
 
-    if (loading) return <div className={`text-sm text-gray-500 ${isRTL ? 'text-end' : 'text-start'}`}>{t('skillsManagement.loading')}</div>
+    if (loading) return <div className={`text-sm text-gray-500 ${'text-start'}`}>{t('skillsManagement.loading')}</div>
 
     return (
         <TooltipProvider>
-        <div className={`space-y-4 ${isRTL ? 'text-end' : 'text-start'}`}>
-            <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
-                <h3 className={`text-sm font-medium flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
+        <div className={`space-y-4 ${'text-start'}`}>
+            <div className={`flex items-center justify-between ${'flex-row'}`}>
+                <h3 className={`text-sm font-medium flex items-center gap-2 ${'flex-row'}`}>
                     <Award className="h-4 w-4 text-hotel-gold" />
                     {t('skillsManagement.title')}
                 </h3>
                 {!readonly && isValidModuleId && (
                     <Dialog open={isAdding} onOpenChange={setIsAdding}>
                         <DialogTrigger asChild>
-                            <Button variant="outline" size="sm" className={`h-8 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                                <Plus className={cn("h-3 w-3", isRTL ? "ms-1" : "me-1")} />
+                            <Button variant="outline" size="sm" className={`h-8`}>
+                                <Plus className={cn("h-3 w-3", "me-1")} />
                                 {t('skillsManagement.addSkill')}
                             </Button>
                         </DialogTrigger>
-                        <DialogContent className={isRTL ? 'text-end' : 'text-start'}>
-                            <DialogHeader className={isRTL ? 'text-end' : 'text-start'}>
+                        <DialogContent className={'text-start'}>
+                            <DialogHeader className={'text-start'}>
                                 <DialogTitle>{t('skillsManagement.linkSkill')}</DialogTitle>
                                 <DialogDescription>
                                     {t('skillsManagement.linkDescription')}
@@ -160,10 +159,10 @@ export function ModuleSkillsEditor({ moduleId, readonly = false }: ModuleSkillsE
                                 <div className="space-y-2">
                                     <Label>{t('skillsManagement.selectSkill')}</Label>
                                     <Select value={selectedSkillId} onValueChange={setSelectedSkillId}>
-                                        <SelectTrigger className={isRTL ? 'flex-row-reverse' : ''}>
+                                        <SelectTrigger className={''}>
                                             <SelectValue placeholder={t('skillsManagement.selectSkillPlaceholder')} />
                                         </SelectTrigger>
-                                        <SelectContent className={isRTL ? 'text-end' : 'text-start'}>
+                                        <SelectContent className={'text-start'}>
                                             {unlinkedSkills.length === 0 ? (
                                                 <div className="p-2 text-sm text-gray-500 text-center">
                                                     {t('skillsManagement.noAvailableSkills')}
@@ -186,7 +185,7 @@ export function ModuleSkillsEditor({ moduleId, readonly = false }: ModuleSkillsE
                                         min={1}
                                         value={points}
                                         onChange={(e) => setPoints(parseInt(e.target.value) || 0)}
-                                        className={isRTL ? 'text-end' : 'text-start'}
+                                        className={'text-start'}
                                     />
                                     <p className="text-xs text-gray-500">
                                         {t('skillsManagement.pointsHint')}
@@ -212,11 +211,11 @@ export function ModuleSkillsEditor({ moduleId, readonly = false }: ModuleSkillsE
                         {moduleSkills.map(ms => (
                             <div
                                 key={ms.id}
-                                className={`flex items-center justify-between p-2 rounded bg-gray-50 border group ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}
+                                className={`flex items-center justify-between p-2 rounded bg-gray-50 border group ${'flex-row'}`}
                             >
-                                <div className={isRTL ? 'text-end' : 'text-start'}>
+                                <div className={'text-start'}>
                                     <div className="font-medium text-sm">{ms.skill?.name || t('skillsManagement.unknownSkill')}</div>
-                                    <div className={`text-xs text-gray-500 flex gap-2 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
+                                    <div className={`text-xs text-gray-500 flex gap-2 ${'flex-row'}`}>
                                         <Badge variant="secondary" className="text-[10px] h-5">
                                             {ms.points_awarded} {t('inlineQuiz.pts')}
                                         </Badge>

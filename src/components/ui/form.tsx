@@ -420,7 +420,7 @@ const FormSummary = forwardRef<HTMLDivElement, FormSummaryProps>(
         className={cn('rounded-md border border-destructive/20 bg-destructive/5 p-3', className)}
         {...props}
       >
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-x-2">
           <div className="h-4 w-4 rounded-full bg-destructive" />
           <h4 className="text-sm font-medium text-destructive">
             Please correct the following {errorCount} {errorCount === 1 ? 'error' : 'errors'}

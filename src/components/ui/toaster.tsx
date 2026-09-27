@@ -73,9 +73,9 @@ export function Toaster() {
                     `,
                     // Action button styling
                     actionButton: `
-                        bg-[#0B1C3E] 
+                        bg-ds-ink 
                         text-white 
-                        hover:bg-[#1a3a6e] 
+                        hover:bg-ds-ink/90 
                         text-xs 
                         font-semibold 
                         px-4 

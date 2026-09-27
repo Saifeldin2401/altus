@@ -330,8 +330,8 @@ export function KnowledgeBaseSidebar({
             <Card className={cn("h-full flex flex-col border-0 rounded-none shadow-none bg-background", className)}>
                 {/* 1. Header with Title & Close */}
                 <CardHeader className="p-4 pb-3 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
-                    <div className={cn("flex items-center justify-between gap-2", isRTL ? "flex-row-reverse" : "flex-row")}>
-                        <CardTitle className={cn("text-base font-bold text-hotel-navy dark:text-slate-100 flex items-center gap-2", isRTL ? "flex-row-reverse" : "flex-row")}>
+                    <div className={cn("flex items-center justify-between gap-2", "flex-row")}>
+                        <CardTitle className={cn("text-base font-bold text-hotel-navy dark:text-slate-100 flex items-center gap-2", "flex-row")}>
                             <div className="p-1.5 rounded-lg bg-hotel-navy/10 dark:bg-hotel-gold/10 text-hotel-navy dark:text-hotel-gold">
                                 <BookOpen className="h-4 w-4" />
                             </div>
@@ -354,21 +354,21 @@ export function KnowledgeBaseSidebar({
                     {/* 2. Search Bar with Dedicated Search Button */}
                     <form onSubmit={handleSearchSubmit} className="mt-3 flex items-center gap-2">
                         <div className="relative flex-1">
-                            <Search className={cn("absolute top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none", isRTL ? "end-3" : "start-3")} />
+                            <Search className={cn("absolute top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none", "start-3")} />
                             <Input
                                 placeholder={t('knowledgeBase.searchResources', 'Search SOPs, policies, checklists...')}
                                 value={searchInput}
                                 onChange={(e) => setSearchInput(e.target.value)}
                                 className={cn(
                                     "h-9 text-xs bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 shadow-sm focus-visible:ring-hotel-navy",
-                                    isRTL ? "pe-9 ps-8 text-end" : "ps-9 pe-8 text-start"
+                                    "ps-9 pe-8 text-start"
                                 )}
                             />
                             {searchInput && (
                                 <button
                                     type="button"
                                     onClick={handleClearSearch}
-                                    className={cn("absolute top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200", isRTL ? "start-2" : "end-2")}
+                                    className={cn("absolute top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200", "end-2")}
                                     aria-label="Clear search"
                                 >
                                     <X className="h-3.5 w-3.5" />
@@ -439,7 +439,7 @@ export function KnowledgeBaseSidebar({
                     <div className="px-4 pt-2 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-950">
                         <TabsList className={cn("w-full grid grid-cols-3 h-9 bg-slate-100 dark:bg-slate-900", isRTL ? "direction-rtl" : "")}>
                             <TabsTrigger value="documents" className="text-xs font-semibold data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800">
-                                <FileText className={cn("h-3.5 w-3.5", isRTL ? "ms-1" : "me-1")} />
+                                <FileText className={cn("h-3.5 w-3.5", "me-1")} />
                                 <span>{t('knowledgeBase.docs', 'SOPs & Docs')}</span>
                                 {docCount > 0 && (
                                     <span className="ms-1.5 px-1.5 py-0.2 text-[10px] rounded-full bg-slate-200 dark:bg-slate-700 font-bold">
@@ -449,7 +449,7 @@ export function KnowledgeBaseSidebar({
                             </TabsTrigger>
 
                             <TabsTrigger value="quizzes" className="text-xs font-semibold data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800">
-                                <ClipboardCheck className={cn("h-3.5 w-3.5", isRTL ? "ms-1" : "me-1")} />
+                                <ClipboardCheck className={cn("h-3.5 w-3.5", "me-1")} />
                                 <span>{t('knowledgeBase.quizzes', 'Quizzes')}</span>
                                 {quizCount > 0 && (
                                     <span className="ms-1.5 px-1.5 py-0.2 text-[10px] rounded-full bg-slate-200 dark:bg-slate-700 font-bold">
@@ -459,7 +459,7 @@ export function KnowledgeBaseSidebar({
                             </TabsTrigger>
 
                             <TabsTrigger value="questions" className="text-xs font-semibold data-[state=active]:bg-white dark:data-[state=active]:bg-slate-800">
-                                <HelpCircle className={cn("h-3.5 w-3.5", isRTL ? "ms-1" : "me-1")} />
+                                <HelpCircle className={cn("h-3.5 w-3.5", "me-1")} />
                                 <span>{t('knowledgeBase.qa', 'Question Bank')}</span>
                                 {questionCount > 0 && (
                                     <span className="ms-1.5 px-1.5 py-0.2 text-[10px] rounded-full bg-slate-200 dark:bg-slate-700 font-bold">
@@ -515,7 +515,7 @@ export function KnowledgeBaseSidebar({
                                         key={doc.id}
                                         className="p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-hotel-gold hover:shadow-xs transition-all space-y-2.5"
                                     >
-                                        <div className={cn("flex items-start gap-2.5", isRTL ? "flex-row-reverse text-end" : "flex-row text-start")}>
+                                        <div className={cn("flex items-start gap-2.5", "flex-row text-start")}>
                                             <div className="flex-1 min-w-0">
                                                 {/* Badge Row */}
                                                 <div className="flex flex-wrap items-center gap-1.5 mb-1">
@@ -551,7 +551,7 @@ export function KnowledgeBaseSidebar({
                                                 className="h-7 text-xs flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
                                                 onClick={() => onLinkDocument?.(doc.id, doc.title)}
                                             >
-                                                <Link2 className={cn("h-3.5 w-3.5", isRTL ? "ms-1" : "me-1")} />
+                                                <Link2 className={cn("h-3.5 w-3.5", "me-1")} />
                                                 {t('knowledgeBase.linkSop', 'Link SOP')}
                                             </Button>
 
@@ -561,7 +561,7 @@ export function KnowledgeBaseSidebar({
                                                 className="h-7 text-xs px-2.5 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:text-hotel-navy hover:border-hotel-gold"
                                                 onClick={() => setPreviewDoc(doc)}
                                             >
-                                                <Eye className={cn("h-3.5 w-3.5", isRTL ? "ms-1" : "me-1")} />
+                                                <Eye className={cn("h-3.5 w-3.5", "me-1")} />
                                                 {t('knowledgeBase.preview', 'Preview')}
                                             </Button>
 
@@ -602,7 +602,7 @@ export function KnowledgeBaseSidebar({
                                         key={quiz.id}
                                         className="p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-hotel-gold/60 transition-all flex items-center justify-between gap-3"
                                     >
-                                        <div className={cn("flex-1 min-w-0", isRTL ? "text-end" : "text-start")}>
+                                        <div className={cn("flex-1 min-w-0", "text-start")}>
                                             <h4 className="font-bold text-sm text-slate-900 dark:text-slate-100 truncate">
                                                 {quiz.title}
                                             </h4>
@@ -623,7 +623,7 @@ export function KnowledgeBaseSidebar({
                                             className="h-8 text-xs bg-purple-600 hover:bg-purple-700 text-white font-semibold shrink-0"
                                             onClick={() => onLinkQuiz?.(quiz.id, quiz.title)}
                                         >
-                                            <Link2 className={cn("h-3.5 w-3.5", isRTL ? "ms-1" : "me-1")} />
+                                            <Link2 className={cn("h-3.5 w-3.5", "me-1")} />
                                             {t('knowledgeBase.link', 'Link')}
                                         </Button>
                                     </div>
@@ -648,10 +648,10 @@ export function KnowledgeBaseSidebar({
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            className={cn("w-full mb-2 h-8 text-xs font-bold text-hotel-navy dark:text-slate-100 border-hotel-navy/30", isRTL ? "flex-row-reverse" : "flex-row")}
+                                            className={cn("w-full mb-2 h-8 text-xs font-bold text-hotel-navy dark:text-slate-100 border-hotel-navy/30", "flex-row")}
                                             onClick={() => onAddQuestions?.(questions.map(q => q.id))}
                                         >
-                                            <Plus className={cn("h-3.5 w-3.5", isRTL ? "ms-1.5" : "me-1.5")} />
+                                            <Plus className={cn("h-3.5 w-3.5", "me-1.5")} />
                                             {t('knowledgeBase.addAll', { count: questions.length, defaultValue: `Add All Questions (${questions.length})` })}
                                         </Button>
                                     )}
@@ -661,7 +661,7 @@ export function KnowledgeBaseSidebar({
                                             key={q.id}
                                             className="p-3 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-hotel-gold/60 transition-all flex items-start justify-between gap-3"
                                         >
-                                            <div className={cn("flex-1 min-w-0", isRTL ? "text-end" : "text-start")}>
+                                            <div className={cn("flex-1 min-w-0", "text-start")}>
                                                 <p className="text-xs font-medium text-slate-900 dark:text-slate-100 line-clamp-2 leading-relaxed">
                                                     {q.question_text}
                                                 </p>

@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge'
 import { useNotifications } from '@/hooks/useNotifications'
 import { useWorkspaces } from '@/hooks/useWorkspaces'
 import { cn } from '@/lib/utils'
-import { Award, Bell, BookOpen, GraduationCap, Home, Menu, Search, User } from 'lucide-react'
+import { Bell, BookOpen, GraduationCap, Home, Menu, Search, Trophy, User } from 'lucide-react'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
@@ -87,13 +87,15 @@ export function MobileNavigation({ className, onOpenMenu }: MobileNavigationProp
               label={t('search', 'Search')}
             />
 
-            {/* 4. Certificates */}
+            {/* 4. Achievements - points, streaks and badges drive daily return
+                visits more than certificates do; certificates stay one tap
+                away in the menu drawer and from My day / Achievements itself. */}
             <NavButton
-              to="/learn/certificates"
-              isActive={isActive('/learn/certificates')}
+              to="/learn/achievements"
+              isActive={isActive('/learn/achievements')}
               onClick={handleHaptic}
-              icon={<Award className="w-5 h-5" />}
-              label={t('certificates', 'Certificates')}
+              icon={<Trophy className="w-5 h-5" />}
+              label={t('workspace.achievements', 'Achievements')}
             />
 
             {/* 5. Me / Profile or Drawer */}

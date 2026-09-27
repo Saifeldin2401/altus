@@ -570,6 +570,7 @@ export default function MediaLibraryPage() {
                               {t('media:actions.open', 'View')}
                             </Button>
                             <Button
+                              aria-label={t('common:a11y.deleteItem', { name: asset.title ?? '', defaultValue: 'Delete {{name}}' })}
                               size="icon"
                               variant="ghost"
                               className="h-8 w-8 text-destructive hover:bg-destructive/10"

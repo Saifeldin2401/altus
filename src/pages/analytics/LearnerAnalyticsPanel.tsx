@@ -41,12 +41,12 @@ function TopicBreakdown({ userId, name }: { userId: string; name: string }) {
     })
 
     return (
-        <Card className="rounded-[8px] border border-[#DDDBD4] dark:border-[#30404D] bg-[#FFFFFF] dark:bg-[#15212E] shadow-none">
+        <Card className="rounded-[8px] border border-ds-border dark:border-ds-chrome-border bg-ds-surface dark:bg-ds-chrome shadow-none">
             <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="space-y-1">
                     <CardTitle className="text-base font-bold flex items-center gap-2">
-                      <BarChart3 className="h-4 w-4 text-[#86672C] dark:text-[#D4AA55]" />
+                      <BarChart3 className="h-4 w-4 text-ds-brass" />
                       <span>Strengths &amp; Gaps Analysis — {name}</span>
                     </CardTitle>
                     <CardDescription className="text-xs">
@@ -63,7 +63,7 @@ function TopicBreakdown({ userId, name }: { userId: string; name: string }) {
                 ) : !data || data.length === 0 ? (
                     <EmptyState size="sm" title="No question attempts yet for this learner" />
                 ) : (
-                    <div className="rounded-[6px] border border-[#DDDBD4] dark:border-[#30404D] overflow-hidden bg-background">
+                    <div className="rounded-[6px] border border-ds-border dark:border-ds-chrome-border overflow-hidden bg-background">
                       <Table>
                           <TableHeader>
                               <TableRow className="bg-muted/30">
@@ -219,12 +219,12 @@ export default function LearnerAnalyticsPanel() {
             </div>
 
             {/* 2. Learner Directory Table Card */}
-            <Card className="rounded-[8px] border border-[#DDDBD4] dark:border-[#30404D] bg-[#FFFFFF] dark:bg-[#15212E] shadow-none">
-                <CardHeader className="pb-3 border-b border-[#DDDBD4]/50 dark:border-[#30404D]/50">
+            <Card className="rounded-[8px] border border-ds-border dark:border-ds-chrome-border bg-ds-surface dark:bg-ds-chrome shadow-none">
+                <CardHeader className="pb-3 border-b border-ds-border/50 dark:border-ds-chrome-border/50">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                       <div>
                         <CardTitle className="text-base font-bold flex items-center gap-2">
-                          <Users className="h-4 w-4 text-[#86672C] dark:text-[#B79A62]" />
+                          <Users className="h-4 w-4 text-ds-brass" />
                           <span>{isRTL ? 'سجل أداء الموظفين والمتعلمين' : 'Learner Performance Directory'}</span>
                         </CardTitle>
                         <CardDescription className="text-xs">
@@ -296,7 +296,7 @@ export default function LearnerAnalyticsPanel() {
                                               <div className="flex items-center gap-2">
                                                   <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted/60">
                                                       <div
-                                                          className="h-full rounded-full bg-[#86672C] dark:bg-[#B79A62] transition-all duration-500"
+                                                          className="h-full rounded-full bg-ds-brass transition-all duration-500"
                                                           style={{ width: `${Math.min(100, Math.max(0, row.avg_progress))}%` }}
                                                       />
                                                   </div>

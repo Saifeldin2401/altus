@@ -355,7 +355,7 @@ export function StudioStageBasics({
                       <Icon className="w-4 h-4" />
                     </div>
                     {mode.badge && (
-                      <Badge className="bg-purple-600 text-white text-[9px] px-1.5 py-0 h-4">
+                      <Badge className="bg-purple-600 text-white text-[9px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
                         {mode.badge}
                       </Badge>
                     )}
@@ -432,11 +432,11 @@ export function StudioStageBasics({
                       <p className="text-xs font-bold text-foreground truncate">
                         {selectedDocObj.title}
                       </p>
-                      <Badge className="bg-blue-600 text-white text-[9px] h-4">
+                      <Badge className="bg-blue-600 text-white text-[9px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
                         {selectedDocObj.content_type || selectedDocObj.file_type || 'SOP Document'}
                       </Badge>
                       {selectedDocObj.department?.name && (
-                        <Badge variant="outline" className="text-[9px] h-4">
+                        <Badge variant="outline" className="text-[9px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
                           {selectedDocObj.department.name}
                         </Badge>
                       )}
@@ -483,10 +483,10 @@ export function StudioStageBasics({
                       <p className="text-xs font-bold text-foreground truncate">
                         {uploadedFileInfo.name}
                       </p>
-                      <Badge className="bg-emerald-600 text-white text-[9px] h-4">
+                      <Badge className="bg-emerald-600 text-white text-[9px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
                         Uploaded Document ({(uploadedFileInfo.size / 1024).toFixed(1)} KB)
                       </Badge>
-                      <Badge variant="outline" className="text-[9px] h-4 border-emerald-300 text-emerald-700 dark:text-emerald-300">
+                      <Badge variant="outline" className="text-[9px] px-1.5 py-0.5 shrink-0 whitespace-nowrap border-emerald-300 text-emerald-700 dark:text-emerald-300">
                         {uploadedFileInfo.wordCount} words extracted
                       </Badge>
                     </div>

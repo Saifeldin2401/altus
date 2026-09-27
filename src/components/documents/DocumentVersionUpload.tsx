@@ -1,5 +1,5 @@
 import { ListSkeleton } from "@/components/loading/ListSkeleton";
-import { EmptyState } from "@/components/shared/EmptyState";
+import { EmptyState } from "@/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -230,7 +230,7 @@ export function DocumentVersionUpload({
           )}
           <Button
             size="sm"
-            className="bg-[#0B1C3E] hover:bg-[#1a3a6e]"
+            className="bg-ds-ink hover:bg-ds-ink/90"
             onClick={() => setUploadDialogOpen(true)}
           >
             <Upload className="w-4 h-4 me-1.5" />
@@ -241,13 +241,13 @@ export function DocumentVersionUpload({
 
       {/* Current Version Info */}
       {currentVersion && (
-        <div className="p-4 bg-[#0B1C3E]/5 border border-[#0B1C3E]/20 rounded-lg">
+        <div className="p-4 bg-ds-ink/5 border border-ds-ink/20 rounded-lg">
           <div className="flex items-center gap-4">
             {getFileIcon(currentVersion.fileType)}
             <div className="flex-1">
               <div className="flex items-center gap-2">
                 <span className="font-semibold">Current Version</span>
-                <Badge className="bg-[#0B1C3E] text-white">
+                <Badge className="bg-ds-ink text-white">
                   v{currentVersion.versionNumber}
                 </Badge>
               </div>
@@ -270,13 +270,14 @@ export function DocumentVersionUpload({
       {/* Version List */}
       {versions.length === 0 ? (
         <EmptyState
-          icon={History}
+          icon={<History className="h-6 w-6" aria-hidden="true" />}
           title="No Versions Yet"
           description="Upload the first version of this document to get started."
-          action={{
-            label: "Upload First Version",
-            onClick: () => setUploadDialogOpen(true),
-          }}
+          action={
+            <button type="button" onClick={() => setUploadDialogOpen(true)} className="inline-flex items-center gap-1.5 text-sm font-semibold text-ds-accent hover:underline">
+              Upload First Version
+            </button>
+          }
           className="min-h-[250px]"
         />
       ) : (
@@ -292,7 +293,7 @@ export function DocumentVersionUpload({
                   className={cn(
                     "group border rounded-lg transition-all",
                     isCurrent
-                      ? "border-[#0B1C3E]/30 bg-[#0B1C3E]/5"
+                      ? "border-ds-ink/30 bg-ds-ink/5"
                       : "border-border hover:border-muted-foreground/50"
                   )}
                 >
@@ -313,7 +314,7 @@ export function DocumentVersionUpload({
                       className={cn(
                         "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold",
                         isCurrent
-                          ? "bg-[#0B1C3E] text-white"
+                          ? "bg-ds-ink text-white"
                           : "bg-muted text-muted-foreground"
                       )}
                     >
@@ -391,7 +392,7 @@ export function DocumentVersionUpload({
                         <div className="flex items-center gap-3">
                           <Avatar className="w-8 h-8">
                             <AvatarImage src={version.uploadedBy.avatar} />
-                            <AvatarFallback className="text-xs bg-[#0B1C3E] text-white">
+                            <AvatarFallback className="text-xs bg-ds-ink text-white">
                               {version.uploadedBy.name.split(" ").map((n) => n[0]).join("").toUpperCase()}
                             </AvatarFallback>
                           </Avatar>
@@ -465,7 +466,7 @@ export function DocumentVersionUpload({
                 className={cn(
                   "border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors",
                   isDragActive
-                    ? "border-[#0B1C3E] bg-[#0B1C3E]/5"
+                    ? "border-ds-ink bg-ds-ink/5"
                     : "border-muted-foreground/25 hover:border-muted-foreground/50"
                 )}
               >
@@ -527,7 +528,7 @@ export function DocumentVersionUpload({
                 </div>
                 <div className="h-2 bg-muted rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-[#0B1C3E] transition-all duration-200"
+                    className="h-full bg-ds-ink transition-all duration-200"
                     style={{ width: `${uploadProgress}%` }}
                   />
                 </div>
@@ -545,7 +546,7 @@ export function DocumentVersionUpload({
             <Button
               onClick={handleUpload}
               disabled={!selectedFile || isUploading}
-              className="bg-[#0B1C3E] hover:bg-[#1a3a6e]"
+              className="bg-ds-ink hover:bg-ds-ink/90"
             >
               {isUploading ? (
                 <span className="animate-spin me-2">◌</span>
@@ -608,7 +609,7 @@ export function DocumentVersionUpload({
             <Button
               onClick={handleCompare}
               disabled={!compareVersion1 || !compareVersion2 || compareVersion1 === compareVersion2}
-              className="bg-[#0B1C3E] hover:bg-[#1a3a6e]"
+              className="bg-ds-ink hover:bg-ds-ink/90"
             >
               <ArrowLeftRight className="w-4 h-4 me-2" />
               Compare

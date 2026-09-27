@@ -36,7 +36,7 @@ export function NotificationSettings() {
                 </CardHeader>
                 <CardContent className="space-y-6 pt-6">
                     <div className="flex items-center justify-between pb-4 border-b border-border/50">
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center gap-x-4">
                             <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-full">
                                 <Globe className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                             </div>
@@ -67,7 +67,7 @@ export function NotificationSettings() {
                     </div>
 
                     <div className="flex items-center justify-between pb-2">
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center gap-x-4">
                             <div className="p-2 bg-primary/10 rounded-full">
                                 <Mail className="h-5 w-5 text-primary" />
                             </div>
@@ -95,7 +95,7 @@ export function NotificationSettings() {
                     <div className="divide-y divide-border/50">
                         {/* Approvals */}
                         <div className="p-6 flex items-center justify-between group">
-                            <div className="flex items-center space-x-4">
+                            <div className="flex items-center gap-x-4">
                                 <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full">
                                     <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
                                 </div>
@@ -126,7 +126,7 @@ export function NotificationSettings() {
 
                         {/* Learning & Training */}
                         <div className="p-6 flex items-center justify-between group">
-                            <div className="flex items-center space-x-4">
+                            <div className="flex items-center gap-x-4">
                                 <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-full">
                                     <BookOpen className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                                 </div>
@@ -157,7 +157,7 @@ export function NotificationSettings() {
 
                         {/* Announcements */}
                         <div className="p-6 flex items-center justify-between group">
-                            <div className="flex items-center space-x-4">
+                            <div className="flex items-center gap-x-4">
                                 <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full">
                                     <AlertCircle className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                                 </div>
@@ -188,7 +188,7 @@ export function NotificationSettings() {
 
                         {/* Maintenance */}
                         <div className="p-6 flex items-center justify-between group">
-                            <div className="flex items-center space-x-4">
+                            <div className="flex items-center gap-x-4">
                                 <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full">
                                     <Wrench className="h-5 w-5 text-orange-600 dark:text-orange-400" />
                                 </div>

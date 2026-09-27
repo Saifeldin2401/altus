@@ -121,22 +121,22 @@ interface DocumentConfidentialityBadgeProps {
 
 const sizeClasses = {
   sm: {
-    badge: "text-[10px] px-1.5 py-0 h-5 gap-1",
-    pill: "text-[10px] px-2 py-0.5 gap-1",
+    badge: "text-[10px] px-1.5 py-0.5 min-h-[20px] gap-1 shrink-0 whitespace-nowrap",
+    pill: "text-[10px] px-2 py-0.5 gap-1 shrink-0 whitespace-nowrap",
     card: "p-2 gap-2",
-    dot: "w-2 h-2",
+    dot: "w-2 h-2 shrink-0",
   },
   default: {
-    badge: "text-xs px-2.5 py-0 h-6 gap-1.5",
-    pill: "text-xs px-3 py-1 gap-1.5",
+    badge: "text-xs px-2.5 py-0.5 min-h-[24px] gap-1.5 shrink-0 whitespace-nowrap",
+    pill: "text-xs px-3 py-1 gap-1.5 shrink-0 whitespace-nowrap",
     card: "p-3 gap-3",
-    dot: "w-2.5 h-2.5",
+    dot: "w-2.5 h-2.5 shrink-0",
   },
   lg: {
-    badge: "text-sm px-3 py-0 h-7 gap-2",
-    pill: "text-sm px-4 py-1.5 gap-2",
+    badge: "text-sm px-3 py-1 min-h-[28px] gap-2 shrink-0 whitespace-nowrap",
+    pill: "text-sm px-4 py-1.5 gap-2 shrink-0 whitespace-nowrap",
     card: "p-4 gap-4",
-    dot: "w-3 h-3",
+    dot: "w-3 h-3 shrink-0",
   },
 };
 

@@ -134,7 +134,7 @@ export function TrainingCategoryBadge({
       variant="outline"
       className={cn(
         "font-medium transition-colors border",
-        size === 'sm' ? "text-[10px] px-1.5 py-0.2 h-5 gap-1" : "text-xs px-2 py-0.5 gap-1.5",
+        size === 'sm' ? "text-[10px] px-2 py-0.5 min-h-[20px] gap-1 shrink-0 whitespace-nowrap" : "text-xs px-2.5 py-0.5 min-h-[22px] gap-1.5 shrink-0 whitespace-nowrap",
         theme.bg,
         theme.text,
         theme.border,
@@ -142,7 +142,7 @@ export function TrainingCategoryBadge({
       )}
     >
       {showIcon && <Icon className={size === 'sm' ? "h-3 w-3 shrink-0" : "h-3.5 w-3.5 shrink-0"} />}
-      <span className="truncate">{category}</span>
+      <span className="whitespace-nowrap">{category}</span>
     </Badge>
   )
 }

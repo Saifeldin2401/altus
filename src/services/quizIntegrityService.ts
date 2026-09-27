@@ -43,6 +43,7 @@ type QuizDefinitionRow = {
   id: string
   title: string
   status?: string | null
+  organization_id: string
   questions?: QuizQuestionLinkRow[] | null
 }
 
@@ -464,6 +465,7 @@ async function autoRepairEmptyQuiz(
         hint: q.hint || null,
         status: 'published' as const,
         created_by: userId,
+        organization_id: quiz.organization_id,
         updated_at: timestamp
       })
       .select('id')
@@ -478,6 +480,7 @@ async function autoRepairEmptyQuiz(
       await supabase.from('unified_question_options').insert(
         q.options.map((opt, idx) => ({
           question_id: questionRecord.id,
+          organization_id: quiz.organization_id,
           option_text: opt.text,
           is_correct: opt.is_correct,
           display_order: idx
@@ -488,6 +491,7 @@ async function autoRepairEmptyQuiz(
     await supabase.from('unified_quiz_questions').insert({
       quiz_id: quiz.id,
       question_id: questionRecord.id,
+      organization_id: quiz.organization_id,
       display_order: i + 1
     })
 
@@ -504,6 +508,7 @@ async function fetchQuizDefinition(quizId: string) {
       id,
       title,
       status,
+      organization_id,
       questions:unified_quiz_questions(
         id,
         question_id,
@@ -719,6 +724,15 @@ async function applyQuestionRepair(payload: RepairPayload) {
     return false
   }
 
+  // Fetch question organization_id
+  const { data: existingQ, error: fetchQError } = await supabase
+    .from('unified_questions')
+    .select('organization_id')
+    .eq('id', normalized.question_id)
+    .single()
+
+  if (fetchQError || !existingQ) throw fetchQError || new Error('Question not found')
+
   // Write to unified_questions (source_domain='knowledge')
   const { error: questionError } = await supabase
     .from('unified_questions')
@@ -729,7 +743,7 @@ async function applyQuestionRepair(payload: RepairPayload) {
       explanation: normalized.explanation,
       hint: normalized.hint,
       updated_at: new Date().toISOString()
-    } as any)
+    })
     .eq('id', normalized.question_id)
 
   if (questionError) throw questionError
@@ -748,6 +762,7 @@ async function applyQuestionRepair(payload: RepairPayload) {
       .insert(
         nextOptions.map((option, index) => ({
           question_id: normalized.question_id,
+          organization_id: existingQ.organization_id,
           option_text: option.text,
           is_correct: option.is_correct,
           display_order: index,

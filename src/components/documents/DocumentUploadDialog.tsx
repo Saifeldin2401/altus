@@ -398,7 +398,7 @@ export function DocumentUploadDialog({ open, onOpenChange }: DocumentUploadDialo
             </div>
           )}
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-x-2">
             <input
               type="checkbox"
               id="acknowledgment"

@@ -140,7 +140,7 @@ const FolderNode: React.FC<FolderNodeProps> = ({
         className={cn(
           "group flex items-center gap-1 py-1.5 px-2 rounded-md cursor-pointer transition-all duration-200",
           "hover:bg-accent",
-          isSelected && "bg-[#0B1C3E] text-white hover:bg-[#1a3a6e]",
+          isSelected && "bg-ds-ink text-white hover:bg-ds-ink/90",
           isDragging && "opacity-50",
           isDragOver && "bg-hotel-gold/20 ring-2 ring-hotel-gold ring-inset",
           level > 0 && "ms-4"

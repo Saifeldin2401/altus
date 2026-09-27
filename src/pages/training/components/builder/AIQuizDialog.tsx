@@ -45,7 +45,6 @@ export function AIQuizDialog({
   sections,
   setSections,
   setActiveSection,
-  isRTL,
 }: AIQuizDialogProps) {
   const { t } = useTranslation('training')
   const { toast } = useToast()
@@ -66,11 +65,11 @@ export function AIQuizDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+          <DialogTitle className={`flex items-center gap-2`}>
             <Sparkles className="w-5 h-5 text-purple-600" />
             {t('builder.aiQuestionGenerator')}
           </DialogTitle>
-          <DialogDescription className={isRTL ? 'text-end' : ''}>
+          <DialogDescription className={''}>
             {t('builder.aiDialogDescription')}
           </DialogDescription>
         </DialogHeader>
@@ -84,7 +83,7 @@ export function AIQuizDialog({
               value={quizCustomTitle}
               onChange={(e) => setQuizCustomTitle(e.target.value)}
               placeholder={t('builder.quizTitlePlaceholder', 'Enter quiz title (e.g. Linen Care Knowledge Assessment)')}
-              className={`w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 ${isRTL ? 'text-end' : ''}`}
+              className={`w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500`}
             />
           </div>
 

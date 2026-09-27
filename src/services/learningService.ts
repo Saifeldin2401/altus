@@ -1049,110 +1049,13 @@ export const learningService = {
     },
 
     async resetModuleProgress(moduleId: string, userId: string) {
-        const timestamp = new Date().toISOString()
-        const { data: existingRow, error: selectError } = await supabase
-            .from('training_progress')
-            .select('*')
-            .eq('user_id', userId)
-            .eq('lp_content_type', 'module')
-            .eq('training_id', moduleId)
-            .maybeSingle()
-
-        if (selectError) throw selectError
-
-        const payload = {
-            id: existingRow?.id,
-            assignment_id: existingRow?.assignment_id ?? null,
-            user_id: userId,
-            lp_content_type: 'module',
-            training_id: moduleId,
-            status: toTrainingStatus('assigned'),
-            progress_percentage: 0,
-            score_percentage: null,
-            passed: null,
-            completed_at: null,
-            last_accessed_at: timestamp,
-            last_activity_at: timestamp,
-            last_block_index: null,
-            last_block_id: null,
-            time_spent_seconds: 0,
-            metadata: {},
-            updated_at: timestamp,
-        }
-
-        const { error } = await supabase
-            .from('training_progress')
-            .upsert(payload, { onConflict: 'user_id,training_id' })
-
-        if (error) throw error
-
-        // Lesson blocks live in `lessons`.
-        const { data: quizBlocks, error: quizBlocksError } = await supabase
-            .from('lessons')
-            .select('id, content_data')
-            .eq('training_module_id', moduleId)
-            .eq('block_type', 'quiz')
-
-        if (quizBlocksError) throw quizBlocksError
-
-        const quizContentIds = Array.from(new Set(
-            (quizBlocks || [])
-                .map((block) => {
-                    const contentData = block.content_data && typeof block.content_data === 'object' && !Array.isArray(block.content_data)
-                        ? (block.content_data as Record<string, unknown>)
-                        : null
-                    const linkedQuizId = contentData?.quiz_id
-                    return typeof linkedQuizId === 'string' && linkedQuizId.length > 0
-                        ? linkedQuizId
-                        : block.id
-                })
-                .filter((contentId): contentId is string => typeof contentId === 'string' && contentId.length > 0)
-        ))
-
-        if (quizContentIds.length === 0) return
-
-        const { data: existingQuizRows, error: quizRowsError } = await supabase
-            .from('training_progress')
-            .select('*')
-            .eq('user_id', userId)
-            .eq('lp_content_type', 'quiz')
-            .in('training_id', quizContentIds)
-
-        if (quizRowsError) throw quizRowsError
-
-        const existingQuizRowsByContent = new Map(
-            (existingQuizRows || []).map((row: { id: string; training_id: string; assignment_id: string | null }) => [row.training_id, row])
-        )
-
-        const quizResetPayload = quizContentIds.map((contentId) => {
-            const existingQuizRow = existingQuizRowsByContent.get(contentId)
-
-            return {
-                id: existingQuizRow?.id,
-                assignment_id: existingQuizRow?.assignment_id ?? null,
-                user_id: userId,
-                lp_content_type: 'quiz',
-                training_id: contentId,
-                status: toTrainingStatus('assigned'),
-                progress_percentage: 0,
-                score_percentage: null,
-                passed: null,
-                completed_at: null,
-                last_accessed_at: timestamp,
-                last_activity_at: timestamp,
-                last_block_index: null,
-                last_block_id: null,
-                time_spent_seconds: 0,
-                metadata: {},
-                updated_at: timestamp,
-            }
+        const { data, error } = await supabase.rpc('reset_training_progress', {
+            p_training_module_id: moduleId,
+            p_user_id: userId,
         })
 
-        const { error: quizResetError } = await supabase
-            .from('training_progress')
-            .upsert(quizResetPayload, { onConflict: 'user_id,training_id' })
-
-        if (quizResetError) throw quizResetError
+        if (error) throw error
+        return data
     },
 
     async reassignModuleUser({
@@ -1481,25 +1384,33 @@ export const learningService = {
 
         if (existingError) throw existingError
 
-        const existingScore = typeof existingRow?.score_percentage === 'number' ? existingRow.score_percentage : null
-        const nextScore = typeof progress.score_percentage === 'number' ? progress.score_percentage : null
-        const existingProgress = typeof existingRow?.progress_percentage === 'number' ? existingRow.progress_percentage : null
-        const nextProgress = typeof progress.progress_percentage === 'number' ? progress.progress_percentage : null
-        const shouldPreserveCompletion = existingRow?.status === 'completed' && progress.status !== 'completed'
-        // A later failed retake must never erase a successful attempt. The attempt
-        // counter and latest-review metadata still update, while the authoritative
-        // completion/pass state remains successful.
-        const shouldPreserveSuccessfulQuizAttempt =
-            existingRow?.lp_content_type === 'quiz' &&
-            existingRow?.passed === true &&
-            progress.passed === false
+        if (progress.content_type === 'module' && progress.status === 'completed' && existingRow?.status !== 'completed') {
+            const rawCompletedBlocks = progress.metadata && typeof progress.metadata === 'object' && !Array.isArray(progress.metadata)
+                ? (progress.metadata as Record<string, unknown>).completed_blocks
+                : undefined
+            const completedBlockIds = Array.isArray(rawCompletedBlocks)
+                ? rawCompletedBlocks.filter((id): id is string => typeof id === 'string')
+                : undefined
 
-        const keepExistingScore =
-            existingScore !== null &&
-            nextScore !== null &&
-            Number.isFinite(existingScore) &&
-            Number.isFinite(nextScore) &&
-            existingScore > nextScore
+            const rpcResult = await this.completeTrainingModuleRPC(progress.content_id, {
+                assignmentId: progress.assignment_id || undefined,
+                completedBlockIds,
+                lastBlockId: progress.last_block_id || undefined,
+                lastBlockIndex: progress.last_block_index ?? undefined,
+                timeSpentSeconds: progress.time_spent_seconds || 0,
+            })
+
+            const { data: updatedRow, error: fetchErr } = await supabase
+                .from('training_progress')
+                .select('*, content_id:training_id, content_type:lp_content_type')
+                .eq('id', rpcResult.training_progress_id)
+                .single()
+
+            if (fetchErr) throw fetchErr
+            return { ...updatedRow, status: fromTrainingStatus(updatedRow.status) } as LearningProgress
+        }
+
+        const isAlreadyCompleted = existingRow?.status === 'completed'
 
         const mergedMetadata = (
             existingRow?.metadata &&
@@ -1513,33 +1424,37 @@ export const learningService = {
             Object.assign(mergedMetadata, progress.metadata as Record<string, unknown>)
         }
 
+        const existingProgress = typeof existingRow?.progress_percentage === 'number' ? existingRow.progress_percentage : null
+        const nextProgress = typeof progress.progress_percentage === 'number' ? progress.progress_percentage : null
         const bestProgressPercentage =
             existingProgress !== null && nextProgress !== null
                 ? Math.max(existingProgress, nextProgress)
                 : (nextProgress ?? existingProgress)
-        const resolvedStatus = (shouldPreserveCompletion || shouldPreserveSuccessfulQuizAttempt)
+
+        const resolvedStatus = isAlreadyCompleted
             ? 'completed'
-            : progress.status
-        const resolvedProgressPercentage = resolvedStatus === 'completed'
+            : (progress.status === 'completed' ? 'in_progress' : progress.status)
+
+        const resolvedProgressPercentage = isAlreadyCompleted
             ? 100
             : Math.min(bestProgressPercentage ?? 0, 99)
-
-        const bestScorePercentage = (shouldPreserveCompletion || shouldPreserveSuccessfulQuizAttempt)
-            ? (existingRow?.score_percentage ?? progress.score_percentage)
-            : (keepExistingScore ? existingRow?.score_percentage : progress.score_percentage)
-        const bestPassed = (shouldPreserveCompletion || shouldPreserveSuccessfulQuizAttempt)
-            ? (existingRow?.passed ?? progress.passed)
-            : (keepExistingScore ? existingRow?.passed : progress.passed)
-        const bestCompletedAt = (shouldPreserveCompletion || shouldPreserveSuccessfulQuizAttempt)
-            ? (existingRow?.completed_at ?? progress.completed_at)
-            : (keepExistingScore ? (existingRow?.completed_at ?? progress.completed_at) : (progress.completed_at ?? existingRow?.completed_at))
 
         // Translate the learning-model payload to training_progress columns:
         // content_id -> training_id, content_type -> lp_content_type, and the
         // learning_assignment_status -> training_status enum. training_progress has
         // no content_id/content_type/training_module_id columns.
-        const { content_id: _ci, content_type: _ct, training_module_id: _tmi, status: _st, ...restProgress } = progress
-        void _ci; void _ct; void _tmi; void _st
+        //
+        // Result columns (passed, score_percentage, quiz_score, completed_at) are
+        // written only by server RPCs (enforce_training_progress_integrity rejects
+        // client changes). They are left out of the payload entirely: sending them -
+        // even as null - overwrote a failed quiz's recorded result and made every
+        // later autosave fail with 42501 until the learner passed.
+        const {
+            content_id: _ci, content_type: _ct, training_module_id: _tmi, status: _st,
+            passed: _p, score_percentage: _sp, completed_at: _ca, quiz_score: _qs,
+            ...restProgress
+        } = progress as LearningProgress & { passed?: unknown; score_percentage?: unknown; completed_at?: unknown; quiz_score?: unknown }
+        void _ci; void _ct; void _tmi; void _st; void _p; void _sp; void _ca; void _qs
 
         const progressData = {
             ...restProgress,
@@ -1548,9 +1463,6 @@ export const learningService = {
             lp_content_type: progress.content_type,
             status: toTrainingStatus(resolvedStatus),
             progress_percentage: resolvedProgressPercentage,
-            score_percentage: bestScorePercentage,
-            passed: bestPassed,
-            completed_at: bestCompletedAt,
             metadata: (Object.keys(mergedMetadata).length ? mergedMetadata : progress.metadata) as Json | undefined,
             updated_at: new Date().toISOString()
         }

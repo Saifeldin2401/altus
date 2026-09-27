@@ -970,6 +970,7 @@ export default function OrganizationProfile() {
                   </Button>
                   {editLogoUrl && (
                     <Button
+                      aria-label="Remove logo"
                       type="button"
                       variant="ghost"
                       size="icon"
@@ -1018,6 +1019,7 @@ export default function OrganizationProfile() {
                   </Button>
                   {editFaviconUrl && (
                     <Button
+                      aria-label="Remove favicon"
                       type="button"
                       variant="ghost"
                       size="icon"

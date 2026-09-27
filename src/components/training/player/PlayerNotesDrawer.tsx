@@ -166,8 +166,7 @@ export function PlayerNotesDrawer({
             {/* Drawer */}
             <div
                 className={cn(
-                    "fixed inset-y-0 z-[100] w-full sm:w-[440px] bg-slate-950 text-slate-100 shadow-2xl border-s border-slate-800 flex flex-col transition-transform duration-300 animate-in slide-in-from-right",
-                    isRTL ? "start-0 border-e border-s-0 slide-in-from-left" : "end-0"
+                    "fixed inset-y-0 z-[100] w-full sm:w-[440px] bg-slate-950 text-slate-100 shadow-2xl border-s border-slate-800 flex flex-col transition-transform duration-300 animate-in slide-in-from-right rtl:slide-in-from-left end-0",
                 )}
             >
                 {/* Header */}
@@ -181,7 +180,7 @@ export function PlayerNotesDrawer({
                                 <h3 className="text-sm font-bold text-white whitespace-nowrap">
                                     {isRTL ? 'مفكرتي الدراسية' : 'Personal Study Notes'}
                                 </h3>
-                                <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/40 text-[10px] h-4 px-1.5">
+                                <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/40 text-[10px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
                                     {totalNotesCount} {isRTL ? 'ملاحظات' : 'Notes'}
                                 </Badge>
                             </div>

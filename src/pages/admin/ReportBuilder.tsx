@@ -249,7 +249,7 @@ export default function ReportBuilder() {
                                 </div>
                                 
                                 <div className="mt-8 pt-4 border-t flex flex-col sm:flex-row justify-between items-center gap-4">
-                                    <div className="flex items-center space-x-2">
+                                    <div className="flex items-center gap-x-2">
                                         <Switch
                                             id="activeStatus"
                                             checked={Boolean(selectedReport.is_active)}

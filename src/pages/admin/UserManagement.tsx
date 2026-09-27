@@ -1,7 +1,7 @@
 import { UserBulkActionsBar } from '@/components/admin/UserBulkActionsBar'
 import { UserForm } from '@/components/admin/UserForm'
 import { DeleteConfirmation } from '@/components/shared/DeleteConfirmation'
-import { EmptyState } from '@/components/shared/EmptyState'
+import { EmptyState } from '@/ui'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -302,7 +302,7 @@ export default function UserManagement() {
   const hardDeleteUserMutation = useMutation({
     mutationFn: async (id: string) => {
       const { data, error: fnError } = await supabase.functions.invoke('delete-user', {
-        body: { userId: id },
+        body: { userId: id, organizationId: currentOrganization?.id },
       })
 
       if (fnError) {
@@ -916,13 +916,13 @@ export default function UserManagement() {
                   </button>
 
                   <span className="hidden shrink-0 md:block">{getRoleBadge(user.role)}</span>
-                  <span className="hidden w-24 shrink-0 text-end text-xs text-ds-muted lg:block">
+                  <span className="hidden min-w-[100px] whitespace-nowrap shrink-0 text-end text-xs text-ds-muted lg:block">
                     {user.last_login_at ? new Date(user.last_login_at).toLocaleDateString() : t('people.neverSignedIn', 'Never signed in')}
                   </span>
                   <span className="flex shrink-0 items-center gap-1.5">
                     {(user.account_status && user.account_status !== 'active') || !user.is_active ? getStatusBadge(user) : null}
                     {user.force_password_reset && (
-                      <span className="hidden rounded-[3px] bg-ds-warning-soft px-1.5 py-0.5 text-[11px] font-medium text-ds-warning sm:inline">
+                      <span className="hidden rounded-[3px] bg-ds-warning-soft px-1.5 py-0.5 text-[11px] font-medium text-ds-warning sm:inline whitespace-nowrap shrink-0">
                         {t_ext('reset', 'Reset required')}
                       </span>
                     )}
@@ -1002,14 +1002,14 @@ export default function UserManagement() {
         </div>
       ) : (
         <EmptyState
-          icon={Users}
+          icon={<Users className="h-6 w-6" aria-hidden="true" />}
           title={searchTerm || statusFilter !== 'all' || roleCategoryFilter !== 'all' ? t('people.noMatch', 'Nobody matches these filters') : t('empty.title', 'No people yet')}
           description={searchTerm || statusFilter !== 'all' || roleCategoryFilter !== 'all' ? t('people.noMatchBody', 'Try another role, status or search.') : t('empty.description', 'Invite colleagues or add them directly.')}
-          action={{
-            label: t('add_user', 'Add a person'),
-            onClick: openCreateForm,
-            icon: Plus
-          }}
+          action={
+            <button type="button" onClick={openCreateForm} className="inline-flex items-center gap-1.5 text-sm font-semibold text-ds-accent hover:underline">
+              <Plus className="h-4 w-4" aria-hidden="true" />{t('add_user', 'Add a person')}
+            </button>
+          }
         />
       )}
 

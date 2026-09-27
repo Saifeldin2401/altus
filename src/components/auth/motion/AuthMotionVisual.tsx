@@ -1,12 +1,15 @@
-import { memo, useState, useEffect } from 'react';
+import { lazy, memo, Suspense, useState, useEffect } from 'react';
 import type { AuthMotionVisualProps } from './types';
-import { MotionLottie } from './MotionLottie';
 import { MotionVideo } from './MotionVideo';
 import { MotionAnimation } from './MotionAnimation';
 import { StaticFallback } from './StaticFallback';
 import { OperationalOverlay } from './OperationalOverlay';
 import { cn } from '@/lib/utils';
 import { ShieldCheck } from 'lucide-react';
+
+// lottie-web is ~600 kB. The animation is decorative, so it loads after the
+// sign-in form instead of blocking it (and never loads when it isn't shown).
+const MotionLottie = lazy(() => import('./MotionLottie'));
 
 function AuthMotionVisualComponent({
   visualType = 'auto',
@@ -116,7 +119,9 @@ function AuthMotionVisualComponent({
         {/* â”€â”€ PRIMARY LEARNING MOTION VISUAL (Lottie - Fit to Viewport) â”€â”€ */}
         <div className="relative w-full flex-1 min-h-0 max-h-[260px] sm:max-h-[300px] xl:max-h-[330px] mx-auto my-1 flex items-center justify-center pointer-events-none">
           {shouldUseLottie ? (
-            <MotionLottie isPaused={prefersReducedMotion} />
+            <Suspense fallback={null}>
+              <MotionLottie isPaused={prefersReducedMotion} />
+            </Suspense>
           ) : shouldUseVideo ? (
             <div className="w-full h-full rounded-2xl overflow-hidden border border-ds-border shadow-md">
               <MotionVideo

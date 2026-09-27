@@ -175,7 +175,7 @@ export function PlayerCelebrationModal({
                         transform: cardTransform,
                         transition: 'transform 0.15s ease-out'
                     }}
-                    className="cursor-pointer mb-6 rounded-2xl bg-gradient-to-br from-[#0B1528] via-[#111C33] to-[#0B1528] border-2 border-amber-500/60 p-6 text-slate-100 shadow-2xl relative group overflow-hidden"
+                    className="cursor-pointer mb-6 rounded-2xl bg-gradient-to-br from-ds-chrome via-ds-chrome-raised to-ds-chrome border-2 border-amber-500/60 p-6 text-slate-100 shadow-2xl relative group overflow-hidden"
                 >
                     {/* Gold Foil Corner Accents */}
                     <div className="absolute top-0 start-0 w-8 h-8 border-t-2 border-s-2 border-amber-400 rounded-ss-xl m-2" />

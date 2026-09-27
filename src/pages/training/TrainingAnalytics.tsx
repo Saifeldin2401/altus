@@ -427,29 +427,29 @@ export default function TrainingAnalytics() {
                                 <AreaChart data={completionTrend} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                                     <defs>
                                         <linearGradient id="colorCompletions" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#15212E" stopOpacity={0.35} />
-                                            <stop offset="95%" stopColor="#15212E" stopOpacity={0} />
+                                            <stop offset="5%" stopColor="rgb(var(--ds-chrome))" stopOpacity={0.35} />
+                                            <stop offset="95%" stopColor="rgb(var(--ds-chrome))" stopOpacity={0} />
                                         </linearGradient>
                                     </defs>
-                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E4E4DF" />
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgb(var(--ds-border))" />
                                     <XAxis
                                         dataKey="week"
                                         tickFormatter={(str) => {
                                             const d = new Date(str)
                                             return `${d.getDate()}/${d.getMonth() + 1}`
                                         }}
-                                        stroke="#6B7580"
+                                        stroke="rgb(var(--ds-muted))"
                                         fontSize={12}
                                         tickLine={false}
                                         axisLine={false}
                                         reversed={isRTL}
                                     />
-                                    <YAxis stroke="#6B7580" fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} orientation={isRTL ? 'right' : 'left'} />
+                                    <YAxis stroke="rgb(var(--ds-muted))" fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} orientation={isRTL ? 'right' : 'left'} />
                                     <Tooltip
-                                        contentStyle={{ borderRadius: '6px', border: '1px solid #E4E4DF', boxShadow: 'none' }}
+                                        contentStyle={{ borderRadius: '6px', border: '1px solid rgb(var(--ds-border))', boxShadow: 'none' }}
                                         labelFormatter={(label) => new Date(label).toLocaleDateString()}
                                     />
-                                    <Area type="monotone" dataKey="completed" stroke="#15212E" strokeWidth={2} fill="url(#colorCompletions)" name={t('completed', 'Completed')} />
+                                    <Area type="monotone" dataKey="completed" stroke="rgb(var(--ds-chrome))" strokeWidth={2} fill="url(#colorCompletions)" name={t('completed', 'Completed')} />
                                 </AreaChart>
                             </ResponsiveContainer>
                         </ChartViewport>

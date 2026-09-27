@@ -60,7 +60,7 @@ export const skillsService = {
         return data as UserSkill[]
     },
 
-    async updateUserSkill(userId: string, skillId: string, updates: Partial<UserSkill>) {
+    async updateUserSkill(userId: string, skillId: string, updates: Partial<UserSkill>, organizationId?: string) {
         const { data: existing, error: existingError } = await supabase
             .from('user_skills')
             .select('id')
@@ -81,9 +81,21 @@ export const skillsService = {
             return data
         }
 
+        let orgId = organizationId
+        if (!orgId) {
+            const { data: member } = await supabase
+                .from('organization_memberships')
+                .select('organization_id')
+                .eq('user_id', userId)
+                .eq('is_active', true)
+                .maybeSingle()
+            orgId = member?.organization_id
+        }
+        if (!orgId) throw new Error('Organization context is required for user skills')
+
         const { data, error } = await supabase
             .from('user_skills')
-            .insert({ ...updates, user_id: userId, skill_id: skillId })
+            .insert({ ...updates, user_id: userId, skill_id: skillId, organization_id: orgId })
             .select()
             .single()
 
@@ -101,10 +113,21 @@ export const skillsService = {
         return data as ModuleSkill[]
     },
 
-    async linkModuleSkill(moduleId: string, skillId: string, points: number = 0) {
+    async linkModuleSkill(moduleId: string, skillId: string, points: number = 0, organizationId?: string) {
+        let orgId = organizationId
+        if (!orgId) {
+            const { data: course } = await supabase
+                .from('courses')
+                .select('organization_id')
+                .eq('id', moduleId)
+                .single()
+            orgId = course?.organization_id
+        }
+        if (!orgId) throw new Error('Organization context is required to link module skills')
+
         const { data, error } = await supabase
             .from('module_skills')
-            .upsert({ module_id: moduleId, skill_id: skillId, points_awarded: points }, { onConflict: 'module_id, skill_id' })
+            .upsert({ module_id: moduleId, skill_id: skillId, points_awarded: points, organization_id: orgId }, { onConflict: 'module_id, skill_id' })
             .select()
             .single()
 

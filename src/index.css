@@ -55,6 +55,15 @@
   --ds-chrome-text: 244 242 236;
   --ds-chrome-muted: 146 156 165;
   --ds-chrome-accent: 183 154 98;
+  /* Printable certificate: a cream/gold/navy "official document" palette.
+     A physical certificate doesn't change with the app's theme, so these are
+     deliberately not redefined under .dark either. */
+  --cert-navy: 11 28 62;
+  --cert-gold: 197 160 89;
+  --cert-gold-bright: 245 216 138;
+  --cert-gold-light: 234 208 150;
+  --cert-gold-deep: 140 107 40;
+  --cert-cream: 250 246 240;
 }
 
 .dark,

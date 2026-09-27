@@ -1199,26 +1199,16 @@ export const platformService = {
 
         // Retraining propagation
         if (params.triggerRetraining) {
-          // Reset progress in training_progress for enrolled learners
-          const { error: resetErr } = await supabase
-            .from('training_progress')
-            .update({
-              status: 'in_progress',
-              progress_percentage: 0,
-              passed: false,
-              completed_at: null,
-              updated_at: new Date().toISOString(),
-              metadata: {
-                mandatory_retraining_required: true,
-                retrained_at: new Date().toISOString(),
-                synced_version: masterVersion,
-                reason: 'Upstream master curriculum updated'
-              }
-            })
-            .eq('training_id', targetModule.id)
-
+          // Reset every enrolled learner server-side. Completion fields are
+          // write-protected (enforce_training_progress_integrity) and RLS hides
+          // other learners' rows from operators, so the old direct UPDATE reset
+          // 0 rows while the audit log below still recorded retraining.
+          const { data: learnersReset, error: resetErr } = await supabase.rpc(
+            'reset_training_progress_for_module',
+            { p_training_module_id: targetModule.id }
+          )
           if (resetErr) {
-            console.warn('Warning resetting learner progress:', resetErr)
+            throw new Error(`Course synced, but learner progress could not be reset for retraining: ${resetErr.message}`)
           }
 
           await this.logPlatformAction({
@@ -1230,7 +1220,8 @@ export const platformService = {
             metadata: {
               master_id: masterModule.id,
               version: masterVersion,
-              module_title: targetModule.title
+              module_title: targetModule.title,
+              learners_reset: learnersReset ?? 0
             }
           })
         }

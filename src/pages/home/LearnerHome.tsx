@@ -12,7 +12,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { Award, BookMarked, BookOpen, ChevronRight, FileCheck2, FileQuestion, PlayCircle } from 'lucide-react'
+import { Award, BookMarked, BookOpen, CheckCircle2, ChevronRight, FileCheck2, FileQuestion, PlayCircle } from 'lucide-react'
 
 import { useAuth } from '@/hooks/useAuth'
 import { useMyCertificates } from '@/hooks/useCertificates'
@@ -29,6 +29,8 @@ import { FirstRunWelcomeModal } from '@/features/learn/gamification/components/F
 import { LeaderboardPanel } from '@/features/learn/gamification/components/LeaderboardPanel'
 import { MomentumPanel } from '@/features/learn/gamification/components/MomentumPanel'
 import { useMyLearningStats, useWelcomeSeen } from '@/features/learn/gamification/gamificationHooks'
+import { LearningPageHero } from '@/features/learn/components/LearningPageHero'
+import { LearningStatusCard } from '@/features/learn/components/LearningStatusCard'
 import {
     ActionQueue,
     EmptyState,
@@ -163,6 +165,10 @@ export default function LearnerHome() {
         () => (progressQuery.data ?? []).filter((p) => p.status === 'completed').length,
         [progressQuery.data],
     )
+    const inProgressCount = useMemo(
+        () => (progressQuery.data ?? []).filter((p) => p.status === 'in_progress').length,
+        [progressQuery.data],
+    )
 
     const firstName = profile?.full_name?.split(' ')[0]
     const hour = new Date(now).getHours()
@@ -177,22 +183,56 @@ export default function LearnerHome() {
     const certificates = certificatesQuery.data ?? []
 
     return (
-        <div className="mx-auto max-w-6xl space-y-8 p-4 sm:p-6 lg:p-8">
-            <header className="space-y-2 border-b border-ds-border pb-6">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ds-accent">{today}</p>
-                <h1 className="font-editorial text-[34px] font-semibold leading-tight text-ds-ink sm:text-[42px]">
-                    {firstName ? `${greeting}, ${firstName}` : greeting}
-                </h1>
-                <p className="text-base text-ds-ink-secondary" aria-live="polite">
-                    {assignmentsQuery.isLoading
-                        ? '\u00a0'
-                        : attention.length > 0
-                            ? t('training:myDay.attentionCount', '{{count}} actions need your attention', { count: attention.length })
-                            : t('training:myDay.attentionNone', 'Nothing needs your attention right now.')}
-                </p>
-            </header>
+        <div className="mx-auto max-w-6xl space-y-6">
+            <LearningPageHero
+                eyebrow={today}
+                title={firstName ? `${greeting}, ${firstName}` : greeting}
+                description={
+                    <span aria-live="polite">
+                        {assignmentsQuery.isLoading
+                            ? '\u00a0'
+                            : attention.length > 0
+                                ? t('training:myDay.attentionCount', '{{count}} actions need your attention', { count: attention.length })
+                                : t('training:myDay.attentionNone', 'Nothing needs your attention right now.')}
+                    </span>
+                }
+                quote={<>Learn.<br />Perform.<br />Grow.<br />Belong.</>}
+            />
 
-            {!statsQuery.isError && <MomentumPanel stats={statsQuery.data} isLoading={statsQuery.isLoading} />}
+            <section aria-label={t('training:myDay.learningSummary', 'Your learning summary')} className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                <LearningStatusCard
+                    title={t('training:myDay.inProgress', 'In progress')}
+                    value={progressQuery.isLoading ? '–' : inProgressCount}
+                    detail={t('training:myDay.courses', 'courses')}
+                    href="/learn/my"
+                    icon={BookOpen}
+                    tone="gold"
+                />
+                <LearningStatusCard
+                    title={t('training:myDay.required', 'Required')}
+                    value={assignmentsQuery.isLoading ? '–' : attention.length}
+                    detail={t('training:myDay.actions', 'actions to complete')}
+                    href="/learn/my"
+                    icon={FileQuestion}
+                    tone="rose"
+                />
+                <LearningStatusCard
+                    title={t('training:completed', 'Completed')}
+                    value={progressQuery.isLoading ? '–' : completedCount}
+                    detail={t('training:myDay.courses', 'courses')}
+                    href="/learn/my"
+                    icon={CheckCircle2}
+                    tone="green"
+                />
+                <LearningStatusCard
+                    title={t('training:certificates', 'Certificates')}
+                    value={certificatesQuery.isLoading ? '–' : certificates.length}
+                    detail={t('training:myDay.earned', 'earned')}
+                    href="/learn/certificates"
+                    icon={Award}
+                    tone="blue"
+                />
+            </section>
 
             <div className="grid gap-8 lg:grid-cols-12 items-start">
                 <div className="lg:col-span-8 space-y-8">
@@ -224,10 +264,10 @@ export default function LearnerHome() {
                         <section aria-labelledby="my-day-continue" className="space-y-3">
                             <SectionHeader
                             headingId="my-day-continue" title={t('training:myDay.continue', 'Continue where you left off')} />
-                            <div className="group flex flex-col gap-4 rounded-xl border border-ds-border bg-ds-surface p-4 sm:flex-row sm:items-center">
+                            <div className="group flex flex-col gap-4 rounded-xl border border-ds-border bg-ds-surface p-3 shadow-[0_12px_32px_rgb(21_33_46/0.04)] sm:flex-row sm:items-center">
                                 <CourseCover
                                     course={{ id: continueLearning.content_id, title: continueLearning.courses?.title }}
-                                    className="h-28 w-full sm:h-20 sm:w-32"
+                                    className="h-36 w-full rounded-lg sm:h-44 sm:w-72"
                                 >
                                     <span className="absolute inset-0 flex items-center justify-center">
                                         <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-ds-surface/90 text-ds-accent shadow">
@@ -235,8 +275,9 @@ export default function LearnerHome() {
                                         </span>
                                     </span>
                                 </CourseCover>
-                                <div className="min-w-0 flex-1 space-y-2">
-                                    <p className="truncate text-sm font-semibold text-ds-ink">
+                                <div className="min-w-0 flex-1 space-y-3">
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ds-muted">{t('training:myDay.course', 'Course')}</p>
+                                    <p className="line-clamp-2 font-editorial text-[23px] font-semibold leading-tight text-ds-ink">
                                         {continueLearning.courses?.title ?? t('training:untitledAssignment', 'Untitled item')}
                                     </p>
                                     <ProgressBar
@@ -281,7 +322,8 @@ export default function LearnerHome() {
                     </section>
                 </div>
 
-                <aside className="lg:col-span-4 space-y-8">
+                <aside className="lg:col-span-4 space-y-6">
+                    {!statsQuery.isError && <MomentumPanel stats={statsQuery.data} isLoading={statsQuery.isLoading} />}
                     <section aria-labelledby="my-day-board" className="space-y-3">
                         <SectionHeader
                             headingId="my-day-board"

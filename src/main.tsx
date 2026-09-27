@@ -44,7 +44,6 @@ if (sentryEnabled) {
     dsn: SENTRY_DSN,
     integrations: [
       Sentry.browserTracingIntegration(),
-      Sentry.replayIntegration(),
     ],
     release: SENTRY_RELEASE,
     environment: SENTRY_ENV,
@@ -53,6 +52,22 @@ if (sentryEnabled) {
     replaysOnErrorSampleRate: replayOnErrorSampleRate,
     sendDefaultPii,
   })
+
+  // Replay is loaded once the browser is idle so it stays out of the entry chunk.
+  if (replaySessionSampleRate > 0 || replayOnErrorSampleRate > 0) {
+    const loadReplay = () => {
+      import('./lib/sentryReplay')
+        .then(({ addSentryReplay }) => addSentryReplay())
+        .catch(() => {
+          // Replay is best-effort; error reporting itself is already running.
+        })
+    }
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(loadReplay, { timeout: 5000 })
+    } else {
+      setTimeout(loadReplay, 2000)
+    }
+  }
 }
 
 function clearLegacyRecoveryState() {

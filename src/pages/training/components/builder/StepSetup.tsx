@@ -134,13 +134,13 @@ export function StepSetup({
       <div className="max-w-5xl mx-auto space-y-6">
         <Card className="shadow-sm border-slate-200">
           <CardHeader>
-            <CardTitle className={cn("text-lg font-semibold", isRTL ? 'text-end' : 'text-start')}>{t('builder.courseSetup')}</CardTitle>
+            <CardTitle className={cn("text-lg font-semibold", 'text-start')}>{t('builder.courseSetup')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid md:grid-cols-2 gap-5">
               <div className="space-y-2">
-                <div className={cn("flex items-center justify-between", isRTL ? "flex-row-reverse" : "")}>
-                  <Label className={cn("text-xs font-semibold text-slate-700", isRTL ? "text-end block" : "")}>{t('title')}</Label>
+                <div className={cn("flex items-center justify-between")}>
+                  <Label className={cn("text-xs font-semibold text-slate-700")}>{t('title')}</Label>
                   <Button
                     type="button"
                     variant="ghost"
@@ -161,31 +161,31 @@ export function StepSetup({
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder={t('builder.untitledModule')}
-                  className={cn("bg-white border-slate-200 focus:ring-ds-brass", isRTL ? "text-end" : "")}
+                  className={cn("bg-white border-slate-200 focus:ring-ds-brass")}
                 />
               </div>
               <div className="space-y-2">
-                <Label className={cn("text-xs font-semibold text-slate-700", isRTL ? "text-end block" : "")}>{t('builder.audience')}</Label>
+                <Label className={cn("text-xs font-semibold text-slate-700")}>{t('builder.audience')}</Label>
                 <Select value={audience} onValueChange={setAudience}>
-                  <SelectTrigger className={cn("bg-white border-slate-200", isRTL ? "flex-row-reverse" : "")}>
+                  <SelectTrigger className={cn("bg-white border-slate-200")}>
                     <SelectValue placeholder={t('builder.audiencePlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all" className={isRTL ? "flex-row-reverse" : ""}>{t('builder.audienceAll')}</SelectItem>
-                    <SelectItem value="new_hires" className={isRTL ? "flex-row-reverse" : ""}>{t('builder.audienceNew')}</SelectItem>
-                    <SelectItem value="front_desk" className={isRTL ? "flex-row-reverse" : ""}>{t('builder.audienceFrontDesk')}</SelectItem>
-                    <SelectItem value="housekeeping" className={isRTL ? "flex-row-reverse" : ""}>{t('builder.audienceHousekeeping')}</SelectItem>
-                    <SelectItem value="food_beverage" className={isRTL ? "flex-row-reverse" : ""}>{t('builder.audienceFood')}</SelectItem>
-                    <SelectItem value="maintenance" className={isRTL ? "flex-row-reverse" : ""}>{t('builder.audienceMaintenance')}</SelectItem>
-                    <SelectItem value="management" className={isRTL ? "flex-row-reverse" : ""}>{t('builder.audienceManagement')}</SelectItem>
+                    <SelectItem value="all" className={''}>{t('builder.audienceAll')}</SelectItem>
+                    <SelectItem value="new_hires" className={''}>{t('builder.audienceNew')}</SelectItem>
+                    <SelectItem value="front_desk" className={''}>{t('builder.audienceFrontDesk')}</SelectItem>
+                    <SelectItem value="housekeeping" className={''}>{t('builder.audienceHousekeeping')}</SelectItem>
+                    <SelectItem value="food_beverage" className={''}>{t('builder.audienceFood')}</SelectItem>
+                    <SelectItem value="maintenance" className={''}>{t('builder.audienceMaintenance')}</SelectItem>
+                    <SelectItem value="management" className={''}>{t('builder.audienceManagement')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
             <div className="space-y-2">
-              <div className={cn("flex items-center justify-between", isRTL ? "flex-row-reverse" : "")}>
-                <Label className={cn("text-xs font-semibold text-slate-700", isRTL ? "text-end block" : "")}>{t('description')}</Label>
+              <div className={cn("flex items-center justify-between")}>
+                <Label className={cn("text-xs font-semibold text-slate-700")}>{t('description')}</Label>
                 <Button
                   type="button"
                   variant="ghost"
@@ -207,48 +207,48 @@ export function StepSetup({
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder={t('builder.descriptionHint')}
                 rows={3}
-                className={cn("bg-white border-slate-200 focus:ring-ds-brass", isRTL ? "text-end" : "")}
+                className={cn("bg-white border-slate-200 focus:ring-ds-brass")}
               />
             </div>
 
             <div className="grid md:grid-cols-3 gap-5">
               <div className="space-y-2">
-                <Label className={cn("text-xs font-semibold text-slate-700", isRTL ? "text-end block" : "")}>{t('category')}</Label>
+                <Label className={cn("text-xs font-semibold text-slate-700")}>{t('category')}</Label>
                 <Select value={category} onValueChange={setCategory}>
-                  <SelectTrigger className={cn("bg-white border-slate-200", isRTL ? "flex-row-reverse" : "")}>
+                  <SelectTrigger className={cn("bg-white border-slate-200")}>
                     <SelectValue placeholder={t('builder.selectCategory')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="onboarding" className={isRTL ? "flex-row-reverse" : ""}>{t('builder.onboarding')}</SelectItem>
-                    <SelectItem value="compliance" className={isRTL ? "flex-row-reverse" : ""}>{t('builder.compliance')}</SelectItem>
-                    <SelectItem value="skills" className={isRTL ? "flex-row-reverse" : ""}>{t('builder.skills')}</SelectItem>
-                    <SelectItem value="operations" className={isRTL ? "flex-row-reverse" : ""}>{t('operations')}</SelectItem>
+                    <SelectItem value="onboarding" className={''}>{t('builder.onboarding')}</SelectItem>
+                    <SelectItem value="compliance" className={''}>{t('builder.compliance')}</SelectItem>
+                    <SelectItem value="skills" className={''}>{t('builder.skills')}</SelectItem>
+                    <SelectItem value="operations" className={''}>{t('operations')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label className={cn("text-xs font-semibold text-slate-700", isRTL ? "text-end block" : "")}>{t('builder.difficulty')}</Label>
+                <Label className={cn("text-xs font-semibold text-slate-700")}>{t('builder.difficulty')}</Label>
                 <Select value={difficultyLevel} onValueChange={setDifficultyLevel}>
-                  <SelectTrigger className={cn("bg-white border-slate-200", isRTL ? "flex-row-reverse" : "")}>
+                  <SelectTrigger className={cn("bg-white border-slate-200")}>
                     <SelectValue placeholder={t('builder.difficultyPlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="beginner" className={isRTL ? "flex-row-reverse" : ""}>{t('beginner')}</SelectItem>
-                    <SelectItem value="intermediate" className={isRTL ? "flex-row-reverse" : ""}>{t('intermediate')}</SelectItem>
-                    <SelectItem value="advanced" className={isRTL ? "flex-row-reverse" : ""}>{t('advanced')}</SelectItem>
+                    <SelectItem value="beginner" className={''}>{t('beginner')}</SelectItem>
+                    <SelectItem value="intermediate" className={''}>{t('intermediate')}</SelectItem>
+                    <SelectItem value="advanced" className={''}>{t('advanced')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label className={cn("text-xs font-semibold text-slate-700", isRTL ? "text-end block" : "")}>{t('builder.contentLanguage')}</Label>
+                <Label className={cn("text-xs font-semibold text-slate-700")}>{t('builder.contentLanguage')}</Label>
                 <Select value={contentLanguage} onValueChange={setContentLanguage}>
-                  <SelectTrigger className={cn("bg-white border-slate-200", isRTL ? "flex-row-reverse" : "")}>
+                  <SelectTrigger className={cn("bg-white border-slate-200")}>
                     <SelectValue placeholder={t('wizard.selectLanguage')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="english" className={isRTL ? "flex-row-reverse" : ""}>{t('wizard.englishOnly')}</SelectItem>
-                    <SelectItem value="arabic" className={isRTL ? "flex-row-reverse" : ""}>{t('wizard.arabicOnly')}</SelectItem>
-                    <SelectItem value="bilingual" className={isRTL ? "flex-row-reverse" : ""}>{t('wizard.bilingual')}</SelectItem>
+                    <SelectItem value="english" className={''}>{t('wizard.englishOnly')}</SelectItem>
+                    <SelectItem value="arabic" className={''}>{t('wizard.arabicOnly')}</SelectItem>
+                    <SelectItem value="bilingual" className={''}>{t('wizard.bilingual')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -256,9 +256,9 @@ export function StepSetup({
 
             <div className="grid md:grid-cols-2 gap-5">
               <div className="space-y-3">
-                <div className={cn("flex items-center justify-between", isRTL ? "flex-row-reverse" : "")}>
-                  <Label className={cn("text-xs font-semibold text-slate-700", isRTL ? "text-end block" : "")}>{t('duration')} ({t('min')})</Label>
-                  <div className={cn("flex items-center gap-2 text-xs text-slate-500", isRTL ? "flex-row-reverse" : "")}>
+                <div className={cn("flex items-center justify-between")}>
+                  <Label className={cn("text-xs font-semibold text-slate-700")}>{t('duration')} ({t('min')})</Label>
+                  <div className={cn("flex items-center gap-2 text-xs text-slate-500")}>
                     <span>{t('builder.overrideDuration', 'Override')}</span>
                     <Switch checked={useEstimatedDuration} onCheckedChange={setUseEstimatedDuration} />
                   </div>
@@ -274,11 +274,10 @@ export function StepSetup({
                   disabled={!useEstimatedDuration}
                   className={cn(
                     "bg-white border-slate-200 focus:ring-ds-brass",
-                    !useEstimatedDuration && "opacity-60",
-                    isRTL ? "text-end" : ""
+                    !useEstimatedDuration && "opacity-60"
                   )}
                 />
-                <div className={cn("flex flex-wrap gap-2", isRTL ? "flex-row-reverse" : "")}>
+                <div className={cn("flex flex-wrap gap-2")}>
                   {durationPresets.map(preset => (
                     <Button
                       key={preset}
@@ -299,15 +298,15 @@ export function StepSetup({
                 <p className="text-xs text-slate-500">{t('builder.calculatedDuration', { count: calculatedDuration })}</p>
               </div>
               <div className="space-y-3">
-                <Label className={cn("text-xs font-semibold text-slate-700", isRTL ? "text-end block" : "")}>{t('builder.validity')} ({t('builder.days')})</Label>
+                <Label className={cn("text-xs font-semibold text-slate-700")}>{t('builder.validity')} ({t('builder.days')})</Label>
                 <Input
                   type="number"
                   value={validityPeriod}
                   onChange={(e) => setValidityPeriod(e.target.value)}
                   placeholder="365"
-                  className={cn("bg-white border-slate-200 focus:ring-ds-brass", isRTL ? "text-end" : "")}
+                  className={cn("bg-white border-slate-200 focus:ring-ds-brass")}
                 />
-                <div className={cn("flex flex-wrap gap-2", isRTL ? "flex-row-reverse" : "")}>
+                <div className={cn("flex flex-wrap gap-2")}>
                   {validityPresets.map(preset => (
                     <Button
                       key={preset}
@@ -328,17 +327,17 @@ export function StepSetup({
 
         <Card className="border-dashed border-2 bg-white/60">
           <CardHeader>
-            <CardTitle className={cn("text-sm font-semibold text-slate-700", isRTL ? 'text-end' : 'text-start')}>{t('builder.smartDefaults')}</CardTitle>
+            <CardTitle className={cn("text-sm font-semibold text-slate-700", 'text-start')}>{t('builder.smartDefaults')}</CardTitle>
           </CardHeader>
           <CardContent className="grid md:grid-cols-2 gap-4 text-sm text-slate-600">
             <div className="space-y-3">
-              <Label className={cn("text-xs font-semibold text-slate-500", isRTL ? "text-end block" : "")}>{t('builder.template')}</Label>
+              <Label className={cn("text-xs font-semibold text-slate-500")}>{t('builder.template')}</Label>
               <Select value={templatePreset} onValueChange={handleTemplateSelection}>
-                <SelectTrigger className={cn("bg-white border-slate-200", isRTL ? "flex-row-reverse" : "")}>
+                <SelectTrigger className={cn("bg-white border-slate-200")}>
                   <SelectValue placeholder={t('builder.templatePlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none" className={isRTL ? "flex-row-reverse" : ""}>{t('builder.templateNone')}</SelectItem>
+                  <SelectItem value="none" className={''}>{t('builder.templateNone')}</SelectItem>
                   {isTemplatesLoading ? (
                     <div className="p-2 text-xs text-muted-foreground text-center">
                       {t('builder.templatesLoading', 'Loading templates...')}
@@ -349,7 +348,7 @@ export function StepSetup({
                     </div>
                   ) : templateOptions.length > 0 ? (
                     templateOptions.map((template) => (
-                      <SelectItem key={template.id} value={template.id} className={isRTL ? "flex-row-reverse" : ""}>
+                      <SelectItem key={template.id} value={template.id} className={''}>
                         {template.name}
                       </SelectItem>
                     ))
@@ -362,7 +361,7 @@ export function StepSetup({
               </Select>
               {selectedTemplate && templatePreset !== 'none' && (
                 <div className="rounded-lg border bg-white/70 p-3">
-                  <div className={cn("flex items-center justify-between", isRTL ? "flex-row-reverse" : "")}>
+                  <div className={cn("flex items-center justify-between")}>
                     <div className="text-xs uppercase tracking-wide text-slate-400">{t('builder.templatePreview', 'Template preview')}</div>
                     <Button
                       type="button"

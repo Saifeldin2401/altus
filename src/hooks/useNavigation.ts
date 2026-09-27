@@ -29,8 +29,11 @@ export interface NavigationItem extends RouteConfig {
 interface UseNavigationReturn {
     /** Sidebar entries of the active workspace */
     workspaceNavigation: NavigationItem[]
-    /** Every route the member may open (command palette, search) */
-    searchRoutes: (query: string) => NavigationItem[]
+    /**
+     * Every route the member may open (command palette, search). Pass
+     * `translate` to also match the localized page title the member sees.
+     */
+    searchRoutes: (query: string, translate?: (key: string) => string) => NavigationItem[]
     isPathActive: (path: string) => boolean
     canAccess: (path: string) => boolean
     getRoute: (path: string) => RouteConfig | undefined
@@ -74,7 +77,7 @@ export function useNavigation(): UseNavigationReturn {
         [activeWorkspace, access, enrich],
     )
 
-    const searchRoutes = useCallback((query: string): NavigationItem[] => {
+    const searchRoutes = useCallback((query: string, translate?: (key: string) => string): NavigationItem[] => {
         const q = query.toLowerCase().trim()
         if (!q) return []
         return ROUTES
@@ -82,6 +85,7 @@ export function useNavigation(): UseNavigationReturn {
             .filter((r) =>
                 r.path.toLowerCase().includes(q) ||
                 r.title.toLowerCase().includes(q) ||
+                (translate?.(r.title).toLowerCase().includes(q) ?? false) ||
                 r.description?.toLowerCase().includes(q) ||
                 r.keywords?.some((k) => k.toLowerCase().includes(q))
             )

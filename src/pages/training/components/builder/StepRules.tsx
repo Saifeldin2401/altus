@@ -86,7 +86,6 @@ export function StepRules({
   setShowAnswers,
   timeLimit,
   setTimeLimit,
-  isRTL,
 }: StepRulesProps) {
   const { t } = useTranslation('training')
   const scorePresets = ['70', '80', '85', '90']
@@ -106,7 +105,7 @@ export function StepRules({
         {/* Course Metadata & Department Card */}
         <Card className="shadow-sm border-slate-200">
           <CardHeader>
-            <CardTitle className={cn("text-base font-bold text-slate-900 dark:text-white flex items-center gap-2", isRTL ? 'flex-row-reverse' : '')}>
+            <CardTitle className={cn("text-base font-bold text-slate-900 dark:text-white flex items-center gap-2")}>
               <BookOpen className="w-4 h-4 text-ds-brass" />
               <span>{t('builder.courseDetails', 'Course Classification & Department')}</span>
             </CardTitle>
@@ -115,7 +114,7 @@ export function StepRules({
             <div className="grid md:grid-cols-3 gap-4">
               {/* Category / Department */}
               <div className="space-y-1.5">
-                <Label className={cn("text-xs font-bold text-slate-700", isRTL ? "text-end block" : "")}>
+                <Label className={cn("text-xs font-bold text-slate-700")}>
                   {t('category', 'Department / Category')} <span className="text-red-500">*</span>
                 </Label>
                 <Select value={category || 'operations'} onValueChange={(val) => setCategory?.(val)}>
@@ -139,7 +138,7 @@ export function StepRules({
 
               {/* Difficulty Level */}
               <div className="space-y-1.5">
-                <Label className={cn("text-xs font-bold text-slate-700", isRTL ? "text-end block" : "")}>
+                <Label className={cn("text-xs font-bold text-slate-700")}>
                   {t('builder.difficulty', 'Difficulty Level')}
                 </Label>
                 <Select value={difficultyLevel} onValueChange={(val) => setDifficultyLevel?.(val)}>
@@ -156,7 +155,7 @@ export function StepRules({
 
               {/* Target Audience */}
               <div className="space-y-1.5">
-                <Label className={cn("text-xs font-bold text-slate-700", isRTL ? "text-end block" : "")}>
+                <Label className={cn("text-xs font-bold text-slate-700")}>
                   {t('builder.audience', 'Target Audience')}
                 </Label>
                 <Select value={audience} onValueChange={(val) => setAudience?.(val)}>
@@ -176,7 +175,7 @@ export function StepRules({
             {/* Course Summary */}
             {setDescription && (
               <div className="space-y-1.5 pt-1">
-                <Label className={cn("text-xs font-bold text-slate-700", isRTL ? "text-end block" : "")}>
+                <Label className={cn("text-xs font-bold text-slate-700")}>
                   {t('builder.courseSummary', 'Course Description & Overview')}
                 </Label>
                 <Textarea
@@ -194,7 +193,7 @@ export function StepRules({
         {/* Dynamic Quiz & Assessment Rules Card */}
         <Card className="shadow-sm border-slate-200">
           <CardHeader>
-            <div className={cn("flex items-center justify-between", isRTL ? 'flex-row-reverse' : '')}>
+            <div className={cn("flex items-center justify-between")}>
               <CardTitle className="text-base font-bold flex items-center gap-2">
                 <SlidersHorizontal className="w-4 h-4 text-ds-brass" />
                 <span>{t('builder.quizRulesTitle', 'Assessment & Quiz Configuration')}</span>
@@ -230,7 +229,7 @@ export function StepRules({
               <>
                 {/* Passing Score with Provenance */}
                 <div className="space-y-2">
-                  <div className={cn("flex items-center justify-between", isRTL ? 'flex-row-reverse' : '')}>
+                  <div className={cn("flex items-center justify-between")}>
                     <Label className="text-xs font-semibold text-slate-700">
                       {t('builder.passingScore', 'Passing Score Threshold (%)')} <span className="text-red-500">*</span>
                     </Label>
@@ -245,9 +244,9 @@ export function StepRules({
                       max="100"
                       value={passingScore}
                       onChange={(e) => setPassingScore(e.target.value)}
-                      className={cn("bg-white border-slate-200 focus:ring-ds-brass", isRTL ? "text-end" : "")}
+                      className={cn("bg-white border-slate-200 focus:ring-ds-brass")}
                     />
-                    <div className={cn("flex flex-wrap gap-2 items-center", isRTL ? "flex-row-reverse" : "")}>
+                    <div className={cn("flex flex-wrap gap-2 items-center")}>
                       {scorePresets.map((preset) => (
                         <Button
                           key={preset}
@@ -266,7 +265,7 @@ export function StepRules({
 
                 {/* Retake & Attempts */}
                 <div className="grid md:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
-                  <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex items-center justify-between`}>
                     <div>
                       <Label className="text-sm font-semibold text-slate-700">{t('builder.allowRetake', 'Allow Retakes on Failure')}</Label>
                       <p className="text-xs text-muted-foreground">{t('builder.allowRetakeHint', 'Learners can retake failed quizzes after review')}</p>
@@ -274,7 +273,7 @@ export function StepRules({
                     <Switch checked={allowRetake} onCheckedChange={setAllowRetake} />
                   </div>
                   <div className="space-y-1.5">
-                    <Label className={cn("text-xs font-semibold text-slate-700", isRTL ? "text-end block" : "")}>
+                    <Label className={cn("text-xs font-semibold text-slate-700")}>
                       {t('builder.maxAttempts', 'Maximum Retake Attempts')}
                     </Label>
                     <Input
@@ -283,21 +282,21 @@ export function StepRules({
                       value={maxAttempts}
                       onChange={(e) => setMaxAttempts(e.target.value)}
                       disabled={!allowRetake}
-                      className={cn("bg-white border-slate-200 focus:ring-ds-brass", isRTL ? "text-end" : "")}
+                      className={cn("bg-white border-slate-200 focus:ring-ds-brass")}
                     />
                   </div>
                 </div>
 
                 {/* Question Randomization & Feedback */}
                 <div className="grid md:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
-                  <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex items-center justify-between`}>
                     <div>
                       <Label className="text-sm font-semibold text-slate-700">{t('builder.randomizeQuestions', 'Randomize Question Order')}</Label>
                       <p className="text-xs text-muted-foreground">{t('builder.randomizeQuestionsHint', 'Shuffle questions for each learner')}</p>
                     </div>
                     <Switch checked={randomizeQuestions} onCheckedChange={setRandomizeQuestions} />
                   </div>
-                  <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex items-center justify-between`}>
                     <div>
                       <Label className="text-sm font-semibold text-slate-700">{t('builder.showAnswers', 'Show Answer Explanations')}</Label>
                       <p className="text-xs text-muted-foreground">{t('builder.showAnswersHint', 'Display remedial rationale after submission')}</p>
@@ -309,7 +308,7 @@ export function StepRules({
                 {/* Time Limit & Auto Advance */}
                 <div className="grid md:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
                   <div className="space-y-1.5">
-                    <Label className={cn("text-xs font-semibold text-slate-700", isRTL ? "text-end block" : "")}>
+                    <Label className={cn("text-xs font-semibold text-slate-700")}>
                       {t('builder.timeLimit', 'Quiz Time Limit (Minutes)')}
                     </Label>
                     <Input
@@ -317,10 +316,10 @@ export function StepRules({
                       value={timeLimit ?? ''}
                       onChange={(e) => setTimeLimit(e.target.value ? Number(e.target.value) : null)}
                       placeholder={t('builder.timeLimitPlaceholder', 'e.g. 10 (Optional)')}
-                      className={cn("bg-white border-slate-200 focus:ring-ds-brass", isRTL ? "text-end" : "")}
+                      className={cn("bg-white border-slate-200 focus:ring-ds-brass")}
                     />
                   </div>
-                  <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex items-center justify-between`}>
                     <div>
                       <Label className="text-sm font-semibold text-slate-700">{t('builder.autoAdvance', 'Auto-Advance on Passing')}</Label>
                       <p className="text-xs text-muted-foreground">{t('builder.autoAdvanceHint', 'Automatically unlock and route to next lesson')}</p>
@@ -336,7 +335,7 @@ export function StepRules({
         {/* Certification & Validity Card */}
         <Card className="shadow-sm border-slate-200">
           <CardHeader>
-            <div className={cn("flex items-center justify-between", isRTL ? 'flex-row-reverse' : '')}>
+            <div className={cn("flex items-center justify-between")}>
               <CardTitle className="text-base font-bold flex items-center gap-2">
                 <Award className="w-4 h-4 text-ds-brass" />
                 <span>{t('builder.certRulesTitle', 'Certification & Validity Period')}</span>
@@ -348,14 +347,14 @@ export function StepRules({
             <CardContent className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <Label className={cn("text-xs font-semibold text-slate-700", isRTL ? "text-end block" : "")}>
+                  <Label className={cn("text-xs font-semibold text-slate-700")}>
                     {t('builder.validity', 'Certificate Validity Period (Days)')}
                   </Label>
                   <Input
                     type="number"
                     value={validityPeriod}
                     onChange={(e) => setValidityPeriod(e.target.value)}
-                    className={cn("bg-white border-slate-200 focus:ring-ds-brass", isRTL ? "text-end" : "")}
+                    className={cn("bg-white border-slate-200 focus:ring-ds-brass")}
                   />
                 </div>
                 <div className="p-3 bg-slate-50 rounded-lg text-xs text-slate-600 flex items-center gap-2">
@@ -371,7 +370,7 @@ export function StepRules({
         {visibilityRules.showMediaRules && (
           <Card className="shadow-sm border-slate-200 bg-slate-50/50">
             <CardHeader>
-              <div className={cn("flex items-center justify-between", isRTL ? 'flex-row-reverse' : '')}>
+              <div className={cn("flex items-center justify-between")}>
                 <CardTitle className="text-base font-bold flex items-center gap-2">
                   <Video className="w-4 h-4 text-blue-600" />
                   <span>{t('builder.mediaGateTitle', 'Media & Video Watch Gate')}</span>

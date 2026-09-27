@@ -701,5 +701,36 @@
             "certificates": "الشهادات",
             "people": "الأشخاص"
         }
+    },
+    "a11y": {
+        "moreActions": "مزيد من الإجراءات",
+        "removeFilter": "إزالة عامل التصفية: {{name}}",
+        "moveUp": "نقل لأعلى",
+        "moveDown": "نقل لأسفل",
+        "removeLogo": "إزالة الشعار",
+        "removeFavicon": "إزالة أيقونة الموقع",
+        "textSettings": "إعدادات النص",
+        "deleteItem": "حذف {{name}}"
+    },
+    "commandPalette": {
+        "placeholder": "ابحث في الدورات والمقالات والأشخاص أو انتقل إلى صفحة…",
+        "searching": "جارٍ البحث…",
+        "noResults": "لا توجد نتائج مطابقة.",
+        "goTo": "انتقل إلى",
+        "workspaces": "تبديل مساحة العمل",
+        "account": "الحساب",
+        "pages": "الصفحات",
+        "profile": "ملفي الشخصي",
+        "settings": "الإعدادات",
+        "types": {
+            "document": "المستندات",
+            "user": "الأشخاص",
+            "training": "التدريب",
+            "announcement": "الإعلانات",
+            "sop": "الإجراءات القياسية",
+            "page": "الصفحات",
+            "certificate": "الشهادات",
+            "course": "الدورات"
+        }
     }
 }

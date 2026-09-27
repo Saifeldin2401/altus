@@ -115,7 +115,7 @@ function AdminAIAssistant({ isOpen, onClose }: { isOpen: boolean, onClose: () =>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-hotel-navy/40 backdrop-blur-md z-[100] flex items-center justify-center p-4" onClick={onClose}>
                 <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} transition={{ type: 'spring', damping: 25, stiffness: 300 }} className="w-full max-w-xl h-[85vh] max-h-[700px] relative" onClick={e => e.stopPropagation()}>
                     <Card className="h-full flex flex-col border-none shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)] bg-slate-50 overflow-hidden relative">
-                        <CardHeader className="bg-gradient-to-r from-hotel-navy to-[#1e293b] text-white py-5 px-6 flex-shrink-0 relative">
+                        <CardHeader className="bg-gradient-to-r from-hotel-navy to-ds-ink text-white py-5 px-6 flex-shrink-0 relative">
                             <div className="flex items-center justify-between relative z-10">
                                 <div className="flex items-center gap-4">
                                     <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center shadow-lg transform rotate-3 ring-1 ring-white/20">
@@ -189,7 +189,7 @@ function AdminAIAssistant({ isOpen, onClose }: { isOpen: boolean, onClose: () =>
                                     <Button 
                                         type="submit" 
                                         disabled={!input.trim() || isLoading} 
-                                        className={cn("rounded-lg h-10 w-10 transition-all", input.trim() ? "bg-hotel-navy hover:bg-[#0f172a] text-white" : "bg-gray-200 text-gray-400")}
+                                        className={cn("rounded-lg h-10 w-10 transition-all", input.trim() ? "bg-hotel-navy hover:bg-ds-ink/90 text-white" : "bg-gray-200 text-gray-400")}
                                         aria-label={isLoading ? t("accessibility.sending", "Sending...") : t("accessibility.send_message", "Send message")}
                                     >
                                         {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Zap className="h-5 w-5" />}
@@ -210,7 +210,7 @@ export function FloatingAdminAI() {
         <>
             <Button
                 onClick={() => setIsOpen(true)}
-                className="fixed bottom-6 end-6 h-14 w-14 rounded-full shadow-2xl bg-hotel-navy hover:bg-[#0f172a] text-white z-50 group transition-all"
+                className="fixed bottom-6 end-6 h-14 w-14 rounded-full shadow-2xl bg-hotel-navy hover:bg-ds-ink/90 text-white z-50 group transition-all"
                 title="System Configuration Assistant"
             >
                 <Settings className="h-6 w-6 group-hover:rotate-90 transition-transform duration-500" />

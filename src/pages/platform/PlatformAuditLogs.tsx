@@ -126,12 +126,12 @@ export default function PlatformAuditLogs() {
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/40">
-                <TableHead>{t('admin:timestamp', 'Timestamp')}</TableHead>
-                <TableHead>{t('admin:operator', 'Platform Operator')}</TableHead>
-                <TableHead>{t('admin:target_org', 'Target Organization')}</TableHead>
-                <TableHead>{t('admin:action', 'Action')}</TableHead>
-                <TableHead>{t('admin:resource', 'Resource Type')}</TableHead>
-                <TableHead className="text-end">{t('admin:details', 'Details')}</TableHead>
+                <TableHead className="min-w-[170px] whitespace-nowrap">{t('admin:timestamp', 'Timestamp')}</TableHead>
+                <TableHead className="min-w-[180px] whitespace-nowrap">{t('admin:operator', 'Platform Operator')}</TableHead>
+                <TableHead className="min-w-[180px] whitespace-nowrap">{t('admin:target_org', 'Target Organization')}</TableHead>
+                <TableHead className="min-w-[160px] whitespace-nowrap">{t('admin:action', 'Action')}</TableHead>
+                <TableHead className="min-w-[140px] whitespace-nowrap">{t('admin:resource', 'Resource Type')}</TableHead>
+                <TableHead className="min-w-[100px] text-end whitespace-nowrap">{t('admin:details', 'Details')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -151,27 +151,27 @@ export default function PlatformAuditLogs() {
                         <span>{formatDateTime(log.created_at)}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="font-medium text-xs">
+                    <TableCell className="font-medium text-xs whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
                         <User className="h-3.5 w-3.5 text-primary" />
                         <span>{log.actor_name}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="text-xs">
+                    <TableCell className="text-xs whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
                         <Building className="h-3.5 w-3.5 text-muted-foreground" />
                         <span className="font-semibold">{log.target_organization_name}</span>
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className={`font-mono text-[11px] ${getActionBadgeColor(log.action)}`}>
+                    <TableCell className="whitespace-nowrap">
+                      <Badge variant="outline" className={`font-mono text-[11px] whitespace-nowrap shrink-0 ${getActionBadgeColor(log.action)}`}>
                         {log.action}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-xs text-muted-foreground font-mono">
+                    <TableCell className="text-xs text-muted-foreground font-mono whitespace-nowrap">
                       {log.resource_type}
                     </TableCell>
-                    <TableCell className="text-end">
+                    <TableCell className="text-end whitespace-nowrap">
                       <Button
                         size="sm"
                         variant="ghost"

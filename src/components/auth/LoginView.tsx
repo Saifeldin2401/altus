@@ -360,7 +360,6 @@ function LoginViewComponent({ isRTL = false, onForgotPassword, onUnlockAccount }
             label={t('email_label', { defaultValue: 'Email address' })}
             icon={Mail}
             disabled={loading}
-            isRTL={isRTL}
             valid={emailValid}
             autoComplete="email"
           />
@@ -482,7 +481,7 @@ function LoginViewComponent({ isRTL = false, onForgotPassword, onUnlockAccount }
 
                 {isNotRegistered && (
                   <p className="text-[11px] text-ds-muted mt-2 pt-2 border-t border-ds-danger/20 leading-relaxed">
-                    {t('errors.not_registered_hint', { defaultValue: 'Only authorized hotel staff and learners with an active account can access PRIME Connect.' })}
+                    {t('errors.not_registered_hint', { defaultValue: 'Only authorized hotel staff and learners with an active account can access Altus Connect.' })}
                   </p>
                 )}
 

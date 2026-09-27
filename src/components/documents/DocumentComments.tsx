@@ -1,4 +1,4 @@
-import { EmptyState } from "@/components/shared/EmptyState";
+import { EmptyState } from "@/ui";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -164,7 +164,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
       >
         <Avatar className="w-8 h-8 shrink-0">
           <AvatarImage src={comment.author.avatar} />
-          <AvatarFallback className="text-xs bg-[#0B1C3E] text-white">
+          <AvatarFallback className="text-xs bg-ds-ink text-white">
             {comment.author.name
               .split(" ")
               .map((n) => n[0])
@@ -226,7 +226,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 </Button>
                 <Button
                   size="sm"
-                  className="bg-[#0B1C3E] hover:bg-[#1a3a6e]"
+                  className="bg-ds-ink hover:bg-ds-ink/90"
                   onClick={onSubmitEdit}
                   disabled={!editContent.trim()}
                 >
@@ -319,7 +319,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             <div className="mt-3 flex gap-2">
               <Avatar className="w-6 h-6 shrink-0">
                 <AvatarImage src={currentUser.avatar} />
-                <AvatarFallback className="text-[10px] bg-[#0B1C3E] text-white">
+                <AvatarFallback className="text-[10px] bg-ds-ink text-white">
                   {currentUser.name
                     .split(" ")
                     .map((n) => n[0])
@@ -341,7 +341,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                   </Button>
                   <Button
                     size="sm"
-                    className="bg-[#0B1C3E] hover:bg-[#1a3a6e]"
+                    className="bg-ds-ink hover:bg-ds-ink/90"
                     onClick={onSubmitReply}
                     disabled={!replyContent.trim()}
                   >
@@ -554,7 +554,7 @@ export function DocumentComments({
       <ScrollArea className="flex-1 p-4">
         {comments.length === 0 ? (
           <EmptyState
-            icon={MessageSquare}
+            icon={<MessageSquare className="h-6 w-6" aria-hidden="true" />}
             title="No comments yet"
             description="Start a discussion by adding the first comment."
             className="py-12"
@@ -613,7 +613,7 @@ export function DocumentComments({
         <div className="flex gap-3">
           <Avatar className="w-8 h-8 shrink-0">
             <AvatarImage src={currentUser.avatar} />
-            <AvatarFallback className="text-xs bg-[#0B1C3E] text-white">
+            <AvatarFallback className="text-xs bg-ds-ink text-white">
               {currentUser.name
                 .split(" ")
                 .map((n) => n[0])
@@ -639,7 +639,7 @@ export function DocumentComments({
                   />
                   <Button
                     size="icon"
-                    className="absolute bottom-2 end-2 h-8 w-8 bg-[#0B1C3E] hover:bg-[#1a3a6e]"
+                    className="absolute bottom-2 end-2 h-8 w-8 bg-ds-ink hover:bg-ds-ink/90"
                     onClick={handleSubmitComment}
                     disabled={!newComment.trim()}
                     aria-label={t('accessibility.send_comment', 'Send comment')}

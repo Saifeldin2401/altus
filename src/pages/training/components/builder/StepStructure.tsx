@@ -108,22 +108,22 @@ export function StepStructure({
   return (
     <div className="p-6">
       <div className="max-w-4xl mx-auto space-y-5">
-        <div className={cn("flex items-center justify-between", isRTL ? "flex-row-reverse" : "")}>
+        <div className={cn("flex items-center justify-between")}>
           <div>
             <h3 className="text-lg font-semibold text-slate-800">{t('builder.structureTitle')}</h3>
             <p className="text-sm text-muted-foreground">{t('builder.structureDesc')}</p>
           </div>
-          <div className={cn("flex items-center gap-2", isRTL ? "flex-row-reverse" : "")}>
+          <div className={cn("flex items-center gap-2")}>
             <Button
               variant="outline"
               onClick={() => setShowAIOutline(true)}
-              className={cn("border-purple-200 text-purple-700 hover:bg-purple-50", isRTL ? "flex-row-reverse" : "")}
+              className={cn("border-purple-200 text-purple-700 hover:bg-purple-50")}
             >
-              <Sparkles className={cn("w-4 h-4", isRTL ? "ms-2" : "me-2")} />
+              <Sparkles className={cn("w-4 h-4", "me-2")} />
               {t('builder.draftWithAI', 'Draft with AI')}
             </Button>
-            <Button onClick={addSection} className={cn("bg-ds-brass hover:bg-ds-accent-hover text-white", isRTL ? "flex-row-reverse" : "")}>
-              <Plus className={cn("w-4 h-4", isRTL ? "ms-2" : "me-2")} />
+            <Button onClick={addSection} className={cn("bg-ds-brass hover:bg-ds-accent-hover text-white")}>
+              <Plus className={cn("w-4 h-4", "me-2")} />
               {t('builder.addSection')}
             </Button>
           </div>
@@ -137,13 +137,13 @@ export function StepStructure({
               </div>
               <h4 className="text-lg font-medium text-slate-700 mb-2">{t('builder.startStructure')}</h4>
               <p className="text-slate-500 mb-6 max-w-sm">{t('builder.startStructureDesc')}</p>
-              <div className={cn("flex items-center gap-2", isRTL ? "flex-row-reverse" : "")}>
-                <Button onClick={addSection} variant="outline" className={cn("border-dashed border-slate-300 hover:border-ds-brass hover:text-ds-brass", isRTL ? "flex-row-reverse" : "")}>
-                  <Plus className={cn("w-4 h-4", isRTL ? "ms-1" : "me-1")} />
+              <div className={cn("flex items-center gap-2")}>
+                <Button onClick={addSection} variant="outline" className={cn("border-dashed border-slate-300 hover:border-ds-brass hover:text-ds-brass")}>
+                  <Plus className={cn("w-4 h-4", "me-1")} />
                   {t('builder.addSection')}
                 </Button>
-                <Button onClick={() => setShowAIOutline(true)} variant="outline" className={cn("border-dashed border-purple-200 text-purple-700 hover:border-purple-400 hover:bg-purple-50", isRTL ? "flex-row-reverse" : "")}>
-                  <Sparkles className={cn("w-4 h-4", isRTL ? "ms-1" : "me-1")} />
+                <Button onClick={() => setShowAIOutline(true)} variant="outline" className={cn("border-dashed border-purple-200 text-purple-700 hover:border-purple-400 hover:bg-purple-50")}>
+                  <Sparkles className={cn("w-4 h-4", "me-1")} />
                   {t('builder.draftWithAI', 'Draft with AI')}
                 </Button>
               </div>
@@ -154,11 +154,11 @@ export function StepStructure({
             {sections.map((section, index) => (
               <Card key={section.id} className="border-slate-200 shadow-sm">
                 <CardContent className="py-4 space-y-3">
-                  <div className={cn("flex items-start justify-between gap-4", isRTL ? "flex-row-reverse" : "")}>
+                  <div className={cn("flex items-start justify-between gap-4")}>
                     <div className="flex-1 space-y-3">
                       <div className="space-y-1.5">
-                        <div className={cn("flex items-center justify-between", isRTL ? "flex-row-reverse" : "")}>
-                          <Label className={cn("text-xs font-semibold text-slate-500", isRTL ? "text-end block" : "")}>
+                        <div className={cn("flex items-center justify-between")}>
+                          <Label className={cn("text-xs font-semibold text-slate-500")}>
                             {t('builder.sectionLabel', { number: index + 1 })}
                           </Label>
                           {(!section.title || section.title.trim().length === 0 || section.title.toLowerCase().startsWith('section')) && (
@@ -183,12 +183,12 @@ export function StepStructure({
                           value={section.title}
                           onChange={(e) => handleRenameSection(section.id, e.target.value)}
                           placeholder="e.g. Front Office Standard Operating Procedures"
-                          className={cn("bg-white border-slate-200 focus:ring-ds-brass", isRTL ? "text-end" : "")}
+                          className={cn("bg-white border-slate-200 focus:ring-ds-brass")}
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <div className={cn("flex items-center justify-between", isRTL ? "flex-row-reverse" : "")}>
-                          <Label className={cn("text-xs font-medium text-slate-400", isRTL ? "text-end block" : "")}>
+                        <div className={cn("flex items-center justify-between")}>
+                          <Label className={cn("text-xs font-medium text-slate-400")}>
                             {t('builder.sectionDescription', 'Section Description / Objectives')}
                           </Label>
                           <Button
@@ -215,15 +215,15 @@ export function StepStructure({
                             )
                           }
                           placeholder="e.g. Master guest check-in protocols and key card security."
-                          className={cn("bg-slate-50/50 text-xs border-slate-200", isRTL ? "text-end" : "")}
+                          className={cn("bg-slate-50/50 text-xs border-slate-200")}
                         />
                       </div>
                     </div>
-                    <div className={cn("flex items-center gap-2", isRTL ? "flex-row-reverse" : "")}>
+                    <div className={cn("flex items-center gap-2")}>
                       <Badge variant="secondary" className="bg-slate-100 text-slate-600 font-normal">
                         {section.items.length} {t('builder.items')}
                       </Badge>
-                      <div className={cn("flex items-center gap-1", isRTL ? "flex-row-reverse" : "")}>
+                      <div className={cn("flex items-center gap-1")}>
                         <Button
                           size="sm"
                           variant="outline"

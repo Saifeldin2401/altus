@@ -31,7 +31,6 @@ function PasswordFieldComponent({
   onFocus,
   onBlur,
   disabled,
-  isRTL = false,
   showStrength = false,
   strengthScore = 0,
   strengthColor = 'bg-ds-border',
@@ -78,7 +77,6 @@ function PasswordFieldComponent({
         label={t('password_label')}
         icon={Lock}
         disabled={disabled}
-        isRTL={isRTL}
         valid={valid}
         rightElement={passwordButton}
         autoComplete="current-password"

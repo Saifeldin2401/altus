@@ -183,7 +183,7 @@ export function PlayerAudioNarrator({
                             <span className="text-xs font-semibold uppercase tracking-wider text-amber-400">
                                 {isRTL ? 'قارئ صوتي ذكي' : 'AI Voice Narrator'}
                             </span>
-                            <Badge variant="outline" className="text-[10px] h-4 px-1.5 border-slate-700 text-slate-300">
+                            <Badge variant="outline" className="text-[10px] px-1.5 py-0.5 shrink-0 whitespace-nowrap border-slate-700 text-slate-300">
                                 {sentences.length > 0 ? `${currentSentenceIndex + 1}/${sentences.length}` : 'Ready'}
                             </Badge>
                         </div>

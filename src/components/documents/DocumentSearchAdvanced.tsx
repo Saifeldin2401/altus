@@ -263,7 +263,7 @@ export function DocumentSearchAdvanced({
           }
         </Button>
         <Button
-          className="bg-[#0B1C3E] hover:bg-[#1a3a6e]"
+          className="bg-ds-ink hover:bg-ds-ink/90"
           onClick={onSearch}
         >
           <Search className="w-4 h-4 me-2" />
@@ -340,6 +340,7 @@ export function DocumentSearchAdvanced({
               <FileText className="w-3 h-3" />
               {type.toUpperCase()}
               <Button
+                aria-label={t('common:a11y.removeFilter', { name: type.toUpperCase(), defaultValue: 'Remove filter: {{name}}' })}
                 variant="ghost"
                 size="icon"
                 className="h-4 w-4 ms-1 hover:bg-muted"
@@ -354,6 +355,7 @@ export function DocumentSearchAdvanced({
               <Shield className="w-3 h-3" />
               {level}
               <Button
+                aria-label={t('common:a11y.removeFilter', { name: level, defaultValue: 'Remove filter: {{name}}' })}
                 variant="ghost"
                 size="icon"
                 className="h-4 w-4 ms-1 hover:bg-muted"
@@ -379,6 +381,7 @@ export function DocumentSearchAdvanced({
                 <Tag className="w-3 h-3" />
                 {tag.name}
                 <Button
+                  aria-label={t('common:a11y.removeFilter', { name: tag.name, defaultValue: 'Remove filter: {{name}}' })}
                   variant="ghost"
                   size="icon"
                   className="h-4 w-4 ms-1 hover:bg-black/10"
@@ -484,7 +487,7 @@ export function DocumentSearchAdvanced({
                     className={cn(
                       "px-2.5 py-1 rounded-md text-xs font-medium transition-colors border",
                       filters.fileTypes?.includes(type.value)
-                        ? "bg-[#0B1C3E] text-white border-[#0B1C3E]"
+                        ? "bg-ds-ink text-white border-ds-ink"
                         : "bg-background border-input hover:bg-accent"
                     )}
                   >
@@ -574,7 +577,7 @@ export function DocumentSearchAdvanced({
                       className={cn(
                         "px-2.5 py-1 rounded-md text-xs font-medium transition-colors border",
                         filters.tagIds?.includes(tag.id)
-                          ? "ring-2 ring-offset-1 ring-[#0B1C3E]"
+                          ? "ring-2 ring-offset-1 ring-ds-ink"
                           : ""
                       )}
                       style={{
@@ -602,7 +605,7 @@ export function DocumentSearchAdvanced({
               <Button variant="outline" onClick={clearFilters}>
                 Clear Filters
               </Button>
-              <Button className="bg-[#0B1C3E] hover:bg-[#1a3a6e]" onClick={onSearch}>
+              <Button className="bg-ds-ink hover:bg-ds-ink/90" onClick={onSearch}>
                 Apply Filters
               </Button>
             </div>
@@ -637,7 +640,7 @@ export function DocumentSearchAdvanced({
             <Button
               onClick={handleSaveSearch}
               disabled={!saveName.trim()}
-              className="bg-[#0B1C3E] hover:bg-[#1a3a6e]"
+              className="bg-ds-ink hover:bg-ds-ink/90"
             >
               <Save className="w-4 h-4 me-2" />
               Save Search

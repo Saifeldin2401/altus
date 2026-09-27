@@ -830,8 +830,8 @@ export default function KnowledgeRead() {
                 .prose h1 {
                     font-size: 2.25rem;
                     font-weight: 800;
-                    color: #111827;
-                    border-bottom: 2px solid #e5e7eb;
+                    color: rgb(var(--ds-ink));
+                    border-bottom: 2px solid rgb(var(--ds-border));
                     padding-bottom: 0.5rem;
                     margin-top: 2rem;
                     margin-bottom: 1rem;
@@ -839,7 +839,7 @@ export default function KnowledgeRead() {
                 .prose h2 {
                     font-size: 1.5rem;
                     font-weight: 700;
-                    color: #1f2937;
+                    color: rgb(var(--ds-ink));
                     margin-top: 1.5rem;
                     margin-bottom: 0.75rem;
                     display: flex;
@@ -849,7 +849,7 @@ export default function KnowledgeRead() {
                 .prose h3 {
                     font-size: 1.25rem;
                     font-weight: 600;
-                    color: #374151;
+                    color: rgb(var(--ds-ink-secondary));
                     margin-top: 1.25rem;
                     margin-bottom: 0.5rem;
                 }
@@ -863,24 +863,24 @@ export default function KnowledgeRead() {
                     font-size: 0.95rem;
                 }
                 .smart-alert-important {
-                    background-color: #fefce8;
-                    border-color: #eab308;
-                    color: #854d0e;
+                    background-color: rgb(var(--ds-warning-soft));
+                    border-color: rgb(var(--ds-warning));
+                    color: rgb(var(--ds-warning));
                 }
                 .smart-alert-warning {
-                    background-color: #fef2f2;
-                    border-color: #ef4444;
-                    color: #b91c1c;
+                    background-color: rgb(var(--ds-danger-soft));
+                    border-color: rgb(var(--ds-danger));
+                    color: rgb(var(--ds-danger));
                 }
                 .smart-alert-note {
-                    background-color: #eff6ff;
-                    border-color: #3b82f6;
-                    color: #1e40af;
+                    background-color: rgb(var(--ds-info-soft));
+                    border-color: rgb(var(--ds-info));
+                    color: rgb(var(--ds-info));
                 }
                 .smart-alert-caution {
-                    background-color: #fff7ed;
-                    border-color: #f97316;
-                    color: #9a3412;
+                    background-color: rgb(var(--ds-warning-soft));
+                    border-color: rgb(var(--ds-warning));
+                    color: rgb(var(--ds-warning));
                 }
 
                 /* Tables */
@@ -889,23 +889,23 @@ export default function KnowledgeRead() {
                     border-spacing: 0;
                     margin: 1.5rem 0;
                     width: 100%;
-                    border: 1px solid #e5e7eb;
+                    border: 1px solid rgb(var(--ds-border));
                     border-radius: 0.5rem;
                     overflow-x: auto;
                     display: block;
                 }
                 .prose table td,
                 .prose table th {
-                    border: 1px solid #e5e7eb;
+                    border: 1px solid rgb(var(--ds-border));
                     padding: 0.875rem 1.25rem;
                     word-break: break-word;
                     overflow-wrap: break-word;
                     min-width: 120px;
                 }
                 .prose table th {
-                    background: #f8fafc;
+                    background: rgb(var(--ds-surface-subtle));
                     font-weight: 600;
-                    color: #475569;
+                    color: rgb(var(--ds-muted));
                     text-align: left;
                 }
 
@@ -991,7 +991,8 @@ export default function KnowledgeRead() {
                         padding: 0 !important;
                     }
 
-                    /* Article header for print */
+                    /* Article header for print: always black-on-white on paper, regardless of
+                       the app's theme, so this is a literal, not a design token. */
                     .print-header {
                         display: block !important;
                         text-align: center;
@@ -1189,7 +1190,7 @@ export default function KnowledgeRead() {
                                 </DropdownMenuContent>
                             </DropdownMenu>
 
-                            <div className="flex items-center ms-1 space-x-0.5">
+                            <div className="flex items-center ms-1 gap-x-0.5">
                                 <Button
                                     variant="ghost"
                                     size="sm"
@@ -1903,6 +1904,7 @@ export default function KnowledgeRead() {
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button
+                                aria-label={t('common:a11y.textSettings', 'Text settings')}
                                 variant="ghost"
                                 size="icon"
                                 className="h-12 w-12 rounded-[14px] text-slate-500 hover:bg-slate-100 transition-all"
@@ -1977,10 +1979,10 @@ export default function KnowledgeRead() {
                                             onClick={() => setReaderTheme('sepia')}
                                             className={cn(
                                                 "h-10 rounded-xl border-2 transition-all flex items-center justify-center",
-                                                readerTheme === 'sepia' ? "border-indigo-600 ring-2 ring-indigo-50 ring-offset-1" : "border-slate-100 bg-[#FDF6E3]"
+                                                readerTheme === 'sepia' ? "border-indigo-600 ring-2 ring-indigo-50 ring-offset-1" : "border-slate-100 bg-[#FDF6E3]" // eslint-disable-line no-restricted-syntax -- reading-theme swatch preview, not app chrome
                                             )}
                                         >
-                                            <div className="w-5 h-5 bg-[#FDF6E3] rounded-full border border-slate-200" title="Sepia" />
+                                            <div className="w-5 h-5 bg-[#FDF6E3] rounded-full border border-slate-200" title="Sepia" /> {/* eslint-disable-line no-restricted-syntax -- reading-theme swatch preview */}
                                         </button>
                                         <button
                                             onClick={() => setReaderTheme('dark')}

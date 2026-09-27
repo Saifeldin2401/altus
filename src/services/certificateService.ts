@@ -104,7 +104,10 @@ function resolveCertificateStatus(
     return expiryTime <= Date.now() ? 'expired' : normalizedStatus
 }
 
-const CERTIFICATE_VERIFY_URL = import.meta.env.VITE_CERTIFICATE_VERIFY_URL || 'altus-advisory.com/verify'
+// The real verification page (see src/pages/public/VerifyCertificate.tsx), never a
+// placeholder domain the certificate's own organization doesn't control.
+const CERTIFICATE_VERIFY_URL = import.meta.env.VITE_CERTIFICATE_VERIFY_URL
+    || (typeof window !== 'undefined' ? `${window.location.host}/verify` : 'phg-connect.com/verify')
 
 /**
  * Generate a luxury enterprise PDF certificate.
@@ -120,6 +123,18 @@ export async function generateCertificatePDF(
 ): Promise<Blob> {
     const qrDataUrl = await createQRCodeDataUrl(`https://${CERTIFICATE_VERIFY_URL}?code=${certificate.verificationCode}`)
 
+    // The certificate's own organization, never a fixed brand name - two different
+    // tenants' certificates must not say the same issuer.
+    let orgName: string | undefined
+    if (certificate.organizationId) {
+        const { data: org } = await supabase
+            .from('organizations')
+            .select('name')
+            .eq('id', certificate.organizationId)
+            .maybeSingle()
+        orgName = org?.name || undefined
+    }
+
     const html = buildCertificateHtml({
         recipientName: certificate.recipientName,
         title: certificate.title,
@@ -129,6 +144,7 @@ export async function generateCertificatePDF(
         verifyUrl: CERTIFICATE_VERIFY_URL,
         score: certificate.score,
         passingScore: certificate.passingScore,
+        orgName: orgName || 'Altus Connect',
         issuedByName: certificate.issuedByName || (certificate.metadata?.issuedByName as string | undefined),
         issuedByTitle: (certificate.metadata?.issuedByTitle as string | undefined),
         secondarySignatoryName: (certificate.metadata?.secondarySignatoryName as string | undefined),

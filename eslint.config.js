@@ -100,6 +100,44 @@ export default defineConfig([
       'src/**/*Chart*.{ts,tsx}',
       'src/ui/tokens/**/*.{ts,tsx}',
       'src/ui/primitives/**/*.{ts,tsx}',
+      // A fixed picker palette (tag colors), not app chrome — forcing it onto
+      // the design tokens would remove the distinguishable swatches it exists for.
+      'src/components/documents/DocumentTagManager.tsx',
+      // Tenant brand-theme presets: a curated palette a tenant picks *as* their
+      // own branding, so it can never be the app's own design tokens.
+      'src/pages/platform/OrganizationsHub.tsx',
+      'src/pages/platform/OrganizationProfile.tsx',
+      'src/components/admin/AITenantEmailBrandCopilotModal.tsx',
+      // The printable certificate's own token definitions (mirrors src/ui/tokens),
+      // plus html2canvas/QRCode color config that must be a resolved literal —
+      // neither can consume a CSS custom property.
+      'src/lib/certificateTemplate.ts',
+      'src/services/certificateService.ts',
+      // Browser DevTools console.log('%c...', 'color: #...') styling — never
+      // rendered as app UI, so it can't use the app's design tokens.
+      'src/services/aiCourseEngineService.ts',
+      'src/lib/ai/providers/multiProviderRouter.ts',
+      'src/components/training/ai-engine/VisualAssetEditorModal.tsx',
+      // Same tenant brand-color default as OrganizationsHub/OrganizationProfile.
+      'src/services/platformService.ts',
+      'src/pages/admin/components/OrganizationProfileSettings.tsx',
+      // Decorative confetti particle colors (mirrors HolidayCelebration.tsx above).
+      'src/components/training/player/PlayerCelebrationModal.tsx',
+      // Inline styles for an HTML email template preview - email clients strip
+      // <style> and CSS custom properties, so these must be literal.
+      'src/pages/admin/EmailTemplateEditor.tsx',
+      // Google's own "G" logo colors on the sign-in button (mirrors the
+      // LinkedIn brand-blue exception on the certificate share button).
+      'src/components/auth/LoginView.tsx',
+      // Contrast-ratio color math, not app UI (mirrors src/lib/theme.ts).
+      'src/lib/colorContrast.ts',
+      // Browser DevTools console styling (imageDebugLogger) and a generated SVG
+      // placeholder image baked as a data URI (imageAgent) — neither is live DOM.
+      'src/lib/ai/imageDebugLogger.ts',
+      'src/lib/ai/agents/imageAgent.ts',
+      // The last-resort fallback rendered via raw innerHTML when React itself
+      // fails to mount, so it cannot depend on the app's CSS bundle having loaded.
+      'src/main.tsx',
     ],
     rules: {
       'no-restricted-syntax': 'off',

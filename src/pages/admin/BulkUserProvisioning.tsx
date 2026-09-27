@@ -323,7 +323,11 @@ function parseUsersInput(rawInput: string) {
   })
 }
 
-async function assertPrerequisites() {
+async function assertPrerequisites(
+  organizationId: string | undefined,
+  isPlatformOperator: boolean,
+  isOrgAdmin: boolean
+) {
   const {
     data: { session }
   } = await supabase.auth.getSession()
@@ -339,6 +343,24 @@ async function assertPrerequisites() {
 
   if (userError || !user) {
     throw new Error('Unable to resolve current authenticated user.')
+  }
+
+  if (isPlatformOperator || isOrgAdmin) {
+    return
+  }
+
+  if (organizationId) {
+    const { data: membership } = await supabase
+      .from('organization_memberships')
+      .select('role')
+      .eq('organization_id', organizationId)
+      .eq('user_id', user.id)
+      .eq('is_active', true)
+      .maybeSingle()
+
+    if (membership && ['organization_owner', 'organization_admin'].includes(membership.role)) {
+      return
+    }
   }
 
   const { data: roleRows, error: roleError } = await supabase
@@ -467,7 +489,7 @@ async function createSingleUser(maps: MapsState, config: BulkConfig, row: InputU
 
 export default function BulkUserProvisioning() {
   const { toast } = useToast()
-  const { currentOrganization } = useTenant()
+  const { currentOrganization, isOrgAdmin } = useTenant()
   const { isPlatformOperator } = useAccountContext()
 
   const { data: entitlements, refetch: refetchEntitlements } = useQuery({
@@ -591,7 +613,7 @@ export default function BulkUserProvisioning() {
 
     try {
       appendLog('Running pre-checks...')
-      await assertPrerequisites()
+      await assertPrerequisites(currentOrganization?.id, isPlatformOperator, isOrgAdmin)
       appendLog('Authenticated and privileges verified.')
 
       const maps = await loadMaps(currentOrganization?.id)

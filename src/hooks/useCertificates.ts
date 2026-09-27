@@ -57,9 +57,10 @@ export function useAllCertificates() {
 }
 
 /**
- * Look up an organization's uploaded logo, for on-screen certificate previews that
- * render their own <img> (e.g. TrainingCertificates.tsx's print/preview dialog) rather
- * than going through generateCertificatePDF()'s own logo resolution.
+ * Look up an organization's uploaded logo and name, for on-screen certificate
+ * previews that render their own <img> (e.g. TrainingCertificates.tsx's
+ * print/preview dialog) rather than going through generateCertificatePDF()'s
+ * own logo resolution.
  */
 export function useOrganizationLogo(organizationId?: string | null) {
     return useQuery({
@@ -67,11 +68,11 @@ export function useOrganizationLogo(organizationId?: string | null) {
         queryFn: async () => {
             const { data, error } = await supabase
                 .from('organizations')
-                .select('logo_url')
+                .select('logo_url, name')
                 .eq('id', organizationId!)
                 .maybeSingle()
             if (error) throw error
-            return data?.logo_url || null
+            return { logoUrl: data?.logo_url || null, name: data?.name || null }
         },
         enabled: !!organizationId,
         staleTime: 5 * 60 * 1000

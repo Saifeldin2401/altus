@@ -122,6 +122,28 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
+          // Shared runtime pieces that the app shell AND the heavy vendor chunks
+          // below all depend on. Rollup merges any unclaimed dependency of a
+          // manual chunk INTO that chunk - left unassigned, React landed in
+          // vendor-editor, Vite's preload helper (used by every lazy route) in
+          // vendor-jspdf and DOMPurify in vendor-mermaid, so first load had to
+          // download the editor, PDF and diagram libraries (~1.4 MB gzip).
+          // None of these import the heavy chunks, so this can't form a cycle.
+          if (
+            id.includes('vite/preload-helper') ||
+            id.includes('commonjsHelpers') ||
+            id.includes('/node_modules/react/') ||
+            id.includes('/node_modules/react-dom/') ||
+            id.includes('/node_modules/scheduler/') ||
+            id.includes('/node_modules/use-sync-external-store/') ||
+            id.includes('/node_modules/@floating-ui/') ||
+            id.includes('/node_modules/dompurify/') ||
+            id.includes('/node_modules/@babel/runtime/') ||
+            id.includes('/node_modules/es-toolkit/')
+          ) {
+            return 'vendor-core'
+          }
+
           if (!id.includes('node_modules')) return undefined
 
           // Large visualization / document libraries - these are the biggest chunks

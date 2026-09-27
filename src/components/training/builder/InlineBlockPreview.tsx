@@ -53,11 +53,10 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
       const sopTitle = (block.content_data as Record<string, unknown>)?.sop_title as string | undefined
       return (
         <div className={cn(
-          'flex items-center gap-3 p-3 bg-emerald-50/60 dark:bg-emerald-950/30 rounded-lg border border-emerald-200/60 dark:border-emerald-800/40',
-          isRTL ? 'flex-row-reverse' : ''
+          'flex items-center gap-3 p-3 bg-emerald-50/60 dark:bg-emerald-950/30 rounded-lg border border-emerald-200/60 dark:border-emerald-800/40'
         )}>
           <BookOpen className="w-4 h-4 text-emerald-600 shrink-0" />
-          <div className={cn('flex-1 min-w-0', isRTL ? 'text-end' : 'text-start')}>
+          <div className={cn('flex-1 min-w-0', 'text-start')}>
             <p className="text-sm font-medium text-emerald-900 dark:text-emerald-200 truncate">
               {sopTitle || block.title || t('builder.inlinePreview.sopReference', 'Knowledge Base SOP')}
             </p>
@@ -98,7 +97,7 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
             '[&_.callout]:text-xs [&_.callout]:p-2 [&_.callout]:rounded-md [&_.callout]:my-2',
             '[&_.callout-info]:bg-blue-50 [&_.callout-info]:dark:bg-blue-950/30 [&_.callout-info]:border [&_.callout-info]:border-blue-200',
             '[&_.callout-warning]:bg-amber-50 [&_.callout-warning]:dark:bg-amber-950/30 [&_.callout-warning]:border [&_.callout-warning]:border-amber-200',
-            isRTL ? 'text-end' : 'text-start'
+            'text-start'
           )}
           dangerouslySetInnerHTML={{ __html: sanitizeHtml(block.content) }}
         />
@@ -132,8 +131,7 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
     if (!block.content_url) {
       return (
         <div className={cn(
-          'flex items-center gap-3 p-4 bg-rose-50/50 dark:bg-rose-950/20 rounded-lg border border-dashed border-rose-200/60',
-          isRTL ? 'flex-row-reverse' : ''
+          'flex items-center gap-3 p-4 bg-rose-50/50 dark:bg-rose-950/20 rounded-lg border border-dashed border-rose-200/60'
         )}>
           <Video className="w-5 h-5 text-rose-400" />
           <span className="text-xs text-muted-foreground italic">{t('builder.inlinePreview.noVideo', 'No video URL added yet')}</span>
@@ -160,8 +158,7 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
     if (!block.content_url) {
       return (
         <div className={cn(
-          'flex items-center gap-3 p-4 bg-blue-50/50 dark:bg-blue-950/20 rounded-lg border border-dashed border-blue-200/60',
-          isRTL ? 'flex-row-reverse' : ''
+          'flex items-center gap-3 p-4 bg-blue-50/50 dark:bg-blue-950/20 rounded-lg border border-dashed border-blue-200/60'
         )}>
           <ImageIcon className="w-5 h-5 text-blue-400" />
           <span className="text-xs text-muted-foreground italic">{t('builder.inlinePreview.noImage', 'No image uploaded yet')}</span>
@@ -185,8 +182,7 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
     if (!block.content_url) {
       return (
         <div className={cn(
-          'flex items-center gap-3 p-4 bg-cyan-50/50 dark:bg-cyan-950/20 rounded-lg border border-dashed border-cyan-200/60',
-          isRTL ? 'flex-row-reverse' : ''
+          'flex items-center gap-3 p-4 bg-cyan-50/50 dark:bg-cyan-950/20 rounded-lg border border-dashed border-cyan-200/60'
         )}>
           <Headphones className="w-5 h-5 text-cyan-400" />
           <span className="text-xs text-muted-foreground italic">{t('builder.inlinePreview.noAudio', 'No audio file added yet')}</span>
@@ -206,13 +202,12 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
   if (block.type === 'document_link') {
     return (
       <div className={cn(
-        'flex items-center gap-3 p-3 bg-amber-50/60 dark:bg-amber-950/20 rounded-lg border border-amber-200/60 dark:border-amber-800/40',
-        isRTL ? 'flex-row-reverse' : ''
+        'flex items-center gap-3 p-3 bg-amber-50/60 dark:bg-amber-950/20 rounded-lg border border-amber-200/60 dark:border-amber-800/40'
       )}>
         <div className="w-8 h-8 rounded-lg bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-700 flex items-center justify-center shrink-0">
           <FileText className="w-4 h-4 text-amber-600" />
         </div>
-        <div className={cn('flex-1 min-w-0', isRTL ? 'text-end' : 'text-start')}>
+        <div className={cn('flex-1 min-w-0', 'text-start')}>
           <p className="text-sm font-medium text-amber-900 dark:text-amber-200 truncate">
             {block.title || t('builder.inlinePreview.document', 'Document')}
           </p>
@@ -241,9 +236,9 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
     return (
       <div className={cn(
         'p-3.5 bg-amber-50/60 dark:bg-amber-950/20 rounded-xl border border-amber-200/80 dark:border-amber-900/50 space-y-2.5',
-        isRTL ? 'text-end' : 'text-start'
+        'text-start'
       )}>
-        <div className={cn("flex items-center justify-between gap-2", isRTL ? "flex-row-reverse" : "")}>
+        <div className={cn("flex items-center justify-between gap-2")}>
           <div className="flex items-center gap-2">
             <FileCheck className="w-4 h-4 text-amber-600 shrink-0" />
             <span className="text-xs font-bold text-amber-950 dark:text-amber-200">
@@ -285,9 +280,9 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
     return (
       <div className={cn(
         'p-3.5 bg-amber-50/70 dark:bg-amber-950/20 rounded-xl border border-amber-200 dark:border-amber-900/50 space-y-2.5',
-        isRTL ? 'text-end' : 'text-start'
+        'text-start'
       )}>
-        <div className={cn("flex items-center justify-between gap-2", isRTL ? "flex-row-reverse" : "")}>
+        <div className={cn("flex items-center justify-between gap-2")}>
           <div className="flex items-center gap-2">
             <MessageSquare className="w-4 h-4 text-amber-600 shrink-0" />
             <span className="text-xs font-bold text-amber-950 dark:text-amber-200">

@@ -194,11 +194,10 @@ export function InlineQuizPreview({ quizId, onRegenerate, isRTL, compact = false
   const estimatedMins = Math.max(1, Math.ceil(questions.length * 1.5))
 
   return (
-    <div className={cn('space-y-3', isRTL ? 'text-end' : 'text-start')}>
+    <div className={cn('space-y-3', 'text-start')}>
       {/* Quiz summary bar */}
       <div className={cn(
-        'flex items-center gap-3 px-3 py-2 bg-purple-50/80 dark:bg-purple-950/30 rounded-lg border border-purple-100 dark:border-purple-900/50',
-        isRTL ? 'flex-row-reverse' : ''
+        'flex items-center gap-3 px-3 py-2 bg-purple-50/80 dark:bg-purple-950/30 rounded-lg border border-purple-100 dark:border-purple-900/50'
       )}>
         <FileQuestion className="w-4 h-4 text-purple-600 shrink-0" />
         <div className="flex-1 flex items-center gap-2 flex-wrap text-xs font-medium text-purple-900 dark:text-purple-200">
@@ -236,21 +235,20 @@ export function InlineQuizPreview({ quizId, onRegenerate, isRTL, compact = false
             >
               {/* Question header */}
               <div className={cn(
-                'flex items-start gap-2.5 p-3',
-                isRTL ? 'flex-row-reverse' : ''
+                'flex items-start gap-2.5 p-3'
               )}>
                 <span className="shrink-0 w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 flex items-center justify-center text-[11px] font-bold mt-0.5">
                   {qIdx + 1}
                 </span>
-                <div className={cn('flex-1 min-w-0', isRTL ? 'text-end' : 'text-start')}>
+                <div className={cn('flex-1 min-w-0', 'text-start')}>
                   <p className="text-sm font-medium text-slate-900 dark:text-white leading-snug">
                     {isRTL && question.question_text_ar ? question.question_text_ar : question.question_text}
                   </p>
-                  <div className={cn('flex items-center gap-1.5 mt-1.5 flex-wrap', isRTL ? 'flex-row-reverse' : '')}>
-                    <Badge variant="outline" className="text-[10px] h-5 px-1.5 font-semibold">
+                  <div className={cn('flex items-center gap-1.5 mt-1.5 flex-wrap')}>
+                    <Badge variant="outline" className="text-[10px] px-2 py-0.5 min-h-[20px] font-semibold shrink-0 whitespace-nowrap">
                       {TYPE_LABELS[question.question_type] || question.question_type}
                     </Badge>
-                    <Badge className={cn('text-[10px] h-5 px-1.5 font-semibold border-none', DIFFICULTY_COLORS[question.difficulty] || DIFFICULTY_COLORS.medium)}>
+                    <Badge className={cn('text-[10px] px-2 py-0.5 min-h-[20px] font-semibold border-none shrink-0 whitespace-nowrap', DIFFICULTY_COLORS[question.difficulty] || DIFFICULTY_COLORS.medium)}>
                       {question.difficulty}
                     </Badge>
                     {question.points && (
@@ -262,7 +260,7 @@ export function InlineQuizPreview({ quizId, onRegenerate, isRTL, compact = false
 
               {/* Answer options */}
               {question.options.length > 0 && (
-                <div className={cn('px-3 pb-2 space-y-1', isRTL ? 'pe-12' : 'ps-12')}>
+                <div className={cn('px-3 pb-2 space-y-1', 'ps-12')}>
                   {question.options.map((opt) => (
                     <div
                       key={opt.id}
@@ -270,8 +268,7 @@ export function InlineQuizPreview({ quizId, onRegenerate, isRTL, compact = false
                         'flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs transition-colors',
                         opt.is_correct
                           ? 'bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800'
-                          : 'bg-slate-50 dark:bg-slate-900 border border-transparent',
-                        isRTL ? 'flex-row-reverse' : ''
+                          : 'bg-slate-50 dark:bg-slate-900 border border-transparent'
                       )}
                     >
                       {opt.is_correct ? (
@@ -292,7 +289,7 @@ export function InlineQuizPreview({ quizId, onRegenerate, isRTL, compact = false
 
               {/* True/False or Fill Blank correct answer */}
               {question.options.length === 0 && question.correct_answer && (
-                <div className={cn('px-3 pb-2', isRTL ? 'pe-12' : 'ps-12')}>
+                <div className={cn('px-3 pb-2', 'ps-12')}>
                   <div className="flex items-center gap-2 px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-md text-xs">
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                     <span className="text-emerald-900 dark:text-emerald-200 font-medium">
@@ -304,7 +301,7 @@ export function InlineQuizPreview({ quizId, onRegenerate, isRTL, compact = false
 
               {/* Expandable explanation */}
               {question.explanation && (
-                <div className={cn('px-3 pb-2', isRTL ? 'pe-12' : 'ps-12')}>
+                <div className={cn('px-3 pb-2', 'ps-12')}>
                   <button
                     onClick={() => toggleExplanation(question.id)}
                     className="flex items-center gap-1 text-[11px] text-slate-500 hover:text-slate-700 transition-colors"

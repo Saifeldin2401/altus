@@ -347,16 +347,21 @@ export const CERTIFICATE_TEMPLATE_STYLES = `
 export function buildCertificateHtml(data: CertificateTemplateData): string {
     const recipientName = escapeHtml((data.recipientName || 'CERTIFICATE HOLDER').toUpperCase())
     const courseTitle = escapeHtml((data.title || 'ACCREDITATION PROGRAM').toUpperCase())
-    const orgName = escapeHtml(data.orgName || 'ALTUS ADVISORY')
+    const orgName = escapeHtml(data.orgName || 'ALTUS CONNECT')
     const brandLine = escapeHtml(data.brandLine || 'ENTERPRISE HOSPITALITY & EXECUTIVE EDUCATION')
-    const issuedByName = escapeHtml(data.issuedByName || 'Saifeldin M.')
-    const issuedByTitle = escapeHtml(data.issuedByTitle || 'VP of Learning & Quality')
-    const secondarySignatoryName = escapeHtml(data.secondarySignatoryName || 'Dr. Khalid Al-Mansoor')
-    const secondarySignatoryTitle = escapeHtml(data.secondarySignatoryTitle || 'Executive Managing Director')
+    // No fabricated signatory: when this certificate has no real issuer on record,
+    // the signature line identifies the issuing organization itself, never an
+    // invented person's name and title.
+    const hasRealIssuer = !!(data.issuedByName && data.issuedByName.trim())
+    const issuedByName = escapeHtml(hasRealIssuer ? data.issuedByName!.trim() : (data.orgName || 'Altus Connect'))
+    const issuedByTitle = escapeHtml(hasRealIssuer ? (data.issuedByTitle || 'Authorized Signatory') : 'Issuing Organization')
+    const hasSecondarySignatory = !!(data.secondarySignatoryName && data.secondarySignatoryName.trim())
+    const secondarySignatoryName = escapeHtml(data.secondarySignatoryName?.trim() || '')
+    const secondarySignatoryTitle = escapeHtml(data.secondarySignatoryTitle || 'Authorized Signatory')
     const completionDateLabel = escapeHtml(data.completionDateLabel || new Date().toLocaleDateString('en-US'))
     const certificateNumber = escapeHtml(data.certificateNumber || data.verificationCode || 'ALTUS-CERT-2026')
     const verificationCode = escapeHtml(data.verificationCode || data.certificateNumber || 'ALTUS-CERT-2026')
-    const verifyUrl = escapeHtml(data.verifyUrl || 'verify.altusadvisory.com')
+    const verifyUrl = escapeHtml(data.verifyUrl || 'verify.altusconnect.com')
 
     const nameFontSize = scaledFontSize(recipientName, 44, 26, 22)
     const titleFontSize = scaledFontSize(courseTitle, 25, 16, 38)
@@ -505,7 +510,7 @@ export function buildCertificateHtml(data: CertificateTemplateData): string {
         <div>
           <div class="certificate-footer-divider"></div>
           <div class="certificate-footer-grid">
-            <!-- Left Signatory: Saifeldin M. -->
+            <!-- Left Signatory: the certificate's real issuer, or the issuing organization -->
             <div class="certificate-signature-block">
               <div class="certificate-signature-script">${issuedByName}</div>
               <div class="certificate-signature-line-wrap">
@@ -515,7 +520,7 @@ export function buildCertificateHtml(data: CertificateTemplateData): string {
               </div>
               <div class="certificate-signature-name">${issuedByName.toUpperCase()}</div>
               <div class="certificate-signature-title">${issuedByTitle}</div>
-              <div class="certificate-signature-org">Altus Advisory</div>
+              <div class="certificate-signature-org">${orgName}</div>
               <div class="certificate-signature-id">Cert ID: ${certificateNumber}</div>
             </div>
 
@@ -531,8 +536,10 @@ export function buildCertificateHtml(data: CertificateTemplateData): string {
               </div>
             </div>
 
-            <!-- Right Signatory & 3D Metallic Gold Seal Medallion -->
+            <!-- Right: a real second signatory when the certificate records one; otherwise
+                 just the seal, never a second fabricated person. -->
             <div class="certificate-seal-wrap">
+              ${hasSecondarySignatory ? `
               <div class="certificate-signature-block" style="text-align: right; align-items: flex-end;">
                 <div class="certificate-signature-script">${secondarySignatoryName}</div>
                 <div class="certificate-signature-line-wrap">
@@ -542,8 +549,9 @@ export function buildCertificateHtml(data: CertificateTemplateData): string {
                 </div>
                 <div class="certificate-signature-name">${secondarySignatoryName.toUpperCase()}</div>
                 <div class="certificate-signature-title">${secondarySignatoryTitle}</div>
-                <div class="certificate-signature-org">Altus Advisory</div>
+                <div class="certificate-signature-org">${orgName}</div>
               </div>
+              ` : ''}
 
               <div class="certificate-seal-outer">
                 <div class="certificate-seal-ring-dashed"></div>
@@ -552,7 +560,7 @@ export function buildCertificateHtml(data: CertificateTemplateData): string {
                   <div class="certificate-seal-brand">ALTUS VERIFIED</div>
                   <div class="certificate-seal-subtitle">EXCELLENCE IN EDUCATION</div>
                   <div class="certificate-seal-stars">★ ★ ★</div>
-                  <div class="certificate-seal-footer">ALTUS ADVISORY</div>
+                  <div class="certificate-seal-footer">${orgName}</div>
                 </div>
               </div>
             </div>

@@ -45,7 +45,7 @@ import { Link, useNavigate } from 'react-router-dom'
 // import { AIDocumentAssistant } from '@/components/documents/AIDocumentAssistant'
 import { DeleteConfirmationDialog } from '@/components/common/ConfirmationDialog'
 import { DocumentConfidentialityBadge } from '@/components/documents/DocumentConfidentialityBadge'
-import { EmptyState } from '@/components/shared/EmptyState'
+import { EmptyState } from '@/ui'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Badge } from '@/components/ui/badge'
@@ -774,11 +774,11 @@ export default function DocumentLibrary() {
               <Badge variant="outline" className="text-xs">
                 {doc.file_extension?.toUpperCase() || 'FILE'}
               </Badge>
-              <span className="text-xs text-ds-muted">{formatFileSize(doc.file_size || 0)}</span>
-              <span className="text-xs text-ds-muted">{formatRelativeTime(doc.created_at)}</span>
+              <span className="text-xs text-ds-muted whitespace-nowrap">{formatFileSize(doc.file_size || 0)}</span>
+              <span className="text-xs text-ds-muted whitespace-nowrap">{formatRelativeTime(doc.created_at)}</span>
               {doc.expires_at && (
                 <span className={cn(
-                  "text-xs",
+                  "text-xs whitespace-nowrap",
                   isExpired ? "text-ds-danger" : isExpiringSoon ? "text-ds-warning" : "text-ds-muted"
                 )}>
                   <Clock className="w-3 h-3 inline me-1" />
@@ -1199,14 +1199,14 @@ export default function DocumentLibrary() {
                     >
                       {documents.length === 0 ? (
                         <EmptyState
-                          icon={FileText}
+                          icon={<FileText className="h-6 w-6" aria-hidden="true" />}
                           title={t('empty.title')}
                           description={t('empty.description')}
-                          action={{
-                            label: t('upload_document'),
-                            onClick: () => setUploadDialogOpen(true),
-                            icon: Plus
-                          }}
+                          action={
+                            <button type="button" onClick={() => setUploadDialogOpen(true)} className="inline-flex items-center gap-1.5 text-sm font-semibold text-ds-accent hover:underline">
+                              <Plus className="h-4 w-4" aria-hidden="true" />{t('upload_document')}
+                            </button>
+                          }
                         />
                       ) : viewMode === 'grid' ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

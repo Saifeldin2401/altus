@@ -292,16 +292,15 @@ export const BuilderCanvas = ({
           {/* Collapsed Header / Summary Bar */}
           <div
             className={cn(
-              "px-4 py-3 flex items-center justify-between gap-3 cursor-pointer select-none",
-              isRTL ? "flex-row-reverse" : ""
+              "px-4 py-3 flex items-center justify-between gap-3 cursor-pointer select-none"
             )}
             onClick={() => setIsMetadataExpanded(!isMetadataExpanded)}
           >
-            <div className={cn("flex items-center gap-2.5 flex-1 min-w-0", isRTL ? "flex-row-reverse" : "")}>
+            <div className={cn("flex items-center gap-2.5 flex-1 min-w-0")}>
               <div className="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0">
                 <SlidersHorizontal className="w-3.5 h-3.5" />
               </div>
-              <div className={cn("flex items-center gap-2 flex-wrap min-w-0", isRTL ? "flex-row-reverse" : "")}>
+              <div className={cn("flex items-center gap-2 flex-wrap min-w-0")}>
                 <div className="flex items-center gap-1.5 flex-wrap">
                   <span className="text-xs font-bold text-slate-900 dark:text-white">
                     {title.trim() || t('builder.untitledModule', 'Untitled Course')}
@@ -327,7 +326,7 @@ export const BuilderCanvas = ({
               </div>
             </div>
 
-            <div className={cn("flex items-center gap-2 shrink-0", isRTL ? "flex-row-reverse" : "")}>
+            <div className={cn("flex items-center gap-2 shrink-0")}>
               {(!title.trim() || !category) && (
                 <Badge variant="outline" className="text-[10px] bg-amber-50 text-amber-800 border-amber-300 dark:bg-amber-950 dark:text-amber-300">
                   <AlertCircle className="w-3 h-3 me-1 text-amber-600" />
@@ -355,8 +354,8 @@ export const BuilderCanvas = ({
             <CardContent className="p-4 md:p-5 pt-2 border-t border-slate-100 dark:border-slate-800 space-y-4 bg-slate-50/40 dark:bg-slate-900/40">
               {/* Course Title Input (Prominent & First) */}
               <div className="space-y-1.5 p-3.5 rounded-xl bg-white dark:bg-slate-950 border-2 border-amber-300/80 dark:border-amber-700/80 shadow-xs">
-                <div className={cn("flex items-center justify-between gap-2", isRTL ? "flex-row-reverse" : "")}>
-                  <Label className={cn("text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5", isRTL ? "flex-row-reverse" : "")}>
+                <div className={cn("flex items-center justify-between gap-2")}>
+                  <Label className={cn("text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5")}>
                     <GraduationCap className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
                     <span>{t('builder.courseTitleLabel', 'Training Course Name')}</span>
                     <span className="text-amber-600 font-bold">*</span>
@@ -371,7 +370,7 @@ export const BuilderCanvas = ({
                   placeholder={t('builder.courseTitlePlaceholder', 'e.g., Front Desk Guest Check-In & Service Standards SOP')}
                   className={cn(
                     "text-sm font-bold bg-amber-50/20 dark:bg-amber-950/10 border-slate-200 dark:border-slate-800 focus:border-ds-brass focus:ring-2 focus:ring-ds-brass/20 h-9",
-                    isRTL ? "text-end" : "text-start"
+                    "text-start"
                   )}
                 />
                 <p className="text-[11px] text-muted-foreground">
@@ -382,12 +381,12 @@ export const BuilderCanvas = ({
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Department / Category */}
                 <div className="space-y-1.5">
-                  <Label className={cn("text-xs font-bold text-slate-700 dark:text-slate-300", isRTL ? "text-end block" : "")}>
+                  <Label className={cn("text-xs font-bold text-slate-700 dark:text-slate-300")}>
                     {t('category', 'Department / Category')} <span className="text-amber-600">*</span>
                   </Label>
                   {setCategory && (
                     <Select value={category || 'operations'} onValueChange={setCategory}>
-                      <SelectTrigger className={cn("bg-white dark:bg-slate-950 text-xs font-medium border-slate-200 dark:border-slate-800", isRTL ? "flex-row-reverse" : "")}>
+                      <SelectTrigger className={cn("bg-white dark:bg-slate-950 text-xs font-medium border-slate-200 dark:border-slate-800")}>
                         <SelectValue placeholder={t('builder.selectCategory', 'Select department')} />
                       </SelectTrigger>
                       <SelectContent>
@@ -408,12 +407,12 @@ export const BuilderCanvas = ({
 
                 {/* Target Audience */}
                 <div className="space-y-1.5">
-                  <Label className={cn("text-xs font-bold text-slate-700 dark:text-slate-300", isRTL ? "text-end block" : "")}>
+                  <Label className={cn("text-xs font-bold text-slate-700 dark:text-slate-300")}>
                     {t('builder.audience', 'Target Audience')}
                   </Label>
                   {setAudience && (
                     <Select value={audience || 'all'} onValueChange={setAudience}>
-                      <SelectTrigger className={cn("bg-white dark:bg-slate-950 text-xs font-medium border-slate-200 dark:border-slate-800", isRTL ? "flex-row-reverse" : "")}>
+                      <SelectTrigger className={cn("bg-white dark:bg-slate-950 text-xs font-medium border-slate-200 dark:border-slate-800")}>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -430,12 +429,12 @@ export const BuilderCanvas = ({
                 {/* Difficulty & Language */}
                 <div className="grid grid-cols-2 gap-2">
                   <div className="space-y-1.5">
-                    <Label className={cn("text-xs font-bold text-slate-700 dark:text-slate-300", isRTL ? "text-end block" : "")}>
+                    <Label className={cn("text-xs font-bold text-slate-700 dark:text-slate-300")}>
                       {t('builder.difficulty', 'Difficulty')}
                     </Label>
                     {setDifficultyLevel && (
                       <Select value={difficultyLevel || 'beginner'} onValueChange={setDifficultyLevel}>
-                        <SelectTrigger className={cn("bg-white dark:bg-slate-950 text-xs font-medium border-slate-200 dark:border-slate-800", isRTL ? "flex-row-reverse" : "")}>
+                        <SelectTrigger className={cn("bg-white dark:bg-slate-950 text-xs font-medium border-slate-200 dark:border-slate-800")}>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -448,12 +447,12 @@ export const BuilderCanvas = ({
                   </div>
 
                   <div className="space-y-1.5">
-                    <Label className={cn("text-xs font-bold text-slate-700 dark:text-slate-300", isRTL ? "text-end block" : "")}>
+                    <Label className={cn("text-xs font-bold text-slate-700 dark:text-slate-300")}>
                       {t('builder.contentLanguage', 'Language')}
                     </Label>
                     {setContentLanguage && (
                       <Select value={contentLanguage || 'english'} onValueChange={setContentLanguage}>
-                        <SelectTrigger className={cn("bg-white dark:bg-slate-950 text-xs font-medium border-slate-200 dark:border-slate-800", isRTL ? "flex-row-reverse" : "")}>
+                        <SelectTrigger className={cn("bg-white dark:bg-slate-950 text-xs font-medium border-slate-200 dark:border-slate-800")}>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -470,7 +469,7 @@ export const BuilderCanvas = ({
               {/* Course Description */}
               {setDescription && (
                 <div className="space-y-1.5">
-                  <Label className={cn("text-xs font-bold text-slate-700 dark:text-slate-300", isRTL ? "text-end block" : "")}>
+                  <Label className={cn("text-xs font-bold text-slate-700 dark:text-slate-300")}>
                     {t('description', 'Course Description & Learning Outcomes')}
                   </Label>
                   <Textarea
@@ -478,7 +477,7 @@ export const BuilderCanvas = ({
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder={t('builder.descriptionHint', 'Describe key learning objectives, target standards, and procedures covered...')}
-                    className={cn("text-xs bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 resize-none", isRTL ? "text-end" : "")}
+                    className={cn("text-xs bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 resize-none")}
                   />
                 </div>
               )}
@@ -487,7 +486,7 @@ export const BuilderCanvas = ({
         </Card>
 
         {/* Top Action & Metrics Bar */}
-        <div className={cn('flex flex-col md:flex-row md:items-center justify-between gap-4', isRTL ? 'md:flex-row-reverse' : '')}>
+        <div className={cn('flex flex-col md:flex-row md:items-center justify-between gap-4')}>
           <div className="space-y-1">
             <h2 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
               <span>{t('builder.courseStructure', 'Course Curriculum & Lessons')}</span>
@@ -515,7 +514,7 @@ export const BuilderCanvas = ({
             </p>
           </div>
 
-          <div className={cn('flex items-center gap-2 shrink-0', isRTL ? 'flex-row-reverse' : '')}>
+          <div className={cn('flex items-center gap-2 shrink-0')}>
             {onOpenAICreator && (
               <Button
                 onClick={onOpenAICreator}
@@ -657,8 +656,8 @@ export const BuilderCanvas = ({
                     className="py-3.5 px-4 md:px-5 bg-slate-50/80 dark:bg-slate-900/90 border-b border-slate-100 dark:border-slate-800 cursor-pointer select-none"
                     onClick={() => onSectionClick(activeSection === section.id ? null : section.id)}
                   >
-                    <div className={cn('flex items-center justify-between gap-3', isRTL ? 'flex-row-reverse' : '')}>
-                      <div className={cn('flex items-center gap-3 flex-1 min-w-0', isRTL ? 'flex-row-reverse' : '')}>
+                    <div className={cn('flex items-center justify-between gap-3')}>
+                      <div className={cn('flex items-center gap-3 flex-1 min-w-0')}>
                         <div className="cursor-grab active:cursor-grabbing p-1 text-slate-400 hover:text-slate-600 rounded shrink-0">
                           <GripVertical className="w-4 h-4" />
                         </div>
@@ -700,7 +699,7 @@ export const BuilderCanvas = ({
                         </Badge>
                       </div>
 
-                      <div className={cn('flex items-center gap-1', isRTL ? 'flex-row-reverse' : '')} onClick={(e) => e.stopPropagation()}>
+                      <div className={cn('flex items-center gap-1')} onClick={(e) => e.stopPropagation()}>
                         {/* Move Up/Down Controls */}
                         <div className="flex items-center">
                           <Button
@@ -826,8 +825,7 @@ export const BuilderCanvas = ({
                                 {/* Compact header row (always visible) */}
                                 <div
                                   className={cn(
-                                    'flex items-center gap-3 p-3 cursor-pointer',
-                                    isRTL ? 'flex-row-reverse' : ''
+                                    'flex items-center gap-3 p-3 cursor-pointer'
                                   )}
                                   onClick={() => onEditContent(section.id, item.id)}
                                 >
@@ -839,7 +837,7 @@ export const BuilderCanvas = ({
                                     {getContentIcon(item.type)}
                                   </div>
 
-                                  <div className={cn('flex-1 min-w-0', isRTL ? 'text-end' : 'text-start')}>
+                                  <div className={cn('flex-1 min-w-0', 'text-start')}>
                                     <p className="font-bold text-xs text-slate-900 dark:text-white truncate">
                                       {item.title || 'Untitled Lesson Block'}
                                     </p>
@@ -851,7 +849,7 @@ export const BuilderCanvas = ({
 
                                   {/* Ergonomic Action Toolbar: Primary Actions Always Visible */}
                                   <div
-                                    className={cn('flex items-center gap-1.5', isRTL ? 'flex-row-reverse' : '')}
+                                    className={cn('flex items-center gap-1.5')}
                                     onClick={(e) => e.stopPropagation()}
                                   >
                                     {/* Inline Preview Toggle - ALWAYS VISIBLE if content exists */}

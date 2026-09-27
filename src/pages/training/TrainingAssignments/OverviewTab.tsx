@@ -55,12 +55,12 @@ export function OverviewTab() {
       <div className="flex flex-col md:flex-row gap-3 items-center justify-between rounded-xl border bg-white p-4 shadow-sm">
         <div className="flex flex-1 items-center gap-3 w-full md:w-auto flex-wrap">
           <div className="relative w-full md:w-64 min-w-0">
-            <Search className={cn("absolute top-2.5 h-4 w-4 text-muted-foreground", isRTL ? "end-3" : "start-3")} />
+            <Search className={cn("absolute top-2.5 h-4 w-4 text-muted-foreground", "start-3")} />
             <Input
               placeholder={t('searchEmployeeOrModule')}
               value={overviewSearch}
               onChange={(e) => setOverviewSearch(e.target.value)}
-              className={cn(isRTL ? "pe-9" : "ps-9", "bg-slate-50/50 border-slate-200")}
+              className={cn("ps-9", "bg-slate-50/50 border-slate-200")}
             />
           </div>
           <GroupedDepartmentSelector
@@ -101,7 +101,7 @@ export function OverviewTab() {
             </Button>
           )}
           <Button variant="outline" size="sm" onClick={handleExport}>
-            <Download className={cn("w-4 h-4", isRTL ? "ms-2" : "me-2")} />
+            <Download className={cn("w-4 h-4", "me-2")} />
             {t('export')}
           </Button>
         </div>

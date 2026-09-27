@@ -201,6 +201,16 @@ export function AssignmentCreateDialog({
   const recipientCount = recipientSummary?.recipient_count || 0
   const isHighRiskBroadAssignment = (scopeType === 'organization' || recipientCount > 30)
 
+  // Why the primary action is unavailable, shown next to it instead of
+  // leaving a silently disabled button (or failing later with a toast).
+  const blockedReason = !selectedModuleId
+    ? t('training:assignFlow.blockedNoCourse', 'Choose a course to assign.')
+    : scopeType === 'individual' && selectedLearnerIds.length === 0
+    ? t('training:assignFlow.blockedNoLearnersPicked', 'Select at least one learner.')
+    : !isFetchingCount && recipientCount === 0
+    ? t('training:assignFlow.blockedNoRecipients', 'No active learners match this audience. Widen the brand, department or role filters.')
+    : null
+
   // Toggle individual learner selection
   const toggleLearnerSelection = (learnerId: string) => {
     setSelectedLearnerIds((prev) =>
@@ -220,19 +230,11 @@ export function AssignmentCreateDialog({
   // Handle final submission
   const handleExecuteAssignment = async () => {
     if (!currentOrganization?.id) {
-      toast({ title: 'Error', description: 'No active organization selected', variant: 'destructive' })
+      toast({ title: t('training:assignFlow.failedTitle', 'Could not assign training'), description: t('training:assignFlow.noOrg', 'No active organization is selected.'), variant: 'destructive' })
       return
     }
-    if (!selectedModuleId) {
-      toast({ title: 'Error', description: 'Please select a training course', variant: 'destructive' })
-      return
-    }
-    if (recipientCount === 0) {
-      toast({ title: 'No Recipients', description: 'Selected scope contains 0 eligible active learners.', variant: 'destructive' })
-      return
-    }
-    if (scopeType === 'individual' && selectedLearnerIds.length === 0) {
-      toast({ title: 'Select Learners', description: 'Please choose at least one learner for individual assignment.', variant: 'destructive' })
+    if (blockedReason) {
+      toast({ title: t('training:assignFlow.failedTitle', 'Could not assign training'), description: blockedReason, variant: 'destructive' })
       return
     }
 
@@ -254,8 +256,13 @@ export function AssignmentCreateDialog({
       })
 
       toast({
-        title: '🎯 Training Assigned Successfully',
-        description: `Enrolled ${result.recipient_count} learners in "${selectedModule?.title || 'Course'}" with due date ${format(new Date(effectiveDueDate), 'dd MMM yyyy')}.`,
+        title: t('training:assignFlow.successTitle', 'Training assigned'),
+        description: t('training:assignFlow.successBody', {
+          count: result.recipient_count,
+          course: selectedModule?.title ?? '',
+          due: format(new Date(effectiveDueDate), 'dd MMM yyyy'),
+          defaultValue: '{{count}} learners enrolled in "{{course}}", due {{due}}.',
+        }),
       })
 
       setShowConfirmModal(false)
@@ -264,8 +271,8 @@ export function AssignmentCreateDialog({
     } catch (err: any) {
       console.error('Assignment execution error:', err)
       toast({
-        title: 'Assignment Failed',
-        description: err?.message || 'Unauthorized or failed to create assignment rule.',
+        title: t('training:assignFlow.failedTitle', 'Could not assign training'),
+        description: err?.message || t('training:assignFlow.failedBody', 'You may not have permission to assign to this audience. Try a narrower scope or contact an administrator.'),
         variant: 'destructive',
       })
     } finally {
@@ -701,10 +708,16 @@ export function AssignmentCreateDialog({
             </div>
           </div>
 
-          <DialogFooter className="p-4 bg-muted/30 border-t flex items-center justify-between">
+          <DialogFooter className="p-4 bg-muted/30 border-t flex items-center justify-between gap-3">
             <Button variant="ghost" size="sm" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
               {t('common:cancel', 'Cancel')}
             </Button>
+
+            {blockedReason && (
+              <p id="assign-blocked-reason" role="status" className="flex-1 text-xs text-ds-muted sm:text-end">
+                {blockedReason}
+              </p>
+            )}
 
             <Button
               size="sm"
@@ -715,18 +728,24 @@ export function AssignmentCreateDialog({
                   handleExecuteAssignment()
                 }
               }}
-              disabled={isSubmitting || !selectedModuleId || recipientCount === 0}
-              className="bg-ds-warning hover:bg-ds-warning text-white font-bold px-5"
+              disabled={isSubmitting || isFetchingCount || !!blockedReason}
+              aria-describedby={blockedReason ? 'assign-blocked-reason' : undefined}
+              className="font-semibold px-5"
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 className="h-4 w-4 me-2 animate-spin" />
-                  Assigning...
+                  <Loader2 className="h-4 w-4 me-2 animate-spin" aria-hidden="true" />
+                  {t('training:assignFlow.assigning', 'Assigning…')}
+                </>
+              ) : isFetchingCount ? (
+                <>
+                  <Loader2 className="h-4 w-4 me-2 animate-spin" aria-hidden="true" />
+                  {t('training:assignFlow.counting', 'Counting learners…')}
                 </>
               ) : (
                 <>
-                  <span>Assign to {recipientCount} Learners</span>
-                  <ArrowRight className="h-4 w-4 ms-1.5" />
+                  <span>{t('training:assignFlow.assignTo', { count: recipientCount, defaultValue: 'Assign to {{count}} learners' })}</span>
+                  <ArrowRight className="h-4 w-4 ms-1.5 rtl:rotate-180" aria-hidden="true" />
                 </>
               )}
             </Button>
@@ -740,41 +759,44 @@ export function AssignmentCreateDialog({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-ds-warning">
               <AlertTriangle className="h-5 w-5" />
-              <span>Confirm Broad Training Assignment</span>
+              <span>{t('training:assignFlow.confirmTitle', 'Assign to a large audience?')}</span>
             </DialogTitle>
             <DialogDescription className="text-xs pt-2">
-              You are about to assign <strong>{selectedModule?.title}</strong> to{' '}
-              <strong>{recipientCount} learners</strong> in{' '}
-              <strong>{currentOrganization?.name}</strong>.
+              {t('training:assignFlow.confirmBody', {
+                count: recipientCount,
+                course: selectedModule?.title ?? '',
+                org: currentOrganization?.name ?? '',
+                defaultValue: 'You are about to assign "{{course}}" to {{count}} learners in {{org}}.',
+              })}
             </DialogDescription>
           </DialogHeader>
 
           <div className="p-3.5 rounded-xl bg-ds-surface-subtle border text-xs space-y-1.5">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Course:</span>
+              <span className="text-muted-foreground">{t('training:assignFlow.course', 'Course')}</span>
               <span className="font-semibold truncate max-w-[200px]">{selectedModule?.title}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Scope:</span>
-              <span className="font-semibold capitalize">{scopeType} level</span>
+              <span className="text-muted-foreground">{t('training:assignFlow.scope', 'Audience')}</span>
+              <span className="font-semibold">{t(`training:assignFlow.scopes.${scopeType}`, scopeType)}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Recipients:</span>
-              <span className="font-bold text-ds-warning">{recipientCount} Active Staff</span>
+              <span className="text-muted-foreground">{t('training:assignFlow.recipients', 'Recipients')}</span>
+              <span className="font-bold text-ds-warning tabular-nums">{recipientCount}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Due Date:</span>
+              <span className="text-muted-foreground">{t('training:assignFlow.dueDate', 'Due date')}</span>
               <span className="font-semibold">{format(new Date(effectiveDueDate), 'dd MMM yyyy')}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Priority:</span>
-              <span className="font-semibold capitalize">{priority}</span>
+              <span className="text-muted-foreground">{t('training:assignFlow.priority', 'Priority')}</span>
+              <span className="font-semibold">{t(`training:assignFlow.priorities.${priority}`, priority)}</span>
             </div>
           </div>
 
           <DialogFooter className="gap-2">
             <Button variant="outline" size="sm" onClick={() => setShowConfirmModal(false)} disabled={isSubmitting}>
-              Back to Edit
+              {t('training:assignFlow.backToEdit', 'Back to edit')}
             </Button>
             <Button
               size="sm"
@@ -782,8 +804,8 @@ export function AssignmentCreateDialog({
               disabled={isSubmitting}
               className="bg-ds-warning hover:bg-ds-warning text-white font-bold"
             >
-              {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin me-2" /> : null}
-              Confirm & Dispatch Assignment
+              {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin me-2" aria-hidden="true" /> : null}
+              {t('training:assignFlow.assignTo', { count: recipientCount, defaultValue: 'Assign to {{count}} learners' })}
             </Button>
           </DialogFooter>
         </DialogContent>

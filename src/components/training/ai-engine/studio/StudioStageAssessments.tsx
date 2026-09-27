@@ -227,7 +227,7 @@ export function StudioStageAssessments({
                       <Icon className="w-4 h-4" />
                     </div>
                     {opt.badge && (
-                      <Badge className="bg-purple-600 text-white text-[9px] px-1.5 py-0 h-4">
+                      <Badge className="bg-purple-600 text-white text-[9px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
                         {opt.badge}
                       </Badge>
                     )}

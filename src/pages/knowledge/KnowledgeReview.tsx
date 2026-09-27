@@ -454,8 +454,8 @@ export default function KnowledgeReview() {
                                                     {formatDistanceToNow(new Date(article.updated_at), { addSuffix: true, locale })}
                                                 </span>
                                                 {article.department?.name && (
-                                                    <Badge variant="outline" className="text-[10px] h-5 px-2 bg-ds-surface-subtle text-ds-muted border-ds-border">
-                                                        <Briefcase className="h-2.5 w-2.5 me-1 text-ds-muted" />
+                                                    <Badge variant="outline" className="text-[10px] px-2 py-0.5 shrink-0 whitespace-nowrap bg-ds-surface-subtle text-ds-muted border-ds-border">
+                                                        <Briefcase className="h-2.5 w-2.5 me-1 text-ds-muted shrink-0" />
                                                         {article.department.name}
                                                     </Badge>
                                                 )}

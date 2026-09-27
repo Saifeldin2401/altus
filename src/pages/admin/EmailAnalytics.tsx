@@ -147,14 +147,14 @@ export default function EmailAnalytics() {
               <ChartViewport minHeight={300}>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={state.timeline}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E4E4DF" />
-                    <XAxis dataKey="date" tick={{ fontSize: 12, fill: '#6B7580' }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 12, fill: '#6B7580' }} axisLine={false} tickLine={false} />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgb(var(--ds-border))" />
+                    <XAxis dataKey="date" tick={{ fontSize: 12, fill: 'rgb(var(--ds-muted))' }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 12, fill: 'rgb(var(--ds-muted))' }} axisLine={false} tickLine={false} />
                     <Tooltip 
-                      contentStyle={{ borderRadius: '6px', border: '1px solid #E4E4DF', boxShadow: 'none' }}
+                      contentStyle={{ borderRadius: '6px', border: '1px solid rgb(var(--ds-border))', boxShadow: 'none' }}
                     />
-                    <Bar dataKey="sent" name="Processed" fill="#15212E" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="failed" name="Failed" fill="#A5302A" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="sent" name="Processed" fill="rgb(var(--ds-chrome))" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="failed" name="Failed" fill="rgb(var(--ds-danger))" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartViewport>

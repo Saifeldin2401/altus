@@ -799,12 +799,12 @@ export default function PlatformUserDirectory() {
             <Table className="hidden md:table">
               <TableHeader className="bg-muted/40">
                 <TableRow>
-                  <TableHead className="text-xs font-bold">{t('admin:user_and_contact', 'Operator & Contact')}</TableHead>
-                  <TableHead className="text-xs font-bold">{t('admin:platform_role', 'Platform Role & Authority')}</TableHead>
-                  <TableHead className="text-xs font-bold">{t('admin:employment_type_label', 'Scope / Affiliation')}</TableHead>
-                  <TableHead className="text-xs font-bold">{t('admin:account_status', 'Status')}</TableHead>
-                  <TableHead className="text-xs font-bold">{t('admin:created_date', 'Granted Date')}</TableHead>
-                  <TableHead className="text-xs font-bold text-end">{t('admin:actions', 'Actions')}</TableHead>
+                  <TableHead className="text-xs font-bold min-w-[280px]">{t('admin:user_and_contact', 'Operator & Contact')}</TableHead>
+                  <TableHead className="text-xs font-bold min-w-[220px] whitespace-nowrap">{t('admin:platform_role', 'Platform Role & Authority')}</TableHead>
+                  <TableHead className="text-xs font-bold min-w-[160px] whitespace-nowrap">{t('admin:employment_type_label', 'Scope / Affiliation')}</TableHead>
+                  <TableHead className="text-xs font-bold min-w-[140px] whitespace-nowrap">{t('admin:account_status', 'Status')}</TableHead>
+                  <TableHead className="text-xs font-bold min-w-[130px] whitespace-nowrap">{t('admin:created_date', 'Granted Date')}</TableHead>
+                  <TableHead className="text-xs font-bold min-w-[180px] text-end whitespace-nowrap">{t('admin:actions', 'Actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -835,67 +835,67 @@ export default function PlatformUserDirectory() {
                 ) : (
                   filteredOperators.map((op) => (
                     <TableRow key={op.user_id} className="hover:bg-muted/30">
-                      <TableCell>
+                      <TableCell className="min-w-[280px]">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-full border border-ds-warning/30 flex items-center justify-center font-bold text-xs uppercase text-ds-warning">
+                          <div className="w-9 h-9 shrink-0 rounded-full border border-ds-warning/30 flex items-center justify-center font-bold text-xs uppercase text-ds-warning">
                             {op.full_name?.slice(0, 2) || op.email?.slice(0, 2) || 'OP'}
                           </div>
-                          <div>
-                            <div className="font-semibold text-xs text-foreground flex items-center gap-1.5">
-                              <span>{op.full_name || 'Platform Staff'}</span>
-                              <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[9px] px-1 py-0 font-bold">
+                          <div className="min-w-0">
+                            <div className="font-semibold text-xs text-foreground flex items-center gap-1.5 flex-wrap">
+                              <span className="whitespace-nowrap">{op.full_name || 'Platform Staff'}</span>
+                              <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[9px] px-1.5 py-0.5 font-bold shrink-0 whitespace-nowrap">
                                 {t('admin:operator_internal_badge', 'Platform Staff')}
                               </Badge>
                             </div>
-                            <div className="text-[11px] text-muted-foreground font-mono">{op.email}</div>
+                            <div className="text-[11px] text-muted-foreground font-mono truncate">{op.email}</div>
                           </div>
                         </div>
                       </TableCell>
 
-                      <TableCell>
+                      <TableCell className="min-w-[220px]">
                         <div className="flex flex-wrap gap-1.5">
                           {op.roles && op.roles.length > 0 ? (
                             op.roles.map((r) => (
                               <Badge
                                 key={r}
-                                className="text-[10px] font-bold capitalize bg-ds-warning-soft text-ds-warning border border-ds-warning/30"
+                                className="text-[10px] font-bold capitalize bg-ds-warning-soft text-ds-warning border border-ds-warning/30 whitespace-nowrap shrink-0"
                               >
-                                <ShieldCheck className="h-3 w-3 me-1 text-ds-warning" />
+                                <ShieldCheck className="h-3 w-3 me-1 text-ds-warning shrink-0" />
                                 {r.replace(/_/g, ' ')}
                               </Badge>
                             ))
                           ) : (
-                            <Badge variant="outline" className="text-[10px] text-muted-foreground">
+                            <Badge variant="outline" className="text-[10px] text-muted-foreground whitespace-nowrap shrink-0">
                               Platform Member
                             </Badge>
                           )}
                         </div>
                       </TableCell>
 
-                      <TableCell>
-                        <Badge variant="outline" className="text-[10px] border-border/60 bg-muted/40 font-mono">
+                      <TableCell className="whitespace-nowrap">
+                        <Badge variant="outline" className="text-[10px] border-border/60 bg-muted/40 font-mono whitespace-nowrap shrink-0">
                           {op.employment_type || 'Platform Core Staff'}
                         </Badge>
                       </TableCell>
 
-                      <TableCell>
+                      <TableCell className="whitespace-nowrap">
                         <Badge
                           variant="outline"
-                          className={`text-[10px] font-semibold ${
- op.is_active
- ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
- : 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
- }`}
+                          className={`text-[10px] font-semibold whitespace-nowrap shrink-0 ${
+                            op.is_active
+                              ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
+                              : 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
+                          }`}
                         >
                           {op.is_active ? t('admin:operator_status_active', 'Active Operator') : t('admin:operator_status_inactive', 'Inactive')}
                         </Badge>
                       </TableCell>
 
-                      <TableCell className="text-[11px] text-muted-foreground font-mono">
+                      <TableCell className="text-[11px] text-muted-foreground font-mono whitespace-nowrap">
                         {op.created_at ? format(new Date(op.created_at), 'dd MMM yyyy') : '—'}
                       </TableCell>
 
-                      <TableCell className="text-end">
+                      <TableCell className="text-end whitespace-nowrap">
                         <div className="flex items-center justify-end gap-1.5">
                           <Button
                             variant="ghost"
@@ -1457,12 +1457,12 @@ export default function PlatformUserDirectory() {
                       aria-label="Select all"
                     />
                   </TableHead>
-                  <TableHead className="text-xs font-bold">{t('admin:user_and_contact', 'User & Identity')}</TableHead>
-                  <TableHead className="text-xs font-bold">{t('admin:primary_tenant_memberships', 'Primary Organization')}</TableHead>
-                  <TableHead className="text-xs font-bold">{t('admin:role', 'Role')}</TableHead>
-                  <TableHead className="text-xs font-bold">{t('admin:platform_user_mgmt.account_status_label', 'Status & Telemetry')}</TableHead>
-                  <TableHead className="text-xs font-bold">{t('admin:created_date', 'Joined')}</TableHead>
-                  <TableHead className="text-xs font-bold text-end">{t('admin:actions', 'Actions')}</TableHead>
+                  <TableHead className="text-xs font-bold min-w-[280px]">{t('admin:user_and_contact', 'User & Identity')}</TableHead>
+                  <TableHead className="text-xs font-bold min-w-[220px]">{t('admin:primary_tenant_memberships', 'Primary Organization')}</TableHead>
+                  <TableHead className="text-xs font-bold min-w-[160px] whitespace-nowrap">{t('admin:role', 'Role')}</TableHead>
+                  <TableHead className="text-xs font-bold min-w-[170px] whitespace-nowrap">{t('admin:platform_user_mgmt.account_status_label', 'Status & Telemetry')}</TableHead>
+                  <TableHead className="text-xs font-bold min-w-[130px] whitespace-nowrap">{t('admin:created_date', 'Joined')}</TableHead>
+                  <TableHead className="text-xs font-bold min-w-[160px] text-end whitespace-nowrap">{t('admin:actions', 'Actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -1495,24 +1495,24 @@ export default function PlatformUserDirectory() {
                           />
                         </TableCell>
 
-                        <TableCell>
+                        <TableCell className="min-w-[280px]">
                           <div className="flex items-center gap-3">
-                            <div className="w-9 h-9 rounded-full border border-ds-accent/30 flex items-center justify-center font-bold text-xs uppercase text-ds-accent">
+                            <div className="w-9 h-9 shrink-0 rounded-full border border-ds-accent/30 flex items-center justify-center font-bold text-xs uppercase text-ds-accent">
                               {u.full_name?.slice(0, 2) || u.email?.slice(0, 2) || 'U'}
                             </div>
-                            <div>
-                              <div className="font-semibold text-xs text-foreground flex items-center gap-1.5">
-                                <span>{u.full_name || 'Anonymous User'}</span>
+                            <div className="min-w-0">
+                              <div className="font-semibold text-xs text-foreground flex items-center gap-1.5 flex-wrap">
+                                <span className="whitespace-nowrap">{u.full_name || 'Anonymous User'}</span>
                                 {u.is_platform_user && (
-                                  <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[9px] px-1 py-0 font-bold">
+                                  <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[9px] px-1.5 py-0.5 font-bold shrink-0 whitespace-nowrap">
                                     Operator
                                   </Badge>
                                 )}
                               </div>
-                              <div className="text-[11px] text-muted-foreground font-mono">{u.email}</div>
+                              <div className="text-[11px] text-muted-foreground font-mono truncate">{u.email}</div>
                               {u.job_title && (
-                                <div className="text-[10px] text-muted-foreground/80 flex items-center gap-1 mt-0.5">
-                                  <Briefcase className="h-2.5 w-2.5 text-ds-accent" />
+                                <div className="text-[10px] text-muted-foreground/80 flex items-center gap-1 mt-0.5 truncate">
+                                  <Briefcase className="h-2.5 w-2.5 text-ds-accent shrink-0" />
                                   <span>{u.job_title}</span>
                                 </div>
                               )}
@@ -1520,11 +1520,11 @@ export default function PlatformUserDirectory() {
                           </div>
                         </TableCell>
 
-                        <TableCell>
+                        <TableCell className="min-w-[220px]">
                           <div className="space-y-0.5">
                             <div className="text-xs font-medium text-foreground flex items-center gap-1.5">
                               <Building2 className="h-3.5 w-3.5 text-ds-accent shrink-0" />
-                              <span>{u.primary_organization_name || t('admin:direct_platform_account', 'Global SaaS Platform')}</span>
+                              <span className="leading-snug">{u.primary_organization_name || t('admin:direct_platform_account', 'Global SaaS Platform')}</span>
                             </div>
                             <div className="text-[10px] text-muted-foreground font-mono">
                               {u.membership_count > 0 ? (
@@ -1536,71 +1536,71 @@ export default function PlatformUserDirectory() {
                           </div>
                         </TableCell>
 
-                        <TableCell>
+                        <TableCell className="whitespace-nowrap">
                           {u.platform_role ? (
-                            <Badge variant="secondary" className="text-[10px] font-bold capitalize bg-ds-warning-soft text-ds-warning border border-ds-warning/30">
-                              <ShieldCheck className="h-3 w-3 me-1 text-ds-warning" />
+                            <Badge variant="secondary" className="text-[10px] font-bold capitalize bg-ds-warning-soft text-ds-warning border border-ds-warning/30 whitespace-nowrap shrink-0">
+                              <ShieldCheck className="h-3 w-3 me-1 text-ds-warning shrink-0" />
                               {u.platform_role.replace(/_/g, ' ')}
                             </Badge>
                           ) : u.memberships?.[0]?.role ? (
-                            <Badge variant="secondary" className="text-[10px] font-semibold capitalize bg-ds-accent/10 text-ds-accent border border-ds-accent/20">
+                            <Badge variant="secondary" className="text-[10px] font-semibold capitalize bg-ds-accent/10 text-ds-accent border border-ds-accent/20 whitespace-nowrap shrink-0">
                               {u.memberships[0].role.replace(/_/g, ' ')}
                             </Badge>
                           ) : (
-                            <span className="text-[11px] text-muted-foreground">{t('admin:no_operator_role', 'None (Tenant User)')}</span>
+                            <span className="text-[11px] text-muted-foreground whitespace-nowrap">{t('admin:no_operator_role', 'None (Tenant User)')}</span>
                           )}
                         </TableCell>
 
-                        <TableCell>
+                        <TableCell className="whitespace-nowrap">
                           <div className="flex flex-wrap items-center gap-1.5">
                             <Badge
                               variant="outline"
-                              className={`text-[10px] font-semibold ${
- isSuspended
- ? 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
- : isLocked
- ? 'bg-ds-warning-soft text-ds-warning border-ds-warning/30'
- : 'bg-ds-success-soft text-ds-success border-ds-success/30'
- }`}
+                              className={`text-[10px] font-semibold whitespace-nowrap shrink-0 ${
+                                isSuspended
+                                  ? 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
+                                  : isLocked
+                                  ? 'bg-ds-warning-soft text-ds-warning border-ds-warning/30'
+                                  : 'bg-ds-success-soft text-ds-success border-ds-success/30'
+                              }`}
                             >
                               {isSuspended ? (
                                 <span className="flex items-center gap-1">
-                                  <Ban className="h-3 w-3 text-ds-danger" />
+                                  <Ban className="h-3 w-3 text-ds-danger shrink-0" />
                                   <span>{t('admin:platform_user_mgmt.suspended', 'Suspended')}</span>
                                 </span>
                               ) : isLocked ? (
                                 <span className="flex items-center gap-1">
-                                  <Lock className="h-3 w-3 text-ds-warning" />
+                                  <Lock className="h-3 w-3 text-ds-warning shrink-0" />
                                   <span>{t('admin:platform_user_mgmt.locked', 'Locked')}</span>
                                 </span>
                               ) : (
                                 <span className="flex items-center gap-1">
-                                  <UserCheck className="h-3 w-3 text-ds-success" />
+                                  <UserCheck className="h-3 w-3 text-ds-success shrink-0" />
                                   <span>{t('admin:platform_user_mgmt.active', 'Active')}</span>
                                 </span>
                               )}
                             </Badge>
 
                             {u.force_password_reset && (
-                              <Badge variant="outline" className="text-[9px] px-1.5 py-0 bg-ds-warning-soft text-ds-warning border-ds-warning/30 font-semibold" title={t('admin:platform_user_mgmt.password_reset_required', 'Password Reset Required')}>
-                                <KeyRound className="h-2.5 w-2.5 me-0.5" />
+                              <Badge variant="outline" className="text-[9px] px-1.5 py-0.5 bg-ds-warning-soft text-ds-warning border-ds-warning/30 font-semibold whitespace-nowrap shrink-0" title={t('admin:platform_user_mgmt.password_reset_required', 'Password Reset Required')}>
+                                <KeyRound className="h-2.5 w-2.5 me-0.5 shrink-0" />
                                 <span>Reset Req</span>
                               </Badge>
                             )}
 
                             {u.failed_login_attempts && u.failed_login_attempts > 0 ? (
-                              <Badge variant="outline" className="text-[9px] px-1.5 py-0 bg-ds-danger-soft text-ds-danger border-ds-danger/30 font-mono" title={`${u.failed_login_attempts} failed login attempts`}>
+                              <Badge variant="outline" className="text-[9px] px-1.5 py-0.5 bg-ds-danger-soft text-ds-danger border-ds-danger/30 font-mono whitespace-nowrap shrink-0" title={`${u.failed_login_attempts} failed login attempts`}>
                                 <span>{u.failed_login_attempts} fails</span>
                               </Badge>
                             ) : null}
                           </div>
                         </TableCell>
 
-                        <TableCell className="text-[11px] text-muted-foreground font-mono">
+                        <TableCell className="text-[11px] text-muted-foreground font-mono whitespace-nowrap">
                           {u.created_at ? format(new Date(u.created_at), 'dd MMM yyyy') : '—'}
                         </TableCell>
 
-                        <TableCell className="text-end">
+                        <TableCell className="text-end whitespace-nowrap">
                           <div className="flex items-center justify-end gap-1.5">
                             <Button
                               variant="ghost"
@@ -1620,6 +1620,7 @@ export default function PlatformUserDirectory() {
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <Button
+                                  aria-label={t('common:a11y.moreActions', 'More actions')}
                                   variant="ghost"
                                   size="icon"
                                   className="h-7 w-7 rounded-lg text-muted-foreground hover:text-foreground"
@@ -1902,6 +1903,7 @@ export default function PlatformUserDirectory() {
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button
+                              aria-label={t('common:a11y.moreActions', 'More actions')}
                               variant="ghost"
                               size="icon"
                               className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground"

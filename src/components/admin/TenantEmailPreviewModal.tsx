@@ -221,7 +221,7 @@ export function TenantEmailPreviewModal({
             </div>
 
             {/* Email Main Content */}
-            <div className={`p-8 space-y-5 ${isRtl ? 'text-end' : 'text-start'}`}>
+            <div className={`p-8 space-y-5 ${'text-start'}`}>
               <h2
                 className="text-xl font-bold tracking-tight"
                 style={{ color: primaryColor }}
@@ -238,7 +238,7 @@ export function TenantEmailPreviewModal({
               </p>
 
               {/* Action Button */}
-              <div className={`pt-3 pb-2 ${isRtl ? 'text-end' : 'text-start'}`}>
+              <div className={`pt-3 pb-2 ${'text-start'}`}>
                 <div
                   className="inline-block px-6 py-3 rounded-lg text-white font-semibold text-sm shadow-md cursor-pointer transition-transform hover:scale-105"
                   style={{ background: headerGradient }}

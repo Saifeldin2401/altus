@@ -148,12 +148,12 @@ export function AITrainingAuditModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[85vh] flex flex-col p-0 overflow-hidden">
         <DialogHeader className="p-6 pb-4 border-b bg-slate-50/50 dark:bg-slate-900/50">
-          <div className={cn('flex items-center justify-between', isRTL ? 'flex-row-reverse' : '')}>
+          <div className={cn('flex items-center justify-between')}>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-950/50 flex items-center justify-center text-purple-600 border border-purple-200">
                 <Wand2 className="w-5 h-5" />
               </div>
-              <div className={isRTL ? 'text-end' : 'text-start'}>
+              <div className={'text-start'}>
                 <DialogTitle className="text-lg font-bold text-slate-900 dark:text-white">
                   {t('builder.auditModalTitle', 'AI Training Audit & Smart Optimizer')}
                 </DialogTitle>
@@ -246,7 +246,7 @@ export function AITrainingAuditModal({
                       key={err.id}
                       className={cn(
                         'flex items-start gap-3 p-3 rounded-lg border border-red-200 bg-red-50/40 text-xs',
-                        isRTL ? 'flex-row-reverse text-end' : 'text-start'
+                        'text-start'
                       )}
                     >
                       <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
@@ -267,7 +267,7 @@ export function AITrainingAuditModal({
                       key={warn.id}
                       className={cn(
                         'flex items-start gap-3 p-3 rounded-lg border border-amber-200 bg-amber-50/40 text-xs',
-                        isRTL ? 'flex-row-reverse text-end' : 'text-start'
+                        'text-start'
                       )}
                     >
                       <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />

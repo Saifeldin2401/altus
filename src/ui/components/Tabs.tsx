@@ -23,7 +23,7 @@ export const Tabs: React.FC<TabsProps> = ({
 }) => {
   return (
     <div className={`w-full border-b border-ds-border ${className}`}>
-      <nav className="flex space-x-6 rtl:space-x-reverse -mb-px overflow-x-auto" aria-label="Tabs">
+      <nav className="flex gap-x-6 -mb-px overflow-x-auto" aria-label="Tabs">
         {items.map((tab) => {
           const isActive = tab.id === activeId
 

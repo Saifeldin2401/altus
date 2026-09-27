@@ -284,15 +284,15 @@ export function DocumentAnalyticsCard({
                 >
                   <defs>
                     <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#0B1C3E" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#0B1C3E" stopOpacity={0} />
+                      <stop offset="5%" stopColor="rgb(var(--ds-ink))" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="rgb(var(--ds-ink))" stopOpacity={0} />
                     </linearGradient>
                     <linearGradient id="colorDownloads" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#C39A45" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#C39A45" stopOpacity={0} />
+                      <stop offset="5%" stopColor="rgb(var(--ds-brass))" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="rgb(var(--ds-brass))" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgb(var(--ds-border))" />
                   <XAxis
                     dataKey="date"
                     tickFormatter={(value) => {
@@ -301,15 +301,15 @@ export function DocumentAnalyticsCard({
                       return !isNaN(d.getTime()) ? format(d, "MMM d") : String(value);
                     }}
                     tick={{ fontSize: 11 }}
-                    stroke="#9ca3af"
+                    stroke="rgb(var(--ds-muted))"
                   />
-                  <YAxis tick={{ fontSize: 11 }} stroke="#9ca3af" />
+                  <YAxis tick={{ fontSize: 11 }} stroke="rgb(var(--ds-muted))" />
                   <Tooltip content={<CustomTooltip />} />
                   <Area
                     type="monotone"
                     dataKey="views"
                     name="Views"
-                    stroke="#0B1C3E"
+                    stroke="rgb(var(--ds-ink))"
                     fillOpacity={1}
                     fill="url(#colorViews)"
                     strokeWidth={2}
@@ -318,7 +318,7 @@ export function DocumentAnalyticsCard({
                     type="monotone"
                     dataKey="downloads"
                     name="Downloads"
-                    stroke="#C39A45"
+                    stroke="rgb(var(--ds-brass))"
                     fillOpacity={1}
                     fill="url(#colorDownloads)"
                     strokeWidth={2}
@@ -340,7 +340,7 @@ export function DocumentAnalyticsCard({
                   </span>
                   <Avatar className="w-8 h-8">
                     <AvatarImage src={user.avatar} />
-                    <AvatarFallback className="text-xs bg-[#0B1C3E] text-white">
+                    <AvatarFallback className="text-xs bg-ds-ink text-white">
                       {user.name
                         .split(" ")
                         .map((n) => n[0])
@@ -365,7 +365,7 @@ export function DocumentAnalyticsCard({
                     </div>
                     <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-[#0B1C3E] rounded-full"
+                        className="h-full bg-ds-ink rounded-full"
                         style={{
                           width: `${analytics.totalViews > 0
                               ? (user.views / analytics.totalViews) * 100
@@ -397,17 +397,17 @@ export function DocumentAnalyticsCard({
                   layout="vertical"
                   margin={{ top: 0, right: 20, left: 80, bottom: 0 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e5e7eb" />
-                  <XAxis type="number" tick={{ fontSize: 11 }} stroke="#9ca3af" />
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="rgb(var(--ds-border))" />
+                  <XAxis type="number" tick={{ fontSize: 11 }} stroke="rgb(var(--ds-muted))" />
                   <YAxis
                     dataKey="department"
                     type="category"
                     tick={{ fontSize: 11 }}
-                    stroke="#9ca3af"
+                    stroke="rgb(var(--ds-muted))"
                     width={75}
                   />
                   <Tooltip content={<CustomTooltip />} />
-                  <Bar dataKey="views" fill="#C39A45" radius={[0, 4, 4, 0]} />
+                  <Bar dataKey="views" fill="rgb(var(--ds-brass))" radius={[0, 4, 4, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

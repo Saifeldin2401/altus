@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/select'
 import { useToast } from '@/components/ui/use-toast'
 import { useCreatePracticalAssessment } from '@/hooks/usePracticalAssessments'
+import { useTenant } from '@/contexts/TenantContext'
 import { supabase } from '@/lib/supabase'
 import type { RubricCriterion } from '@/types/enterpriseOperatingModel'
 import { ClipboardCheck, Plus, Trash2, Building, Percent } from 'lucide-react'
@@ -44,6 +45,7 @@ export function CreateAssessmentModal({
   const { i18n } = useTranslation('common')
   const isAr = i18n.language === 'ar'
   const { toast } = useToast()
+  const { currentOrganization } = useTenant()
 
   const [title, setTitle] = useState('')
   const [titleAr, setTitleAr] = useState('')
@@ -156,7 +158,17 @@ export function CreateAssessmentModal({
       return
     }
 
-    const effectiveOrgId = organizationId || 'e0000000-0000-0000-0000-000000000001'
+    const effectiveOrgId = organizationId || currentOrganization?.id
+    if (!effectiveOrgId) {
+      toast({
+        title: isAr ? 'خطأ في المؤسسة' : 'Organization Required',
+        description: isAr
+          ? 'يرجى اختيار مؤسسة صالحة قبل إنشاء التقييم'
+          : 'An active organization context is required to create assessments',
+        variant: 'destructive'
+      })
+      return
+    }
 
     try {
       await createMutation.mutateAsync({

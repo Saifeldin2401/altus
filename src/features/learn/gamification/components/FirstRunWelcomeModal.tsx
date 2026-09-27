@@ -5,17 +5,10 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import {
   ArrowRight,
   Award,
-  BookOpen,
   CheckCircle2,
-  Compass,
   Flame,
   Sparkles,
   Trophy,
-  Users,
-  UtensilsCrossed,
-  BedDouble,
-  ShieldCheck,
-  Crown,
   X,
 } from 'lucide-react'
 
@@ -27,24 +20,13 @@ interface FirstRunWelcomeModalProps {
   onClose: () => void
 }
 
-const DISCIPLINES = [
-  { id: 'front_office', icon: Compass, labelEn: 'Front Office & Reception', labelAr: 'المكاتب الأمامية والاستقبال' },
-  { id: 'culinary', icon: UtensilsCrossed, labelEn: 'Food & Beverage', labelAr: 'الأغذية والمشروبات' },
-  { id: 'housekeeping', icon: BedDouble, labelEn: 'Housekeeping & Rooms', labelAr: 'التدبير الفندقي والغرف' },
-  { id: 'hafawah', icon: Sparkles, labelEn: 'Guest Relations & Hafawah', labelAr: 'علاقات النزلاء والحفاوة' },
-  { id: 'security', icon: ShieldCheck, labelEn: 'Safety & Security', labelAr: 'الأمن والسلامة الفندقية' },
-  { id: 'leadership', icon: Crown, labelEn: 'Leadership & Operations', labelAr: 'القيادة والعمليات' },
-] as const
-
 export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalProps) {
-  const { t, i18n } = useTranslation(['training', 'common'])
-  const isArabic = i18n.language?.startsWith('ar')
+  const { t } = useTranslation(['training', 'common'])
   const reduce = useReducedMotion()
   const navigate = useNavigate()
   const markWelcome = useMarkWelcomeSeen()
 
-  const [step, setStep] = useState<1 | 2 | 3>(1)
-  const [selectedDiscipline, setSelectedDiscipline] = useState<string>('front_office')
+  const [step, setStep] = useState<1 | 2>(1)
 
   if (!isOpen) return null
 
@@ -52,7 +34,6 @@ export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalPr
     try {
       await markWelcome.mutateAsync()
     } catch (e) {
-      // Non-blocking error handling
       console.warn('Could not record welcome dismissal', e)
     }
     onClose()
@@ -62,7 +43,7 @@ export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalPr
   }
 
   const handleNext = () => {
-    if (step < 3) setStep((s) => (s + 1) as 1 | 2 | 3)
+    if (step === 1) setStep(2)
     else void handleFinish()
   }
 
@@ -106,7 +87,7 @@ export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalPr
         <div className="p-6 sm:p-8 space-y-6">
           {/* Progress Indicators */}
           <div className="flex items-center gap-2">
-            {[1, 2, 3].map((s) => (
+            {[1, 2].map((s) => (
               <div
                 key={s}
                 className={cn(
@@ -132,12 +113,10 @@ export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalPr
                 </div>
                 <div>
                   <h2 id="welcome-title" className="text-xl font-bold tracking-tight text-ds-ink sm:text-2xl">
-                    {isArabic ? 'مرحباً بك في برايم كونكت' : 'Welcome to PRIME Connect'}
+                    {t('training:welcomeTour.step1Title', 'Welcome to Altus Connect')}
                   </h2>
                   <p className="mt-1 text-sm text-ds-muted">
-                    {isArabic
-                      ? 'منصتك الموحدة للتعلم وتطوير مهارات الضيافة الفاخرة واكتساب النقاط والشارات.'
-                      : 'Your unified platform for luxury hospitality learning, operational excellence, and badges.'}
+                    {t('training:welcomeTour.step1Desc', 'Your unified platform for luxury hospitality learning, operational excellence, and badges.')}
                   </p>
                 </div>
 
@@ -146,12 +125,10 @@ export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalPr
                     <Trophy className="h-5 w-5 shrink-0 text-ds-accent mt-0.5" />
                     <div>
                       <p className="text-sm font-semibold text-ds-ink">
-                        {isArabic ? 'اكسب نقاطاً مع كل إنجاز' : 'Earn Points with Every Lesson'}
+                        {t('training:welcomeTour.pointsTitle', 'Earn Points with Every Lesson')}
                       </p>
                       <p className="text-xs text-ds-muted">
-                        {isArabic
-                          ? '10 نقاط لكل درس، 50 نقطة لكل دورة، ونقاط إضافية عند التفوق.'
-                          : '10 pts per lesson, 50 pts per course, and bonus points for high scores.'}
+                        {t('training:welcomeTour.pointsDesc', '10 pts per lesson, 50 pts per course, and bonus points for high scores.')}
                       </p>
                     </div>
                   </div>
@@ -160,12 +137,10 @@ export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalPr
                     <Flame className="h-5 w-5 shrink-0 text-amber-500 mt-0.5" />
                     <div>
                       <p className="text-sm font-semibold text-ds-ink">
-                        {isArabic ? 'حافظ على استمرارية تعلّمك' : 'Build Your Learning Streak'}
+                        {t('training:welcomeTour.streakTitle', 'Build Your Learning Streak')}
                       </p>
                       <p className="text-xs text-ds-muted">
-                        {isArabic
-                          ? 'تعلّم بضع دقائق يومياً للحفاظ على شعلة التعلّم مضيئة.'
-                          : 'Learn a few minutes each day to keep your streak flame burning.'}
+                        {t('training:welcomeTour.streakDesc', 'Learn a few minutes each day to keep your streak flame burning.')}
                       </p>
                     </div>
                   </div>
@@ -174,12 +149,10 @@ export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalPr
                     <Award className="h-5 w-5 shrink-0 text-ds-success mt-0.5" />
                     <div>
                       <p className="text-sm font-semibold text-ds-ink">
-                        {isArabic ? '13 شارة مهنية معتمدة' : '13 Hospitality Badges'}
+                        {t('training:welcomeTour.badgesTitle', '13 Hospitality Badges')}
                       </p>
                       <p className="text-xs text-ds-muted">
-                        {isArabic
-                          ? 'ارتقِ من رتبة مبتدئ وصولاً إلى رتبة الخبير المعتمد.'
-                          : 'Progress from Newcomer all the way to Master rank.'}
+                        {t('training:welcomeTour.badgesDesc', 'Progress from Newcomer all the way to Master rank.')}
                       </p>
                     </div>
                   </div>
@@ -194,63 +167,6 @@ export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalPr
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
                 transition={{ duration: 0.2 }}
-                className="space-y-4"
-              >
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-ds-accent-soft text-ds-accent">
-                  <Compass className="h-6 w-6" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold tracking-tight text-ds-ink sm:text-2xl">
-                    {isArabic ? 'ما هو مجال اهتمامك الرئيسي؟' : 'What is your primary focus?'}
-                  </h2>
-                  <p className="mt-1 text-sm text-ds-muted">
-                    {isArabic
-                      ? 'اختر مجالك لتخصيص ترشيحات الدورات وإجراءات العمل اليومية.'
-                      : 'Select your operational domain to tailor training and SOP recommendations.'}
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2.5 pt-2">
-                  {DISCIPLINES.map((d) => {
-                    const Icon = d.icon
-                    const isSelected = selectedDiscipline === d.id
-                    return (
-                      <button
-                        key={d.id}
-                        type="button"
-                        onClick={() => setSelectedDiscipline(d.id)}
-                        className={cn(
-                          'flex flex-col items-start gap-2 rounded-xl border p-3.5 text-start transition-all',
-                          isSelected
-                            ? 'border-ds-accent bg-ds-accent-soft/40 shadow-sm'
-                            : 'border-ds-border bg-ds-surface hover:border-ds-border-strong hover:bg-ds-surface-subtle'
-                        )}
-                      >
-                        <span
-                          className={cn(
-                            'inline-flex h-8 w-8 items-center justify-center rounded-lg',
-                            isSelected ? 'bg-ds-accent text-white' : 'bg-ds-surface-subtle text-ds-ink'
-                          )}
-                        >
-                          <Icon className="h-4 w-4" />
-                        </span>
-                        <span className="text-xs font-semibold text-ds-ink">
-                          {isArabic ? d.labelAr : d.labelEn}
-                        </span>
-                      </button>
-                    )
-                  })}
-                </div>
-              </motion.div>
-            )}
-
-            {step === 3 && (
-              <motion.div
-                key="step-3"
-                initial={reduce ? {} : { opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-                transition={{ duration: 0.2 }}
                 className="space-y-4 text-center"
               >
                 <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full bg-ds-success-soft text-ds-success">
@@ -258,12 +174,10 @@ export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalPr
                 </div>
                 <div>
                   <h2 className="text-xl font-bold tracking-tight text-ds-ink sm:text-2xl">
-                    {isArabic ? 'أنت جاهز تماماً!' : "You're All Set!"}
+                    {t('training:welcomeTour.readyTitle', "You're All Set!")}
                   </h2>
                   <p className="mt-1 text-sm text-ds-muted max-w-sm mx-auto">
-                    {isArabic
-                      ? 'تم تهيئة ملفك التدريبي بنجاح برتبة مبتدئ. أكمل درسك الأول اليوم لتحصل على شارة "الخطوات الأولى".'
-                      : 'Your training profile is ready at Newcomer rank. Complete your first lesson today to unlock the "First Steps" badge.'}
+                    {t('training:welcomeTour.readyDesc', 'Your learning profile is ready at Newcomer rank. Complete your first lesson today to unlock the "First Steps" badge.')}
                   </p>
                 </div>
 
@@ -274,10 +188,10 @@ export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalPr
                     </span>
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-semibold text-ds-ink">
-                        {isArabic ? 'الرتبة الحالية: مبتدئ' : 'Current Rank: Newcomer'}
+                        {t('training:welcomeTour.currentRank', 'Current Rank: Newcomer')}
                       </p>
                       <p className="text-xs text-ds-muted">
-                        {isArabic ? 'الهدف القادم: 100 نقطة للمستوى التالي' : 'Next milestone: 100 pts to reach Explorer'}
+                        {t('training:welcomeTour.nextMilestone', 'Next milestone: 100 pts to reach Explorer')}
                       </p>
                     </div>
                   </div>
@@ -288,21 +202,21 @@ export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalPr
 
           {/* Action Footer */}
           <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 border-t border-ds-border">
-            {step < 3 ? (
+            {step === 1 ? (
               <>
                 <button
                   type="button"
                   onClick={() => void handleFinish(false)}
                   className="text-xs font-semibold text-ds-muted hover:text-ds-ink hover:underline py-2"
                 >
-                  {isArabic ? 'تخطي الترحيب' : 'Skip introduction'}
+                  {t('training:welcomeTour.skip', 'Skip introduction')}
                 </button>
                 <button
                   type="button"
                   onClick={handleNext}
                   className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg bg-ds-ink px-5 text-sm font-semibold text-ds-on-ink hover:bg-ds-ink/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent"
                 >
-                  <span>{isArabic ? 'متابعة' : 'Continue'}</span>
+                  <span>{t('training:welcomeTour.continue', 'Continue')}</span>
                   <ArrowRight className="h-4 w-4 rtl:rotate-180" />
                 </button>
               </>
@@ -313,14 +227,14 @@ export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalPr
                   onClick={() => void handleFinish(false)}
                   className="inline-flex min-h-[44px] items-center justify-center rounded-lg border border-ds-border px-4 text-sm font-semibold text-ds-ink hover:bg-ds-surface-subtle"
                 >
-                  {isArabic ? 'الذهاب إلى يومي' : 'Go to My Day'}
+                  {t('training:welcomeTour.goToMyDay', 'Go to My Day')}
                 </button>
                 <button
                   type="button"
                   onClick={() => void handleFinish(true)}
                   className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg bg-ds-accent px-5 text-sm font-semibold text-white hover:bg-ds-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent"
                 >
-                  <span>{isArabic ? 'استكشف الدورات الآن' : 'Explore Courses'}</span>
+                  <span>{t('training:welcomeTour.exploreCourses', 'Explore Courses')}</span>
                   <ArrowRight className="h-4 w-4 rtl:rotate-180" />
                 </button>
               </>

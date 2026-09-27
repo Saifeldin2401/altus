@@ -188,7 +188,7 @@ export function RegisterLearnerModal({
                       <div className="text-xs text-muted-foreground truncate flex items-center gap-2">
                         <span>{p.email}</span>
                         {p.job_title && (
-                          <Badge variant="outline" className="text-[10px] py-0 px-1.5 h-4">
+                          <Badge variant="outline" className="text-[10px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
                             {p.job_title}
                           </Badge>
                         )}

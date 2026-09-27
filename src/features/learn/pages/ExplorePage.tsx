@@ -15,9 +15,10 @@ import { Award, CheckCircle2, ChevronRight, Clock, Search, X } from 'lucide-reac
 import { useAuth } from '@/hooks/useAuth'
 import { useLearningProgress } from '@/hooks/useLearningProgress'
 import { cn } from '@/lib/utils'
-import { EmptyState, ErrorState, ProgressBar, Skeleton, WorkspaceHeader } from '@/ui'
+import { EmptyState, ErrorState, ProgressBar, Skeleton } from '@/ui'
 
 import { useCatalog } from '../catalogHooks'
+import { LearningPageHero } from '../components/LearningPageHero'
 import { CourseCover } from '../gamification/components/CourseCover'
 import type { CatalogCourse } from '../catalogApi'
 
@@ -80,13 +81,15 @@ export default function ExplorePage() {
     { id: 'in_progress', label: t('explore.filter.in_progress', 'In progress') },
     { id: 'completed', label: t('explore.filter.completed', 'Completed') },
   ]
+  const featuredCourseCount = !text.trim() && state === 'all' ? Math.min(courses.length, 3) : 0
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8">
-      <WorkspaceHeader
+    <div className="mx-auto max-w-6xl space-y-6">
+      <LearningPageHero
         eyebrow={t('explore.eyebrow', 'Learn')}
-        title={t('explore.title', 'Explore courses')}
-        context={catalog.isLoading ? null : t('explore.count', '{{count}} published courses', { count: counts.all })}
+        title={t('explore.heroTitle', 'Discover your next skill.')}
+        description={catalog.isLoading ? undefined : t('explore.heroDescription', 'Explore courses designed to help you perform, grow and lead in hospitality.')}
+        quote={<>Elevate.<br />People.<br />Performance.<br />Hospitality.</>}
       />
 
       <div className="space-y-4">
@@ -156,8 +159,56 @@ export default function ExplorePage() {
           ) : undefined}
         />
       ) : (
-        <ul className="divide-y divide-ds-border overflow-hidden rounded-[6px] border border-ds-border bg-ds-surface">
-          {courses.map((c) => {
+        <div className="space-y-7">
+          {featuredCourseCount > 0 && (
+            <section aria-labelledby="explore-featured" className="space-y-3">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <h2 id="explore-featured" className="font-editorial text-[25px] font-semibold leading-none text-ds-ink">{t('explore.recommended', 'Recommended for you')}</h2>
+                  <p className="mt-1 text-sm text-ds-muted">{t('explore.recommendedHint', 'A curated starting point from your course catalog.')}</p>
+                </div>
+                <span className="text-sm font-semibold text-ds-accent">{t('explore.count', '{{count}} courses', { count: counts.all })}</span>
+              </div>
+              <ul className="grid gap-3 md:grid-cols-3">
+                {courses.slice(0, featuredCourseCount).map((c) => {
+                  const s = stateOf(c)
+                  const p = progressById.get(c.id)
+                  return (
+                    <li key={c.id}>
+                      <Link to={`/learn/courses/${c.id}`} className="group flex h-full flex-col overflow-hidden rounded-xl border border-ds-border bg-ds-surface shadow-[0_12px_32px_rgb(21_33_46/0.04)] transition-[border-color,box-shadow,transform] duration-200 ease-out hover:-translate-y-0.5 hover:border-ds-border-strong hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent motion-reduce:hover:translate-y-0">
+                        <CourseCover course={c} className="h-36 w-full rounded-none">
+                          <span className={cn('absolute start-3 top-3 rounded-md px-2 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-white', s === 'in_progress' ? 'bg-ds-success' : s === 'completed' ? 'bg-ds-ink' : 'bg-ds-warning')}>
+                            {s === 'in_progress' ? t('explore.filter.in_progress', 'In progress') : s === 'completed' ? t('explore.done', 'Completed') : t('explore.recommendedBadge', 'Recommended')}
+                          </span>
+                          {s === 'in_progress' && <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1 bg-ds-surface/60"><span className="block h-full bg-ds-accent" style={{ width: `${Math.round(p?.pct ?? 0)}%` }} /></span>}
+                        </CourseCover>
+                        <span className="flex flex-1 flex-col gap-2 p-4">
+                          <span className="line-clamp-2 font-editorial text-[21px] font-semibold leading-tight text-ds-ink group-hover:underline">{c.title}</span>
+                          {c.description && <span className="line-clamp-2 text-sm leading-snug text-ds-ink-secondary">{c.description}</span>}
+                          <span className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 pt-1 text-xs text-ds-muted">
+                            {c.estimated_duration_minutes ? <span className="inline-flex items-center gap-1"><Clock aria-hidden="true" className="h-3.5 w-3.5" />{t('explore.minutes', '{{count}} min', { count: c.estimated_duration_minutes })}</span> : null}
+                            {c.difficulty_level && <span>{t(`explore.level.${c.difficulty_level.toLowerCase()}`, c.difficulty_level)}</span>}
+                            {c.certificate_enabled && <span className="inline-flex items-center gap-1 text-ds-accent"><Award aria-hidden="true" className="h-3.5 w-3.5" />{t('explore.certificate', 'Certificate')}</span>}
+                          </span>
+                          <span className="mt-1 inline-flex min-h-[40px] items-center justify-between rounded-md bg-ds-ink px-3 text-sm font-semibold text-ds-on-ink">{s === 'in_progress' ? t('explore.continue', 'Continue learning') : t('explore.start', 'Start course')}<ChevronRight aria-hidden="true" className="h-4 w-4 rtl:rotate-180" /></span>
+                        </span>
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
+            </section>
+          )}
+          {courses.length > featuredCourseCount && (
+            <section aria-labelledby="explore-all" className="space-y-3">
+              <div className="flex items-end justify-between">
+                <div>
+                  <h2 id="explore-all" className="font-editorial text-[25px] font-semibold leading-none text-ds-ink">{featuredCourseCount ? t('explore.allCourses', 'All courses') : t('explore.results', 'Course results')}</h2>
+                  <p className="mt-1 text-sm text-ds-muted">{t('explore.count', '{{count}} courses', { count: courses.length - featuredCourseCount })}</p>
+                </div>
+              </div>
+        <ul className="divide-y divide-ds-border overflow-hidden rounded-xl border border-ds-border bg-ds-surface shadow-[0_12px_32px_rgb(21_33_46/0.03)]">
+          {courses.slice(featuredCourseCount).map((c) => {
             const s = stateOf(c)
             const p = progressById.get(c.id)
             return (
@@ -204,6 +255,9 @@ export default function ExplorePage() {
             )
           })}
         </ul>
+            </section>
+          )}
+        </div>
       )}
     </div>
   )

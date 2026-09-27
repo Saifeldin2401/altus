@@ -123,7 +123,7 @@ export function ArticleReadinessDrawer({
                         {item.label}
                       </span>
                       {item.importance === 'critical' && !item.passed && (
-                        <Badge variant="destructive" className="text-[9px] px-1 py-0 h-4">
+                        <Badge variant="destructive" className="text-[9px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
                           Required
                         </Badge>
                       )}

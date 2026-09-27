@@ -271,6 +271,7 @@ export function OrganizationProfileSettings() {
                   </Button>
                   {logoUrl && isOrgAdmin && (
                     <Button
+                      aria-label={t('common:a11y.removeLogo', 'Remove logo')}
                       type="button"
                       variant="ghost"
                       size="icon"
@@ -320,6 +321,7 @@ export function OrganizationProfileSettings() {
                   </Button>
                   {faviconUrl && isOrgAdmin && (
                     <Button
+                      aria-label={t('common:a11y.removeFavicon', 'Remove favicon')}
                       type="button"
                       variant="ghost"
                       size="icon"

@@ -14,7 +14,7 @@ interface VersionRow {
     createdAt: string
 }
 
-export function VersionHistoryCard({ moduleId, isRTL }: { moduleId: string | null; isRTL: boolean }) {
+export function VersionHistoryCard({ moduleId }: { moduleId: string | null; isRTL: boolean }) {
     const { t } = useTranslation('training')
 
     const { data: versions } = useQuery({
@@ -51,14 +51,14 @@ export function VersionHistoryCard({ moduleId, isRTL }: { moduleId: string | nul
     return (
         <Card className="shadow-sm border-slate-200">
             <CardHeader>
-                <CardTitle className={cn("text-sm font-semibold flex items-center gap-2", isRTL ? "flex-row-reverse" : "")}>
+                <CardTitle className={cn("text-sm font-semibold flex items-center gap-2")}>
                     <History className="w-4 h-4 text-slate-500" />
                     {t('builder.versionHistory', 'Version History')}
                 </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
                 {versions.map((version) => (
-                    <div key={version.id} className={cn("flex items-center justify-between text-xs", isRTL ? "flex-row-reverse" : "")}>
+                    <div key={version.id} className={cn("flex items-center justify-between text-xs")}>
                         <div className="flex items-center gap-2">
                             <Badge variant="outline" className="text-[10px]">v{version.versionNumber}</Badge>
                             <span className="text-slate-500">{version.publishedByName || t('unknownUser', 'Unknown')}</span>

@@ -13,6 +13,7 @@ interface RAGSearchOptions {
   limit?: number
   departmentId?: string | null
   contentType?: string
+  organizationId?: string | null
 }
 
 /**
@@ -76,7 +77,7 @@ export async function searchHotelKnowledge(
   query: string,
   options: RAGSearchOptions = {}
 ): Promise<ArticleSource[]> {
-  const { limit = 5, departmentId, contentType } = options
+  const { limit = 5, departmentId, contentType, organizationId } = options
   const terms = extractSearchKeywords(query)
 
   if (terms.length === 0 && !query.trim()) return []
@@ -93,6 +94,7 @@ export async function searchHotelKnowledge(
       p_department_id: departmentId || null,
       p_limit: limit,
       p_offset: 0,
+      p_organization_id: organizationId || null,
     })
 
     if (!rankError && ranked && ranked.length > 0) {

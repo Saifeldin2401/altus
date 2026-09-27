@@ -35,6 +35,7 @@ interface SecureDocumentFilters {
   sort_order?: 'asc' | 'desc'
   limit?: number
   offset?: number
+  organization_id?: string
 }
 
 interface SecureUserFilters {
@@ -43,6 +44,7 @@ interface SecureUserFilters {
   role?: string
   is_active?: boolean
   limit?: number
+  organization_id?: string
 }
 
 // ============================================================================
@@ -116,7 +118,8 @@ export async function secureSearchDocuments(filters: SecureDocumentFilters = {})
     p_sort_by: sanitizedSortBy,
     p_sort_order: sanitizedSortOrder,
     p_limit: Math.min(limit, 500),
-    p_offset: Math.max(offset, 0)
+    p_offset: Math.max(offset, 0),
+    p_organization_id: sanitizeUUID(filters.organization_id)
   })
 
   if (error) {
@@ -146,8 +149,23 @@ export async function secureSearchUsers(filters: SecureUserFilters = {}) {
   const sanitizedSearch = search ? sanitizeSearchInput(search) : null
   const sanitizedDepartmentId = sanitizeUUID(department_id)
 
-  // Validate role against allowed values
-  const validRoles = ['corporate_admin', 'regional_admin', 'regional_hr', 'property_manager', 'property_hr', 'department_head', 'manager', 'staff']
+  // Validate role against allowed platform and tenant values
+  const validRoles = [
+    'administrator',
+    'admin',
+    'training_manager',
+    'knowledge_manager',
+    'author',
+    'instructor',
+    'department_manager',
+    'manager',
+    'learner',
+    'staff',
+    'super_admin',
+    'organization_owner',
+    'organization_admin',
+    'brand_admin'
+  ]
   const sanitizedRole = role && validRoles.includes(role) ? role : null
 
   const { data, error } = await supabase.rpc('secure_search_users', {
@@ -155,7 +173,8 @@ export async function secureSearchUsers(filters: SecureUserFilters = {}) {
     p_department_id: sanitizedDepartmentId,
     p_role: sanitizedRole,
     p_is_active: is_active,
-    p_limit: Math.min(limit, 200)
+    p_limit: Math.min(limit, 200),
+    p_organization_id: sanitizeUUID(filters.organization_id)
   })
 
   if (error) {

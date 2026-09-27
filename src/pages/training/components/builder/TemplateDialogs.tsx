@@ -27,7 +27,6 @@ export function TemplatePreviewDialog({
   templatePreset,
   templateStats,
   requestApplyTemplate,
-  isRTL,
 }: TemplatePreviewDialogProps) {
   const { t } = useTranslation('training')
 
@@ -35,11 +34,11 @@ export function TemplatePreviewDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle className={cn("flex items-center gap-2", isRTL ? "flex-row-reverse" : "")}>
+          <DialogTitle className={cn("flex items-center gap-2")}>
             <Layers className="w-5 h-5 text-ds-brass" />
             {t('builder.templatePreviewTitle', { name: selectedTemplate?.name || t('builder.template') })}
           </DialogTitle>
-          <DialogDescription className={isRTL ? 'text-end' : ''}>
+          <DialogDescription className={''}>
             {selectedTemplate?.description || t('builder.templatePreviewDesc')}
           </DialogDescription>
         </DialogHeader>
@@ -63,7 +62,7 @@ export function TemplatePreviewDialog({
               templateStats.sections.map((section) => (
                 <div
                   key={`${section.title}-${section.count}`}
-                  className={cn("flex items-center justify-between rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700", isRTL ? "flex-row-reverse text-end" : "")}
+                  className={cn("flex items-center justify-between rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700")}
                 >
                   <span className="font-medium">{section.title}</span>
                   <Badge variant="secondary" className="bg-slate-100 text-slate-600 font-normal">
@@ -74,7 +73,7 @@ export function TemplatePreviewDialog({
             )}
           </div>
         </div>
-        <div className={cn("flex items-center justify-between pt-4", isRTL ? "flex-row-reverse" : "")}>
+        <div className={cn("flex items-center justify-between pt-4")}>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             {t('cancel')}
           </Button>
@@ -102,7 +101,6 @@ export function TemplateApplyConfirmDialog({
   open,
   onOpenChange,
   confirmApplyTemplate,
-  isRTL,
 }: TemplateApplyConfirmDialogProps) {
   const { t } = useTranslation('training')
 
@@ -110,15 +108,15 @@ export function TemplateApplyConfirmDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className={cn("flex items-center gap-2", isRTL ? "flex-row-reverse" : "")}>
+          <DialogTitle className={cn("flex items-center gap-2")}>
             <AlertTriangle className="w-5 h-5 text-amber-500" />
             {t('builder.templateReplaceTitle', 'Replace current structure?')}
           </DialogTitle>
-          <DialogDescription className={isRTL ? 'text-end' : ''}>
+          <DialogDescription className={''}>
             {t('builder.templateReplaceDesc', 'Applying this template will clear your existing sections and content.')}
           </DialogDescription>
         </DialogHeader>
-        <div className={cn("flex items-center justify-end gap-3 pt-4", isRTL ? "flex-row-reverse" : "")}>
+        <div className={cn("flex items-center justify-end gap-3 pt-4")}>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             {t('builder.keepExisting', 'Keep existing')}
           </Button>

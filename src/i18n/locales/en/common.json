@@ -701,5 +701,36 @@
             "certificates": "Certificates",
             "people": "People"
         }
+    },
+    "a11y": {
+        "moreActions": "More actions",
+        "removeFilter": "Remove filter: {{name}}",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "removeLogo": "Remove logo",
+        "removeFavicon": "Remove favicon",
+        "textSettings": "Text settings",
+        "deleteItem": "Delete {{name}}"
+    },
+    "commandPalette": {
+        "placeholder": "Search courses, articles, people, or jump to a page…",
+        "searching": "Searching…",
+        "noResults": "No results found.",
+        "goTo": "Go to",
+        "workspaces": "Switch workspace",
+        "account": "Account",
+        "pages": "Pages",
+        "profile": "My profile",
+        "settings": "Settings",
+        "types": {
+            "document": "Documents",
+            "user": "People",
+            "training": "Training",
+            "announcement": "Announcements",
+            "sop": "SOPs",
+            "page": "Pages",
+            "certificate": "Certificates",
+            "course": "Courses"
+        }
     }
 }

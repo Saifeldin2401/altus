@@ -348,7 +348,7 @@ export function VideoContentBuilder({ value, onChange }: VideoContentBuilderProp
                         {/* Vimeo - show placeholder with link */}
                         {isVimeo && vimeoId && (
                             <div
-                                className="aspect-video rounded-lg overflow-hidden bg-gradient-to-br from-[#1ab7ea] to-[#0d92c8] relative cursor-pointer group"
+                                className="aspect-video rounded-lg overflow-hidden bg-gradient-to-br from-sky-400 to-sky-600 relative cursor-pointer group"
                                 onClick={() => window.open(value, '_blank')}
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter' || e.key === ' ') {
@@ -768,7 +768,7 @@ export function ChecklistBuilder({
 
                                 <div className="flex-1 space-y-2">
                                     <div className="flex items-center gap-2">
-                                        <Badge variant="outline" className="text-[10px] font-bold px-1.5 h-5 shrink-0 bg-slate-50 dark:bg-slate-800">
+                                        <Badge variant="outline" className="text-[10px] font-bold px-1.5 py-0.5 min-h-[20px] shrink-0 whitespace-nowrap bg-slate-50 dark:bg-slate-800">
                                             #{index + 1}
                                         </Badge>
                                         <Input
@@ -1076,6 +1076,7 @@ export function FAQBuilder({
                                 <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 dark:bg-slate-800/60 border-b">
                                     <div className="flex items-center gap-1">
                                         <Button
+                                            aria-label={t('common:a11y.moveUp', 'Move up')}
                                             type="button"
                                             variant="ghost"
                                             size="icon"
@@ -1086,6 +1087,7 @@ export function FAQBuilder({
                                             <ChevronUp className="h-3.5 w-3.5" />
                                         </Button>
                                         <Button
+                                            aria-label={t('common:a11y.moveDown', 'Move down')}
                                             type="button"
                                             variant="ghost"
                                             size="icon"
@@ -1096,7 +1098,7 @@ export function FAQBuilder({
                                             <ChevronDown className="h-3.5 w-3.5" />
                                         </Button>
                                     </div>
-                                    <Badge variant="outline" className="text-[10px] font-bold px-1.5 h-5 bg-white dark:bg-slate-900">
+                                    <Badge variant="outline" className="text-[10px] font-bold px-1.5 py-0.5 min-h-[20px] shrink-0 whitespace-nowrap bg-white dark:bg-slate-900">
                                         Q{index + 1}
                                     </Badge>
                                     <span className="flex-1 font-semibold text-xs truncate text-slate-700 dark:text-slate-300">

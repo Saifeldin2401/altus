@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { useAuditRetention, type AuditRetentionPolicy } from '@/hooks/admin/useAuditRetention'
+import { useTenant } from '@/contexts/TenantContext'
 import { AlertTriangle, CheckCircle2, Clock, DatabaseZap, Edit2, Plus, ShieldCheck, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -17,7 +18,8 @@ const EXPORT_FORMATS = ['pdf', 'excel', 'csv', 'json']
 
 export default function AuditRetentionPolicies() {
     const { t } = useTranslation(['admin', 'common'])
-    const { data: policies, isLoading, createPolicy, updatePolicy, deletePolicy } = useAuditRetention()
+    const { currentOrganization } = useTenant()
+    const { data: policies, isLoading, createPolicy, updatePolicy, deletePolicy } = useAuditRetention(currentOrganization?.id)
     const [selectedPolicy, setSelectedPolicy] = useState<Partial<AuditRetentionPolicy> | null>(null)
     const [isEditing, setIsEditing] = useState(false)
 
@@ -49,14 +51,14 @@ export default function AuditRetentionPolicies() {
 
         const p = { ...selectedPolicy }
         if (p.id) {
-            updatePolicy.mutate(p as any, {
+            updatePolicy.mutate(p as Partial<AuditRetentionPolicy> & { id: string }, {
                 onSuccess: () => {
                     setIsEditing(false)
                     setSelectedPolicy(null)
                 }
             })
         } else {
-            createPolicy.mutate(p as any, {
+            createPolicy.mutate(p as Omit<AuditRetentionPolicy, 'id' | 'organization_id' | 'created_at' | 'updated_at'>, {
                 onSuccess: () => {
                     setIsEditing(false)
                     setSelectedPolicy(null)
@@ -198,7 +200,7 @@ export default function AuditRetentionPolicies() {
                                             <h4 className="text-sm font-bold text-ds-danger leading-none">Automated Deletion</h4>
                                             <p className="text-xs text-ds-danger mt-2">When enabled, matching audit exports are deleted once the retention period has passed.</p>
                                         </div>
-                                        <div className="flex items-center space-x-2">
+                                        <div className="flex items-center gap-x-2">
                                             <Switch
                                                 id="autoDelete"
                                                 checked={Boolean(selectedPolicy.auto_delete)}
@@ -214,7 +216,7 @@ export default function AuditRetentionPolicies() {
                                 </div>
 
                                 <div className="mt-8 pt-6 border-t flex flex-col sm:flex-row justify-between items-center gap-4">
-                                    <div className="flex items-center space-x-2 bg-ds-accent-soft px-3 py-2 rounded-lg border border-ds-accent/30">
+                                    <div className="flex items-center gap-x-2 bg-ds-accent-soft px-3 py-2 rounded-lg border border-ds-accent/30">
                                         <Switch
                                             id="defaultStatus"
                                             checked={Boolean(selectedPolicy.is_default)}

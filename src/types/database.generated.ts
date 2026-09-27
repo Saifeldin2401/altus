@@ -11190,6 +11190,19 @@ export type Database = {
       }
     }
     Functions: {
+      reset_training_progress: {
+        Args: {
+          p_training_module_id: string
+          p_user_id: string
+        }
+        Returns: Json
+      }
+      reset_training_progress_for_module: {
+        Args: {
+          p_training_module_id: string
+        }
+        Returns: number
+      }
       _assign_module_to_user: {
         Args: {
           p_assigned_by: string

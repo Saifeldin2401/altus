@@ -43,11 +43,11 @@ export default function ComponentGallery() {
   ]
 
   return (
-    <div className={`min-h-screen p-8 bg-[#F6F6F3] dark:bg-[#101419] text-[#15212E] dark:text-[#F0F3F7] font-sans transition-colors duration-150`}>
-      <header className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-[#DDDBD4] dark:border-[#2C3644] mb-8">
+    <div className={`min-h-screen p-8 bg-ds-background dark:bg-ds-background text-ds-ink font-sans transition-colors duration-150`}>
+      <header className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-ds-border dark:border-ds-border-strong mb-8">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Altus Connect Design System</h1>
-          <p className="text-sm text-[#667080] dark:text-[#7D8B9B] mt-1">
+          <p className="text-sm text-ds-muted mt-1">
             Enterprise Tokens, Typography Scale, and WCAG AA Primitives Gallery
           </p>
         </div>
@@ -55,7 +55,7 @@ export default function ComponentGallery() {
           <Button variant="secondary" size="sm" onClick={toggleDirection} leftIcon={<ArrowLeftRight className="w-4 h-4" />}>
             {isRTL ? 'Switch to LTR (English)' : 'Switch to RTL (العربية)'}
           </Button>
-          <Button variant="secondary" size="sm" onClick={toggleTheme} leftIcon={isDark ? <Sun className="w-4 h-4 text-[#D4AA55]" /> : <Moon className="w-4 h-4" />}>
+          <Button variant="secondary" size="sm" onClick={toggleTheme} leftIcon={isDark ? <Sun className="w-4 h-4 text-ds-brass" /> : <Moon className="w-4 h-4" />}>
             {isDark ? 'Light Mode' : 'Dark Mode'}
           </Button>
         </div>
@@ -71,7 +71,7 @@ export default function ComponentGallery() {
             {tokenList.map((token) => (
               <div
                 key={token.name}
-                className="p-4 bg-[#FFFFFF] dark:bg-[#18202A] border border-[#DDDBD4] dark:border-[#2C3644] rounded-[8px] space-y-3"
+                className="p-4 bg-ds-surface dark:bg-ds-surface-subtle border border-ds-border dark:border-ds-border-strong rounded-[8px] space-y-3"
               >
                 <div className="flex items-center justify-between">
                   <span className="font-semibold text-sm">{token.name}</span>
@@ -80,10 +80,10 @@ export default function ComponentGallery() {
                     style={{ backgroundColor: isDark ? token.dark : token.light }}
                   />
                 </div>
-                <div className="font-mono text-xs text-[#667080] dark:text-[#7D8B9B]">
+                <div className="font-mono text-xs text-ds-muted">
                   Light: {token.light} · Dark: {token.dark}
                 </div>
-                <p className="text-xs text-[#3B4754] dark:text-[#B4BFCB]">
+                <p className="text-xs text-ds-ink-secondary">
                   {token.usage}
                 </p>
               </div>
@@ -96,49 +96,49 @@ export default function ComponentGallery() {
           <h2 id="section-typography" className="text-lg font-semibold tracking-tight">
             2. Typography Scale (IBM Plex Sans & Arabic)
           </h2>
-          <div className="p-6 bg-[#FFFFFF] dark:bg-[#18202A] border border-[#DDDBD4] dark:border-[#2C3644] rounded-[8px] space-y-6">
+          <div className="p-6 bg-ds-surface dark:bg-ds-surface-subtle border border-ds-border dark:border-ds-border-strong rounded-[8px] space-y-6">
             <div>
-              <span className="text-xs font-semibold text-[#86672C] dark:text-[#D4AA55] uppercase tracking-wider block mb-1">
+              <span className="text-xs font-semibold text-ds-brass uppercase tracking-wider block mb-1">
                 Display · 32/40 · 600
               </span>
               <p className={typography.scale.display.className}>
                 Fire safety & guest service excellence
               </p>
             </div>
-            <div className="border-t border-[#DDDBD4] dark:border-[#2C3644] pt-4">
-              <span className="text-xs font-semibold text-[#86672C] dark:text-[#D4AA55] uppercase tracking-wider block mb-1">
+            <div className="border-t border-ds-border dark:border-ds-border-strong pt-4">
+              <span className="text-xs font-semibold text-ds-brass uppercase tracking-wider block mb-1">
                 H1 · 24/32 · 600
               </span>
               <p className={typography.scale.h1.className}>
                 Assigned courses and certifications
               </p>
             </div>
-            <div className="border-t border-[#DDDBD4] dark:border-[#2C3644] pt-4">
-              <span className="text-xs font-semibold text-[#86672C] dark:text-[#D4AA55] uppercase tracking-wider block mb-1">
+            <div className="border-t border-ds-border dark:border-ds-border-strong pt-4">
+              <span className="text-xs font-semibold text-ds-brass uppercase tracking-wider block mb-1">
                 H2 · 18/26 · 600
               </span>
               <p className={typography.scale.h2.className}>
                 Department compliance requirements
               </p>
             </div>
-            <div className="border-t border-[#DDDBD4] dark:border-[#2C3644] pt-4">
-              <span className="text-xs font-semibold text-[#86672C] dark:text-[#D4AA55] uppercase tracking-wider block mb-1">
+            <div className="border-t border-ds-border dark:border-ds-border-strong pt-4">
+              <span className="text-xs font-semibold text-ds-brass uppercase tracking-wider block mb-1">
                 Body · 15/24 · 400
               </span>
               <p className={typography.scale.body.className}>
                 Complete all mandatory lessons before taking the final quiz. A minimum passing score of 80% is required to issue your accredited certificate.
               </p>
             </div>
-            <div className="border-t border-[#DDDBD4] dark:border-[#2C3644] pt-4">
-              <span className="text-xs font-semibold text-[#86672C] dark:text-[#D4AA55] uppercase tracking-wider block mb-1">
+            <div className="border-t border-ds-border dark:border-ds-border-strong pt-4">
+              <span className="text-xs font-semibold text-ds-brass uppercase tracking-wider block mb-1">
                 Label · 12/16 · 600 Caps
               </span>
               <p className={typography.scale.label.className}>
                 Due Date · 2026-10-15
               </p>
             </div>
-            <div className="border-t border-[#DDDBD4] dark:border-[#2C3644] pt-4">
-              <span className="text-xs font-semibold text-[#86672C] dark:text-[#D4AA55] uppercase tracking-wider block mb-1">
+            <div className="border-t border-ds-border dark:border-ds-border-strong pt-4">
+              <span className="text-xs font-semibold text-ds-brass uppercase tracking-wider block mb-1">
                 Data · Mono 13
               </span>
               <p className={typography.scale.data.className}>
@@ -153,14 +153,14 @@ export default function ComponentGallery() {
           <h2 id="section-buttons" className="text-lg font-semibold tracking-tight">
             3. Button Primitives (Touch Target &gt;= 44px, Brass Focus Ring)
           </h2>
-          <div className="p-6 bg-[#FFFFFF] dark:bg-[#18202A] border border-[#DDDBD4] dark:border-[#2C3644] rounded-[8px] space-y-4">
+          <div className="p-6 bg-ds-surface dark:bg-ds-surface-subtle border border-ds-border dark:border-ds-border-strong rounded-[8px] space-y-4">
             <div className="flex flex-wrap items-center gap-4">
               <Button variant="primary">Primary Action</Button>
               <Button variant="secondary">Secondary Action</Button>
               <Button variant="ghost">Ghost Button</Button>
               <Button variant="destructive">Destructive Action</Button>
             </div>
-            <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-[#DDDBD4] dark:border-[#2C3644]">
+            <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-ds-border dark:border-ds-border-strong">
               <Button variant="primary" isLoading>Loading State</Button>
               <Button variant="secondary" disabled>Disabled State</Button>
               <Button variant="destructive" onClick={() => setConfirmOpen(true)}>
@@ -175,7 +175,7 @@ export default function ComponentGallery() {
           <h2 id="section-pills" className="text-lg font-semibold tracking-tight">
             4. Status Pills (Semantic States)
           </h2>
-          <div className="p-6 bg-[#FFFFFF] dark:bg-[#18202A] border border-[#DDDBD4] dark:border-[#2C3644] rounded-[8px] flex flex-wrap gap-3">
+          <div className="p-6 bg-ds-surface dark:bg-ds-surface-subtle border border-ds-border dark:border-ds-border-strong rounded-[8px] flex flex-wrap gap-3">
             <StatusPill variant="success" label="Completed" icon={<CheckCircle2 className="w-3.5 h-3.5" />} />
             <StatusPill variant="warning" label="Due in 2 Days" icon={<AlertTriangle className="w-3.5 h-3.5" />} />
             <StatusPill variant="danger" label="Overdue" icon={<AlertCircle className="w-3.5 h-3.5" />} />
@@ -198,8 +198,8 @@ export default function ComponentGallery() {
                   onClick={() => setQueryStateMode(mode)}
                   className={`px-3 py-1.5 min-h-[44px] rounded-[6px] text-xs font-semibold uppercase tracking-wider border transition-colors ${
                     queryStateMode === mode
-                      ? 'bg-[#86672C] text-white border-[#86672C]'
-                      : 'bg-[#FFFFFF] dark:bg-[#18202A] border-[#DDDBD4] dark:border-[#2C3644] text-[#15212E] dark:text-[#F0F3F7]'
+                      ? 'bg-ds-brass text-white border-ds-brass'
+                      : 'bg-ds-surface dark:bg-ds-surface-subtle border-ds-border dark:border-ds-border-strong text-ds-ink'
                   }`}
                 >
                   {mode}
@@ -208,7 +208,7 @@ export default function ComponentGallery() {
             </div>
           </div>
 
-          <div className="p-4 bg-[#FFFFFF] dark:bg-[#18202A] border border-[#DDDBD4] dark:border-[#2C3644] rounded-[8px]">
+          <div className="p-4 bg-ds-surface dark:bg-ds-surface-subtle border border-ds-border dark:border-ds-border-strong rounded-[8px]">
             <QueryState
               isLoading={queryStateMode === 'loading'}
               isEmpty={queryStateMode === 'empty'}
@@ -220,9 +220,9 @@ export default function ComponentGallery() {
               emptyAction={<Button variant="primary">Browse Catalog</Button>}
               onRetry={() => setQueryStateMode('success')}
             >
-              <div className="p-6 bg-[#F6F6F3] dark:bg-[#101419] rounded-[6px] border border-[#DDDBD4] dark:border-[#2C3644]">
+              <div className="p-6 bg-ds-background dark:bg-ds-background rounded-[6px] border border-ds-border dark:border-ds-border-strong">
                 <h3 className="font-semibold text-base mb-2">Live Content Rendered Successfully</h3>
-                <p className="text-sm text-[#3B4754] dark:text-[#B4BFCB]">
+                <p className="text-sm text-ds-ink-secondary">
                   All courses and lessons are loaded directly through feature hooks.
                 </p>
               </div>

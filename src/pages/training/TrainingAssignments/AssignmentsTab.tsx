@@ -25,7 +25,6 @@ import { useTrainingAssignmentsContext } from '../contexts/TrainingAssignmentsCo
 
 export function AssignmentsTab() {
   const {
-    isRTL,
     isLoadingAssignments,
     hideCreateButton,
     search,
@@ -138,7 +137,7 @@ export function AssignmentsTab() {
           <div className="relative flex-1 max-w-none sm:max-w-md">
             <div className={cn(
               "absolute inset-y-0 flex items-center pointer-events-none",
-              isRTL ? "end-0 pe-4" : "start-0 ps-4"
+              "start-0 ps-4"
             )}>
               <Search className="w-4 h-4 text-slate-400" />
             </div>
@@ -148,7 +147,7 @@ export function AssignmentsTab() {
               onChange={(e) => setSearch(e.target.value)}
               className={cn(
                 "h-10 bg-slate-50 border-slate-200 focus:bg-white focus:border-hotel-gold/50 focus:ring-2 focus:ring-hotel-gold/20 transition-all",
-                isRTL ? "pe-11 text-end" : "ps-11"
+                "ps-11"
               )}
             />
             {search && (
@@ -156,7 +155,7 @@ export function AssignmentsTab() {
                 onClick={() => setSearch('')}
                 className={cn(
                   "absolute inset-y-0 flex items-center text-slate-400 hover:text-slate-600 transition-colors",
-                  isRTL ? "start-0 ps-3" : "end-0 pe-3"
+                  "end-0 pe-3"
                 )}
               >
                 <X className="w-4 h-4" />
@@ -226,7 +225,7 @@ export function AssignmentsTab() {
                 onClick={() => setShowAssignmentDialog(true)}
                 className="bg-hotel-navy hover:bg-hotel-navy/90 text-white h-10 px-4 shadow-sm hover:shadow transition-all"
               >
-                <Plus className={cn("w-4 h-4", isRTL ? "ms-2" : "me-2")} />
+                <Plus className={cn("w-4 h-4", "me-2")} />
                 {t('create')}
               </Button>
             )}
@@ -444,7 +443,7 @@ export function AssignmentsTab() {
                           <div className="flex items-center gap-2 text-sm">
                             <span className="text-slate-500">{getTargetIcon(targetType)}</span>
                             <span className="text-slate-600">{targetTypeLabel}</span>
-                            <Badge variant="outline" className="text-[10px] px-1.5 h-5 bg-slate-50">
+                            <Badge variant="outline" className="text-[10px] px-1.5 py-0.5 shrink-0 whitespace-nowrap bg-slate-50">
                               {targets.length}
                             </Badge>
                           </div>
@@ -498,7 +497,7 @@ export function AssignmentsTab() {
                       className="w-full border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-medium h-9"
                       onClick={() => openManageAssignees(primaryAssignment.content_id, primaryAssignment.courses?.title)}
                     >
-                      <Users className={cn("h-4 w-4 text-slate-500", isRTL ? "ms-2" : "me-2")} />
+                      <Users className={cn("h-4 w-4 text-slate-500", "me-2")} />
                       {t('manageAssignees', 'Manage assignees')}
                     </Button>
                   </div>
@@ -523,7 +522,7 @@ export function AssignmentsTab() {
                 onClick={() => setShowAssignmentDialog(true)}
                 className="mt-6 bg-hotel-navy hover:bg-hotel-navy/90 text-white px-6 shadow-sm hover:shadow transition-all"
               >
-                <Plus className={cn("w-4 h-4", isRTL ? "ms-2" : "me-2")} />
+                <Plus className={cn("w-4 h-4", "me-2")} />
                 {t('createAssignment')}
               </Button>
             )}

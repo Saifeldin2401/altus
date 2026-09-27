@@ -23,18 +23,18 @@ import { useTranslation } from 'react-i18next'
 import type { Subscription, SubscriptionPlan } from '@/lib/types/tenant'
 import { formatDateTime } from '@/lib/utils'
 
-const DEFAULT_ENTERPRISE_PLAN: SubscriptionPlan = {
-  id: 'a0000000-0000-0000-0000-000000000001',
-  name: 'Enterprise Plan',
-  code: 'enterprise',
-  max_users: 10000,
-  max_storage_gb: 500,
-  ai_monthly_quota_usd: 1000.00,
+const DEFAULT_STANDARD_PLAN: SubscriptionPlan = {
+  id: '00000000-0000-0000-0000-000000000000',
+  name: 'Standard Tier',
+  code: 'standard',
+  max_users: 25,
+  max_storage_gb: 5,
+  ai_monthly_quota_usd: 10.00,
   features: {
-    custom_branding: true,
+    custom_branding: false,
     ai_generation: true,
-    api_access: true,
-    advanced_analytics: true
+    api_access: false,
+    advanced_analytics: false
   },
   is_active: true,
   created_at: new Date().toISOString()
@@ -106,23 +106,23 @@ export function SubscriptionEntitlementsCard() {
     staleTime: 60 * 1000
   })
 
-  const planName = entitlements?.plan || subscription?.plan?.name || DEFAULT_ENTERPRISE_PLAN.name
-  const planCode = entitlements?.plan_code || subscription?.plan?.code || 'enterprise'
+  const planName = entitlements?.plan || subscription?.plan?.name || DEFAULT_STANDARD_PLAN.name
+  const planCode = entitlements?.plan_code || subscription?.plan?.code || 'standard'
 
   // Metric values prioritized from quota evaluation RPC
   const userCount = quotaEvaluation?.utilization?.learners?.used ?? entitlements?.usage?.learners ?? 0
-  const maxUsers = quotaEvaluation?.utilization?.learners?.max ?? entitlements?.max_learners ?? subscription?.plan?.max_users ?? DEFAULT_ENTERPRISE_PLAN.max_users
+  const maxUsers = quotaEvaluation?.utilization?.learners?.max ?? entitlements?.max_learners ?? subscription?.plan?.max_users ?? DEFAULT_STANDARD_PLAN.max_users
   const userPercent = quotaEvaluation?.utilization?.learners?.pct ?? Math.min(100, Math.round((userCount / (maxUsers || 1)) * 100))
 
   const aiCreditsUsed = quotaEvaluation?.utilization?.ai_credits?.used ?? entitlements?.ai_credits_used ?? 0
-  const aiMonthlyQuota = quotaEvaluation?.utilization?.ai_credits?.max ?? entitlements?.ai_credits_monthly ?? subscription?.plan?.ai_monthly_quota_usd ?? DEFAULT_ENTERPRISE_PLAN.ai_monthly_quota_usd
+  const aiMonthlyQuota = quotaEvaluation?.utilization?.ai_credits?.max ?? entitlements?.ai_credits_monthly ?? subscription?.plan?.ai_monthly_quota_usd ?? DEFAULT_STANDARD_PLAN.ai_monthly_quota_usd
   const aiPercent = quotaEvaluation?.utilization?.ai_credits?.pct ?? (aiMonthlyQuota > 0 ? Math.min(100, Math.round((aiCreditsUsed / (aiMonthlyQuota || 1)) * 100)) : 0)
 
   const storageUsedGb = quotaEvaluation?.utilization?.storage?.used_gb ?? (quotaEvaluation?.utilization?.storage?.used ? Number((quotaEvaluation.utilization.storage.used / (1024 * 1024 * 1024)).toFixed(2)) : 0)
-  const maxStorageGb = quotaEvaluation?.utilization?.storage?.max_gb ?? entitlements?.max_storage_gb ?? subscription?.plan?.max_storage_gb ?? DEFAULT_ENTERPRISE_PLAN.max_storage_gb
+  const maxStorageGb = quotaEvaluation?.utilization?.storage?.max_gb ?? entitlements?.max_storage_gb ?? subscription?.plan?.max_storage_gb ?? DEFAULT_STANDARD_PLAN.max_storage_gb
   const storagePercent = quotaEvaluation?.utilization?.storage?.pct ?? Math.min(100, Math.round((storageUsedGb / (maxStorageGb || 1)) * 100))
 
-  const features = entitlements?.plan_features || subscription?.plan?.features || DEFAULT_ENTERPRISE_PLAN.features
+  const features = entitlements?.plan_features || subscription?.plan?.features || DEFAULT_STANDARD_PLAN.features
 
   // Capacity Threshold Assessment (80%, 90%, 100%)
   const maxPercent = Math.max(userPercent, aiPercent, storagePercent)

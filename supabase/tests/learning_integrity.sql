@@ -153,14 +153,31 @@ BEGIN
   IF NOT v_ok THEN RAISE EXCEPTION 'FAIL C2: learner self-approved a submission'; END IF;
 
   -- Progress row: completion fields cannot be forged
-  -- A bogus assignment id from the client is dropped rather than failing the write.
-  INSERT INTO public.training_progress (user_id, training_id, lp_content_type, status, passed, score_percentage, quiz_score, completed_at, assignment_id)
-  VALUES (auth.uid(), current_setting('t.module')::uuid, 'module', 'completed', true, 100, 100, now(), gen_random_uuid());
-  UPDATE public.training_progress SET status = 'completed', passed = true, quiz_score = 100, completed_at = now()
-   WHERE user_id = auth.uid() AND training_id = current_setting('t.module')::uuid;
+  -- Direct insertion of completion fields (status='completed', score, passed, completed_at) is rejected.
+  v_ok := false;
+  BEGIN
+    INSERT INTO public.training_progress (user_id, training_id, lp_content_type, status, passed, score_percentage, quiz_score, completed_at, assignment_id)
+    VALUES (auth.uid(), current_setting('t.module')::uuid, 'module', 'completed', true, 100, 100, now(), gen_random_uuid());
+  EXCEPTION WHEN insufficient_privilege THEN v_ok := true;
+  END;
+  IF NOT v_ok THEN RAISE EXCEPTION 'FAIL: learner inserted training_progress with completed status directly'; END IF;
+
+  -- Normal in-progress tracking is accepted
+  INSERT INTO public.training_progress (user_id, training_id, lp_content_type, status, progress_percentage)
+  VALUES (auth.uid(), current_setting('t.module')::uuid, 'module', 'in_progress', 50);
+
+  -- Direct update to completed status or 100% progress is rejected
+  v_ok := false;
+  BEGIN
+    UPDATE public.training_progress SET status = 'completed', passed = true, quiz_score = 100, completed_at = now()
+     WHERE user_id = auth.uid() AND training_id = current_setting('t.module')::uuid;
+  EXCEPTION WHEN insufficient_privilege THEN v_ok := true;
+  END;
+  IF NOT v_ok THEN RAISE EXCEPTION 'FAIL: learner updated training_progress to completed directly'; END IF;
+
   SELECT count(*) INTO v_n FROM public.training_progress
    WHERE user_id = auth.uid() AND training_id = current_setting('t.module')::uuid
-     AND (status = 'completed' OR passed IS NOT NULL OR quiz_score IS NOT NULL OR completed_at IS NOT NULL OR assignment_id IS NOT NULL);
+     AND (status = 'completed' OR passed IS NOT NULL OR quiz_score IS NOT NULL OR completed_at IS NOT NULL);
   IF v_n <> 0 THEN RAISE EXCEPTION 'FAIL: learner forged training_progress completion fields'; END IF;
 
   -- Completion is refused while nothing is done

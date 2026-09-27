@@ -435,7 +435,7 @@ export function QuestionEditor() {
                                                         control={form.control}
                                                         name={`options.${index}.is_correct`}
                                                         render={({ field }) => (
-                                                            <FormItem className="flex items-center space-x-2 space-y-0 pt-2">
+                                                            <FormItem className="flex items-center gap-x-2 space-y-0 pt-2">
                                                                 <FormControl>
                                                                     <Switch
                                                                         checked={field.value}

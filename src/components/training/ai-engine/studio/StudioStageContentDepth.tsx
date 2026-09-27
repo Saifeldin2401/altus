@@ -256,7 +256,7 @@ export function StudioStageContentDepth({
                     <p className="text-xs font-bold text-foreground">
                       {isRTL ? preset.title_ar : preset.title}
                     </p>
-                    <Badge className={cn('text-[9px] px-1.5 py-0 h-4', isSelected ? 'bg-purple-600 text-white' : 'bg-muted text-muted-foreground')}>
+                    <Badge className={cn('text-[9px] px-1.5 py-0.5 shrink-0 whitespace-nowrap', isSelected ? 'bg-purple-600 text-white' : 'bg-muted text-muted-foreground')}>
                       {preset.badge}
                     </Badge>
                   </div>

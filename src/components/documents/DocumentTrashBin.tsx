@@ -1,5 +1,5 @@
 import { ListSkeleton } from "@/components/loading/ListSkeleton";
-import { EmptyState } from "@/components/shared/EmptyState";
+import { EmptyState } from "@/ui";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -171,7 +171,7 @@ export function DocumentTrashBin({
     return (
       <div className={className}>
         <EmptyState
-          icon={Trash2}
+          icon={<Trash2 className="h-6 w-6" aria-hidden="true" />}
           title="Trash is Empty"
           description="Deleted documents will appear here for 30 days before being permanently removed."
           className="min-h-[300px]"
@@ -451,7 +451,7 @@ export function DocumentTrashBin({
             <Button
               onClick={handleRestore}
               disabled={actionLoading}
-              className="bg-[#0B1C3E] hover:bg-[#1a3a6e]"
+              className="bg-ds-ink hover:bg-ds-ink/90"
             >
               {actionLoading ? (
                 <span className="animate-spin me-2">◌</span>

@@ -44,8 +44,7 @@ export function ModuleTemplateSelector({
   onOpenChange,
   onTemplateSelected
 }: ModuleTemplateSelectorProps) {
-  const { t, i18n } = useTranslation('training')
-  const isRTL = i18n.dir() === 'rtl'
+  const { t } = useTranslation('training')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
 
   const { data: templates, isLoading, isError } = useQuery({
@@ -85,16 +84,16 @@ export function ModuleTemplateSelector({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className={cn(isRTL ? "text-end" : "text-start")}>
+          <DialogTitle className={cn("text-start")}>
             {t('hub.templates.title')}
           </DialogTitle>
-          <DialogDescription className={cn(isRTL ? "text-end" : "text-start")}>
+          <DialogDescription className={cn("text-start")}>
             {t('hub.templates.description')}
           </DialogDescription>
         </DialogHeader>
 
         {/* Category Filter */}
-        <div className={cn("flex gap-2 flex-wrap mb-6", isRTL ? "flex-row-reverse" : "")}>
+        <div className={cn("flex gap-2 flex-wrap mb-6")}>
           {categories.map((cat) => (
             <Button
               key={cat.value}
@@ -102,8 +101,7 @@ export function ModuleTemplateSelector({
               size="sm"
               onClick={() => setSelectedCategory(cat.value)}
               className={cn(
-                selectedCategory === cat.value && "bg-hotel-gold hover:bg-hotel-gold-dark",
-                isRTL ? "flex-row-reverse" : ""
+                selectedCategory === cat.value && "bg-hotel-gold hover:bg-hotel-gold-dark"
               )}
             >
               {cat.label}
@@ -131,18 +129,18 @@ export function ModuleTemplateSelector({
                   key={template.id}
                   className={cn(
                     "cursor-pointer hover:shadow-lg transition-all border-2 hover:border-hotel-gold",
-                    isRTL ? "text-end" : "text-start"
+                    "text-start"
                   )}
                   onClick={() => onTemplateSelected(template)}
                 >
                   <CardHeader>
-                    <div className={cn("flex items-start justify-between gap-4", isRTL ? "flex-row-reverse" : "")}>
+                    <div className={cn("flex items-start justify-between gap-4")}>
                       <div className="flex-1">
-                        <div className={cn("flex items-center gap-2 mb-2", isRTL ? "flex-row-reverse" : "")}>
+                        <div className={cn("flex items-center gap-2 mb-2")}>
                           <Icon className="h-5 w-5 text-hotel-navy" />
                           <CardTitle className="text-lg">{template.name}</CardTitle>
                         </div>
-                        <CardDescription className={cn("line-clamp-2", isRTL ? "text-end" : "text-start")}>
+                        <CardDescription className={cn("line-clamp-2", "text-start")}>
                           {template.description}
                         </CardDescription>
                       </div>
@@ -152,13 +150,13 @@ export function ModuleTemplateSelector({
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className={cn("flex items-center justify-between", isRTL ? "flex-row-reverse" : "")}>
+                    <div className={cn("flex items-center justify-between")}>
                       <span className="text-sm text-muted-foreground">
                         {template.template_structure?.sections?.length || 0} {t('hub.templates.sections')}
                       </span>
                       <Button
                         size="sm"
-                        className={cn("bg-hotel-gold hover:bg-hotel-gold-dark", isRTL ? "flex-row-reverse" : "")}
+                        className={cn("bg-hotel-gold hover:bg-hotel-gold-dark")}
                       >
                         {t('hub.templates.useTemplate')}
                       </Button>

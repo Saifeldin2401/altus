@@ -1,6 +1,6 @@
 import { PageHeader } from '@/components/layout/PageHeader'
 import { DeleteConfirmation } from '@/components/shared/DeleteConfirmation'
-import { EmptyState } from '@/components/shared/EmptyState'
+import { EmptyState } from '@/ui'
 import { GroupedDepartmentSelector } from '@/components/shared/GroupedDepartmentSelector'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -62,6 +62,7 @@ interface PathForm {
 export default function TrainingPaths() {
   const { profile, primaryRole } = useAuth()
   const { currentOrganization } = useTenant()
+  const orgId = currentOrganization?.id || profile?.organization_id
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { t, i18n } = useTranslation('training')
@@ -77,12 +78,13 @@ export default function TrainingPaths() {
   // Enroll in path mutation
   const enrollInPathMutation = useMutation({
     mutationFn: async (pathId: string) => {
-      if (!profile?.id) throw new Error('Not authenticated')
-      const orgId = currentOrganization?.id || (profile as any)?.organization_id || '00000000-0000-0000-0000-000000000000'
+      if (!orgId) {
+        throw new Error(isRTL ? 'سياق المؤسسة مطلوب للتسجيل في المسارات التدريبية' : 'Organization context is required to enroll in learning paths')
+      }
       const { data, error } = await supabase
         .from('user_path_enrollments')
         .insert({
-          user_id: profile.id,
+          user_id: profile?.id,
           path_id: pathId,
           organization_id: orgId,
           enrolled_at: new Date().toISOString()
@@ -94,7 +96,7 @@ export default function TrainingPaths() {
       return data
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['my-path-enrollments', profile?.id] })
+      queryClient.invalidateQueries({ queryKey: ['my-path-enrollments', profile?.id, orgId] })
       toast.success(isRTL ? 'تم التسجيل في المسار التدريبي بنجاح' : 'Enrolled in learning path successfully')
       setActiveTab('my')
     },
@@ -123,8 +125,9 @@ export default function TrainingPaths() {
 
   // Fetch all learning paths
   const { data: paths, isLoading: pathsLoading } = useQuery({
-    queryKey: ['training-paths'],
+    queryKey: ['training-paths', orgId],
     queryFn: async () => {
+      if (!orgId) return []
       const { data, error } = await supabase
         .from('training_paths')
         .select(`
@@ -134,6 +137,7 @@ export default function TrainingPaths() {
             courses(id, title, description, estimated_duration_minutes)
           )
         `)
+        .eq('organization_id', orgId)
         .order('created_at', { ascending: false })
 
       if (error) throw error
@@ -145,14 +149,15 @@ export default function TrainingPaths() {
           courses: TrainingModule
         })[]
       })[]
-    }
+    },
+    enabled: !!orgId
   })
 
   // Fetch user's path enrollments
   const { data: myEnrollments, isLoading: enrollmentsLoading } = useQuery({
-    queryKey: ['my-path-enrollments', profile?.id],
+    queryKey: ['my-path-enrollments', profile?.id, orgId],
     queryFn: async () => {
-      if (!profile?.id) return []
+      if (!profile?.id || !orgId) return []
       const { data, error } = await supabase
         .from('user_path_enrollments')
         .select(`
@@ -166,6 +171,7 @@ export default function TrainingPaths() {
           )
         `)
         .eq('user_id', profile.id)
+        .eq('organization_id', orgId)
         .order('enrolled_at', { ascending: false })
 
       if (error) throw error
@@ -183,7 +189,7 @@ export default function TrainingPaths() {
         }
       })[]
     },
-    enabled: !!profile?.id
+    enabled: !!profile?.id && !!orgId
   })
 
   const enrolledPathIds = useMemo(() => {
@@ -192,40 +198,57 @@ export default function TrainingPaths() {
 
   // Fetch available modules
   const { data: availableModules } = useQuery({
-    queryKey: ['available-training-modules'],
+    queryKey: ['available-training-modules', orgId],
     queryFn: async () => {
+      if (!orgId) return []
       const { data, error } = await supabase
         .from('courses')
         .select('id, title, estimated_duration_minutes')
         .eq('is_deleted', false)
+        .eq('organization_id', orgId)
       if (error) throw error
       return data as TrainingModule[]
-    }
+    },
+    enabled: !!orgId
   })
 
   const { data: departments } = useQuery({
-    queryKey: ['departments'],
+    queryKey: ['departments', orgId],
     queryFn: async () => {
+      if (!orgId) return []
       const { data, error } = await supabase
         .from('departments')
         .select('id, name')
+        .eq('organization_id', orgId)
       if (error) throw error
       return data as { id: string; name: string }[]
-    }
+    },
+    enabled: !!orgId
   })
 
   // Fetch active staff for specific targeting
   const { data: staffList } = useQuery({
-    queryKey: ['active-staff'],
+    queryKey: ['active-staff', orgId],
     queryFn: async () => {
+      if (!orgId) return []
       const { data, error } = await supabase
-        .from('profiles')
-        .select('id, full_name, job_title')
-        .eq('is_deleted', false)
-        .order('full_name')
+        .from('organization_memberships')
+        .select(`
+          user_id,
+          profiles!inner(id, full_name, job_title, is_deleted)
+        `)
+        .eq('organization_id', orgId)
+        .eq('is_active', true)
+        .eq('profiles.is_deleted', false)
+
       if (error) throw error
-      return data as { id: string; full_name: string; job_title: string }[]
-    }
+      const uniqueProfiles = (data || [])
+        .map(m => m.profiles as unknown as { id: string; full_name: string; job_title: string })
+        .filter(Boolean)
+        .sort((a, b) => (a.full_name || '').localeCompare(b.full_name || ''))
+      return uniqueProfiles
+    },
+    enabled: !!orgId
   })
 
   // Create/update path mutation
@@ -269,6 +292,9 @@ export default function TrainingPaths() {
           if (modulesError) throw modulesError
         }
       } else {
+        if (!orgId) {
+          throw new Error(isRTL ? 'سياق المؤسسة مطلوب لإنشاء المسار التدريبي' : 'Organization context is required to create a learning path')
+        }
         // Create new path
         const { data: newPath, error } = await supabase
           .from('training_paths')
@@ -282,6 +308,7 @@ export default function TrainingPaths() {
             target_role: data.target_role ?? null,
             target_department_id: data.target_department_id ?? null,
             target_user_ids: data.target_user_ids ?? [],
+            organization_id: orgId,
             created_by: profile?.id ?? null
           })
           .select()
@@ -306,7 +333,7 @@ export default function TrainingPaths() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['training-paths'] })
+      queryClient.invalidateQueries({ queryKey: ['training-paths', orgId] })
       setShowPathDialog(false)
       setEditingPath(null)
       resetForm()
@@ -327,7 +354,7 @@ export default function TrainingPaths() {
       if (error) throw error
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['training-paths'] })
+      queryClient.invalidateQueries({ queryKey: ['training-paths', orgId] })
       toast.success(t('pathDeleted'))
     },
     onError: (error) => {
@@ -541,14 +568,14 @@ export default function TrainingPaths() {
                   </div>
                 ) : (
                   <EmptyState
-                    icon={BookOpen}
+                    icon={<BookOpen className="h-6 w-6" aria-hidden="true" />}
                     title={t('noPaths')}
                     description={t('no_paths_desc')}
-                    action={{
-                      label: t('newPath'),
-                      onClick: () => setShowPathDialog(true),
-                      icon: Plus
-                    }}
+                    action={
+                      <button type="button" onClick={() => setShowPathDialog(true)} className="inline-flex items-center gap-1.5 text-sm font-semibold text-ds-accent hover:underline">
+                        <Plus className="h-4 w-4" aria-hidden="true" />{t('newPath')}
+                      </button>
+                    }
                   />
                 )}
               </CardContent>
@@ -572,7 +599,7 @@ export default function TrainingPaths() {
               <TabsTrigger value="targeting">{t('targeting')}</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="general" className={cn("space-y-4 pt-4", isRTL ? "text-end" : "text-start")}>
+            <TabsContent value="general" className={cn("space-y-4 pt-4", "text-start")}>
               <div className="space-y-2">
                 <Label>{t('pathTitle')}</Label>
                 <Input
@@ -623,8 +650,8 @@ export default function TrainingPaths() {
                 </div>
               </div>
 
-              <div className={cn("flex gap-4", isRTL ? "flex-row-reverse" : "")}>
-                <div className={cn("flex items-center", isRTL ? "space-x-reverse space-x-2" : "space-x-2")}>
+              <div className={cn("flex gap-4")}>
+                <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     id="mandatory"
@@ -635,7 +662,7 @@ export default function TrainingPaths() {
                   <Label htmlFor="mandatory">{t('mandatory')}</Label>
                 </div>
 
-                <div className={cn("flex items-center", isRTL ? "space-x-reverse space-x-2" : "space-x-2")}>
+                <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     id="certificate"
@@ -648,7 +675,7 @@ export default function TrainingPaths() {
               </div>
             </TabsContent>
 
-            <TabsContent value="modules" className={cn("space-y-4 pt-4", isRTL ? "text-end" : "text-start")}>
+            <TabsContent value="modules" className={cn("space-y-4 pt-4", "text-start")}>
               <div className="space-y-2">
                 <Label>{t('selectModules')}</Label>
                 <div className="border rounded-md p-4 max-h-[300px] overflow-y-auto space-y-2">
@@ -681,7 +708,7 @@ export default function TrainingPaths() {
               </div>
             </TabsContent>
 
-            <TabsContent value="targeting" className={cn("space-y-4 pt-4", isRTL ? "text-end" : "text-start")}>
+            <TabsContent value="targeting" className={cn("space-y-4 pt-4", "text-start")}>
               <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-2">
                   <GroupedDepartmentSelector
@@ -737,9 +764,9 @@ export default function TrainingPaths() {
                 </div>
               </div>
 
-              <div className={cn("p-3 bg-ds-accent-soft text-ds-accent text-[11px] rounded border border-ds-accent/30 flex items-start gap-2", isRTL ? "flex-row-reverse" : "")}>
-                <Target className={cn("w-4 h-4 mt-0.5 text-ds-accent", isRTL ? "ms-2" : "")} />
-                <p className={isRTL ? "text-end" : ""}>
+              <div className={cn("p-3 bg-ds-accent-soft text-ds-accent text-[11px] rounded border border-ds-accent/30 flex items-start gap-2")}>
+                <Target className={cn("w-4 h-4 mt-0.5 text-ds-accent")} />
+                <p className={''}>
                   <strong>{t('targeting_logic')}:</strong> {t('targeting_logic_desc')}
                 </p>
               </div>
@@ -751,7 +778,7 @@ export default function TrainingPaths() {
               {t('cancel')}
             </Button>
             <Button className="bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90 rounded-md transition-colors px-6" onClick={handleSubmit} disabled={pathMutation.isPending}>
-              {pathMutation.isPending ? <Loader2 className={cn("w-4 h-4 animate-spin", isRTL ? "ms-2" : "me-1")} /> : null}
+              {pathMutation.isPending ? <Loader2 className={cn("w-4 h-4 animate-spin", "me-1")} /> : null}
               {pathMutation.isPending ? t('saving') : t('savePath')}
             </Button>
           </div>

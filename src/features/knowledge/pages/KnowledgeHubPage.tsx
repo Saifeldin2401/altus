@@ -137,13 +137,17 @@ export default function KnowledgeHubPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-10">
       {/* Search first */}
-      <header className="relative space-y-5 overflow-hidden rounded-2xl border border-ds-border bg-gradient-to-br from-ds-accent-soft via-ds-surface to-ds-brass/10 p-5 sm:p-8">
+      <header
+        className="relative space-y-5 overflow-hidden rounded-xl border border-ds-border bg-ds-surface bg-cover bg-[position:70%_center] p-5 sm:p-8"
+        style={{ backgroundImage: "linear-gradient(90deg, rgb(255 255 255 / 0.98) 0%, rgb(255 255 255 / 0.94) 48%, rgb(255 255 255 / 0.40) 74%, rgb(255 255 255 / 0.08) 100%), url('/assets/altus/sop-checklist.jpg')" }}
+      >
         <div aria-hidden="true" className="pointer-events-none absolute -end-16 -top-16 h-56 w-56 rounded-full bg-ds-brass/10 blur-2xl" />
         <div className="space-y-2">
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ds-accent">{t('hub.eyebrow', 'Knowledge')}</p>
-          <h1 className="font-editorial text-[34px] font-semibold leading-tight text-ds-ink sm:text-[42px]">
-            {t('hub.title', 'What do you need to know?')}
+          <h1 className="max-w-3xl font-editorial text-[38px] font-semibold leading-[0.94] text-ds-ink sm:text-[52px]">
+            {t('hub.heroTitle', 'Everything your team needs to know.')}
           </h1>
+          <p className="max-w-2xl text-base leading-relaxed text-ds-ink-secondary sm:text-lg">{t('hub.heroDescription', "Search your organization's SOPs, policies, guides and procedures.")}</p>
         </div>
         <div role="search" className="relative">
           <label htmlFor="knowledge-search" className="sr-only">{t('hub.searchLabel', 'Search knowledge')}</label>
@@ -186,6 +190,9 @@ export default function KnowledgeHubPage() {
           ))}
           {scope && <span className="ms-auto hidden text-xs text-ds-muted sm:inline">{t('hub.scopeLine', 'Showing knowledge for {{scope}}', { scope })}</span>}
         </div>
+        <p className="absolute bottom-7 end-8 hidden max-w-[10rem] font-editorial text-[21px] font-semibold leading-[0.96] text-ds-ink xl:block">
+          Know it.<br />Use it.<br />Own it.
+        </p>
       </header>
 
       {results.isLoading ? (

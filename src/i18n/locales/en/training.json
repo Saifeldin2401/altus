@@ -1934,5 +1934,59 @@
             "completion": "Completion %",
             "sop": "SOP acknowledgement %"
         }
+    },
+    "welcomeTour": {
+        "step1Title": "Welcome to Altus Connect",
+        "step1Desc": "Your unified platform for luxury hospitality learning, operational excellence, and badges.",
+        "pointsTitle": "Earn Points with Every Lesson",
+        "pointsDesc": "10 pts per lesson, 50 pts per course, and bonus points for high scores.",
+        "streakTitle": "Build Your Learning Streak",
+        "streakDesc": "Learn a few minutes each day to keep your streak flame burning.",
+        "badgesTitle": "13 Hospitality Badges",
+        "badgesDesc": "Progress from Newcomer all the way to Master rank.",
+        "readyTitle": "You're All Set!",
+        "readyDesc": "Your learning profile is ready at Newcomer rank. Complete your first lesson today to unlock the \"First Steps\" badge.",
+        "currentRank": "Current Rank: Newcomer",
+        "nextMilestone": "Next milestone: 100 pts to reach Explorer",
+        "skip": "Skip introduction",
+        "continue": "Continue",
+        "goToMyDay": "Go to My Day",
+        "exploreCourses": "Explore Courses"
+    },
+    "assignFlow": {
+        "assignTo_one": "Assign to {{count}} learner",
+        "assignTo_other": "Assign to {{count}} learners",
+        "counting": "Counting learners…",
+        "assigning": "Assigning…",
+        "blockedNoCourse": "Choose a course to assign.",
+        "blockedNoLearnersPicked": "Select at least one learner.",
+        "blockedNoRecipients": "No active learners match this audience. Widen the brand, department or role filters.",
+        "successTitle": "Training assigned",
+        "successBody_one": "{{count}} learner enrolled in \"{{course}}\", due {{due}}.",
+        "successBody_other": "{{count}} learners enrolled in \"{{course}}\", due {{due}}.",
+        "failedTitle": "Could not assign training",
+        "failedBody": "You may not have permission to assign to this audience. Try a narrower scope or contact an administrator.",
+        "noOrg": "No active organization is selected.",
+        "confirmTitle": "Assign to a large audience?",
+        "confirmBody_one": "You are about to assign \"{{course}}\" to {{count}} learner in {{org}}.",
+        "confirmBody_other": "You are about to assign \"{{course}}\" to {{count}} learners in {{org}}.",
+        "course": "Course",
+        "scope": "Audience",
+        "recipients": "Recipients",
+        "dueDate": "Due date",
+        "priority": "Priority",
+        "backToEdit": "Back to edit",
+        "scopes": {
+            "organization": "Whole organization",
+            "brand": "Brand",
+            "department": "Department",
+            "role": "Role",
+            "individual": "Selected people"
+        },
+        "priorities": {
+            "normal": "Normal",
+            "high": "High",
+            "compliance": "Compliance"
+        }
     }
 }

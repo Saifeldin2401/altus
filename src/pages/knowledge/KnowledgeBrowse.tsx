@@ -554,7 +554,7 @@ export default function KnowledgeBrowse() {
                                 </span>
                                 <span className="text-[10px] font-mono text-muted-foreground">{featured.length} VIP standards</span>
                             </h2>
-                            <div className="divide-y divide-[#DDDBD4] dark:divide-[#30404D] overflow-hidden rounded-[6px] border border-ds-border bg-card">
+                            <div className="divide-y divide-ds-border dark:divide-ds-chrome-border overflow-hidden rounded-[6px] border border-ds-border bg-card">
                                 {featured.slice(0, 5).map(a => (
                                     <Link
                                         key={a.id}
@@ -586,7 +586,7 @@ export default function KnowledgeBrowse() {
                                 </span>
                                 <span className="text-[10px] text-muted-foreground font-mono">Live Sync</span>
                             </h2>
-                            <div className="divide-y divide-[#DDDBD4] dark:divide-[#30404D] overflow-hidden rounded-[6px] border border-ds-border bg-card">
+                            <div className="divide-y divide-ds-border dark:divide-ds-chrome-border overflow-hidden rounded-[6px] border border-ds-border bg-card">
                                 {recentArticles.slice(0, 5).map(a => (
                                     <Link
                                         key={a.id}
@@ -660,29 +660,29 @@ export default function KnowledgeBrowse() {
                                                     <div className="flex items-center justify-between gap-2 flex-wrap">
                                                         <div className="flex items-center gap-1.5 flex-wrap">
                                                             {/* Content Type Pill */}
-                                                            <Badge className="bg-ds-accent/10 text-ds-accent border border-ds-accent/20 text-[10px] font-semibold uppercase tracking-wider h-5 px-2 py-0 rounded-[4px]">
-                                                                <Icon className="h-3 w-3 me-1" />
+                                                            <Badge className="bg-ds-accent/10 text-ds-accent border border-ds-accent/20 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-[4px] whitespace-nowrap shrink-0">
+                                                                <Icon className="h-3 w-3 me-1 shrink-0" />
                                                                 {t(`content_types.${article.content_type}`, article.content_type)}
                                                             </Badge>
 
                                                             {/* Department Badge */}
                                                             {article.department?.name && (
-                                                                <Badge variant="outline" className="bg-muted/60 text-muted-foreground border-ds-border text-[10px] font-medium h-5 px-2 py-0 rounded-[4px]">
-                                                                    <Briefcase className="h-2.5 w-2.5 me-1 text-muted-foreground" />
+                                                                <Badge variant="outline" className="bg-muted/60 text-muted-foreground border-ds-border text-[10px] font-medium px-2 py-0.5 rounded-[4px] whitespace-nowrap shrink-0">
+                                                                    <Briefcase className="h-2.5 w-2.5 me-1 text-muted-foreground shrink-0" />
                                                                     {article.department.name}
                                                                 </Badge>
                                                             )}
 
                                                             {/* Master SOP Indicators */}
                                                             {article.is_master_template && (
-                                                                <Badge className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[10px] h-5 py-0 flex items-center gap-1 font-semibold rounded-[4px]">
-                                                                    <Sparkles className="h-2.5 w-2.5 text-ds-warning" />
+                                                                <Badge className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[10px] px-2 py-0.5 flex items-center gap-1 font-semibold rounded-[4px] whitespace-nowrap shrink-0">
+                                                                    <Sparkles className="h-2.5 w-2.5 text-ds-warning shrink-0" />
                                                                     {t('viewer.master_sop', 'Master SOP')}
                                                                 </Badge>
                                                             )}
                                                             {article.master_source_id && (
-                                                                <Badge className="bg-ds-accent-soft text-ds-accent border-ds-accent/30 text-[10px] h-5 py-0 flex items-center gap-1 font-semibold rounded-[4px]">
-                                                                    <Crown className="h-2.5 w-2.5 text-ds-accent" />
+                                                                <Badge className="bg-ds-accent-soft text-ds-accent border-ds-accent/30 text-[10px] px-2 py-0.5 flex items-center gap-1 font-semibold rounded-[4px] whitespace-nowrap shrink-0">
+                                                                    <Crown className="h-2.5 w-2.5 text-ds-accent shrink-0" />
                                                                     {t('from_master', 'From Master')}
                                                                 </Badge>
                                                             )}
@@ -693,7 +693,7 @@ export default function KnowledgeBrowse() {
                                                                         e.stopPropagation()
                                                                         setSyncModalState({ open: true, article })
                                                                     }}
-                                                                    className="bg-ds-warning hover:bg-ds-warning text-white text-[10px] h-5 py-0 flex items-center gap-1 font-semibold cursor-pointer shadow-none rounded-[4px]"
+                                                                    className="bg-ds-warning hover:bg-ds-warning text-white text-[10px] px-2 py-0.5 flex items-center gap-1 font-semibold cursor-pointer shadow-none rounded-[4px] whitespace-nowrap shrink-0"
                                                                 >
                                                                     <span>Update Available</span>
                                                                 </Badge>
@@ -703,7 +703,7 @@ export default function KnowledgeBrowse() {
                                                         {/* Top Right Highlights */}
                                                         <div className="flex items-center gap-1.5 shrink-0">
                                                             {isPendingAck && (
-                                                                <Badge className="bg-ds-danger-soft text-ds-danger border-ds-danger/30 text-[10px] font-semibold h-5 py-0 rounded-[4px]">
+                                                                <Badge className="bg-ds-danger-soft text-ds-danger border-ds-danger/30 text-[10px] font-semibold px-2 py-0.5 rounded-[4px] whitespace-nowrap shrink-0">
                                                                     {t('library.required', 'Required')}
                                                                 </Badge>
                                                             )}
@@ -775,7 +775,7 @@ export default function KnowledgeBrowse() {
                                         <div
                                             className={cn(
                                                 "absolute z-20 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-150",
-                                                isRTL ? "start-3" : "end-3",
+                                                "end-3",
                                                 viewMode === 'grid' ? "top-3" : "top-3 sm:top-4"
                                             )}
                                         >
@@ -845,7 +845,7 @@ export default function KnowledgeBrowse() {
                             )}
                             {canManage && (
                                 <Link to="/studio/articles/new">
-                                    <Button className="bg-ds-ink hover:bg-[#725725] text-ds-on-ink font-medium rounded-[6px] shadow-none">
+                                    <Button className="bg-ds-ink hover:bg-ds-accent-hover text-ds-on-ink font-medium rounded-[6px] shadow-none">
                                         <Plus className="h-4 w-4 me-2" />
                                         {t('library.create_new', 'Draft New SOP')}
                                     </Button>

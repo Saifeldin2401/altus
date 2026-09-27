@@ -183,7 +183,8 @@ async function searchArticlesRanked(
         p_department_id: toRealUuid(filters.department_id),
         p_requires_acknowledgment: filters.requires_acknowledgment ?? null,
         p_limit: pageSize,
-        p_offset: from
+        p_offset: from,
+        p_organization_id: toRealUuid(filters.organization_id) || null
     })
 
     if (rankError) {

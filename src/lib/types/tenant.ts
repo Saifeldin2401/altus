@@ -1,10 +1,12 @@
 export type TenantRole = 
   | 'organization_owner'
   | 'organization_admin'
+  | 'brand_admin'
+  | 'hotel_admin'
+  | 'department_manager'
   | 'training_manager'
   | 'knowledge_manager'
-  | 'brand_admin'
-  | 'department_manager'
+  | 'author'
   | 'instructor'
   | 'learner'
 

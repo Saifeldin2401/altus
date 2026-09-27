@@ -398,7 +398,7 @@ export function DocumentExpiryBanner({
             <Button
               onClick={handleExtendSubmit}
               disabled={!newExpiryDate}
-              className="bg-[#0B1C3E] hover:bg-[#1a3a6e]"
+              className="bg-ds-ink hover:bg-ds-ink/90"
             >
               <CheckCircle2 className="w-4 h-4 me-2" />
               Extend Expiry

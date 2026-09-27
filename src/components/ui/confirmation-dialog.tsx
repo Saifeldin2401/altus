@@ -95,7 +95,7 @@ export function ConfirmationDialog({
                         </div>
                     </div>
                 </AlertDialogHeader>
-                <AlertDialogFooter className="sm:space-x-2">
+                <AlertDialogFooter className="sm:gap-x-2">
                     <AlertDialogCancel disabled={isLoading}>{cancelText}</AlertDialogCancel>
                     <Button
                         onClick={handleConfirm}

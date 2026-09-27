@@ -1,5 +1,7 @@
 import { useDebounce } from '@/hooks/useDebounce'
+import { useNavigation } from '@/hooks/useNavigation'
 import { useSearch } from '@/hooks/useSearch'
+import { useWorkspaces } from '@/hooks/useWorkspaces'
 import {
   CommandDialog,
   CommandEmpty,
@@ -10,6 +12,7 @@ import {
   CommandSeparator,
 } from '@/components/ui/command'
 import {
+  ArrowRightLeft,
   Award,
   BookOpen,
   Compass,
@@ -30,38 +33,45 @@ interface CommandPaletteProps {
   onOpenChange: (open: boolean) => void
 }
 
+const RESULT_ICON: Record<string, typeof FileText> = {
+  document: FileText,
+  user: User,
+  training: GraduationCap,
+  announcement: Megaphone,
+  sop: BookOpen,
+  page: LayoutDashboard,
+  certificate: Award,
+  course: Compass,
+}
+
+/**
+ * Cmd/Ctrl+K. With no query it lists the pages of the member's current
+ * workspace and the other workspaces they can open - the same capability-gated
+ * route table the sidebar uses, so a manager sees manager pages and a learner
+ * never sees a page they can't open. Typing searches both pages and content.
+ */
 export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   const { t, i18n } = useTranslation(['common', 'nav'])
-  const isRTL = i18n.language === 'ar' || document.documentElement.dir === 'rtl'
+  const isArabic = i18n.language?.startsWith('ar')
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
-  
+  const { workspaceNavigation, searchRoutes } = useNavigation()
+  const { activeWorkspace, authorizedWorkspaces } = useWorkspaces()
+
   const debouncedQuery = useDebounce(query, 300)
   const { results, isLoading, hasResults } = useSearch(debouncedQuery, { limit: 12 })
 
-  const runCommand = (command: () => void) => {
+  const navTitle = (key: string) => t(key, { ns: 'nav' })
+  // Page matches are local, so they use the live query rather than the debounced one.
+  const matchingPages = query.trim() ? searchRoutes(query, navTitle) : []
+  const otherWorkspaces = authorizedWorkspaces.filter((ws) => ws.id !== activeWorkspace)
+
+  const go = (path: string) => {
     onOpenChange(false)
     setQuery('')
-    setTimeout(() => {
-      command()
-    }, 10)
+    setTimeout(() => navigate(path), 10)
   }
 
-  const getIcon = (type: string) => {
-    const iconMap: Record<string, React.ReactNode> = {
-      document: <FileText className="me-2 h-4 w-4" />,
-      user: <User className="me-2 h-4 w-4" />,
-      training: <GraduationCap className="me-2 h-4 w-4" />,
-      announcement: <Megaphone className="me-2 h-4 w-4" />,
-      sop: <BookOpen className="me-2 h-4 w-4" />,
-      page: <LayoutDashboard className="me-2 h-4 w-4" />,
-      certificate: <Award className="me-2 h-4 w-4" />,
-      course: <Compass className="me-2 h-4 w-4" />,
-    }
-    return iconMap[type] || <FileText className="me-2 h-4 w-4" />
-  }
-
-  // Group dynamic results
   const groupedResults = results.reduce((acc, result) => {
     if (!acc[result.type]) acc[result.type] = []
     acc[result.type].push(result)
@@ -70,110 +80,102 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
 
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
-      <CommandInput 
-        placeholder={isRTL ? 'ابحث في دورات ومقررات وإجراءات ألتوس...' : 'Search ALTUS courses, modules, SOPs, certificates...'} 
+      <CommandInput
+        placeholder={t('common:commandPalette.placeholder', 'Search courses, articles, people, or jump to a page…')}
         value={query}
         onValueChange={setQuery}
       />
       <CommandList>
         <CommandEmpty>
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-6">
-              <Loader2 className="h-6 w-6 animate-spin text-amber-500 mb-2" />
-              <p className="text-sm text-gray-500">{isRTL ? 'جاري البحث في منظومة ألتوس...' : 'Searching ALTUS ecosystem...'}</p>
+            <div className="flex flex-col items-center justify-center py-6" role="status">
+              <Loader2 className="h-6 w-6 animate-spin text-ds-brass mb-2" aria-hidden="true" />
+              <p className="text-sm text-ds-muted">{t('common:commandPalette.searching', 'Searching…')}</p>
             </div>
           ) : (
-            isRTL ? 'لا توجد نتائج مطابقة.' : 'No results found.'
+            t('common:commandPalette.noResults', 'No results found.')
           )}
         </CommandEmpty>
 
-        {/* Quick Actions - always show when no query */}
-        {!debouncedQuery && (
+        {!query.trim() && (
           <>
-            <CommandGroup heading={isRTL ? 'إجراءات التعلم السريعة' : 'Learning Actions'}>
-              <CommandItem
-                onSelect={() => runCommand(() => navigate('/learn/courses'))}
-                onClick={() => runCommand(() => navigate('/learn/courses'))}
-                className="cursor-pointer"
-              >
-                <Compass className="me-2 h-4 w-4 text-amber-500" />
-                <span>{isRTL ? 'دليل ومكتبة الدورات التدريبية' : 'Explore Course Catalog'}</span>
-              </CommandItem>
-              <CommandItem
-                onSelect={() => runCommand(() => navigate('/learn/my'))}
-                onClick={() => runCommand(() => navigate('/learn/my'))}
-                className="cursor-pointer"
-              >
-                <BookOpen className="me-2 h-4 w-4 text-amber-500" />
-                <span>{isRTL ? 'مساري التعليمي ومقرراتي' : 'My Learning Curriculum'}</span>
-              </CommandItem>
-              <CommandItem
-                onSelect={() => runCommand(() => navigate('/learn/certificates'))}
-                onClick={() => runCommand(() => navigate('/learn/certificates'))}
-                className="cursor-pointer"
-              >
-                <Award className="me-2 h-4 w-4 text-amber-500" />
-                <span>{isRTL ? 'الشهادات والاعتمادات الرسمية' : 'My Certificates & Accreditations'}</span>
-              </CommandItem>
-              <CommandItem
-                onSelect={() => runCommand(() => navigate('/knowledge'))}
-                onClick={() => runCommand(() => navigate('/knowledge'))}
-                className="cursor-pointer"
-              >
-                <FileText className="me-2 h-4 w-4 text-amber-500" />
-                <span>{isRTL ? 'دليل المعايير والإجراءات القياسية (SOPs)' : 'Hospitality Standards & SOPs'}</span>
-              </CommandItem>
-            </CommandGroup>
-            
+            {workspaceNavigation.length > 0 && (
+              <CommandGroup heading={t('common:commandPalette.goTo', 'Go to')}>
+                {workspaceNavigation.map((item) => {
+                  const Icon = item.icon
+                  return (
+                    <CommandItem key={item.path} value={`page ${item.path} ${navTitle(item.title)}`} onSelect={() => go(item.path)} className="cursor-pointer">
+                      <Icon className="me-2 h-4 w-4 text-ds-brass" aria-hidden="true" />
+                      <span>{navTitle(item.title)}</span>
+                    </CommandItem>
+                  )
+                })}
+              </CommandGroup>
+            )}
+
+            {otherWorkspaces.length > 0 && (
+              <>
+                <CommandSeparator />
+                <CommandGroup heading={t('common:commandPalette.workspaces', 'Switch workspace')}>
+                  {otherWorkspaces.map((ws) => (
+                    <CommandItem key={ws.id} value={`workspace ${ws.id} ${ws.label} ${ws.labelAr}`} onSelect={() => go(ws.defaultPath)} className="cursor-pointer">
+                      <ArrowRightLeft className="me-2 h-4 w-4 text-ds-muted" aria-hidden="true" />
+                      <span>{isArabic ? ws.labelAr : ws.label}</span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </>
+            )}
+
             <CommandSeparator />
-            
-            <CommandGroup heading={isRTL ? 'التنقل المباشر' : 'Navigation'}>
-              <CommandItem
-                onSelect={() => runCommand(() => navigate('/profile'))}
-                onClick={() => runCommand(() => navigate('/profile'))}
-                className="cursor-pointer"
-              >
-                <User className="me-2 h-4 w-4 text-slate-400" />
-                <span>{isRTL ? 'الملف المهني' : 'My Profile'}</span>
+            <CommandGroup heading={t('common:commandPalette.account', 'Account')}>
+              <CommandItem value="account profile" onSelect={() => go('/profile')} className="cursor-pointer">
+                <User className="me-2 h-4 w-4 text-ds-muted" aria-hidden="true" />
+                <span>{t('common:commandPalette.profile', 'My profile')}</span>
               </CommandItem>
-              <CommandItem
-                onSelect={() => runCommand(() => navigate('/learn/paths'))}
-                onClick={() => runCommand(() => navigate('/learn/paths'))}
-                className="cursor-pointer"
-              >
-                <GraduationCap className="me-2 h-4 w-4 text-slate-400" />
-                <span>{isRTL ? 'المسارات التخصصية' : 'Learning Paths'}</span>
-              </CommandItem>
-              <CommandItem
-                onSelect={() => runCommand(() => navigate('/settings'))}
-                onClick={() => runCommand(() => navigate('/settings'))}
-                className="cursor-pointer"
-              >
-                <Settings className="me-2 h-4 w-4 text-slate-400" />
-                <span>{isRTL ? 'إعدادات الحساب' : 'Settings'}</span>
+              <CommandItem value="account settings" onSelect={() => go('/settings')} className="cursor-pointer">
+                <Settings className="me-2 h-4 w-4 text-ds-muted" aria-hidden="true" />
+                <span>{t('common:commandPalette.settings', 'Settings')}</span>
               </CommandItem>
             </CommandGroup>
           </>
         )}
 
-        {/* Dynamic Results */}
-        {debouncedQuery && hasResults && (
-          Object.entries(groupedResults).map(([type, items]) => (
-            <CommandGroup key={type} heading={type.charAt(0).toUpperCase() + type.slice(1)}>
-              {items.map((result) => (
-                <CommandItem 
-                  key={result.id} 
-                  value={result.title}
-                  onSelect={() => runCommand(() => navigate(result.url))}
-                  onClick={() => runCommand(() => navigate(result.url))}
-                  className="cursor-pointer"
-                >
-                  {getIcon(result.type)}
-                  <span>{result.title}</span>
+        {/* Pages are matched here (capability-gated, localized titles), so cmdk's
+            own fuzzy filter is kept from hiding them via a value that contains the query. */}
+        {matchingPages.length > 0 && (
+          <CommandGroup heading={t('common:commandPalette.pages', 'Pages')}>
+            {matchingPages.map((item) => {
+              const Icon = item.icon
+              return (
+                <CommandItem key={item.path} value={`page ${item.path} ${navTitle(item.title)} ${query}`} onSelect={() => go(item.path)} className="cursor-pointer">
+                  <Icon className="me-2 h-4 w-4 text-ds-brass" aria-hidden="true" />
+                  <span>{navTitle(item.title)}</span>
                 </CommandItem>
-              ))}
-            </CommandGroup>
-          ))
+              )
+            })}
+          </CommandGroup>
+        )}
+
+        {debouncedQuery && hasResults && (
+          Object.entries(groupedResults).map(([type, items]) => {
+            const Icon = RESULT_ICON[type] ?? FileText
+            return (
+              <CommandGroup key={type} heading={t(`common:commandPalette.types.${type}`, type.charAt(0).toUpperCase() + type.slice(1))}>
+                {items.map((result) => (
+                  <CommandItem
+                    key={result.id}
+                    value={`${type} ${result.id} ${result.title} ${debouncedQuery}`}
+                    onSelect={() => go(result.url)}
+                    className="cursor-pointer"
+                  >
+                    <Icon className="me-2 h-4 w-4 text-ds-muted" aria-hidden="true" />
+                    <span>{result.title}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )
+          })
         )}
       </CommandList>
     </CommandDialog>

@@ -145,7 +145,7 @@ export function DocumentBulkActionsBar({
       <div
         className={cn(
           "sticky top-0 z-40 flex items-center gap-3 px-4 py-3",
-          "bg-[#0B1C3E] text-white shadow-lg rounded-lg mx-4 mt-4",
+          "bg-ds-ink text-white shadow-lg rounded-lg mx-4 mt-4",
           className
         )}
       >
@@ -154,7 +154,7 @@ export function DocumentBulkActionsBar({
           <Checkbox
             checked={isAllSelected}
             onCheckedChange={handleSelectToggle}
-            className="border-white/50 data-[state=checked]:bg-white data-[state=checked]:text-[#0B1C3E]"
+            className="border-white/50 data-[state=checked]:bg-white data-[state=checked]:text-ds-ink"
           />
           <div className="flex items-center gap-2">
             <Badge
@@ -328,7 +328,7 @@ export function DocumentBulkActionsBar({
                 className={cn(
                   "w-full flex items-center gap-3 p-3 rounded-md text-start transition-colors",
                   selectedFolderId === null
-                    ? "bg-[#0B1C3E] text-white"
+                    ? "bg-ds-ink text-white"
                     : "hover:bg-muted"
                 )}
               >
@@ -345,7 +345,7 @@ export function DocumentBulkActionsBar({
                   className={cn(
                     "w-full flex items-center gap-3 p-3 rounded-md text-start transition-colors",
                     selectedFolderId === folder.id
-                      ? "bg-[#0B1C3E] text-white"
+                      ? "bg-ds-ink text-white"
                       : "hover:bg-muted"
                   )}
                   style={{ paddingLeft: `${folder.level * 20 + 12}px` }}
@@ -368,7 +368,7 @@ export function DocumentBulkActionsBar({
             </Button>
             <Button
               onClick={handleMove}
-              className="bg-[#0B1C3E] hover:bg-[#1a3a6e]"
+              className="bg-ds-ink hover:bg-ds-ink/90"
               disabled={isProcessing}
             >
               {isProcessing ? (
@@ -455,7 +455,7 @@ export function DocumentBulkActionsBar({
             </Button>
             <Button
               onClick={handleTag}
-              className="bg-[#0B1C3E] hover:bg-[#1a3a6e]"
+              className="bg-ds-ink hover:bg-ds-ink/90"
               disabled={selectedTagIds.length === 0 || isProcessing}
             >
               {isProcessing ? (
