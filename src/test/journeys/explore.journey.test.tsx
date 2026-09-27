@@ -12,6 +12,7 @@ vi.mock('react-i18next', () => ({
 vi.mock('@/hooks/useAuth', () => ({ useAuth: () => ({ user: { id: 'learner-1' } }) }))
 vi.mock('@/hooks/useLearningProgress', () => ({ useLearningProgress: vi.fn() }))
 vi.mock('@/features/learn/catalogHooks', () => ({ useCatalog: vi.fn() }))
+vi.mock('@/hooks/useTraining', () => ({ useMyAssignments: () => ({ data: [], isLoading: false }) }))
 
 import ExplorePage from '@/features/learn/pages/ExplorePage'
 import { useCatalog } from '@/features/learn/catalogHooks'
@@ -51,7 +52,7 @@ describe('journey: explore', () => {
         expect(within(screen.getByText('Allergen Handling').closest('a') as HTMLElement).getAllByText('Completed').length).toBeGreaterThanOrEqual(1)
         expect(screen.getByText('40%')).toBeInTheDocument()
 
-        fireEvent.click(screen.getByRole('button', { name: /In progress/ }))
+        fireEvent.click(within(screen.getByRole('group', { name: 'Filter by status' })).getByRole('button', { name: /In progress/ }))
         expect(screen.getByText('Guest Recovery')).toBeInTheDocument()
         expect(screen.queryByText('Fire Safety')).not.toBeInTheDocument()
     })

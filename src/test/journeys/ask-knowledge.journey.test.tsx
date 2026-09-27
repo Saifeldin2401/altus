@@ -90,7 +90,7 @@ describe('journey: ask-knowledge', () => {
             }),
         } as never)
 
-        const related = await getRelatedArticles('doc-1')
+        const related = await getRelatedArticles('11111111-1111-4111-8111-000000000001')
         expect(Array.isArray(related)).toBe(true)
         expect(related.length).toBe(1)
         expect(related[0].id).toBe('doc-2')
