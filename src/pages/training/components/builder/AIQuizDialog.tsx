@@ -54,12 +54,13 @@ export function AIQuizDialog({
 
   useEffect(() => {
     if (open) {
+      const suffix = t('builder.quizTitleSuffix', 'Quiz')
       const defaultName = aiPrefillTitle
-        ? `${aiPrefillTitle} - Quiz`
-        : (title.trim() ? `${title.trim()} - Quiz` : 'Knowledge Assessment')
+        ? `${aiPrefillTitle} - ${suffix}`
+        : (title.trim() ? `${title.trim()} - ${suffix}` : t('builder.defaultQuizTitle', 'Knowledge Assessment'))
       setQuizCustomTitle(defaultName)
     }
-  }, [open, aiPrefillTitle, title])
+  }, [open, aiPrefillTitle, title, t])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

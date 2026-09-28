@@ -122,14 +122,6 @@ const ROLES = [
     { value: 'knowledge_manager', label: 'Knowledge Manager' },
     { value: 'author', label: 'Author' },
     { value: 'learner', label: 'Learner' },
-    { value: 'corporate_admin', label: 'Corporate Admin (Legacy)' },
-    { value: 'regional_admin', label: 'Regional Admin (Legacy)' },
-    { value: 'regional_hr', label: 'Regional HR (Legacy)' },
-    { value: 'property_manager', label: 'Property Manager (Legacy)' },
-    { value: 'property_hr', label: 'Property HR (Legacy)' },
-    { value: 'department_head', label: 'Department Head (Legacy)' },
-    { value: 'manager', label: 'Manager (Legacy)' },
-    { value: 'staff', label: 'Staff (Legacy)' },
 ]
 
 export default function AssignmentManager() {

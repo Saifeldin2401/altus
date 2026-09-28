@@ -15,6 +15,13 @@
         "untitled": "Document"
     },
     "builder": {
+        "untitled": "Section",
+        "untitledModule": "Untitled Course",
+        "untitledCourse": "Untitled Course",
+        "untitledContent": "Content",
+        "untitledBlock": "Untitled",
+        "quizTitleSuffix": "Quiz",
+        "defaultQuizTitle": "Knowledge Assessment",
         "studioTitle": "AI Course & Curriculum Studio",
         "studioDesc": "High-control LCMS curriculum generation, multi-format assessments, and OpenRouter AI visuals.",
         "activePreset": "Preset Config",

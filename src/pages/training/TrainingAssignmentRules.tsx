@@ -32,13 +32,14 @@ export default function TrainingAssignmentRules() {
         is_active: true
     })
 
+    // Must match the roles exposed by the user_roles view (membership_app_roles()),
+    // which is what learners' assignment lists are matched against.
     const roles = [
-        'regional_admin',
-        'regional_hr',
-        'property_manager',
-        'property_hr',
-        'department_head',
-        'staff'
+        'administrator',
+        'training_manager',
+        'knowledge_manager',
+        'author',
+        'learner'
     ]
 
     const resetForm = () => {
@@ -54,12 +55,6 @@ export default function TrainingAssignmentRules() {
         try {
             if (!newRule.training_module_id || !newRule.target_role) return
 
-            // Dual-write: target_role/training_module_id are the columns
-            // handle_new_user_training() reads to auto-assign this rule to
-            // anyone granted this role in the future. target_type/target_id/
-            // content_type/content_id are what generate_assignment_progress()
-            // reads to retroactively backfill CURRENT holders of the role
-            // right now. Both are needed - they cover different moments in time.
             const payload = {
                 training_module_id: newRule.training_module_id,
                 target_role: newRule.target_role,

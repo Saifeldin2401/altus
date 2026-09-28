@@ -1085,9 +1085,9 @@ export default function TrainingPlayer() {
                 blockTime += Math.max(0, Math.floor((Date.now() - blockStartRef.current) / 1000))
             }
             await recordLessonBlockCompletion(user.id, moduleData.module.id, blockId, blockTime)
-        } catch (_error) {
-            // Block completion recording is non-critical - continue silently
-            // Main progress tracking will still work
+        } catch (error) {
+            // Non-blocking: complete_training_module re-records the session's completed blocks.
+            console.warn('Could not save lesson step completion:', error)
         }
     }, [user, moduleData, activeBlock?.id])
 
@@ -1270,7 +1270,8 @@ export default function TrainingPlayer() {
         setTimeSpentSeconds(getCurrentSessionSeconds())
 
         if (user && moduleData) {
-            void recordLessonBlockLastViewed(user.id, moduleData.module.id, activeBlockId)
+            recordLessonBlockLastViewed(user.id, moduleData.module.id, activeBlockId)
+                .catch(error => console.warn('Could not save lesson position:', error))
         }
 
         scheduleProgressSave()

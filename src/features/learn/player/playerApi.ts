@@ -138,7 +138,7 @@ export async function recordLessonBlockCompletion(
   timeSpentSeconds: number
 ) {
   const nowIso = new Date().toISOString()
-  await supabase.from('lesson_progress').upsert(
+  const { error } = await supabase.from('lesson_progress').upsert(
     {
       user_id: userId,
       training_module_id: trainingModuleId,
@@ -149,6 +149,7 @@ export async function recordLessonBlockCompletion(
     },
     { onConflict: 'user_id,block_id' }
   )
+  if (error) throw error
 }
 
 export async function recordLessonBlockLastViewed(
@@ -157,7 +158,7 @@ export async function recordLessonBlockLastViewed(
   blockId: string
 ) {
   const nowIso = new Date().toISOString()
-  await supabase.from('lesson_progress').upsert(
+  const { error } = await supabase.from('lesson_progress').upsert(
     {
       user_id: userId,
       training_module_id: trainingModuleId,
@@ -166,6 +167,7 @@ export async function recordLessonBlockLastViewed(
     },
     { onConflict: 'user_id,block_id' }
   )
+  if (error) throw error
 }
 
 export async function fetchPersistedProgress(userId: string, trainingId: string) {

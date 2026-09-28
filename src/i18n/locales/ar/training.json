@@ -15,6 +15,13 @@
     "untitled": "مستند"
   },
   "builder": {
+    "untitled": "القسم",
+    "untitledModule": "دورة بدون عنوان",
+    "untitledCourse": "دورة بدون عنوان",
+    "untitledContent": "محتوى",
+    "untitledBlock": "بدون عنوان",
+    "quizTitleSuffix": "اختبار",
+    "defaultQuizTitle": "تقييم المعرفة",
     "studioTitle": "استوديو توليد الدورات بالذكاء الاصطناعي",
     "studioDesc": "محرك توليد المناهج المتكامل LCMS، اختبارات متعددة الأنماط، وتوليد صور تعليمية عبر OpenRouter مجاناً.",
     "activePreset": "القوالب الجاهزة",
