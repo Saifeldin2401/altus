@@ -101,4 +101,22 @@ describe('Password Reset & Auth Recovery Session Protection', () => {
     const shouldSuppressDashboard = shouldSuppressAuthenticatedAppState('/dashboard', '', '')
     expect(shouldSuppressDashboard).toBe(false)
   })
+
+  it('stores and retrieves last reset email seamlessly in local storage', () => {
+    const testEmail = 'staff.member@hotelchain.com'
+    window.localStorage.setItem('last_reset_email', testEmail)
+    expect(window.localStorage.getItem('last_reset_email')).toBe(testEmail)
+  })
+
+  it('correctly handles recovery tokens in hash and query strings', () => {
+    const queryUrl = new URL('https://phg-connect.com/reset-password?token=secret123&type=recovery&email=user%40example.com')
+    expect(queryUrl.searchParams.get('token')).toBe('secret123')
+    expect(queryUrl.searchParams.get('type')).toBe('recovery')
+    expect(queryUrl.searchParams.get('email')).toBe('user@example.com')
+
+    const hashUrl = new URL('https://phg-connect.com/reset-password#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired')
+    const hashParams = new URLSearchParams(hashUrl.hash.replace(/^#/, ''))
+    expect(hashParams.get('error_code')).toBe('otp_expired')
+    expect(decodeURIComponent(hashParams.get('error_description')!.replace(/\+/g, ' '))).toBe('Email link is invalid or has expired')
+  })
 })

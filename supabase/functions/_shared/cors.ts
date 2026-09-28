@@ -27,12 +27,10 @@ export function resolveCorsOrigin(req: Request): string {
 
   if (!origin) return "";
 
-  const cleanOrigin = origin.trim().replace(/\/$/, "");
-
   const isAllowed = allowedOrigins.some((ao) => {
     const cleanAo = ao.trim().replace(/\/$/, "");
     return cleanAo === cleanOrigin;
-  });
+  }) || /^https:\/\/[a-z0-9-]+(\.preview)?\.vercel\.app$/i.test(cleanOrigin);
 
   return isAllowed
     ? origin

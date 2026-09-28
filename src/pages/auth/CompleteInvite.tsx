@@ -83,13 +83,14 @@ export default function CompleteInvite() {
 
             try {
                 const queryParams = new URLSearchParams(window.location.search)
-                const code = queryParams.get('code')
-                const tokenHash = queryParams.get('token_hash')
-                const otpType = queryParams.get('type')
+                const hashParams = new URLSearchParams(window.location.hash.substring(1))
+                const code = queryParams.get('code') || hashParams.get('code')
+                const tokenHash = queryParams.get('token_hash') || queryParams.get('token') || hashParams.get('token_hash') || hashParams.get('token')
+                const rawOtpType = queryParams.get('type') || hashParams.get('type')
+                const otpType: SupportedOtpType = isSupportedOtpType(rawOtpType) ? rawOtpType : 'invite'
                 // Session credentials come from the fragment only - Supabase puts them there
                 // specifically so they never reach the server (no logs, no history, no Referer
                 // leakage). Reading them from the query string as a fallback would defeat that.
-                const hashParams = new URLSearchParams(window.location.hash.substring(1))
                 const accessToken = hashParams.get('access_token')
                 const refreshToken = hashParams.get('refresh_token')
 

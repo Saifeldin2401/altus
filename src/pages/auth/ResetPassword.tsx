@@ -53,11 +53,62 @@ export default function ResetPassword() {
         safeLocalStorage.setItem(REMEMBER_ME_KEY, 'true')
     }, [])
 
-    // Protect against mail scanners prefetching the direct token link.
-    const hasTokenHashInUrl = new URLSearchParams(window.location.search).has('token_hash')
-    const [awaitingConfirmation, setAwaitingConfirmation] = useState(hasTokenHashInUrl)
+    const getInitialEmail = () => {
+        try {
+            const url = new URL(window.location.href)
+            const qEmail = url.searchParams.get('email')
+            if (qEmail) return qEmail
+            const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''))
+            const hEmail = hashParams.get('email')
+            if (hEmail) return hEmail
+        } catch {
+            // ignore
+        }
+        return safeLocalStorage.getItem('last_reset_email') || ''
+    }
 
-    const [resendEmail, setResendEmail] = useState('')
+    const getInitialUrlError = () => {
+        try {
+            const url = new URL(window.location.href)
+            const qErr = url.searchParams.get('error_description') || url.searchParams.get('error')
+            if (qErr) return decodeURIComponent(qErr.replace(/\+/g, ' '))
+            const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''))
+            const hErr = hashParams.get('error_description') || hashParams.get('error')
+            if (hErr) return decodeURIComponent(hErr.replace(/\+/g, ' '))
+        } catch {
+            // ignore
+        }
+        return null
+    }
+
+    const [urlErrorDescription, setUrlErrorDescription] = useState<string | null>(getInitialUrlError)
+
+    // Protect against mail scanners prefetching the direct token link.
+    const getHasTokenHashInUrl = () => {
+        try {
+            const url = new URL(window.location.href)
+            const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''))
+            const hasError = Boolean(
+                url.searchParams.get('error') ||
+                url.searchParams.get('error_description') ||
+                hashParams.get('error') ||
+                hashParams.get('error_description')
+            )
+            if (hasError) return false
+
+            return Boolean(
+                url.searchParams.get('token_hash') ||
+                url.searchParams.get('token') ||
+                hashParams.get('token_hash') ||
+                hashParams.get('token')
+            )
+        } catch {
+            return false
+        }
+    }
+    const [awaitingConfirmation, setAwaitingConfirmation] = useState(getHasTokenHashInUrl)
+
+    const [resendEmail, setResendEmail] = useState(getInitialEmail)
     const [resendLoading, setResendLoading] = useState(false)
     const [resendSuccess, setResendSuccess] = useState(false)
     const [resendError, setResendError] = useState<string | null>(null)
@@ -67,17 +118,22 @@ export default function ResetPassword() {
     }, [])
 
     const hasResetParams = useCallback(() => {
-        const url = new URL(window.location.href)
-        const queryParams = url.searchParams
-        const hashParams = new URLSearchParams(window.location.hash.substring(1))
-        // access_token/refresh_token are session credentials and must only ever be read from the
-        // URL fragment (never sent to the server, so never logged/cached/leaked via Referer).
-        // code/token_hash are single-use exchange tokens designed to appear in the query string.
-        return Boolean(
-            queryParams.get('code') ||
-            queryParams.get('token_hash') ||
-            hashParams.get('access_token')
-        )
+        try {
+            const url = new URL(window.location.href)
+            const queryParams = url.searchParams
+            const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''))
+            return Boolean(
+                queryParams.get('code') ||
+                queryParams.get('token_hash') ||
+                queryParams.get('token') ||
+                hashParams.get('code') ||
+                hashParams.get('token_hash') ||
+                hashParams.get('token') ||
+                hashParams.get('access_token')
+            )
+        } catch {
+            return false
+        }
     }, [])
 
     useEffect(() => {
@@ -98,15 +154,29 @@ export default function ResetPassword() {
                 const classified = classifyAuthLinkError(candidateError)
                 if (classified.kind !== 'invalid_link') {
                     temporaryFailureMessage = AUTH_SERVICE_UNAVAILABLE_MESSAGE
+                } else if (candidateError instanceof Error && candidateError.message) {
+                    setUrlErrorDescription(candidateError.message)
                 }
             }
 
             try {
                 const url = new URL(window.location.href)
                 const queryParams = url.searchParams
-                const code = queryParams.get('code')
-                const tokenHash = queryParams.get('token_hash')
-                const otpType = queryParams.get('type')
+                const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''))
+
+                const urlErr = queryParams.get('error_description') || hashParams.get('error_description')
+                if (urlErr) {
+                    const decoded = decodeURIComponent(urlErr.replace(/\+/g, ' '))
+                    setUrlErrorDescription(decoded)
+                    setTokenValid(false)
+                    setValidatingToken(false)
+                    validationInFlightRef.current = false
+                    return
+                }
+
+                const code = queryParams.get('code') || hashParams.get('code')
+                const tokenHash = queryParams.get('token_hash') || queryParams.get('token') || hashParams.get('token_hash') || hashParams.get('token')
+                const otpType: SupportedOtpType = 'recovery'
 
                 if (!isTokenCurrentlyValid && code) {
                     const { data, error: exchangeError } = await withAuthLinkTimeout(
@@ -125,7 +195,7 @@ export default function ResetPassword() {
                     }
                 }
 
-                if (!isTokenCurrentlyValid && tokenHash && isSupportedOtpType(otpType)) {
+                if (!isTokenCurrentlyValid && tokenHash) {
                     const { data, error: verifyError } = await withAuthLinkTimeout(
                         supabase.auth.verifyOtp({
                             token_hash: tokenHash,
@@ -137,7 +207,10 @@ export default function ResetPassword() {
                     if (!verifyError && data.session) {
                         isTokenCurrentlyValid = true
                         markRecoverySessionActive(data.session)
-                        window.history.replaceState({}, document.title, window.location.pathname)
+                        url.searchParams.delete('token_hash')
+                        url.searchParams.delete('token')
+                        url.searchParams.delete('type')
+                        window.history.replaceState({}, document.title, url.pathname + (url.search ? url.search : ''))
                         setAuthFlowState('reset-password')
                     } else if (verifyError) {
                         rememberValidationError(verifyError)
@@ -149,7 +222,6 @@ export default function ResetPassword() {
                     // specifically so they never reach the server (no logs, no history, no
                     // Referer leakage). Reading them from the query string as a fallback would
                     // defeat that.
-                    const hashParams = new URLSearchParams(window.location.hash.substring(1))
                     const accessToken = hashParams.get('access_token')
                     const refreshToken = hashParams.get('refresh_token')
 
@@ -174,17 +246,23 @@ export default function ResetPassword() {
                 }
 
                 if (!isTokenCurrentlyValid) {
-                    const { data: { session }, error: sessionError } = await withAuthLinkTimeout(
-                        supabase.auth.getSession(),
-                        'Password reset session lookup'
-                    )
-
-                    if (session?.user) {
+                    if (sessionRef.current) {
                         isTokenCurrentlyValid = true
-                        markRecoverySessionActive(session)
+                        markRecoverySessionActive(sessionRef.current)
                         setAuthFlowState('reset-password')
-                    } else if (sessionError) {
-                        rememberValidationError(sessionError)
+                    } else {
+                        const { data: { session }, error: sessionError } = await withAuthLinkTimeout(
+                            supabase.auth.getSession(),
+                            'Password reset session lookup'
+                        )
+
+                        if (session?.user) {
+                            isTokenCurrentlyValid = true
+                            markRecoverySessionActive(session)
+                            setAuthFlowState('reset-password')
+                        } else if (sessionError) {
+                            rememberValidationError(sessionError)
+                        }
                     }
                 }
             } catch (candidateError) {
@@ -231,25 +309,30 @@ export default function ResetPassword() {
 
         const email = resendEmail.trim().toLowerCase()
         if (!email || !email.includes('@')) {
-            setResendError(t('forgot_password.invalid_email'))
+            setResendError(t('forgot_password.invalid_email', { defaultValue: 'Please enter a valid email address.' }))
             return
         }
+
+        safeLocalStorage.setItem('last_reset_email', email)
 
         // Rate limiting check
         const rateLimitKey = `auth:password-reset:${email}`
         if (!SecurityMiddleware.rateLimit(rateLimitKey, rateLimitConfig.auth.maxRequests, rateLimitConfig.auth.windowMs)) {
-            setResendError(t('reset_password.resend_rate_limited'))
+            setResendError(t('reset_password.resend_rate_limited', { defaultValue: 'Too many requests. Please wait a few minutes before trying again.' }))
             return
         }
 
         setResendLoading(true)
         try {
             const { error: invokeError } = await supabase.functions.invoke('public-forgot-password', {
-                body: { email },
+                body: {
+                    email,
+                    redirectTo: `${window.location.origin}/reset-password`,
+                },
             })
 
             if (invokeError?.message?.toLowerCase().includes('too many')) {
-                setResendError(t('reset_password.resend_rate_limited'))
+                setResendError(t('reset_password.resend_rate_limited', { defaultValue: 'Too many requests. Please wait a few minutes before trying again.' }))
                 return
             }
 
@@ -259,16 +342,19 @@ export default function ResetPassword() {
                     setResendError(AUTH_SERVICE_UNAVAILABLE_MESSAGE)
                     return
                 }
+                setResendError(invokeError.message || t('forgot_password.error', { defaultValue: 'Failed to send reset email. Please try again.' }))
+                return
             }
 
             setResendSuccess(true)
-        } catch (candidateError) {
+        } catch (candidateError: unknown) {
+            console.error('Password reset resend error:', candidateError)
             const classified = classifyAuthLinkError(candidateError)
-            if (classified.kind !== 'invalid_link') {
-                setResendError(AUTH_SERVICE_UNAVAILABLE_MESSAGE)
-                return
-            }
-            setResendError(t('forgot_password.error'))
+            setResendError(
+                classified.kind === 'service_unavailable'
+                    ? AUTH_SERVICE_UNAVAILABLE_MESSAGE
+                    : t('forgot_password.error', { defaultValue: 'Failed to send reset email. Please try again.' })
+            )
         } finally {
             setResendLoading(false)
         }
@@ -386,59 +472,6 @@ export default function ResetPassword() {
         }
     }
 
-    const renderResendPanel = () => (
-        <div className="border rounded-lg p-4 space-y-3">
-            <p className="text-sm font-medium text-ds-ink flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                {t('reset_password.resend_title')}
-            </p>
-
-            {resendSuccess ? (
-                <div className="flex items-center gap-2 p-3 bg-ds-success-soft border border-ds-success/30 rounded-md text-ds-success">
-                    <CheckCircle className="h-4 w-4 flex-shrink-0" />
-                    <span className="text-sm">{t('reset_password.resend_success')}</span>
-                </div>
-            ) : (
-                <>
-                    {resendError && (
-                        <div className="flex items-center gap-2 p-2 bg-ds-danger-soft border border-ds-danger/30 rounded-md text-ds-danger">
-                            <AlertCircle className="h-3 w-3 flex-shrink-0" />
-                            <span className="text-xs">{resendError}</span>
-                        </div>
-                    )}
-                    <div className="flex gap-2">
-                        <Input
-                            type="email"
-                            value={resendEmail}
-                            onChange={(e) => setResendEmail(e.target.value)}
-                            placeholder={t('email_placeholder')}
-                            disabled={resendLoading}
-                            className="flex-1"
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    e.preventDefault()
-                                    void handleResend()
-                                }
-                            }}
-                        />
-                        <Button
-                            onClick={() => void handleResend()}
-                            disabled={resendLoading || !resendEmail.trim()}
-                            size="sm"
-                            className="shrink-0"
-                        >
-                            {resendLoading ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                            ) : (
-                                <RefreshCw className="h-4 w-4" />
-                            )}
-                        </Button>
-                    </div>
-                </>
-            )}
-        </div>
-    )
-
     const renderWrapper = (content: React.ReactNode) => (
         <div className="min-h-screen flex flex-col items-center justify-center bg-ds-surface-subtle px-4 py-12">
             <div className="w-full max-w-md flex flex-col items-center">
@@ -450,37 +483,7 @@ export default function ResetPassword() {
         </div>
     )
 
-    if (awaitingConfirmation) {
-        if (!hasResetParams()) {
-            return renderWrapper(
-                <Card className="w-full">
-                    <CardHeader className="text-center">
-                        <div className="mx-auto w-12 h-12 bg-ds-danger-soft rounded-full flex items-center justify-center mb-4">
-                            <AlertCircle className="h-6 w-6 text-ds-danger" />
-                        </div>
-                        <CardTitle>{t('reset_password.invalid_title')}</CardTitle>
-                        <CardDescription>
-                            {t('reset_password.invalid_message')}
-                        </CardDescription>
-                    </CardHeader>
-                    <CardFooter>
-                        <div className="w-full">
-                            <Button
-                                className="w-full"
-                                variant="outline"
-                                onClick={() => {
-                                    clearAuthFlowState('reset-password')
-                                    navigate('/forgot-password')
-                                }}
-                            >
-                                {t('reset_password.request_new')}
-                            </Button>
-                        </div>
-                    </CardFooter>
-                </Card>
-            )
-        }
-
+    if (awaitingConfirmation && hasResetParams()) {
         return renderWrapper(
             <Card className="w-full">
                 <CardHeader className="text-center">
@@ -492,9 +495,20 @@ export default function ResetPassword() {
                         {t('reset_password.confirm_message')}
                     </CardDescription>
                 </CardHeader>
-                <CardFooter>
+                <CardFooter className="flex flex-col gap-3">
                     <Button className="w-full" size="lg" onClick={handleConfirmClick}>
                         {t('reset_password.confirm_button')}
+                    </Button>
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        className="w-full"
+                        onClick={() => {
+                            clearAuthFlowState('reset-password')
+                            navigate('/login')
+                        }}
+                    >
+                        {t('forgot_password.back_to_login', { defaultValue: 'Back to Login' })}
                     </Button>
                 </CardFooter>
             </Card>
@@ -526,31 +540,78 @@ export default function ResetPassword() {
                         {t('reset_password.service_unavailable_message', { defaultValue: serviceUnavailableMessage })}
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                    {renderResendPanel()}
-                </CardContent>
-                <CardFooter>
-                    <div className="w-full space-y-3">
-                        <Button className="w-full" onClick={() => setValidationNonce((value) => value + 1)}>
-                            {t('reset_password.revalidate_link')}
-                        </Button>
-                        <Button
-                            className="w-full"
-                            variant="outline"
-                            onClick={() => {
-                                clearAuthFlowState('reset-password')
-                                navigate('/forgot-password')
-                            }}
-                        >
-                            {t('reset_password.request_new')}
-                        </Button>
-                    </div>
+                <CardFooter className="flex flex-col gap-3">
+                    <Button
+                        className="w-full"
+                        size="lg"
+                        onClick={() => setValidationNonce((value) => value + 1)}
+                    >
+                        <RefreshCw className="h-4 w-4 me-2" />
+                        {t('reset_password.revalidate_link', { defaultValue: 'Retry Verification' })}
+                    </Button>
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        className="w-full"
+                        onClick={() => {
+                            clearAuthFlowState('reset-password')
+                            navigate('/login')
+                        }}
+                    >
+                        {t('forgot_password.back_to_login', { defaultValue: 'Back to Login' })}
+                    </Button>
                 </CardFooter>
             </Card>
         )
     }
 
     if (!tokenValid) {
+        if (resendSuccess) {
+            return renderWrapper(
+                <Card className="w-full">
+                    <CardHeader className="text-center">
+                        <div className="mx-auto w-12 h-12 bg-ds-success-soft rounded-full flex items-center justify-center mb-4">
+                            <CheckCircle className="h-6 w-6 text-ds-success" />
+                        </div>
+                        <CardTitle>{t('forgot_password.success_title', { defaultValue: 'Check Your Email' })}</CardTitle>
+                        <CardDescription>
+                            {t('reset_password.resend_success', { defaultValue: 'A new reset link has been sent to your email. Please check your inbox.' })}
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="text-center space-y-4">
+                        <div className="p-4 bg-ds-surface-subtle dark:bg-muted/50 rounded-lg">
+                            <Mail className="h-5 w-5 mx-auto text-ds-muted mb-2" />
+                            <p className="text-sm font-medium text-ds-ink">{resendEmail}</p>
+                        </div>
+                        <p className="text-xs text-ds-muted">
+                            {t('forgot_password.check_spam', { defaultValue: "Didn't receive the email? Check your spam folder." })}
+                        </p>
+                    </CardContent>
+                    <CardFooter className="flex flex-col gap-3">
+                        <Button
+                            variant="outline"
+                            className="w-full"
+                            onClick={() => {
+                                setResendSuccess(false)
+                            }}
+                        >
+                            {t('forgot_password.try_different', { defaultValue: 'Try a different email' })}
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            className="w-full"
+                            onClick={() => {
+                                clearAuthFlowState('reset-password')
+                                navigate('/login')
+                            }}
+                        >
+                            {t('forgot_password.back_to_login', { defaultValue: 'Back to Login' })}
+                        </Button>
+                    </CardFooter>
+                </Card>
+            )
+        }
+
         return renderWrapper(
             <Card className="w-full">
                 <CardHeader className="text-center">
@@ -559,29 +620,77 @@ export default function ResetPassword() {
                     </div>
                     <CardTitle>{t('reset_password.invalid_title')}</CardTitle>
                     <CardDescription>
-                        {t('reset_password.invalid_message')}
+                        {urlErrorDescription || t('reset_password.invalid_message')}
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                    {renderResendPanel()}
-                </CardContent>
-                <CardFooter>
-                    <div className="w-full space-y-3">
-                        <Button className="w-full" onClick={() => setValidationNonce((value) => value + 1)}>
-                            {t('reset_password.revalidate_link')}
-                        </Button>
+                <form onSubmit={(e) => { e.preventDefault(); void handleResend(); }}>
+                    <CardContent className="space-y-4">
+                        {resendError && (
+                            <div className="flex items-center gap-2 p-3 bg-ds-danger-soft border border-ds-danger/30 rounded-md text-ds-danger text-sm">
+                                <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                                <span>{resendError}</span>
+                            </div>
+                        )}
+                        <div className="space-y-2 text-start">
+                            <Label htmlFor="resend-email">{t('forgot_password.email_label', { defaultValue: 'Email Address' })}</Label>
+                            <div className="relative">
+                                <Input
+                                    id="resend-email"
+                                    type="email"
+                                    value={resendEmail}
+                                    onChange={(e) => setResendEmail(e.target.value)}
+                                    placeholder={t('email_placeholder', { defaultValue: 'name@example.com' })}
+                                    disabled={resendLoading}
+                                    className="ps-10"
+                                    autoFocus
+                                />
+                                <Mail className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ds-muted" />
+                            </div>
+                        </div>
+                    </CardContent>
+                    <CardFooter className="flex flex-col gap-3">
                         <Button
+                            type="submit"
                             className="w-full"
-                            variant="outline"
+                            size="lg"
+                            disabled={resendLoading || !resendEmail.trim()}
+                        >
+                            {resendLoading ? (
+                                <>
+                                    <Loader2 className="h-4 w-4 animate-spin me-2" />
+                                    {t('forgot_password.sending', { defaultValue: 'Sending...' })}
+                                </>
+                            ) : (
+                                <>
+                                    <Mail className="h-4 w-4 me-2" />
+                                    {t('forgot_password.send_link', { defaultValue: 'Send Reset Link' })}
+                                </>
+                            )}
+                        </Button>
+                        {hasResetParams() && (
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="w-full"
+                                onClick={() => setValidationNonce((val) => val + 1)}
+                            >
+                                <RefreshCw className="h-4 w-4 me-2" />
+                                {t('reset_password.retry_link', { defaultValue: 'Retry Link' })}
+                            </Button>
+                        )}
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            className="w-full"
                             onClick={() => {
                                 clearAuthFlowState('reset-password')
-                                navigate('/forgot-password')
+                                navigate('/login')
                             }}
                         >
-                            {t('reset_password.request_new')}
+                            {t('forgot_password.back_to_login', { defaultValue: 'Back to Login' })}
                         </Button>
-                    </div>
-                </CardFooter>
+                    </CardFooter>
+                </form>
             </Card>
         )
     }

@@ -1,6 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
-import { buildCorsHeaders } from "../_shared/cors.ts";
+import { buildCorsHeaders, getAllowedOrigins } from "../_shared/cors.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
@@ -9,6 +9,7 @@ const CANONICAL_APP_URL = "https://www.phg-connect.com";
 
 type ResolvedAppUrl = {
   appUrl: string;
+  redirectTo?: string;
   source: string;
   usedFallback: boolean;
 };
@@ -74,15 +75,41 @@ function resolveClientIp(req: Request): string {
   return "unknown";
 }
 
-function resolveAppUrl(req: Request): ResolvedAppUrl {
+function resolveAppUrl(req: Request, requestedRedirectTo?: unknown): ResolvedAppUrl {
+  if (typeof requestedRedirectTo === "string" && requestedRedirectTo.trim()) {
+    try {
+      const parsed = new URL(requestedRedirectTo.trim());
+      const cleanOrigin = parsed.origin.trim().replace(/\/$/, "");
+      const allowedOrigins = getAllowedOrigins();
+      const isAllowed =
+        allowedOrigins.some((ao) => ao.trim().replace(/\/$/, "") === cleanOrigin) ||
+        /^https:\/\/[a-z0-9-]+(\.preview)?\.vercel\.app$/i.test(cleanOrigin) ||
+        cleanOrigin === "http://localhost:3000" ||
+        cleanOrigin === "http://localhost:5173" ||
+        cleanOrigin === "http://127.0.0.1:5173";
+
+      if (isAllowed) {
+        return {
+          appUrl: parsed.origin,
+          redirectTo: parsed.toString(),
+          source: "body_redirectTo",
+          usedFallback: false,
+        };
+      }
+    } catch {
+      // Ignore invalid candidates.
+    }
+  }
+
+  const reqOrigin = (req.headers.get("origin") || "").trim();
   const candidates = [
+    { value: reqOrigin, source: "origin" },
     { value: (Deno.env.get("APP_URL") || "").trim(), source: "APP_URL" },
     {
       value: (Deno.env.get("APP_BASE_URL") || "").trim(),
       source: "APP_BASE_URL",
     },
     { value: (Deno.env.get("SITE_URL") || "").trim(), source: "SITE_URL" },
-    { value: (req.headers.get("origin") || "").trim(), source: "origin" },
   ];
 
   for (const candidate of candidates) {
@@ -179,7 +206,10 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    const body = (await req.json().catch(() => ({}))) as { email?: unknown };
+    const body = (await req.json().catch(() => ({}))) as {
+      email?: unknown;
+      redirectTo?: unknown;
+    };
     const email = normalizeEmail(body?.email);
 
     if (!email || !email.includes("@")) {
@@ -220,8 +250,8 @@ Deno.serve(async (req: Request) => {
       .then(() => undefined)
       .catch(() => undefined);
 
-    const resolvedAppUrl = resolveAppUrl(req);
-    const resetRedirectTo = `${resolvedAppUrl.appUrl}/reset-password`;
+    const resolvedAppUrl = resolveAppUrl(req, body?.redirectTo);
+    const resetRedirectTo = resolvedAppUrl.redirectTo || `${resolvedAppUrl.appUrl}/reset-password`;
 
     if (resolvedAppUrl.usedFallback) {
       logEvent("warn", "app_url_fallback_used", {
@@ -278,8 +308,9 @@ Deno.serve(async (req: Request) => {
       });
     } else {
       const hashedToken = linkData?.properties?.hashed_token || null;
-      if (!hashedToken) {
-        logEvent("warn", "hashed_token_missing", {
+      const actionLink = linkData?.properties?.action_link || null;
+      if (!hashedToken && !actionLink) {
+        logEvent("warn", "recovery_tokens_missing", {
           requestId,
           emailDomain,
           redirectTo: resetRedirectTo,
@@ -287,8 +318,8 @@ Deno.serve(async (req: Request) => {
       }
 
       const resetLink = hashedToken
-        ? `${resetRedirectTo}?token_hash=${hashedToken}&type=recovery`
-        : resetRedirectTo;
+        ? `${resetRedirectTo}?token_hash=${hashedToken}&type=recovery&email=${encodeURIComponent(email)}`
+        : (actionLink || resetRedirectTo);
 
       try {
         const emailResponse = await fetch(

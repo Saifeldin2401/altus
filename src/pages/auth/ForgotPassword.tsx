@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { getRedirectFromSearch } from '@/lib/authRedirect'
+import { safeLocalStorage } from '@/lib/storage'
 import { supabase } from '@/lib/supabase'
 import { AlertCircle, ArrowLeft, CheckCircle, Loader2, Mail } from 'lucide-react'
 import { useState } from 'react'
@@ -14,7 +15,7 @@ export default function ForgotPassword() {
     const location = useLocation()
     const redirectPath = getRedirectFromSearch(location.search)
     const loginUrl = redirectPath ? `/login?redirect=${encodeURIComponent(redirectPath)}` : '/login'
-    const [email, setEmail] = useState('')
+    const [email, setEmail] = useState(() => safeLocalStorage.getItem('last_reset_email') || '')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState(false)
@@ -31,9 +32,13 @@ export default function ForgotPassword() {
             }
 
             const normalizedEmail = email.trim().toLowerCase()
+            safeLocalStorage.setItem('last_reset_email', normalizedEmail)
 
             const { error: invokeError } = await supabase.functions.invoke('public-forgot-password', {
-                body: { email: normalizedEmail },
+                body: {
+                    email: normalizedEmail,
+                    redirectTo: `${window.location.origin}/reset-password`,
+                },
             })
 
             if (invokeError) {
