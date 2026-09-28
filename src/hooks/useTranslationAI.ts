@@ -1,5 +1,6 @@
-import { normalizeTranslationErrorMessage } from '@/lib/translationUtils'
+import { normalizeTranslationErrorMessage, splitPlainText } from '@/lib/translationUtils'
 import { altusAI } from '@/lib/ai/client'
+import { supabase } from '@/lib/supabase'
 import { useMutation } from '@tanstack/react-query'
 
 export type TranslationTargetLanguage =
@@ -37,7 +38,7 @@ export const SUPPORTED_TRANSLATION_LANGUAGES: Array<{
     { code: 'tr', label: 'Türkçe (Turkish)', direction: 'ltr' }
 ]
 
-interface TranslationRequest {
+export interface TranslationRequest {
     text?: string
     texts?: string[]
     file_url?: string
@@ -48,7 +49,7 @@ interface TranslationRequest {
     strict_target_only?: boolean
 }
 
-interface TranslationMeta {
+export interface TranslationMeta {
     model_used?: string
     used_fallback?: boolean
     partial_failures?: number
@@ -57,7 +58,7 @@ interface TranslationMeta {
     translated_segments?: number
 }
 
-interface TranslationResponse {
+export interface TranslationResponse {
     translated_text?: string
     translated_texts?: string[]
     extracted_text?: string
@@ -84,9 +85,16 @@ export function useTranslationAI() {
                 texts = [],
                 target_lang,
                 source_lang = 'auto',
+                preserve_format = true,
+                strict_target_only = false,
             } = request
 
-            const rawInputs = text ? [text] : texts
+            // Semantic chunking if a single long text is passed
+            const isSingleLongText = Boolean(text && text.trim().length > 2000 && (!texts || texts.length === 0))
+            const rawInputs = isSingleLongText
+                ? splitPlainText(text, 2000)
+                : text ? [text] : texts
+
             if (rawInputs.length === 0) {
                 return {
                     translated_text: '',
@@ -101,8 +109,9 @@ export function useTranslationAI() {
             const allCached = rawInputs.every(t => clientTranslationCache.has(getCacheKey(t, target_lang)))
             if (allCached) {
                 const cachedResults = rawInputs.map(t => clientTranslationCache.get(getCacheKey(t, target_lang)) || t)
+                const fullTranslatedText = isSingleLongText ? cachedResults.join('\n\n') : (cachedResults[0] || '')
                 return {
-                    translated_text: cachedResults[0] || '',
+                    translated_text: fullTranslatedText,
                     translated_texts: cachedResults,
                     success: true,
                     source_lang,
@@ -116,7 +125,61 @@ export function useTranslationAI() {
                 }
             }
 
-            // 2. Primary: Execute via altusAI engine (OpenRouter / Gemini)
+            // 2. Primary: Execute via dedicated ai-translation edge function (Postgres cache + parallel execution)
+            try {
+                const edgeBody: Record<string, unknown> = {
+                    target_lang,
+                    source_lang,
+                    preserve_format,
+                    strict_target_only,
+                }
+                if (isSingleLongText) {
+                    edgeBody.texts = rawInputs
+                } else if (text) {
+                    edgeBody.text = text
+                } else {
+                    edgeBody.texts = rawInputs
+                }
+
+                const { data, error } = await supabase.functions.invoke<TranslationResponse>('ai-translation', {
+                    body: edgeBody,
+                })
+
+                if (!error && data && data.success !== false) {
+                    const translatedResults = data.translated_texts || (data.translated_text ? [data.translated_text] : [])
+
+                    // Cache in browser memory
+                    translatedResults.forEach((trans, idx) => {
+                        const original = rawInputs[idx]
+                        if (original && trans) {
+                            clientTranslationCache.set(getCacheKey(original, target_lang), trans)
+                        }
+                    })
+
+                    const fullTranslatedText = isSingleLongText && translatedResults.length > 0
+                        ? translatedResults.join('\n\n')
+                        : (data.translated_text || translatedResults[0] || '')
+
+                    return {
+                        ...data,
+                        translated_text: fullTranslatedText,
+                        translated_texts: translatedResults,
+                        meta: {
+                            ...data.meta,
+                            total_segments: rawInputs.length,
+                            translated_segments: translatedResults.length,
+                        }
+                    }
+                }
+
+                if (error) {
+                    console.warn('[useTranslationAI] ai-translation edge function returned error, falling back to altusAI:', error)
+                }
+            } catch (edgeErr) {
+                console.warn('[useTranslationAI] ai-translation invocation threw, falling back to altusAI:', edgeErr)
+            }
+
+            // 3. Fallback: Execute via client altusAI engine (parallel Groq LPU / cascading providers)
             try {
                 const targetLangObj = SUPPORTED_TRANSLATION_LANGUAGES.find(l => l.code === target_lang)
                 const targetLangLabel = targetLangObj?.label || target_lang
@@ -137,15 +200,17 @@ export function useTranslationAI() {
                     }
                 })
 
+                const fullTranslatedText = isSingleLongText ? translatedList.join('\n\n') : (translatedList[0] || '')
+
                 return {
-                    translated_text: translatedList[0] || '',
+                    translated_text: fullTranslatedText,
                     translated_texts: translatedList,
                     success: true,
                     source_lang,
                     target_lang,
                     meta: {
-                        model_used: 'altusAI-openrouter',
-                        used_fallback: false,
+                        model_used: 'altusAI-fallback',
+                        used_fallback: true,
                         total_segments: rawInputs.length,
                         translated_segments: translatedList.length,
                     }

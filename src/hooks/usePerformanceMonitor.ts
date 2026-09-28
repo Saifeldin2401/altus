@@ -11,7 +11,7 @@ import { trackPerformance, trackEngagement, trackWebVital } from '@/lib/vercelMo
  * Hook to monitor component render performance
  */
 export function useRenderPerformance(componentName: string) {
-  const renderStartTime = useRef<number>()
+  const renderStartTime = useRef<number | null>(null)
   const [renderCount, setRenderCount] = useState(0)
 
   useEffect(() => {
@@ -114,7 +114,8 @@ export function useMemoryMonitor(interval = 5000) {
     if (!('memory' in performance)) return
 
     const updateMemory = () => {
-      const memory = (performance as unknown as { memory: PerformanceMemory }).memory
+      const perf = performance as unknown as { memory: { usedJSHeapSize: number; totalJSHeapSize: number; jsHeapSizeLimit: number } }
+      const memory = perf.memory
       setMemoryUsage({
         usedJSHeapSize: memory.usedJSHeapSize,
         totalJSHeapSize: memory.totalJSHeapSize,
@@ -213,9 +214,15 @@ export function useNetworkPerformance() {
   } | null>(null)
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !('connection' in navigator)) return
-
-    const connection = (navigator as unknown as { connection: NetworkInformation }).connection
+    interface NetworkInfoLike {
+      effectiveType: string
+      downlink: number
+      rtt: number
+      saveData: boolean
+      addEventListener: (type: string, listener: () => void) => void
+      removeEventListener: (type: string, listener: () => void) => void
+    }
+    const connection = (navigator as unknown as { connection: NetworkInfoLike }).connection
 
     const updateNetworkInfo = () => {
       setNetworkInfo({

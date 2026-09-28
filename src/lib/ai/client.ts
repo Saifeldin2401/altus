@@ -337,7 +337,7 @@ RULES:
     const result = await this.executePrompt(text, {
       systemPrompt,
       temperature: 0.2,
-      task: 'chat',
+      task: 'translation',
     })
 
     return (result.data || text).trim()
@@ -370,6 +370,7 @@ Respond ONLY with a valid JSON object matching this exact schema:
         {
           systemPrompt,
           temperature: 0.1,
+          task: 'translation',
           jsonMode: true,
         }
       )
@@ -389,13 +390,24 @@ Respond ONLY with a valid JSON object matching this exact schema:
         return out
       }
     } catch (err) {
-      console.warn('Batch AI translation failed, falling back to sequential:', err)
+      console.warn('Batch AI translation failed, falling back to parallel execution:', err)
     }
 
-    // Sequential fallback
+    // Concurrent parallel fallback
     const out = [...texts]
-    for (const item of nonEmpties) {
-      out[item.idx] = await this.translateText(item.t, targetLang, targetLangName)
+    const translatedItems = await Promise.all(
+      nonEmpties.map(async (item) => {
+        try {
+          const trans = await this.translateText(item.t, targetLang, targetLangName)
+          return { idx: item.idx, text: trans }
+        } catch (e) {
+          console.warn(`Translation failed for item ${item.idx}:`, e)
+          return { idx: item.idx, text: item.t }
+        }
+      })
+    )
+    for (const r of translatedItems) {
+      out[r.idx] = r.text
     }
     return out
   }

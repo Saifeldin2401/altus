@@ -308,8 +308,6 @@ serve(async (req) => {
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
-    const isServiceRoleCall = isAuthorizedServiceRoleRequest(authHeader, serviceRoleKey);
-
     const decodeJwt = (t: string): Record<string, unknown> | null => {
       try {
         const parts = t.split(".");
@@ -323,6 +321,8 @@ serve(async (req) => {
     const authClaims = decodeJwt(rawToken);
     const apiKeyClaims = apiKeyHeader ? decodeJwt(apiKeyHeader) : null;
     const jwtRole = (authClaims?.role as string) || "anon";
+    const isServiceRoleCall =
+      isAuthorizedServiceRoleRequest(authHeader, serviceRoleKey) || jwtRole === "service_role";
 
     const projectRef = supabaseUrl.split("//")[1]?.split(".")[0] ?? "";
     const looksLikeSupabaseKey = (claims: Record<string, unknown> | null, raw: string) =>
@@ -785,50 +785,6 @@ serve(async (req) => {
             let streamSuccess = false;
             let streamedText = "";
             const streamDiagnostics: string[] = [];
-            if (!streamSuccess && OPENROUTER_API_KEY && providerEnabled("openrouter")) {
-              for (const candModel of openRouterCandidates) {
-                try {
-                  const orRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-                    method: "POST",
-                    headers: { Authorization: `Bearer ${OPENROUTER_API_KEY}`, "HTTP-Referer": "https://phg-connect.com", "X-Title": "Altus Connect", "Content-Type": "application/json" },
-                    body: JSON.stringify({ model: candModel, messages: [{ role: "system", content: defaultSystemPrompt }, { role: "user", content: prompt }], temperature: effectiveTemperature, max_tokens: effectiveMaxTokens, stream: true, stream_options: { include_usage: true } }),
-                    signal: AbortSignal.timeout(50000),
-                  });
-                  if (orRes.ok && orRes.body) {
-                    providerUsed = "openrouter";
-                    modelUsed = candModel;
-                    const reader = orRes.body.getReader();
-                    const decoder = new TextDecoder();
-                    let buffer = "";
-                    let hadTokens = false;
-                    while (true) {
-                      const { done, value } = await reader.read();
-                      if (done) break;
-                      buffer += decoder.decode(value, { stream: true });
-                      const lines = buffer.split("\n");
-                      buffer = lines.pop() || "";
-                      for (const line of lines) {
-                        const trimmed = line.trim();
-                        if (trimmed === "data: [DONE]") continue;
-                        if (trimmed.startsWith("data:")) {
-                          try {
-                            const json = JSON.parse(trimmed.slice(5).trim());
-                            const textChunk = json?.choices?.[0]?.delta?.content;
-                            if (textChunk) { hadTokens = true; streamedText += textChunk; sendEvent({ chunk: textChunk, done: false }); }
-                            if (json?.usage) recordUsage("openrouter", json);
-                          } catch { /* skip */ }
-                        }
-                      }
-                    }
-                    if (hadTokens) { streamSuccess = true; break; }
-                  } else {
-                    streamDiagnostics.push(`OpenRouter ${candModel} (${orRes.status}): ${await orRes.text().catch(() => "")}`);
-                  }
-                } catch (orErr) {
-                  streamDiagnostics.push(`OpenRouter ${candModel} error: ${(orErr as Error).message}`);
-                }
-              }
-            }
             if (!streamSuccess && GROQ_API_KEY && providerEnabled("groq")) {
               for (const groqModel of DEFAULT_GROQ_MODELS) {
                 try {
@@ -870,6 +826,50 @@ serve(async (req) => {
                   }
                 } catch (groqErr) {
                   streamDiagnostics.push(`Groq ${groqModel} error: ${(groqErr as Error).message}`);
+                }
+              }
+            }
+            if (!streamSuccess && OPENROUTER_API_KEY && providerEnabled("openrouter")) {
+              for (const candModel of openRouterCandidates) {
+                try {
+                  const orRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                    method: "POST",
+                    headers: { Authorization: `Bearer ${OPENROUTER_API_KEY}`, "HTTP-Referer": "https://phg-connect.com", "X-Title": "Altus Connect", "Content-Type": "application/json" },
+                    body: JSON.stringify({ model: candModel, messages: [{ role: "system", content: defaultSystemPrompt }, { role: "user", content: prompt }], temperature: effectiveTemperature, max_tokens: effectiveMaxTokens, stream: true, stream_options: { include_usage: true } }),
+                    signal: AbortSignal.timeout(50000),
+                  });
+                  if (orRes.ok && orRes.body) {
+                    providerUsed = "openrouter";
+                    modelUsed = candModel;
+                    const reader = orRes.body.getReader();
+                    const decoder = new TextDecoder();
+                    let buffer = "";
+                    let hadTokens = false;
+                    while (true) {
+                      const { done, value } = await reader.read();
+                      if (done) break;
+                      buffer += decoder.decode(value, { stream: true });
+                      const lines = buffer.split("\n");
+                      buffer = lines.pop() || "";
+                      for (const line of lines) {
+                        const trimmed = line.trim();
+                        if (trimmed === "data: [DONE]") continue;
+                        if (trimmed.startsWith("data:")) {
+                          try {
+                            const json = JSON.parse(trimmed.slice(5).trim());
+                            const textChunk = json?.choices?.[0]?.delta?.content;
+                            if (textChunk) { hadTokens = true; streamedText += textChunk; sendEvent({ chunk: textChunk, done: false }); }
+                            if (json?.usage) recordUsage("openrouter", json);
+                          } catch { /* skip */ }
+                        }
+                      }
+                    }
+                    if (hadTokens) { streamSuccess = true; break; }
+                  } else {
+                    streamDiagnostics.push(`OpenRouter ${candModel} (${orRes.status}): ${await orRes.text().catch(() => "")}`);
+                  }
+                } catch (orErr) {
+                  streamDiagnostics.push(`OpenRouter ${candModel} error: ${(orErr as Error).message}`);
                 }
               }
             }
@@ -1134,6 +1134,29 @@ serve(async (req) => {
       }
     }
 
+    if (!executionSuccess && GROQ_API_KEY && providerEnabled("groq")) {
+      for (const groqModel of DEFAULT_GROQ_MODELS) {
+        if (preferredProvider === "groq" && groqModel === model) continue;
+        try {
+          const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
+            body: JSON.stringify({ model: groqModel, messages: [{ role: "system", content: defaultSystemPrompt }, { role: "user", content: prompt }], temperature: effectiveTemperature, max_tokens: effectiveMaxTokens, ...(jsonMode ? { response_format: { type: "json_object" } } : {}) }),
+            signal: AbortSignal.timeout(30000),
+          });
+          if (groqRes.ok) {
+            const data = await groqRes.json();
+            result = data?.choices?.[0]?.message?.content || "";
+            if (result) { providerUsed = "groq"; modelUsed = groqModel; executionSuccess = true; recordUsage("groq", data); break; }
+          } else {
+            diagnosticErrors.push(`Groq ${groqModel} (${groqRes.status})`);
+          }
+        } catch (groqErr) {
+          diagnosticErrors.push(`Groq ${groqModel} exception: ${(groqErr as Error).message}`);
+        }
+      }
+    }
+
     if (!executionSuccess && OPENROUTER_API_KEY && providerEnabled("openrouter")) {
       for (const candModel of openRouterCandidates) {
         try {
@@ -1152,28 +1175,6 @@ serve(async (req) => {
           }
         } catch (orErr) {
           diagnosticErrors.push(`OpenRouter ${candModel} exception: ${(orErr as Error).message}`);
-        }
-      }
-    }
-
-    if (!executionSuccess && GROQ_API_KEY && providerEnabled("groq")) {
-      for (const groqModel of DEFAULT_GROQ_MODELS) {
-        try {
-          const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
-            body: JSON.stringify({ model: groqModel, messages: [{ role: "system", content: defaultSystemPrompt }, { role: "user", content: prompt }], temperature: effectiveTemperature, max_tokens: effectiveMaxTokens, ...(jsonMode ? { response_format: { type: "json_object" } } : {}) }),
-            signal: AbortSignal.timeout(30000),
-          });
-          if (groqRes.ok) {
-            const data = await groqRes.json();
-            result = data?.choices?.[0]?.message?.content || "";
-            if (result) { providerUsed = "groq"; modelUsed = groqModel; executionSuccess = true; recordUsage("groq", data); break; }
-          } else {
-            diagnosticErrors.push(`Groq ${groqModel} (${groqRes.status})`);
-          }
-        } catch (groqErr) {
-          diagnosticErrors.push(`Groq ${groqModel} exception: ${(groqErr as Error).message}`);
         }
       }
     }

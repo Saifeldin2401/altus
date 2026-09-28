@@ -111,6 +111,35 @@ CRITICAL TRANSLATION RULES:
 3. Monolingual Output: Return ONLY the translated text in ${targetLangName}. Do NOT include intro/outro conversational remarks, explanations, or quotes.`;
 };
 
+function splitTextIntoParagraphChunks(value: string, maxChars = 2000): string[] {
+  const safeMax = Math.max(500, Math.floor(maxChars));
+  const chunks: string[] = [];
+  let remaining = value.trim();
+
+  while (remaining.length > safeMax) {
+    const slice = remaining.slice(0, safeMax);
+    const candidates = [
+      slice.lastIndexOf("\n\n"),
+      slice.lastIndexOf("\n"),
+      slice.lastIndexOf(". "),
+      slice.lastIndexOf("! "),
+      slice.lastIndexOf("? "),
+      slice.lastIndexOf(" "),
+    ].filter((index) => index >= Math.floor(safeMax * 0.5));
+
+    const breakIndex = candidates.length > 0 ? Math.max(...candidates) : -1;
+    const cutIndex = breakIndex >= 0 ? breakIndex + 1 : safeMax;
+    chunks.push(remaining.slice(0, cutIndex).trim());
+    remaining = remaining.slice(cutIndex).trim();
+  }
+
+  if (remaining) {
+    chunks.push(remaining);
+  }
+
+  return chunks;
+}
+
 /**
  * Route the translation through the central AI gateway (process-ai-request) so
  * that ai_platform_config (free-only mode, enabled providers, disabled models),
@@ -135,6 +164,8 @@ async function translateViaGateway(
         prompt: text,
         systemPrompt: buildSystemPrompt(targetLangName, targetLangCode),
         task: "translation",
+        provider: "groq",
+        model: "openai/gpt-oss-120b",
         temperature: 0.2,
         max_tokens: 4096,
         jsonMode: false,
@@ -193,22 +224,37 @@ serve(async (req) => {
     const supabaseClient = createClient(supabaseUrl, serviceRoleKey);
 
     const token = authHeader.replace(/^Bearer\s+/i, "").trim();
-    const {
-      data: { user },
-      error: userError,
-    } = await supabaseClient.auth.getUser(token);
 
-    if (userError || !user) {
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: "Unauthorized: Invalid token",
-        }),
-        {
-          status: 401,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        },
-      );
+    const decodeJwt = (t: string): Record<string, unknown> | null => {
+      try {
+        const parts = t.split(".");
+        if (parts.length !== 3) return null;
+        return JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
+      } catch {
+        return null;
+      }
+    };
+    const claims = decodeJwt(token);
+    const isServiceRole = claims?.role === "service_role";
+
+    if (!isServiceRole) {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabaseClient.auth.getUser(token);
+
+      if (userError || !user) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: "Unauthorized: Invalid token",
+          }),
+          {
+            status: 401,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
+      }
     }
 
     const body = await req.json().catch(() => ({}));
@@ -237,9 +283,15 @@ serve(async (req) => {
       );
     }
 
-    // Normalize input to array of strings
-    if (text && (!Array.isArray(texts) || texts.length === 0)) {
-      texts = [text];
+    // Normalize input to array of strings (with chunking for long single documents)
+    const isSingleText = Boolean(text && (!Array.isArray(texts) || texts.length === 0));
+    if (isSingleText) {
+      const rawText = String(text ?? "");
+      if (rawText.length > 2000) {
+        texts = splitTextIntoParagraphChunks(rawText, 2000);
+      } else {
+        texts = [rawText];
+      }
     } else if (!Array.isArray(texts)) {
       texts = [];
     }
@@ -380,9 +432,13 @@ serve(async (req) => {
       );
     }
 
+    const finalTranslatedText = isSingleText && texts.length > 1
+      ? results.join("\n\n")
+      : (results[0] || "");
+
     return new Response(
       JSON.stringify({
-        translated_text: results[0] || "",
+        translated_text: finalTranslatedText,
         translated_texts: results,
         success: true,
         source_lang: resolvedSourceLang,

@@ -36,8 +36,6 @@ interface EmptyStateProps {
     /** Additional className for container */
     className?: string
     /** Compact mode for inline usage */
-    animationData?
-    /** Compact mode for inline usage */
     compact?: boolean
 }
 
@@ -68,13 +66,10 @@ const defaultProps: Record<EmptyStateVariant, {
     },
 }
 
-import { AnimatedState } from '@/components/ui/AnimatedState'
-
 function EmptyState({
     variant = 'no-data',
     icon,
     iconElement,
-    animationData,
     title,
     description,
     action,
@@ -95,28 +90,20 @@ function EmptyState({
                 className
             )}
         >
-            {/* Icon or Animation */}
+            {/* Icon or Graphic */}
             <div
                 className={cn(
                     'flex items-center justify-center mb-4',
-                    animationData ? 'w-48 h-48' : (compact ? 'w-12 h-12 rounded-full bg-muted/50' : 'w-16 h-16 rounded-full bg-muted/50')
+                    compact ? 'w-12 h-12 rounded-full bg-muted/50' : 'w-16 h-16 rounded-full bg-muted/50'
                 )}
             >
-                {animationData ? (
-                    <AnimatedState
-                        animationData={animationData}
-                        height={compact ? 120 : 200}
-                        width={compact ? 120 : 200}
+                {iconElement || (
+                    <IconComponent
+                        className={cn(
+                            'text-muted-foreground',
+                            compact ? 'w-6 h-6' : 'w-8 h-8'
+                        )}
                     />
-                ) : (
-                    iconElement || (
-                        <IconComponent
-                            className={cn(
-                                'text-muted-foreground',
-                                compact ? 'w-6 h-6' : 'w-8 h-8'
-                            )}
-                        />
-                    )
                 )}
             </div>
 

@@ -1,4 +1,4 @@
-function splitPlainText(value: string, maxChars: number) {
+export function splitPlainText(value: string, maxChars = 2000): string[] {
     const safeMax = Math.max(500, Math.floor(maxChars))
     const chunks: string[] = []
     let remaining = value.trim()

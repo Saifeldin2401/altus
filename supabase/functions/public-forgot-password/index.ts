@@ -253,6 +253,11 @@ Deno.serve(async (req: Request) => {
     }
     const recipientName = (profile?.full_name || "").trim() || email;
 
+    let emailSendSuccess = false;
+    let emailSendStatus = 0;
+    let emailSendResponse = "";
+    let emailSendError = "";
+
     const { data: linkData, error: linkError } =
       await adminClient.auth.admin.generateLink({
         type: "recovery",
@@ -284,11 +289,6 @@ Deno.serve(async (req: Request) => {
       const resetLink = hashedToken
         ? `${resetRedirectTo}?token_hash=${hashedToken}&type=recovery`
         : resetRedirectTo;
-
-      let emailSendSuccess = false;
-      let emailSendStatus = 0;
-      let emailSendResponse = "";
-      let emailSendError = "";
 
       try {
         const emailResponse = await fetch(
