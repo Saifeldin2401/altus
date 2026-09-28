@@ -244,7 +244,7 @@ export function TenantProvider({ children }: { children: React.ReactNode }) {
   // anywhere in the app. Restores the site default when the tenant has none set (or
   // outside tenant scope), so switching tenants/orgs never leaves a stale icon behind.
   useEffect(() => {
-    const DEFAULT_FAVICON = '/remal-favicon-small.png'
+    const DEFAULT_FAVICON = '/favicon-32x32.png'
     const href = currentOrganization?.favicon_url || DEFAULT_FAVICON
 
     const iconLink = document.querySelector<HTMLLinkElement>("link[rel='icon']")
