@@ -13,9 +13,12 @@ import { clearAuthFlowState, setAuthFlowState } from '@/lib/authFlowState'
 import { securityConfig } from '@/lib/security-config'
 import { supabase } from '@/lib/supabase'
 import { AlertCircle, CheckCircle, Eye, EyeOff, Loader2, Lock, ShieldCheck, UserRound } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import type { Session } from '@supabase/supabase-js'
+import { safeLocalStorage, safeSessionStorage } from '@/lib/storage'
+import { REMEMBER_ME_KEY } from '@/hooks/useInactivityTimeout'
 
 type SupportedOtpType = 'invite' | 'recovery' | 'signup' | 'magiclink' | 'email' | 'email_change'
 
@@ -54,6 +57,13 @@ export default function CompleteInvite() {
     const [validationNonce, setValidationNonce] = useState(0)
     const [jobTitleOptions, setJobTitleOptions] = useState<string[]>([])
     const [loadingFormOptions, setLoadingFormOptions] = useState(false)
+    const sessionRef = useRef<Session | null>(null)
+
+    const markRecoverySessionActive = useCallback((session: Session) => {
+        sessionRef.current = session
+        safeSessionStorage.setItem('altus_session_active', 'true')
+        safeLocalStorage.setItem(REMEMBER_ME_KEY, 'true')
+    }, [])
 
     useEffect(() => {
         setAuthFlowState('complete-invite')
@@ -91,6 +101,7 @@ export default function CompleteInvite() {
 
                     if (!exchangeError && exchangeData.session) {
                         validSession = true
+                        markRecoverySessionActive(exchangeData.session)
                         const currentUrl = new URL(window.location.href)
                         currentUrl.searchParams.delete('code')
                         const normalizedSearch = currentUrl.search ? currentUrl.search : ''
@@ -114,6 +125,7 @@ export default function CompleteInvite() {
 
                     if (!verifyError && verifiedData.session) {
                         validSession = true
+                        markRecoverySessionActive(verifiedData.session)
                         window.history.replaceState({}, document.title, window.location.pathname)
                         setAuthFlowState('complete-invite')
                     } else if (verifyError) {
@@ -132,6 +144,7 @@ export default function CompleteInvite() {
 
                     if (!setSessionError && setSessionData.session) {
                         validSession = true
+                        markRecoverySessionActive(setSessionData.session)
                         window.history.replaceState({}, document.title, window.location.pathname)
                         setAuthFlowState('complete-invite')
                     } else if (setSessionError) {
@@ -147,6 +160,7 @@ export default function CompleteInvite() {
 
                     if (!sessionError && sessionData.session) {
                         validSession = true
+                        markRecoverySessionActive(sessionData.session)
                         setAuthFlowState('complete-invite')
                     } else if (sessionError) {
                         rememberValidationError(sessionError)
@@ -347,6 +361,24 @@ export default function CompleteInvite() {
 
             if (completeInviteData?.error) {
                 throw new Error(completeInviteData.error)
+            }
+
+            let { data: { session: activeSession } } = await supabase.auth.getSession()
+
+            if (!activeSession && sessionRef.current) {
+                console.warn('[CompleteInvite] Active session missing from GoTrue client, restoring from cached invite session...')
+                const { data: restored, error: restoreError } = await supabase.auth.setSession({
+                    access_token: sessionRef.current.access_token,
+                    refresh_token: sessionRef.current.refresh_token,
+                })
+                if (!restoreError && restored.session) {
+                    activeSession = restored.session
+                    markRecoverySessionActive(restored.session)
+                }
+            }
+
+            if (!activeSession) {
+                throw new Error('Your invite session has expired or is invalid. Please use the original invite link from your email.')
             }
 
             const { error: updateError } = await supabase.auth.updateUser({

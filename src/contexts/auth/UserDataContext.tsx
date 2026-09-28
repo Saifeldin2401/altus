@@ -209,6 +209,18 @@ export function UserDataProvider({ children }: { children: ReactNode }) {
       return
     }
 
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname.toLowerCase()
+      if (
+        path === '/reset-password' ||
+        path.startsWith('/reset-password/') ||
+        path === '/complete-invite' ||
+        path.startsWith('/complete-invite/')
+      ) {
+        return
+      }
+    }
+
     if (!shouldRefreshUserData(userId)) return
 
     loadUserData(userId).catch(() => {

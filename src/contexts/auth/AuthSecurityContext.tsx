@@ -84,6 +84,18 @@ export function AuthSecurityProvider({ children }: { children: ReactNode }) {
       return
     }
 
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname.toLowerCase()
+      if (
+        path === '/reset-password' ||
+        path.startsWith('/reset-password/') ||
+        path === '/complete-invite' ||
+        path.startsWith('/complete-invite/')
+      ) {
+        return
+      }
+    }
+
     // Check security requirements (non-blocking)
     const checkRequirements = async () => {
       try {
@@ -104,6 +116,18 @@ export function AuthSecurityProvider({ children }: { children: ReactNode }) {
   // ── Session security checks ───────────────────────────────────────────────
   const performSessionSecurityCheck = useCallback(async () => {
     if (!userId || !setUser) return
+
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname.toLowerCase()
+      if (
+        path === '/reset-password' ||
+        path.startsWith('/reset-password/') ||
+        path === '/complete-invite' ||
+        path.startsWith('/complete-invite/')
+      ) {
+        return
+      }
+    }
 
     try {
       // Validate session binding (IP/User-Agent) with timeout

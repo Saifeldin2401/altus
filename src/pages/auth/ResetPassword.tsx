@@ -18,6 +18,10 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
+import type { Session } from '@supabase/supabase-js'
+import { safeLocalStorage, safeSessionStorage } from '@/lib/storage'
+import { REMEMBER_ME_KEY } from '@/hooks/useInactivityTimeout'
+
 type SupportedOtpType = 'recovery'
 
 function isSupportedOtpType(value: string | null): value is SupportedOtpType {
@@ -41,6 +45,13 @@ export default function ResetPassword() {
     const [validationNonce, setValidationNonce] = useState(0)
     const validationInFlightRef = useRef(false)
     const [redirectCountdown, setRedirectCountdown] = useState<number | null>(null)
+    const sessionRef = useRef<Session | null>(null)
+
+    const markRecoverySessionActive = useCallback((session: Session) => {
+        sessionRef.current = session
+        safeSessionStorage.setItem('altus_session_active', 'true')
+        safeLocalStorage.setItem(REMEMBER_ME_KEY, 'true')
+    }, [])
 
     // Protect against mail scanners prefetching the direct token link.
     const hasTokenHashInUrl = new URLSearchParams(window.location.search).has('token_hash')
@@ -105,6 +116,7 @@ export default function ResetPassword() {
 
                     if (!exchangeError && data.session) {
                         isTokenCurrentlyValid = true
+                        markRecoverySessionActive(data.session)
                         url.searchParams.delete('code')
                         window.history.replaceState({}, document.title, url.pathname + (url.search ? url.search : ''))
                         setAuthFlowState('reset-password')
@@ -124,6 +136,7 @@ export default function ResetPassword() {
 
                     if (!verifyError && data.session) {
                         isTokenCurrentlyValid = true
+                        markRecoverySessionActive(data.session)
                         window.history.replaceState({}, document.title, window.location.pathname)
                         setAuthFlowState('reset-password')
                     } else if (verifyError) {
@@ -151,6 +164,7 @@ export default function ResetPassword() {
 
                         if (!setSessionError && data.session) {
                             isTokenCurrentlyValid = true
+                            markRecoverySessionActive(data.session)
                             window.history.replaceState({}, document.title, window.location.pathname)
                             setAuthFlowState('reset-password')
                         } else if (setSessionError) {
@@ -167,6 +181,7 @@ export default function ResetPassword() {
 
                     if (session?.user) {
                         isTokenCurrentlyValid = true
+                        markRecoverySessionActive(session)
                         setAuthFlowState('reset-password')
                     } else if (sessionError) {
                         rememberValidationError(sessionError)
@@ -303,6 +318,30 @@ export default function ResetPassword() {
         setLoading(true)
 
         try {
+            // Ensure session is active before updating password
+            let { data: { session: activeSession } } = await supabase.auth.getSession()
+
+            // If Supabase client lost session but we have our verified sessionRef, restore it
+            if (!activeSession && sessionRef.current) {
+                console.warn('[ResetPassword] Active session missing from GoTrue client, restoring from cached recovery session...')
+                const { data: restored, error: restoreError } = await supabase.auth.setSession({
+                    access_token: sessionRef.current.access_token,
+                    refresh_token: sessionRef.current.refresh_token,
+                })
+                if (!restoreError && restored.session) {
+                    activeSession = restored.session
+                    markRecoverySessionActive(restored.session)
+                }
+            }
+
+            if (!activeSession) {
+                setError(t('reset_password.session_expired', {
+                    defaultValue: 'Your password reset session has expired or is invalid. Please request a new password reset link below.'
+                }))
+                setTokenValid(false)
+                return
+            }
+
             const { error: updateError } = await supabase.auth.updateUser({
                 password,
             })
@@ -328,11 +367,20 @@ export default function ResetPassword() {
         } catch (candidateError: unknown) {
             console.error('Password update error:', candidateError)
             const classified = classifyAuthLinkError(candidateError)
-            setError(
-                classified.kind === 'service_unavailable'
-                    ? AUTH_SERVICE_UNAVAILABLE_MESSAGE
-                    : (candidateError instanceof Error ? candidateError.message : 'Failed to update password. Please try again.')
-            )
+            const errorMessage = candidateError instanceof Error ? candidateError.message : ''
+
+            if (errorMessage.toLowerCase().includes('session missing') || classified.kind === 'invalid_link') {
+                setError(t('reset_password.session_expired', {
+                    defaultValue: 'Your password reset session has expired or is invalid. Please request a new password reset link below.'
+                }))
+                setTokenValid(false)
+            } else {
+                setError(
+                    classified.kind === 'service_unavailable'
+                        ? AUTH_SERVICE_UNAVAILABLE_MESSAGE
+                        : (errorMessage || 'Failed to update password. Please try again.')
+                )
+            }
         } finally {
             setLoading(false)
         }

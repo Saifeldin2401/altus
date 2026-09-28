@@ -53,6 +53,21 @@ export function useAuthSession() {
    */
   const clearLocalSession = useCallback(
     async (reason: string, onCleared: () => void) => {
+      // Guard: Never perform destructive global signOut while on recovery routes (/reset-password, /complete-invite)
+      if (typeof window !== 'undefined') {
+        const path = window.location.pathname.toLowerCase()
+        const isRecoveryRoute =
+          path === '/reset-password' ||
+          path.startsWith('/reset-password/') ||
+          path === '/complete-invite' ||
+          path.startsWith('/complete-invite/')
+        if (isRecoveryRoute) {
+          console.warn(`[Auth] Suppressed clearLocalSession ('${reason}') because active route is recovery: ${path}`)
+          onCleared()
+          return
+        }
+      }
+
       // If a clear is already in flight, wait for it then reset state
       if (authRecoveryInProgressRef.current && clearPromiseRef.current) {
         await clearPromiseRef.current.catch(() => {})

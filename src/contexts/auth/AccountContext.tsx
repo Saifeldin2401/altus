@@ -131,6 +131,17 @@ export function AccountProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (authLoading) return
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname.toLowerCase()
+      if (
+        path === '/reset-password' ||
+        path.startsWith('/reset-password/') ||
+        path === '/complete-invite' ||
+        path.startsWith('/complete-invite/')
+      ) {
+        return
+      }
+    }
     resolve()
   }, [authLoading, user?.id, resolve])
 

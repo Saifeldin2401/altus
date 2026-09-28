@@ -172,6 +172,7 @@ export function AuthIdentityProvider({ children }: { children: ReactNode }) {
       if (!mounted) return
       if (session?.user) {
         if (shouldDeferAuthenticatedAppState()) {
+          safeSessionStorage.setItem('altus_session_active', 'true')
           finishLoading()
           return
         }
@@ -208,6 +209,7 @@ export function AuthIdentityProvider({ children }: { children: ReactNode }) {
       if (!mounted) return
 
       if (session?.user && shouldDeferAuthenticatedAppState()) {
+        safeSessionStorage.setItem('altus_session_active', 'true')
         finishLoading()
         return
       }
@@ -218,8 +220,10 @@ export function AuthIdentityProvider({ children }: { children: ReactNode }) {
         setUser(session.user)
         finishLoading()
       } else {
-        safeSessionStorage.removeItem('altus_session_active')
-        setUser(null)
+        if (!shouldDeferAuthenticatedAppState()) {
+          safeSessionStorage.removeItem('altus_session_active')
+          setUser(null)
+        }
         finishLoading()
       }
     })
@@ -237,6 +241,8 @@ export function AuthIdentityProvider({ children }: { children: ReactNode }) {
 
       if (!mounted || document.visibilityState === 'hidden') return
       if (resumeValidationInFlightRef.current) return
+      // CRITICAL: Suppress resume verification when on a recovery route to prevent session eviction
+      if (shouldDeferAuthenticatedAppState()) return
 
       const now = Date.now()
       if (now - lastResumeValidationAtRef.current < CONFIG.validationThrottleMs) return
