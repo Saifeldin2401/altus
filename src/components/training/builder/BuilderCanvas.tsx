@@ -279,70 +279,66 @@ export const BuilderCanvas = ({
   }
 
   return (
-    <div className="flex-1 p-3 md:p-5 lg:p-6 bg-slate-50/60 dark:bg-slate-950/40 w-full overflow-x-hidden">
+    <div className="flex-1 p-3 md:p-5 lg:p-6 bg-ds-surface-subtle w-full overflow-x-hidden">
       <div className="w-full max-w-3xl xl:max-w-4xl mx-auto space-y-5">
 
         {/* Collapsible Course Metadata & Classification Card */}
         <Card className={cn(
-          "overflow-hidden border transition-all duration-200 shadow-xs",
-          isMetadataExpanded
-            ? "bg-white dark:bg-slate-900 border-amber-300/80 dark:border-amber-700/80 shadow-sm"
-            : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-slate-300"
+          "overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface text-ds-ink shadow-2xs transition-all duration-200",
+          isMetadataExpanded && "border-ds-border-strong shadow-xs"
         )}>
           {/* Collapsed Header / Summary Bar */}
           <div
-            className={cn(
-              "px-4 py-3 flex items-center justify-between gap-3 cursor-pointer select-none"
-            )}
+            className="px-4 py-3 flex items-center justify-between gap-3 cursor-pointer select-none"
             onClick={() => setIsMetadataExpanded(!isMetadataExpanded)}
           >
-            <div className={cn("flex items-center gap-2.5 flex-1 min-w-0")}>
-              <div className="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0">
+            <div className="flex items-center gap-2.5 flex-1 min-w-0">
+              <div className="w-7 h-7 rounded-md bg-ds-accent-soft text-ds-accent flex items-center justify-center shrink-0">
                 <SlidersHorizontal className="w-3.5 h-3.5" />
               </div>
-              <div className={cn("flex items-center gap-2 flex-wrap min-w-0")}>
+              <div className="flex items-center gap-2 flex-wrap min-w-0">
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="text-xs font-bold text-slate-900 dark:text-white">
+                  <span className="text-xs font-semibold text-ds-ink">
                     {title.trim() || t('builder.untitledModule', 'Untitled Course')}
                   </span>
                   {(!title.trim() || title === 'Untitled Module' || title === 'Untitled Course') && (
-                    <Badge variant="outline" className="text-[10px] bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-300 font-bold animate-pulse flex items-center gap-1">
-                      <Edit3 className="w-3 h-3 text-amber-600" />
+                    <Badge variant="outline" className="text-[10px] bg-ds-accent-soft text-ds-accent border-ds-accent/40 font-semibold flex items-center gap-1">
+                      <Edit3 className="w-3 h-3 text-ds-accent" />
                       <span>{t('builder.nameCoursePrompt', 'Click to set course name')}</span>
                     </Badge>
                   )}
                 </div>
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <Badge variant="secondary" className="text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                  <Badge variant="outline" className="text-[10px] font-semibold border-ds-border bg-ds-surface-subtle text-ds-muted">
                     {categoryLabels[category] || category || 'Operations'}
                   </Badge>
-                  <Badge variant="outline" className="text-[10px] font-medium text-slate-500">
+                  <Badge variant="outline" className="text-[10px] font-medium border-ds-border bg-ds-surface-subtle text-ds-muted">
                     {audienceLabels[audience] || audience || 'All Staff'}
                   </Badge>
-                  <Badge variant="outline" className="text-[10px] font-medium text-slate-500 capitalize">
+                  <Badge variant="outline" className="text-[10px] font-medium border-ds-border bg-ds-surface-subtle text-ds-muted capitalize">
                     {difficultyLevel}
                   </Badge>
                 </div>
               </div>
             </div>
 
-            <div className={cn("flex items-center gap-2 shrink-0")}>
+            <div className="flex items-center gap-2 shrink-0">
               {(!title.trim() || !category) && (
-                <Badge variant="outline" className="text-[10px] bg-amber-50 text-amber-800 border-amber-300 dark:bg-amber-950 dark:text-amber-300">
-                  <AlertCircle className="w-3 h-3 me-1 text-amber-600" />
+                <Badge variant="outline" className="text-[10px] border-ds-warning/40 bg-ds-warning-soft text-ds-warning-text font-medium">
+                  <AlertCircle className="w-3 h-3 me-1 text-ds-warning" />
                   {t('builder.incompleteClassification', 'Setup needed')}
                 </Badge>
               )}
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-7 px-2 text-xs font-semibold text-slate-600 hover:text-slate-900"
+                className="h-7 px-2 text-xs font-semibold text-ds-muted hover:text-ds-ink hover:bg-ds-surface-subtle"
                 onClick={(e) => {
                   e.stopPropagation()
                   setIsMetadataExpanded(!isMetadataExpanded)
                 }}
               >
-                <Edit3 className="w-3 h-3 me-1 text-slate-400" />
+                <Edit3 className="w-3 h-3 me-1 text-ds-muted" />
                 <span>{isMetadataExpanded ? t('builder.collapse', 'Done') : t('builder.editDetails', 'Edit Details')}</span>
                 {isMetadataExpanded ? <ChevronUp className="w-3.5 h-3.5 ms-1" /> : <ChevronDown className="w-3.5 h-3.5 ms-1" />}
               </Button>
@@ -351,16 +347,16 @@ export const BuilderCanvas = ({
 
           {/* Expanded Metadata Form */}
           {isMetadataExpanded && (
-            <CardContent className="p-4 md:p-5 pt-2 border-t border-slate-100 dark:border-slate-800 space-y-4 bg-slate-50/40 dark:bg-slate-900/40">
+            <CardContent className="p-4 md:p-5 pt-3 border-t border-ds-border space-y-4 bg-ds-surface-subtle/50">
               {/* Course Title Input (Prominent & First) */}
-              <div className="space-y-1.5 p-3.5 rounded-xl bg-white dark:bg-slate-950 border-2 border-amber-300/80 dark:border-amber-700/80 shadow-xs">
-                <div className={cn("flex items-center justify-between gap-2")}>
-                  <Label className={cn("text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5")}>
-                    <GraduationCap className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+              <div className="space-y-1.5 p-3.5 rounded-[8px] bg-ds-surface border border-ds-border shadow-2xs">
+                <div className="flex items-center justify-between gap-2">
+                  <Label className="text-xs font-semibold text-ds-ink flex items-center gap-1.5">
+                    <GraduationCap className="w-4 h-4 text-ds-accent shrink-0" />
                     <span>{t('builder.courseTitleLabel', 'Training Course Name')}</span>
-                    <span className="text-amber-600 font-bold">*</span>
+                    <span className="text-ds-danger font-bold">*</span>
                   </Label>
-                  <span className="text-[10px] font-semibold text-amber-800 dark:text-amber-300 bg-amber-100/80 dark:bg-amber-950/80 px-2 py-0.5 rounded-full border border-amber-300 dark:border-amber-700">
+                  <span className="text-[10px] font-semibold text-ds-accent bg-ds-accent-soft px-2 py-0.5 rounded-full border border-ds-accent/30">
                     {t('builder.requiredField', 'Required')}
                   </span>
                 </div>
@@ -368,12 +364,9 @@ export const BuilderCanvas = ({
                   value={title}
                   onChange={(e) => setTitle?.(e.target.value)}
                   placeholder={t('builder.courseTitlePlaceholder', 'e.g., Front Desk Guest Check-In & Service Standards SOP')}
-                  className={cn(
-                    "text-sm font-bold bg-amber-50/20 dark:bg-amber-950/10 border-slate-200 dark:border-slate-800 focus:border-ds-brass focus:ring-2 focus:ring-ds-brass/20 h-9",
-                    "text-start"
-                  )}
+                  className="text-sm font-semibold bg-ds-surface border-ds-border text-ds-ink focus-visible:ring-ds-accent h-9 text-start"
                 />
-                <p className="text-[11px] text-muted-foreground">
+                <p className="text-[11px] text-ds-muted">
                   {t('builder.courseTitleHelper', 'Give this training a clear, descriptive name that employees will see across the LMS and on their completion certificates.')}
                 </p>
               </div>
@@ -381,12 +374,12 @@ export const BuilderCanvas = ({
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Department / Category */}
                 <div className="space-y-1.5">
-                  <Label className={cn("text-xs font-bold text-slate-700 dark:text-slate-300")}>
-                    {t('category', 'Department / Category')} <span className="text-amber-600">*</span>
+                  <Label className="text-xs font-semibold text-ds-ink">
+                    {t('category', 'Department / Category')} <span className="text-ds-danger">*</span>
                   </Label>
                   {setCategory && (
                     <Select value={category || 'operations'} onValueChange={setCategory}>
-                      <SelectTrigger className={cn("bg-white dark:bg-slate-950 text-xs font-medium border-slate-200 dark:border-slate-800")}>
+                      <SelectTrigger className="bg-ds-surface text-xs font-medium border-ds-border text-ds-ink">
                         <SelectValue placeholder={t('builder.selectCategory', 'Select department')} />
                       </SelectTrigger>
                       <SelectContent>
@@ -407,12 +400,12 @@ export const BuilderCanvas = ({
 
                 {/* Target Audience */}
                 <div className="space-y-1.5">
-                  <Label className={cn("text-xs font-bold text-slate-700 dark:text-slate-300")}>
+                  <Label className="text-xs font-semibold text-ds-ink">
                     {t('builder.audience', 'Target Audience')}
                   </Label>
                   {setAudience && (
                     <Select value={audience || 'all'} onValueChange={setAudience}>
-                      <SelectTrigger className={cn("bg-white dark:bg-slate-950 text-xs font-medium border-slate-200 dark:border-slate-800")}>
+                      <SelectTrigger className="bg-ds-surface text-xs font-medium border-ds-border text-ds-ink">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -429,12 +422,12 @@ export const BuilderCanvas = ({
                 {/* Difficulty & Language */}
                 <div className="grid grid-cols-2 gap-2">
                   <div className="space-y-1.5">
-                    <Label className={cn("text-xs font-bold text-slate-700 dark:text-slate-300")}>
+                    <Label className="text-xs font-semibold text-ds-ink">
                       {t('builder.difficulty', 'Difficulty')}
                     </Label>
                     {setDifficultyLevel && (
                       <Select value={difficultyLevel || 'beginner'} onValueChange={setDifficultyLevel}>
-                        <SelectTrigger className={cn("bg-white dark:bg-slate-950 text-xs font-medium border-slate-200 dark:border-slate-800")}>
+                        <SelectTrigger className="bg-ds-surface text-xs font-medium border-ds-border text-ds-ink">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -447,12 +440,12 @@ export const BuilderCanvas = ({
                   </div>
 
                   <div className="space-y-1.5">
-                    <Label className={cn("text-xs font-bold text-slate-700 dark:text-slate-300")}>
+                    <Label className="text-xs font-semibold text-ds-ink">
                       {t('builder.contentLanguage', 'Language')}
                     </Label>
                     {setContentLanguage && (
                       <Select value={contentLanguage || 'english'} onValueChange={setContentLanguage}>
-                        <SelectTrigger className={cn("bg-white dark:bg-slate-950 text-xs font-medium border-slate-200 dark:border-slate-800")}>
+                        <SelectTrigger className="bg-ds-surface text-xs font-medium border-ds-border text-ds-ink">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -469,7 +462,7 @@ export const BuilderCanvas = ({
               {/* Course Description */}
               {setDescription && (
                 <div className="space-y-1.5">
-                  <Label className={cn("text-xs font-bold text-slate-700 dark:text-slate-300")}>
+                  <Label className="text-xs font-semibold text-ds-ink">
                     {t('description', 'Course Description & Learning Outcomes')}
                   </Label>
                   <Textarea
@@ -477,7 +470,7 @@ export const BuilderCanvas = ({
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder={t('builder.descriptionHint', 'Describe key learning objectives, target standards, and procedures covered...')}
-                    className={cn("text-xs bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800 resize-none")}
+                    className="text-xs bg-ds-surface border-ds-border text-ds-ink focus-visible:ring-ds-accent resize-none"
                   />
                 </div>
               )}
@@ -514,14 +507,14 @@ export const BuilderCanvas = ({
             </p>
           </div>
 
-          <div className={cn('flex items-center gap-2 shrink-0')}>
+          <div className="flex items-center gap-2 shrink-0">
             {onOpenAICreator && (
               <Button
                 onClick={onOpenAICreator}
                 size="sm"
-                className="bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 font-bold shadow-xs border-none text-xs"
+                className="bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90 font-semibold shadow-2xs text-xs h-8"
               >
-                <Sparkles className="w-3.5 h-3.5 me-1.5" />
+                <Sparkles className="w-3.5 h-3.5 me-1.5 text-ds-accent" />
                 {t('builder.aiDraft', 'Draft with AI')}
               </Button>
             )}
@@ -529,9 +522,9 @@ export const BuilderCanvas = ({
               onClick={onAddSection}
               size="sm"
               variant="outline"
-              className="font-semibold bg-white dark:bg-slate-900 shadow-xs hover:border-amber-400 text-xs"
+              className="font-semibold border-ds-border text-ds-ink hover:bg-ds-surface-subtle shadow-2xs text-xs h-8"
             >
-              <Plus className="w-3.5 h-3.5 me-1.5 text-amber-600" />
+              <Plus className="w-3.5 h-3.5 me-1.5 text-ds-accent" />
               {t('builder.addSection', 'Add Section')}
             </Button>
           </div>
@@ -541,13 +534,13 @@ export const BuilderCanvas = ({
         {sections.length === 0 ? (
           <div className="space-y-6 pt-4">
             <div className="text-center space-y-2 py-6">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500/20 to-yellow-400/20 border border-amber-300/40 flex items-center justify-center mx-auto text-amber-600 shadow-inner">
-                <Layers className="w-8 h-8" />
+              <div className="w-14 h-14 rounded-full bg-ds-accent-soft text-ds-accent flex items-center justify-center mx-auto mb-2">
+                <Layers className="w-7 h-7" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+              <h3 className="text-base font-semibold text-ds-ink">
                 {t('builder.startCreating', 'How would you like to build your course?')}
               </h3>
-              <p className="text-sm text-muted-foreground max-w-md mx-auto">
+              <p className="text-xs text-ds-muted max-w-md mx-auto">
                 {t('builder.chooseMethod', 'Choose a fast creation method to get started in seconds.')}
               </p>
             </div>
@@ -556,22 +549,22 @@ export const BuilderCanvas = ({
               {/* Option 1: AI Creator */}
               <div
                 onClick={onOpenAICreator}
-                className="group relative p-6 rounded-2xl bg-white dark:bg-slate-900 border-2 border-amber-300/70 hover:border-amber-500 hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between"
+                className="group relative p-6 rounded-[8px] bg-ds-surface border border-ds-border hover:border-ds-border-strong hover:shadow-xs transition-all cursor-pointer flex flex-col justify-between"
               >
                 <div className="space-y-3">
-                  <div className="w-12 h-12 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center shadow-md">
-                    <Sparkles className="w-6 h-6" />
+                  <div className="w-11 h-11 rounded-[8px] bg-ds-accent-soft text-ds-accent flex items-center justify-center">
+                    <Sparkles className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900 dark:text-white group-hover:text-amber-600 transition-colors">
+                    <h4 className="font-semibold text-sm text-ds-ink">
                       Smart AI Creator
                     </h4>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-ds-muted mt-1 leading-relaxed">
                       Generate full curriculum, rich lesson text, and verified quizzes from any topic or hotel SOP in 10 seconds.
                     </p>
                   </div>
                 </div>
-                <div className="pt-4 flex items-center gap-1 text-xs font-bold text-amber-600 group-hover:translate-x-1 transition-transform">
+                <div className="pt-4 flex items-center gap-1 text-xs font-semibold text-ds-accent group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform">
                   <span>Generate with AI</span>
                   <span>&rarr;</span>
                 </div>
@@ -580,22 +573,22 @@ export const BuilderCanvas = ({
               {/* Option 2: Template Selector */}
               <div
                 onClick={onOpenTemplateSelector}
-                className="group p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all cursor-pointer flex flex-col justify-between"
+                className="group p-6 rounded-[8px] bg-ds-surface border border-ds-border hover:border-ds-border-strong hover:shadow-xs transition-all cursor-pointer flex flex-col justify-between"
               >
                 <div className="space-y-3">
-                  <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-200">
-                    <Layers className="w-6 h-6" />
+                  <div className="w-11 h-11 rounded-[8px] bg-ds-surface-subtle text-ds-ink border border-ds-border flex items-center justify-center">
+                    <Layers className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors">
+                    <h4 className="font-semibold text-sm text-ds-ink">
                       Hotel SOP Templates
                     </h4>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-ds-muted mt-1 leading-relaxed">
                       Start from pre-built 5-star hotel operational courses (Front Desk, Housekeeping, Food & Beverage, Safety).
                     </p>
                   </div>
                 </div>
-                <div className="pt-4 flex items-center gap-1 text-xs font-bold text-blue-600 group-hover:translate-x-1 transition-transform">
+                <div className="pt-4 flex items-center gap-1 text-xs font-semibold text-ds-ink group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform">
                   <span>Browse Templates</span>
                   <span>&rarr;</span>
                 </div>
@@ -604,22 +597,22 @@ export const BuilderCanvas = ({
               {/* Option 3: Start from Scratch */}
               <div
                 onClick={onAddSection}
-                className="group p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all cursor-pointer flex flex-col justify-between"
+                className="group p-6 rounded-[8px] bg-ds-surface border border-ds-border hover:border-ds-border-strong hover:shadow-xs transition-all cursor-pointer flex flex-col justify-between"
               >
                 <div className="space-y-3">
-                  <div className="w-12 h-12 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center border border-slate-200">
-                    <Plus className="w-6 h-6" />
+                  <div className="w-11 h-11 rounded-[8px] bg-ds-surface-subtle text-ds-ink border border-ds-border flex items-center justify-center">
+                    <Plus className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-900 dark:text-white group-hover:text-slate-800 transition-colors">
+                    <h4 className="font-semibold text-sm text-ds-ink">
                       Blank Canvas
                     </h4>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-ds-muted mt-1 leading-relaxed">
                       Create a custom course structure from scratch with full manual control over every section and block.
                     </p>
                   </div>
                 </div>
-                <div className="pt-4 flex items-center gap-1 text-xs font-bold text-slate-700 group-hover:translate-x-1 transition-transform">
+                <div className="pt-4 flex items-center gap-1 text-xs font-semibold text-ds-ink group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform">
                   <span>Add First Section</span>
                   <span>&rarr;</span>
                 </div>
@@ -647,22 +640,22 @@ export const BuilderCanvas = ({
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleDropSection(e, sectionIndex)}
                   className={cn(
-                    'overflow-hidden transition-all duration-200 border bg-white dark:bg-slate-900 shadow-xs',
-                    isExpanded ? 'border-slate-300 dark:border-slate-700 shadow-sm' : 'border-slate-200 dark:border-slate-800 opacity-95'
+                    'overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface text-ds-ink shadow-2xs transition-all duration-200',
+                    isExpanded ? 'border-ds-border-strong shadow-xs' : 'opacity-95'
                   )}
                 >
                   {/* Section Header */}
                   <CardHeader
-                    className="py-3.5 px-4 md:px-5 bg-slate-50/80 dark:bg-slate-900/90 border-b border-slate-100 dark:border-slate-800 cursor-pointer select-none"
+                    className="py-3 px-4 md:px-5 bg-ds-surface-subtle border-b border-ds-border cursor-pointer select-none"
                     onClick={() => onSectionClick(activeSection === section.id ? null : section.id)}
                   >
-                    <div className={cn('flex items-center justify-between gap-3')}>
-                      <div className={cn('flex items-center gap-3 flex-1 min-w-0')}>
-                        <div className="cursor-grab active:cursor-grabbing p-1 text-slate-400 hover:text-slate-600 rounded shrink-0">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="cursor-grab active:cursor-grabbing p-1 text-ds-muted hover:text-ds-ink rounded shrink-0">
                           <GripVertical className="w-4 h-4" />
                         </div>
 
-                        <span className="w-6 h-6 rounded-full bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300 font-bold text-xs flex items-center justify-center shrink-0">
+                        <span className="w-6 h-6 rounded-full bg-ds-accent-soft text-ds-accent font-semibold text-xs flex items-center justify-center shrink-0">
                           {sectionIndex + 1}
                         </span>
 
@@ -674,7 +667,7 @@ export const BuilderCanvas = ({
                               onChange={(e) => setEditingTitle(e.target.value)}
                               onBlur={() => saveRenaming(section.id)}
                               onKeyDown={(e) => e.key === 'Enter' && saveRenaming(section.id)}
-                              className="h-8 text-sm font-bold bg-white dark:bg-slate-950"
+                              className="h-8 text-sm font-semibold bg-ds-surface border-ds-border text-ds-ink"
                             />
                           </div>
                         ) : (
@@ -685,27 +678,27 @@ export const BuilderCanvas = ({
                               startRenaming(section.id, section.title)
                             }}
                           >
-                            <h3 className="font-bold text-sm text-slate-900 dark:text-white truncate">
+                            <h3 className="font-semibold text-sm text-ds-ink truncate">
                               {section.title}
                             </h3>
-                            <span className="text-[11px] text-muted-foreground opacity-0 group-hover/title:opacity-100 transition-opacity">
+                            <span className="text-[11px] text-ds-muted opacity-0 group-hover/title:opacity-100 transition-opacity">
                               (Click to rename)
                             </span>
                           </div>
                         )}
 
-                        <Badge variant="secondary" className="text-[11px] font-semibold bg-slate-200/70 text-slate-700 shrink-0">
+                        <Badge variant="outline" className="text-[11px] font-medium border-ds-border bg-ds-surface text-ds-muted shrink-0">
                           {section.items.length} {section.items.length === 1 ? 'Lesson' : 'Lessons'}
                         </Badge>
                       </div>
 
-                      <div className={cn('flex items-center gap-1')} onClick={(e) => e.stopPropagation()}>
+                      <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
                         {/* Move Up/Down Controls */}
                         <div className="flex items-center">
                           <Button
                             size="icon"
                             variant="ghost"
-                            className="h-7 w-7 text-slate-400 hover:text-slate-700"
+                            className="h-7 w-7 text-ds-muted hover:text-ds-ink"
                             disabled={sectionIndex === 0}
                             onClick={() => onReorderSection(sectionIndex, sectionIndex - 1)}
                             title="Move section up"
@@ -715,7 +708,7 @@ export const BuilderCanvas = ({
                           <Button
                             size="icon"
                             variant="ghost"
-                            className="h-7 w-7 text-slate-400 hover:text-slate-700"
+                            className="h-7 w-7 text-ds-muted hover:text-ds-ink"
                             disabled={sectionIndex === sections.length - 1}
                             onClick={() => onReorderSection(sectionIndex, sectionIndex + 1)}
                             title="Move section down"
@@ -729,7 +722,7 @@ export const BuilderCanvas = ({
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="h-7 px-2 text-xs font-medium text-slate-600 hover:text-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800"
+                            className="h-7 px-2 text-xs font-medium text-ds-muted hover:text-ds-ink hover:bg-ds-surface"
                             onClick={() => {
                               if (isSectionFullyExpanded(section)) {
                                 collapseAllInSection(section)
@@ -741,7 +734,7 @@ export const BuilderCanvas = ({
                             {isSectionFullyExpanded(section) ? (
                               <><ChevronUp className="w-3.5 h-3.5 me-1" /><span>{t('builder.inlinePreview.collapseAll', 'Collapse All')}</span></>
                             ) : (
-                              <><Eye className="w-3.5 h-3.5 me-1 text-slate-500" /><span>{t('builder.inlinePreview.expandAll', 'Expand All')}</span></>
+                              <><Eye className="w-3.5 h-3.5 me-1 text-ds-muted" /><span>{t('builder.inlinePreview.expandAll', 'Expand All')}</span></>
                             )}
                           </Button>
                         )}
@@ -750,10 +743,10 @@ export const BuilderCanvas = ({
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="h-7 px-2 text-xs font-semibold text-purple-700 dark:text-purple-300 hover:text-purple-800 hover:bg-purple-50 dark:hover:bg-purple-950/50"
+                            className="h-7 px-2 text-xs font-semibold text-ds-accent hover:bg-ds-accent-soft"
                             onClick={() => onGenerateQuizFromSection(section.id)}
                           >
-                            <Sparkles className="w-3.5 h-3.5 me-1 text-purple-600" />
+                            <Sparkles className="w-3.5 h-3.5 me-1 text-ds-accent" />
                             <span>AI Quiz</span>
                           </Button>
                         )}
@@ -761,14 +754,14 @@ export const BuilderCanvas = ({
                         <Button
                           size="icon"
                           variant="ghost"
-                          className="h-7 w-7 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/50"
+                          className="h-7 w-7 text-ds-muted hover:text-ds-danger hover:bg-ds-danger/10"
                           onClick={() => onDeleteSection(section.id)}
                           title="Delete section"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </Button>
 
-                        <div className="h-7 w-7 flex items-center justify-center text-slate-400">
+                        <div className="h-7 w-7 flex items-center justify-center text-ds-muted">
                           {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                         </div>
                       </div>
@@ -777,11 +770,11 @@ export const BuilderCanvas = ({
 
                   {/* Section Content & Lesson Blocks */}
                   {isExpanded && (
-                    <CardContent className="p-4 md:p-5 space-y-4 bg-white dark:bg-slate-900">
+                    <CardContent className="p-4 md:p-5 space-y-4 bg-ds-surface">
                       {/* Lesson Items */}
                       {section.items.length === 0 ? (
-                        <div className="p-6 text-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl bg-slate-50/50 dark:bg-slate-900/50">
-                          <p className="text-xs font-semibold text-slate-500 mb-3">
+                        <div className="p-6 text-center border border-dashed border-ds-border rounded-[8px] bg-ds-surface-subtle/50">
+                          <p className="text-xs font-medium text-ds-muted mb-3">
                             This section has no lessons yet. Choose a content type below to add your first lesson:
                           </p>
                           <div className="flex flex-wrap gap-2 justify-center">
@@ -793,9 +786,9 @@ export const BuilderCanvas = ({
                                   size="sm"
                                   variant="outline"
                                   onClick={() => onAddContent(config.type, section.id)}
-                                  className="h-8 text-xs font-semibold bg-white dark:bg-slate-950 hover:border-amber-400 hover:bg-amber-50/50"
+                                  className="h-8 text-xs font-medium border-ds-border text-ds-ink hover:bg-ds-surface"
                                 >
-                                  <IconComponent className="w-3.5 h-3.5 me-1.5 text-amber-600" />
+                                  <IconComponent className="w-3.5 h-3.5 me-1.5 text-ds-accent" />
                                   {config.label}
                                 </Button>
                               )
@@ -816,10 +809,10 @@ export const BuilderCanvas = ({
                                 onDragOver={handleDragOver}
                                 onDrop={(e) => handleDropContent(e, section.id, itemIndex)}
                                 className={cn(
-                                  'group rounded-xl border bg-white dark:bg-slate-950 transition-all overflow-hidden',
+                                  'group rounded-[8px] border bg-ds-surface text-ds-ink transition-all overflow-hidden shadow-2xs',
                                   isBlockExpanded
-                                    ? 'border-amber-300 dark:border-amber-700 shadow-sm'
-                                    : 'border-slate-200 dark:border-slate-800 hover:border-amber-400 hover:shadow-xs'
+                                    ? 'border-amber-500/50 shadow-xs'
+                                    : 'border-ds-border hover:border-amber-500/40 hover:shadow-xs'
                                 )}
                               >
                                 {/* Compact header row (always visible) */}
@@ -829,19 +822,19 @@ export const BuilderCanvas = ({
                                   )}
                                   onClick={() => onEditContent(section.id, item.id)}
                                 >
-                                  <div className="cursor-grab active:cursor-grabbing text-slate-300 group-hover:text-slate-500">
+                                  <div className="cursor-grab active:cursor-grabbing text-ds-muted/50 group-hover:text-ds-muted">
                                     <GripVertical className="w-4 h-4" />
                                   </div>
 
-                                  <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
+                                  <div className="w-8 h-8 rounded-[6px] bg-ds-surface-subtle border border-ds-border/60 flex items-center justify-center shrink-0 text-ds-ink">
                                     {getContentIcon(item.type)}
                                   </div>
 
                                   <div className={cn('flex-1 min-w-0', 'text-start')}>
-                                    <p className="font-bold text-xs text-slate-900 dark:text-white truncate">
+                                    <p className="font-semibold text-xs text-ds-ink truncate">
                                       {item.title || 'Untitled Lesson Block'}
                                     </p>
-                                    <p className="text-[11px] text-muted-foreground truncate capitalize">
+                                    <p className="text-[11px] text-ds-muted truncate capitalize">
                                       {item.type.replace('_', ' ')} • {item.is_mandatory ? 'Mandatory' : 'Optional'}
                                       {item.duration ? ` • ${item.duration} min` : ''}
                                     </p>
@@ -858,10 +851,10 @@ export const BuilderCanvas = ({
                                         size="sm"
                                         variant={isBlockExpanded ? "secondary" : "ghost"}
                                         className={cn(
-                                          'h-7 px-2 text-xs font-semibold transition-colors',
+                                          'h-7 px-2 text-xs font-medium transition-colors',
                                           isBlockExpanded
-                                            ? 'text-amber-900 bg-amber-100 hover:bg-amber-200 dark:bg-amber-950 dark:text-amber-300'
-                                            : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800'
+                                            ? 'text-amber-800 bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/20 dark:text-amber-300'
+                                            : 'text-ds-muted hover:text-ds-ink hover:bg-ds-surface-subtle'
                                         )}
                                         onClick={() => toggleBlockPreview(item.id)}
                                         title={isBlockExpanded ? t('builder.inlinePreview.collapse', 'Collapse preview') : t('builder.inlinePreview.expand', 'Expand preview')}
@@ -869,7 +862,7 @@ export const BuilderCanvas = ({
                                         {isBlockExpanded ? (
                                           <><ChevronUp className="w-3.5 h-3.5 me-1" /><span>{t('builder.inlinePreview.hide', 'Hide')}</span></>
                                         ) : (
-                                          <><Eye className="w-3.5 h-3.5 me-1 text-slate-500" /><span>{t('builder.inlinePreview.preview', 'Preview')}</span></>
+                                          <><Eye className="w-3.5 h-3.5 me-1 text-ds-muted" /><span>{t('builder.inlinePreview.preview', 'Preview')}</span></>
                                         )}
                                       </Button>
                                     )}
@@ -880,7 +873,7 @@ export const BuilderCanvas = ({
                                         size="sm"
                                         variant="ghost"
                                         disabled={expandingLessonId === item.id}
-                                        className="h-7 px-2 text-xs font-semibold text-indigo-700 dark:text-indigo-300 hover:text-indigo-800 hover:bg-indigo-50 dark:hover:bg-indigo-950"
+                                        className="h-7 px-2 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 hover:bg-indigo-500/10"
                                         onClick={async () => {
                                           setExpandingLessonId(item.id)
                                           try {
@@ -898,7 +891,7 @@ export const BuilderCanvas = ({
                                           </>
                                         ) : (
                                           <>
-                                            <Sparkles className="w-3.5 h-3.5 me-1 text-indigo-600 dark:text-indigo-400" />
+                                            <Sparkles className="w-3.5 h-3.5 me-1 text-indigo-500" />
                                             <span className="hidden sm:inline">Deep Expand</span>
                                           </>
                                         )}
@@ -909,10 +902,10 @@ export const BuilderCanvas = ({
                                     <Button
                                       size="sm"
                                       variant="outline"
-                                      className="h-7 px-2.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-amber-700 hover:border-amber-400"
+                                      className="h-7 px-2.5 text-xs font-medium border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle hover:border-amber-500/40"
                                       onClick={() => onEditContent(section.id, item.id)}
                                     >
-                                      <Edit3 className="w-3 h-3 me-1 text-slate-400" />
+                                      <Edit3 className="w-3 h-3 me-1 text-ds-muted" />
                                       <span>Edit</span>
                                     </Button>
 
@@ -920,7 +913,7 @@ export const BuilderCanvas = ({
                                     <Button
                                       size="icon"
                                       variant="ghost"
-                                      className="h-7 w-7 p-0 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950 opacity-60 group-hover:opacity-100 transition-opacity"
+                                      className="h-7 w-7 p-0 text-ds-muted hover:text-red-600 hover:bg-red-500/10 opacity-60 group-hover:opacity-100 transition-opacity"
                                       onClick={() => onDeleteContent(section.id, item.id)}
                                       title="Delete lesson"
                                     >
@@ -931,7 +924,7 @@ export const BuilderCanvas = ({
 
                                 {/* Inline Content Preview (expanded state) */}
                                 {isBlockExpanded && (
-                                  <div className="border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
+                                  <div className="border-t border-ds-border bg-ds-surface-subtle/50">
                                     <InlineBlockPreview
                                       block={item}
                                       isRTL={isRTL}
@@ -944,8 +937,8 @@ export const BuilderCanvas = ({
                           })}
 
                           {/* Fast Add Inline Toolbar */}
-                          <div className="pt-2 flex items-center justify-between border-t border-slate-100 dark:border-slate-800 flex-wrap gap-2">
-                            <span className="text-[11px] font-semibold text-slate-400">Add Lesson:</span>
+                          <div className="pt-3 flex items-center justify-between border-t border-ds-border flex-wrap gap-2">
+                            <span className="text-[11px] font-medium text-ds-muted">Add Lesson:</span>
                             <div className="flex flex-wrap gap-1.5">
                               {CONTENT_TYPES_CONFIG.map((config) => {
                                 const IconComponent = config.icon
@@ -955,9 +948,9 @@ export const BuilderCanvas = ({
                                     size="sm"
                                     variant="ghost"
                                     onClick={() => onAddContent(config.type, section.id)}
-                                    className="h-7 px-2 text-[11px] font-medium text-slate-600 dark:text-slate-400 hover:text-amber-700 hover:bg-amber-50/70 dark:hover:bg-slate-800"
+                                    className="h-7 px-2 text-[11px] font-medium text-ds-muted hover:text-ds-ink hover:bg-ds-surface-subtle"
                                   >
-                                    <IconComponent className="w-3 h-3 me-1" />
+                                    <IconComponent className="w-3 h-3 me-1 text-ds-muted" />
                                     {config.label.split(' ')[0]}
                                   </Button>
                                 )
@@ -975,9 +968,9 @@ export const BuilderCanvas = ({
             {/* Bottom Add Section Card */}
             <div
               onClick={onAddSection}
-              className="p-4 rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-800 hover:border-amber-400 hover:bg-amber-50/30 dark:hover:bg-slate-900/40 transition-all text-center cursor-pointer flex items-center justify-center gap-2 text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-amber-800 dark:hover:text-amber-300"
+              className="p-4 rounded-[8px] border-2 border-dashed border-ds-border hover:border-amber-500/40 hover:bg-amber-500/5 transition-all text-center cursor-pointer flex items-center justify-center gap-2 text-xs font-semibold text-ds-muted hover:text-ds-ink"
             >
-              <Plus className="w-4 h-4 text-amber-600" />
+              <Plus className="w-4 h-4 text-amber-600 dark:text-amber-400" />
               <span>Add Another Section to Course</span>
             </div>
           </div>
@@ -986,21 +979,21 @@ export const BuilderCanvas = ({
 
       {/* Quick Lesson SOP Preview Dialog */}
       <Dialog open={!!previewingBlock} onOpenChange={(open) => !open && setPreviewingBlock(null)}>
-        <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-6">
-          <DialogHeader className="pb-3 border-b">
-            <DialogTitle className="text-base font-bold flex items-center gap-2 text-slate-900 dark:text-white">
-              <FileText className="w-4 h-4 text-amber-600" />
+        <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-6 bg-ds-surface border-ds-border text-ds-ink">
+          <DialogHeader className="pb-3 border-b border-ds-border">
+            <DialogTitle className="text-base font-bold flex items-center gap-2 text-ds-ink">
+              <FileText className="w-4 h-4 text-amber-600 dark:text-amber-400" />
               <span>{previewingBlock?.title || 'Lesson SOP Preview'}</span>
             </DialogTitle>
           </DialogHeader>
           <ScrollArea className="flex-1 max-h-[60vh] pe-4 py-4">
             {previewingBlock?.content ? (
               <div
-                className="prose prose-sm dark:prose-invert max-w-none text-slate-800 dark:text-slate-200 leading-relaxed"
+                className="prose prose-sm dark:prose-invert max-w-none text-ds-ink leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: sanitizeHtml(previewingBlock.content) }}
               />
             ) : (
-              <p className="text-xs text-muted-foreground italic">No SOP text content available for this lesson block.</p>
+              <p className="text-xs text-ds-muted italic">No SOP text content available for this lesson block.</p>
             )}
           </ScrollArea>
         </DialogContent>

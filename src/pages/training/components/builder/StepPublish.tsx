@@ -61,21 +61,21 @@ export function StepPublish({
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Pre-Publish AI Audit & Health Banner */}
         {auditResult && (
-          <div className="p-4 rounded-xl bg-gradient-to-r from-purple-900 to-indigo-900 text-white shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="p-5 rounded-[8px] border border-ds-border bg-ds-surface text-ds-ink shadow-2xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-purple-200 border border-white/20">
-                <Wand2 className="w-6 h-6" />
+              <div className="w-10 h-10 rounded-[6px] bg-ds-accent-soft text-ds-accent flex items-center justify-center shrink-0">
+                <Wand2 className="w-5 h-5" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h4 className="font-bold text-base">
+                  <h4 className="font-semibold text-sm text-ds-ink">
                     {t('builder.aiAuditBannerTitle', 'AI Pre-Publish Quality Audit')}
                   </h4>
-                  <Badge variant="outline" className="bg-white/20 text-white border-white/30 text-xs">
+                  <Badge variant="outline" className="bg-ds-accent-soft text-ds-accent border border-ds-accent/30 text-[11px] font-semibold">
                     {auditResult.healthScore}% {t('builder.healthScore', 'Quality Score')}
                   </Badge>
                 </div>
-                <p className="text-xs text-purple-200 mt-0.5">
+                <p className="text-xs text-ds-muted mt-0.5">
                   {auditResult.errors.length > 0
                     ? `${auditResult.errors.length} blockers preventing publication. ${auditResult.opportunities.length} fields can be auto-completed with AI.`
                     : `Course structure meets 5-star standard. ${auditResult.opportunities.length} suggestions available.`}
@@ -85,26 +85,26 @@ export function StepPublish({
 
             <Button
               onClick={onOpenAuditModal}
-              className="bg-white text-purple-900 hover:bg-purple-50 font-bold text-xs h-9 px-4 shrink-0 shadow-sm"
+              className="bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90 font-semibold text-xs h-9 px-4 shrink-0 shadow-2xs"
             >
-              <Sparkles className="w-3.5 h-3.5 me-1.5 text-purple-700" />
+              <Sparkles className="w-3.5 h-3.5 me-1.5 text-ds-accent" />
               {t('builder.openAuditBtn', 'AI Complete & Optimize')}
             </Button>
           </div>
         )}
 
-        <Card className="shadow-sm border-slate-200">
+        <Card className="rounded-[8px] border border-ds-border bg-ds-surface text-ds-ink shadow-2xs">
           <CardHeader>
-            <CardTitle className={cn("text-lg font-semibold", 'text-start')}>{t('builder.publishTitle', 'Review & Publish Course')}</CardTitle>
+            <CardTitle className="text-base font-semibold text-ds-ink text-start">{t('builder.publishTitle', 'Review & Publish Course')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid md:grid-cols-3 gap-4">
-              <div className="rounded-lg border bg-slate-50/70 p-4">
-                <div className="text-xs uppercase tracking-wide text-slate-500 font-bold">{t('builder.summary', 'Course Summary')}</div>
-                <div className="mt-3 space-y-2 text-sm text-slate-700">
+              <div className="rounded-[6px] border border-ds-border bg-ds-surface-subtle/70 p-4">
+                <div className="text-xs uppercase tracking-wide text-ds-muted font-bold">{t('builder.summary', 'Course Summary')}</div>
+                <div className="mt-3 space-y-2 text-sm text-ds-ink">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-slate-500">Department:</span>
-                    <Badge variant="outline" className="text-xs capitalize font-semibold bg-white">
+                    <span className="text-xs text-ds-muted">Department:</span>
+                    <Badge variant="outline" className="text-xs capitalize font-semibold border-ds-border bg-ds-surface text-ds-ink">
                       {category ? category.replace('_', ' ') : 'Hotel Operations'}
                     </Badge>
                   </div>
@@ -112,34 +112,34 @@ export function StepPublish({
                   <div>{t('builder.summaryItems', { count: totalItems, defaultValue: `${totalItems} content items` })}</div>
                   <div>{t('builder.summaryDuration', { count: displayDuration || 0, defaultValue: `${displayDuration || 0} min duration` })}</div>
                   {overrideDuration !== null && Math.round(overrideDuration) !== Math.round(calculatedDuration) && (
-                    <div className="text-xs text-slate-500">{t('builder.calculatedDuration', { count: calculatedDuration, defaultValue: `Calculated ${calculatedDuration} min` })}</div>
+                    <div className="text-xs text-ds-muted">{t('builder.calculatedDuration', { count: calculatedDuration, defaultValue: `Calculated ${calculatedDuration} min` })}</div>
                   )}
                 </div>
               </div>
-              <div className="rounded-lg border bg-slate-50/70 p-4">
-                <div className="text-xs uppercase tracking-wide text-slate-500 font-bold">{t('builder.rulesSummary', 'Rules Summary')}</div>
-                <div className="mt-3 space-y-2 text-sm text-slate-700">
+              <div className="rounded-[6px] border border-ds-border bg-ds-surface-subtle/70 p-4">
+                <div className="text-xs uppercase tracking-wide text-ds-muted font-bold">{t('builder.rulesSummary', 'Rules Summary')}</div>
+                <div className="mt-3 space-y-2 text-sm text-ds-ink">
                   <div>{certificateEnabled ? t('builder.certEnabled', 'Certificate enabled') : t('builder.certDisabled', 'Certificate disabled')}</div>
                   <div>{t('builder.passScoreSummary', { score: passingScore || 80, defaultValue: `Passing score: ${passingScore || 80}%` })}</div>
                   <div>{t('builder.retakeSummary', { count: allowRetake ? Number(maxAttempts) : 0, defaultValue: `Retakes allowed: ${allowRetake ? Number(maxAttempts) : 0}` })}</div>
                 </div>
               </div>
-              <div className="rounded-lg border bg-slate-50/70 p-4">
-                <div className="text-xs uppercase tracking-wide text-slate-500 font-bold">{t('builder.publishChecklist', 'Pre-Flight Checklist')}</div>
+              <div className="rounded-[6px] border border-ds-border bg-ds-surface-subtle/70 p-4">
+                <div className="text-xs uppercase tracking-wide text-ds-muted font-bold">{t('builder.publishChecklist', 'Pre-Flight Checklist')}</div>
                 <div className="mt-3 space-y-2 text-sm">
                   {validationChecklist.map((item) => (
-                    <div key={item.key} className={cn("flex items-center justify-between gap-2")}>
+                    <div key={item.key} className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
                         {item.ok ? (
-                          <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
+                          <CheckCircle2 className="h-4 w-4 text-ds-success shrink-0" />
                         ) : (
-                          <AlertTriangle className="h-4 w-4 text-amber-500 shrink-0" />
+                          <AlertTriangle className="h-4 w-4 text-ds-warning shrink-0" />
                         )}
-                        <span className={item.ok ? 'text-slate-700' : 'text-amber-700'}>{item.label}</span>
+                        <span className={item.ok ? 'text-ds-ink' : 'text-ds-warning-text'}>{item.label}</span>
                       </div>
                       {item.key === 'category' && !item.ok && setCategory && (
                         <Select onValueChange={(v) => setCategory(v)}>
-                          <SelectTrigger className="h-6 text-[11px] px-2 w-32 bg-white">
+                          <SelectTrigger className="h-6 text-[11px] px-2 w-32 bg-ds-surface border-ds-border text-ds-ink">
                             <SelectValue placeholder="Set Category" />
                           </SelectTrigger>
                           <SelectContent>
@@ -158,14 +158,14 @@ export function StepPublish({
               </div>
             </div>
 
-            <div className={cn("flex items-center justify-end gap-3")}>
-              <Button variant="outline" onClick={handleSave} disabled={builderBusy}>
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <Button variant="outline" onClick={handleSave} disabled={builderBusy} className="border-ds-border text-ds-ink hover:bg-ds-surface-subtle">
                 {t('builder.saveDraft', 'Save Draft')}
               </Button>
               <Button
                 onClick={publishTraining}
                 disabled={!publishReady || builderBusy}
-                className="bg-ds-brass hover:bg-ds-accent-hover text-white"
+                className="bg-ds-accent text-white hover:bg-ds-accent-hover font-semibold shadow-2xs disabled:opacity-50"
               >
                 {t('builder.publish', 'Publish Module')}
               </Button>

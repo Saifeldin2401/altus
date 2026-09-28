@@ -330,26 +330,38 @@ export function MembershipsManagement() {
   const handleDeleteMember = async () => {
     if (!deletingMember) return
     try {
-      const { error } = await supabase
-        .from('organization_memberships')
-        .delete()
-        .eq('id', deletingMember.id)
+      const { data: rpcSuccess, error: rpcError } = await supabase.rpc('remove_tenant_member', {
+        p_org_id: deletingMember.organization_id,
+        p_user_id: deletingMember.user_id,
+      })
 
-      if (error) throw error
+      if (rpcError || !rpcSuccess) {
+        // Fallback to soft-deactivation if RPC is unavailable
+        const { error: updateError } = await supabase
+          .from('organization_memberships')
+          .update({
+            is_active: false,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', deletingMember.id)
+
+        if (updateError) throw updateError
+      }
+
       await queryClient.invalidateQueries({ queryKey: ['org-memberships'] })
       await queryClient.invalidateQueries({ queryKey: ['tenant-role-counts'] })
       await refetch()
       setDeletingMember(null)
       toast({
         title: t('common:success', 'Success'),
-        description: t('admin:membership_deleted', 'User membership removed.')
+        description: t('admin:membership_deactivated', 'User membership deactivated.'),
       })
     } catch (err: unknown) {
       const error = err as { message?: string }
       toast({
         title: t('common:error', 'Error'),
         description: error?.message || 'Failed to remove membership',
-        variant: 'destructive'
+        variant: 'destructive',
       })
     }
   }

@@ -683,19 +683,19 @@ export function TrainingTrackCommandCenter({
     return (
         <div className="space-y-6">
             {/* Top Command Toolbar */}
-            <div className="flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white/90 p-4 shadow-sm backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/90 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-col gap-3 rounded-[8px] border border-ds-border bg-ds-surface p-3.5 shadow-none lg:flex-row lg:items-center lg:justify-between">
                 {/* Left: Filter Controls */}
-                <div className="flex flex-wrap items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2.5">
                     <div className="flex items-center gap-2">
-                        <Filter className="h-4 w-4 text-hotel-gold" />
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                        <Filter className="h-4 w-4 text-ds-accent" />
+                        <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">
                             {isRTL ? 'تصفية المركز' : 'Scope Filters'}
                         </span>
                     </div>
 
                     {/* Department Selector */}
                     <Select value={selectedDepartmentId} onValueChange={setSelectedDepartmentId}>
-                        <SelectTrigger className="h-9 w-[170px] bg-slate-50 text-xs font-semibold">
+                        <SelectTrigger className="h-9 w-[170px] bg-ds-surface border-ds-border text-xs font-medium text-ds-ink">
                             <SelectValue placeholder={isRTL ? 'كل الأقسام' : 'All Departments'} />
                         </SelectTrigger>
                         <SelectContent>
@@ -708,8 +708,8 @@ export function TrainingTrackCommandCenter({
 
                     {/* Timeframe */}
                     <Select value={timeframe} onValueChange={(val: any) => setTimeframe(val)}>
-                        <SelectTrigger className="h-9 w-[120px] bg-slate-50 text-xs font-semibold">
-                            <Clock className="me-1.5 h-3.5 w-3.5 text-slate-400" />
+                        <SelectTrigger className="h-9 w-[120px] bg-ds-surface border-ds-border text-xs font-medium text-ds-ink">
+                            <Clock className="me-1.5 h-3.5 w-3.5 text-ds-muted" />
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -727,9 +727,9 @@ export function TrainingTrackCommandCenter({
                         variant="outline"
                         size="sm"
                         onClick={() => refetch()}
-                        className="h-9 bg-white font-semibold text-slate-700 hover:bg-slate-50"
+                        className="h-9 border-ds-border bg-ds-surface text-xs font-medium text-ds-ink hover:bg-ds-surface-subtle"
                     >
-                        <RefreshCw className={cn("me-1.5 h-4 w-4", isLoading && "animate-spin")} />
+                        <RefreshCw className={cn("me-1.5 h-3.5 w-3.5", isLoading && "animate-spin")} />
                         {isRTL ? 'تحديث البيانات' : 'Refresh'}
                     </Button>
 
@@ -737,9 +737,9 @@ export function TrainingTrackCommandCenter({
                         variant="outline"
                         size="sm"
                         onClick={handleExportAuditCSV}
-                        className="h-9 border-slate-300 bg-white font-semibold text-slate-800 hover:bg-slate-50"
+                        className="h-9 border-ds-border bg-ds-surface text-xs font-medium text-ds-ink hover:bg-ds-surface-subtle"
                     >
-                        <Download className="me-1.5 h-4 w-4 text-slate-600" />
+                        <Download className="me-1.5 h-3.5 w-3.5 text-ds-muted" />
                         {isRTL ? 'تصدير سجل التدقيق' : 'Export Audit Log'}
                     </Button>
                 </div>
@@ -747,26 +747,26 @@ export function TrainingTrackCommandCenter({
 
             {/* 4 Pillars Tab Navigation */}
             <Tabs value={subTab} onValueChange={(val: any) => setSubTab(val)} className="space-y-6">
-                <TabsList className="grid h-12 w-full grid-cols-2 rounded-xl bg-slate-100 p-1.5 dark:bg-slate-800/80 md:grid-cols-4">
-                    <TabsTrigger value="overview" className="flex items-center gap-2 rounded-lg font-bold text-xs sm:text-sm data-[state=active]:bg-white data-[state=active]:text-hotel-navy data-[state=active]:shadow-sm">
-                        <BarChart3 className="h-4 w-4 text-hotel-gold" />
+                <TabsList className="grid h-11 w-full grid-cols-2 rounded-[8px] bg-ds-surface-subtle border border-ds-border p-1 md:grid-cols-4">
+                    <TabsTrigger value="overview" className="flex items-center gap-2 rounded-[6px] text-xs font-medium data-[state=active]:bg-ds-surface data-[state=active]:text-ds-ink data-[state=active]:shadow-xs text-ds-muted">
+                        <BarChart3 className="h-4 w-4 text-ds-accent" />
                         <span>{isRTL ? 'لوحة الامتثال التنفيذية' : 'Executive Overview'}</span>
                     </TabsTrigger>
-                    <TabsTrigger value="roster" className="flex items-center gap-2 rounded-lg font-bold text-xs sm:text-sm data-[state=active]:bg-white data-[state=active]:text-hotel-navy data-[state=active]:shadow-sm">
-                        <Users className="h-4 w-4 text-hotel-gold" />
+                    <TabsTrigger value="roster" className="flex items-center gap-2 rounded-[6px] text-xs font-medium data-[state=active]:bg-ds-surface data-[state=active]:text-ds-ink data-[state=active]:shadow-xs text-ds-muted">
+                        <Users className="h-4 w-4 text-ds-accent" />
                         <span>{isRTL ? 'متابعة المتدربين الحية' : 'Learner Operations'}</span>
                     </TabsTrigger>
-                    <TabsTrigger value="modules" className="flex items-center gap-2 rounded-lg font-bold text-xs sm:text-sm data-[state=active]:bg-white data-[state=active]:text-hotel-navy data-[state=active]:shadow-sm">
-                        <Brain className="h-4 w-4 text-hotel-gold" />
+                    <TabsTrigger value="modules" className="flex items-center gap-2 rounded-[6px] text-xs font-medium data-[state=active]:bg-ds-surface data-[state=active]:text-ds-ink data-[state=active]:shadow-xs text-ds-muted">
+                        <Brain className="h-4 w-4 text-ds-accent" />
                         <span>{isRTL ? 'صحة المقررات والفجوات' : 'Course Health & Gaps'}</span>
                     </TabsTrigger>
-                    <TabsTrigger value="certifications" className="flex items-center gap-2 rounded-lg font-bold text-xs sm:text-sm data-[state=active]:bg-white data-[state=active]:text-hotel-navy data-[state=active]:shadow-sm">
-                        <Award className="h-4 w-4 text-hotel-gold" />
+                    <TabsTrigger value="certifications" className="flex items-center gap-2 rounded-[6px] text-xs font-medium data-[state=active]:bg-ds-surface data-[state=active]:text-ds-ink data-[state=active]:shadow-xs text-ds-muted">
+                        <Award className="h-4 w-4 text-ds-accent" />
                         <span>{isRTL ? 'الشهادات وتفتيش الامتثال' : 'Certifications & Audit'}</span>
                         {metrics.expiringCertificatesCount > 0 && (
-                            <Badge className="h-5 px-1.5 bg-amber-500 text-slate-950 font-black text-[10px]">
+                            <span className="ms-1 px-1.5 py-0.5 rounded-full bg-ds-warning-soft text-ds-warning text-[10px] font-bold">
                                 {metrics.expiringCertificatesCount}
-                            </Badge>
+                            </span>
                         )}
                     </TabsTrigger>
                 </TabsList>
@@ -775,139 +775,133 @@ export function TrainingTrackCommandCenter({
                 <TabsContent value="overview" className="space-y-6 animate-in fade-in duration-300">
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
                         {/* 1. Compliance Rate */}
-                        <Card className="border-s-4 border-s-emerald-500 bg-gradient-to-br from-white to-emerald-50/30 shadow-sm hover:shadow-md transition-shadow">
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-xs font-semibold text-slate-500">{isRTL ? 'معدل الامتثال' : 'Compliance Rate'}</span>
-                                    <Shield className="h-4 w-4 text-emerald-600" />
-                                </div>
-                                <div className="mt-2 flex items-baseline gap-2">
-                                    <span className="text-2xl font-black text-slate-900">{metrics.complianceRate}%</span>
-                                    <Badge className="bg-emerald-100 text-emerald-800 border-none text-[10px]">
-                                        {metrics.complianceRate >= 90 ? (isRTL ? 'ممتاز' : 'Target Met') : (isRTL ? 'قيد المتابعة' : 'On Track')}
-                                    </Badge>
-                                </div>
-                                <p className="mt-1 text-[11px] text-slate-400">
-                                    {metrics.completedCount} / {metrics.totalAssignments} {isRTL ? 'مكتمل' : 'Completed'}
-                                </p>
-                            </CardContent>
-                        </Card>
+                        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 space-y-2 shadow-none transition-colors hover:border-ds-border-strong">
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'معدل الامتثال' : 'Compliance Rate'}</span>
+                                <Shield className="h-4 w-4 text-ds-accent" />
+                            </div>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{metrics.complianceRate}%</span>
+                                <span className={cn(
+                                    "px-1.5 py-0.5 rounded text-[10px] font-semibold",
+                                    metrics.complianceRate >= 90 ? "bg-ds-success-soft text-ds-success" : "bg-ds-warning-soft text-ds-warning"
+                                )}>
+                                    {metrics.complianceRate >= 90 ? (isRTL ? 'ممتاز' : 'Target Met') : (isRTL ? 'قيد المتابعة' : 'On Track')}
+                                </span>
+                            </div>
+                            <p className="text-[11px] text-ds-muted">
+                                {metrics.completedCount} / {metrics.totalAssignments} {isRTL ? 'مكتمل' : 'Completed'}
+                            </p>
+                        </div>
 
                         {/* 2. Assessment Mastery Score */}
-                        <Card className="border-s-4 border-s-indigo-500 bg-gradient-to-br from-white to-indigo-50/30 shadow-sm hover:shadow-md transition-shadow">
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-xs font-semibold text-slate-500">{isRTL ? 'متوسط الدرجات' : 'Average Score'}</span>
-                                    <Award className="h-4 w-4 text-indigo-600" />
-                                </div>
-                                <div className="mt-2 flex items-baseline gap-2">
-                                    <span className="text-2xl font-black text-slate-900">{metrics.avgScore}%</span>
-                                    <Badge className="bg-indigo-100 text-indigo-800 border-none text-[10px]">
-                                        {metrics.avgScore >= 85 ? (isRTL ? '5 نجوم' : '5-Star Quality') : (isRTL ? 'جيد' : 'Standard')}
-                                    </Badge>
-                                </div>
-                                <p className="mt-1 text-[11px] text-slate-400">
-                                    {isRTL ? 'عبر كافة الاختبارات' : 'Across all module quizzes'}
-                                </p>
-                            </CardContent>
-                        </Card>
+                        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 space-y-2 shadow-none transition-colors hover:border-ds-border-strong">
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'متوسط الدرجات' : 'Average Score'}</span>
+                                <Award className="h-4 w-4 text-ds-accent" />
+                            </div>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{metrics.avgScore ?? '—'}%</span>
+                                <span className="px-1.5 py-0.5 rounded bg-ds-info-soft text-ds-info text-[10px] font-semibold">
+                                    {(metrics.avgScore ?? 0) >= 85 ? (isRTL ? '5 نجوم' : '5-Star Quality') : (isRTL ? 'معياري' : 'Standard')}
+                                </span>
+                            </div>
+                            <p className="text-[11px] text-ds-muted">
+                                {isRTL ? 'عبر كافة الاختبارات' : 'Across all module quizzes'}
+                            </p>
+                        </div>
 
                         {/* 3. Total Enrollments */}
-                        <Card className="border-s-4 border-s-blue-500 bg-gradient-to-br from-white to-blue-50/30 shadow-sm hover:shadow-md transition-shadow">
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-xs font-semibold text-slate-500">{isRTL ? 'إجمالي التكليفات' : 'Total Assignments'}</span>
-                                    <BookOpen className="h-4 w-4 text-blue-600" />
-                                </div>
-                                <div className="mt-2 flex items-baseline gap-2">
-                                    <span className="text-2xl font-black text-slate-900">{metrics.totalAssignments}</span>
-                                    <span className="text-xs text-slate-500">{isRTL ? 'سجل تدريب' : 'records'}</span>
-                                </div>
-                                <p className="mt-1 text-[11px] text-slate-400">
-                                    {rawData?.modules.length || 0} {isRTL ? 'مقرراً معتمداً' : 'active courses'}
-                                </p>
-                            </CardContent>
-                        </Card>
+                        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 space-y-2 shadow-none transition-colors hover:border-ds-border-strong">
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'إجمالي التكليفات' : 'Total Assignments'}</span>
+                                <BookOpen className="h-4 w-4 text-ds-accent" />
+                            </div>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{metrics.totalAssignments}</span>
+                                <span className="text-xs text-ds-muted">{isRTL ? 'سجل تدريب' : 'records'}</span>
+                            </div>
+                            <p className="text-[11px] text-ds-muted">
+                                {rawData?.modules.length || 0} {isRTL ? 'مقرراً معتمداً' : 'active courses'}
+                            </p>
+                        </div>
 
                         {/* 4. Active Learners */}
-                        <Card className="border-s-4 border-s-amber-500 bg-gradient-to-br from-white to-amber-50/30 shadow-sm hover:shadow-md transition-shadow">
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-xs font-semibold text-slate-500">{isRTL ? 'المتدربون النشطون' : 'Active Learners'}</span>
-                                    <Activity className="h-4 w-4 text-amber-600 animate-pulse" />
-                                </div>
-                                <div className="mt-2 flex items-baseline gap-2">
-                                    <span className="text-2xl font-black text-slate-900">{metrics.activeLearnersCount}</span>
-                                    <span className="text-xs text-amber-700 font-bold">{isRTL ? 'موظف' : 'staff'}</span>
-                                </div>
-                                <p className="mt-1 text-[11px] text-slate-400">
-                                    {metrics.inProgressCount} {isRTL ? 'جلسة قيد التنفيذ' : 'in-progress sessions'}
-                                </p>
-                            </CardContent>
-                        </Card>
+                        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 space-y-2 shadow-none transition-colors hover:border-ds-border-strong">
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'المتدربون النشطون' : 'Active Learners'}</span>
+                                <Activity className="h-4 w-4 text-ds-accent" />
+                            </div>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{metrics.activeLearnersCount}</span>
+                                <span className="text-xs text-ds-muted font-medium">{isRTL ? 'موظف' : 'staff'}</span>
+                            </div>
+                            <p className="text-[11px] text-ds-muted">
+                                {metrics.inProgressCount} {isRTL ? 'جلسة قيد التنفيذ' : 'in-progress sessions'}
+                            </p>
+                        </div>
 
                         {/* 5. Overdue Compliance Risk */}
-                        <Card className={cn(
-                            "border-s-4 shadow-sm hover:shadow-md transition-shadow",
-                            metrics.overdueCount > 0 ? "border-s-red-500 bg-gradient-to-br from-white to-red-50/40" : "border-s-slate-300 bg-white"
+                        <div className={cn(
+                            "rounded-[8px] border p-4 space-y-2 shadow-none transition-colors",
+                            metrics.overdueCount > 0 ? "border-ds-danger/40 bg-ds-danger-soft/20 hover:border-ds-danger" : "border-ds-border bg-ds-surface hover:border-ds-border-strong"
                         )}>
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-xs font-semibold text-slate-500">{isRTL ? 'مخاطر التأخير' : 'Overdue Risk'}</span>
-                                    <AlertTriangle className={cn("h-4 w-4", metrics.overdueCount > 0 ? "text-red-600" : "text-slate-400")} />
-                                </div>
-                                <div className="mt-2 flex items-baseline gap-2">
-                                    <span className={cn("text-2xl font-black", metrics.overdueCount > 0 ? "text-red-600" : "text-slate-900")}>
-                                        {metrics.overdueCount}
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'مخاطر التأخير' : 'Overdue Risk'}</span>
+                                <AlertTriangle className={cn("h-4 w-4", metrics.overdueCount > 0 ? "text-ds-danger" : "text-ds-muted")} />
+                            </div>
+                            <div className="flex items-baseline gap-2">
+                                <span className={cn("text-2xl font-bold font-mono tracking-tight", metrics.overdueCount > 0 ? "text-ds-danger" : "text-ds-ink")}>
+                                    {metrics.overdueCount}
+                                </span>
+                                {metrics.overdueCount > 0 ? (
+                                    <span className="px-1.5 py-0.5 rounded bg-ds-danger-soft text-ds-danger text-[10px] font-semibold">
+                                        {isRTL ? 'يتطلب إجراء' : 'Action Req.'}
                                     </span>
-                                    {metrics.overdueCount > 0 ? (
-                                        <Badge className="bg-red-100 text-red-800 border-none text-[10px]">
-                                            {isRTL ? 'يتطلب إجراء' : 'Action Req.'}
-                                        </Badge>
-                                    ) : (
-                                        <Badge className="bg-emerald-100 text-emerald-800 border-none text-[10px]">
-                                            {isRTL ? 'لا يوجد تأخير' : 'Zero Overdue'}
-                                        </Badge>
-                                    )}
-                                </div>
-                                <p className="mt-1 text-[11px] text-slate-400">
-                                    {isRTL ? 'تجاوز مهلة الـ 14 يوماً' : '> 14 days without completion'}
-                                </p>
-                            </CardContent>
-                        </Card>
+                                ) : (
+                                    <span className="px-1.5 py-0.5 rounded bg-ds-success-soft text-ds-success text-[10px] font-semibold">
+                                        {isRTL ? 'لا يوجد تأخير' : 'Zero Overdue'}
+                                    </span>
+                                )}
+                            </div>
+                            <p className="text-[11px] text-ds-muted">
+                                {isRTL ? 'تجاوز مهلة الـ 14 يوماً' : '> 14 days without completion'}
+                            </p>
+                        </div>
 
                         {/* 6. Recertifications Due */}
-                        <Card className="border-s-4 border-s-purple-500 bg-gradient-to-br from-white to-purple-50/30 shadow-sm hover:shadow-md transition-shadow">
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-xs font-semibold text-slate-500">{isRTL ? 'إعادة التأهيل (30 يوم)' : 'Recert. Due'}</span>
-                                    <Clock className="h-4 w-4 text-purple-600" />
-                                </div>
-                                <div className="mt-2 flex items-baseline gap-2">
-                                    <span className="text-2xl font-black text-slate-900">{metrics.expiringCertificatesCount}</span>
-                                    <span className="text-xs text-purple-700 font-bold">{isRTL ? 'شهادة' : 'credentials'}</span>
-                                </div>
-                                <p className="mt-1 text-[11px] text-slate-400">
-                                    {isRTL ? 'تنتهي خلال 30 يوماً' : 'Expiring within 30 days'}
-                                </p>
-                            </CardContent>
-                        </Card>
+                        <div className={cn(
+                            "rounded-[8px] border p-4 space-y-2 shadow-none transition-colors",
+                            metrics.expiringCertificatesCount > 0 ? "border-ds-warning/40 bg-ds-warning-soft/20 hover:border-ds-warning" : "border-ds-border bg-ds-surface hover:border-ds-border-strong"
+                        )}>
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'إعادة التأهيل (30 يوم)' : 'Recert. Due'}</span>
+                                <Clock className="h-4 w-4 text-ds-accent" />
+                            </div>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{metrics.expiringCertificatesCount}</span>
+                                <span className="text-xs text-ds-muted font-medium">{isRTL ? 'شهادة' : 'credentials'}</span>
+                            </div>
+                            <p className="text-[11px] text-ds-muted">
+                                {isRTL ? 'تنتهي خلال 30 يوماً' : 'Expiring within 30 days'}
+                            </p>
+                        </div>
                     </div>
 
                     {/* Charts */}
                     <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-                        <Card className="lg:col-span-7 shadow-sm">
+                        <Card className="lg:col-span-7 shadow-none border border-ds-border bg-ds-surface rounded-[8px]">
                             <CardHeader className="flex flex-row items-center justify-between pb-2">
                                 <div>
-                                    <CardTitle className="text-base font-bold text-slate-900">
+                                    <CardTitle className="text-base font-semibold text-ds-ink">
                                         {isRTL ? 'سرعة الإنجاز والنشاط التدريبي اليومي' : 'Completion Velocity & Daily Activity'}
                                     </CardTitle>
-                                    <CardDescription className="text-xs">
+                                    <CardDescription className="text-xs text-ds-muted">
                                         {isRTL ? 'مقارنة بين الجلسات الجديدة والمكتملة على مدار الـ 14 يوماً الماضية' : 'Daily comparison between newly started vs completed courses'}
                                     </CardDescription>
                                 </div>
-                                <Badge variant="outline" className="text-xs bg-slate-50">
-                                    <LineChart className="me-1 h-3.5 w-3.5 text-hotel-gold" />
+                                <Badge variant="outline" className="text-xs border-ds-border bg-ds-surface-subtle text-ds-muted">
+                                    <LineChart className="me-1 h-3.5 w-3.5 text-ds-accent" />
                                     14-Day Velocity
                                 </Badge>
                             </CardHeader>
@@ -928,7 +922,7 @@ export function TrainingTrackCommandCenter({
                                             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgb(var(--ds-border))" />
                                             <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'rgb(var(--ds-muted))' }} />
                                             <YAxis tick={{ fontSize: 11, fill: 'rgb(var(--ds-muted))' }} allowDecimals={false} />
-                                            <Tooltip contentStyle={{ backgroundColor: 'rgb(var(--ds-ink))', borderColor: 'rgb(var(--ds-border-strong))', borderRadius: '8px', color: 'rgb(var(--ds-on-ink))', fontSize: '12px' }} />
+                                            <Tooltip contentStyle={{ backgroundColor: 'rgb(var(--ds-surface))', borderColor: 'rgb(var(--ds-border))', borderRadius: '8px', color: 'rgb(var(--ds-ink))', fontSize: '12px' }} />
                                             <Area type="monotone" dataKey="completed" name={isRTL ? 'مكتمل' : 'Completed'} stroke="rgb(var(--ds-success))" strokeWidth={2.5} fillOpacity={1} fill="url(#completedGrad)" />
                                             <Area type="monotone" dataKey="started" name={isRTL ? 'بدأ التدريب' : 'Started'} stroke="rgb(var(--ds-warning))" strokeWidth={2} strokeDasharray="4 4" fillOpacity={1} fill="url(#startedGrad)" />
                                         </AreaChart>
@@ -937,50 +931,50 @@ export function TrainingTrackCommandCenter({
                             </CardContent>
                         </Card>
 
-                        <Card className="lg:col-span-5 shadow-sm">
+                        <Card className="lg:col-span-5 shadow-none border border-ds-border bg-ds-surface rounded-[8px]">
                             <CardHeader className="flex flex-row items-center justify-between pb-2">
                                 <div>
-                                    <CardTitle className="text-base font-bold text-slate-900">
+                                    <CardTitle className="text-base font-semibold text-ds-ink">
                                         {isRTL ? 'مؤشر الامتثال حسب القسم' : 'Department Compliance Matrix'}
                                     </CardTitle>
-                                    <CardDescription className="text-xs">
+                                    <CardDescription className="text-xs text-ds-muted">
                                         {isRTL ? 'نسبة الامتثال ومتوسط الدرجات لكل قسم تشغيلي' : 'Compliance % and avg score across departments'}
                                     </CardDescription>
                                 </div>
-                                <Shield className="h-4 w-4 text-hotel-gold" />
+                                <Shield className="h-4 w-4 text-ds-accent" />
                             </CardHeader>
                             <CardContent className="pt-2">
                                 <div className="space-y-3 max-h-[280px] overflow-y-auto custom-scrollbar-light pe-1">
                                     {metrics.departmentPerformance.length === 0 ? (
-                                        <div className="py-12 text-center text-xs text-slate-400">
+                                        <div className="py-12 text-center text-xs text-ds-muted">
                                             {isRTL ? 'لا توجد بيانات للأقسام المختارة' : 'No department data found'}
                                         </div>
                                     ) : (
                                         metrics.departmentPerformance.map((dept) => (
-                                            <div key={dept.name} className="space-y-1 rounded-lg border border-slate-100 bg-slate-50/50 p-2.5">
+                                            <div key={dept.name} className="space-y-1 rounded-[6px] border border-ds-border bg-ds-surface-subtle p-2.5">
                                                 <div className="flex items-center justify-between text-xs">
-                                                    <span className="font-bold text-slate-800">{dept.name}</span>
+                                                    <span className="font-semibold text-ds-ink">{dept.name}</span>
                                                     <div className="flex items-center gap-2">
                                                         {dept.avgScore !== null && (
-                                                            <span className="text-[11px] text-slate-500 font-semibold">
+                                                            <span className="text-[11px] text-ds-muted font-medium">
                                                                 {dept.avgScore}% {isRTL ? 'درجة' : 'Score'}
                                                             </span>
                                                         )}
-                                                        <Badge className={cn(
-                                                            "h-5 text-[10px] font-bold border-none",
-                                                            dept.compliance >= 90 ? "bg-emerald-100 text-emerald-800" :
-                                                            dept.compliance >= 75 ? "bg-amber-100 text-amber-800" : "bg-red-100 text-red-800"
+                                                        <span className={cn(
+                                                            "px-1.5 py-0.5 rounded text-[10px] font-semibold",
+                                                            dept.compliance >= 90 ? "bg-ds-success-soft text-ds-success" :
+                                                            dept.compliance >= 75 ? "bg-ds-warning-soft text-ds-warning" : "bg-ds-danger-soft text-ds-danger"
                                                         )}>
                                                             {dept.compliance}%
-                                                        </Badge>
+                                                        </span>
                                                     </div>
                                                 </div>
-                                                <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
+                                                <div className="h-1.5 w-full bg-ds-border rounded-full overflow-hidden">
                                                     <div
                                                         className={cn(
                                                             "h-full rounded-full transition-all",
-                                                            dept.compliance >= 90 ? "bg-emerald-500" :
-                                                            dept.compliance >= 75 ? "bg-amber-500" : "bg-red-500"
+                                                            dept.compliance >= 90 ? "bg-ds-success" :
+                                                            dept.compliance >= 75 ? "bg-ds-warning" : "bg-ds-danger"
                                                         )}
                                                         style={{ width: `${dept.compliance}%` }}
                                                     />
@@ -1007,31 +1001,31 @@ export function TrainingTrackCommandCenter({
                 {/* ─── TAB 3: COURSE HEALTH & KNOWLEDGE GAPS ─── */}
                 <TabsContent value="modules" className="space-y-6 animate-in fade-in duration-300">
                     {/* Top Radar: Tricky Knowledge Gaps */}
-                    <Card className="border-amber-200 bg-amber-50/30 shadow-sm">
+                    <Card className="border border-ds-border bg-ds-surface rounded-[8px] shadow-none">
                         <CardHeader className="pb-3">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <div className="h-8 w-8 rounded-lg bg-amber-500 flex items-center justify-center text-slate-950 shadow-sm">
+                                    <div className="h-8 w-8 rounded-[6px] bg-ds-accent-soft flex items-center justify-center text-ds-accent shadow-none">
                                         <Brain className="h-4 w-4" />
                                     </div>
                                     <div>
-                                        <CardTitle className="text-base font-bold text-slate-900">
+                                        <CardTitle className="text-base font-semibold text-ds-ink">
                                             {isRTL ? 'رادار الفجوات المعرفية والأسئلة الأكثر صعوبة' : 'AI Knowledge Gap Radar & Weak Spots'}
                                         </CardTitle>
-                                        <CardDescription className="text-xs">
+                                        <CardDescription className="text-xs text-ds-muted">
                                             {isRTL ? 'الأسئلة والإجراءات المعيارية التي سجلت أقل معدلات إجابة صحيحة من المتدربين' : 'Standard questions and SOP topics with lowest staff accuracy'}
                                         </CardDescription>
                                     </div>
                                 </div>
-                                <Badge className="bg-amber-500 text-slate-950 font-bold text-xs">
+                                <span className="px-2 py-0.5 rounded-[4px] bg-ds-accent-soft text-ds-accent font-semibold text-xs border border-ds-accent/30">
                                     AI Analyzed
-                                </Badge>
+                                </span>
                             </div>
                         </CardHeader>
                         <CardContent>
                             <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
                                 {metrics.knowledgeGaps.length === 0 ? (
-                                    <div className="col-span-full py-8 text-center text-xs text-slate-500">
+                                    <div className="col-span-full py-8 text-center text-xs text-ds-muted">
                                         {isRTL ? 'لا توجد فجوات حرجة مسجلة - كافة الاختبارات تحقق نسب النجاح المعيارية.' : 'No critical knowledge gaps detected. All questions meet benchmark standards.'}
                                     </div>
                                 ) : (
@@ -1039,27 +1033,27 @@ export function TrainingTrackCommandCenter({
                                         <div
                                             key={gap.id}
                                             onClick={() => setSelectedQuestionForDetail(gap)}
-                                            className="group cursor-pointer rounded-xl border border-amber-200/80 bg-white p-3.5 shadow-xs hover:shadow-md hover:border-amber-400 transition-all space-y-2"
+                                            className="group cursor-pointer rounded-[6px] border border-ds-border bg-ds-surface-subtle p-3.5 hover:border-ds-border-strong hover:bg-ds-surface transition-all space-y-2"
                                         >
                                             <div className="flex items-center justify-between text-xs">
-                                                <Badge variant="outline" className="text-[10px] border-amber-300 text-amber-900 bg-amber-50/50">
+                                                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium border border-ds-border bg-ds-surface text-ds-muted">
                                                     {gap.category}
-                                                </Badge>
+                                                </span>
                                                 <span className={cn(
                                                     "font-bold text-xs",
-                                                    gap.accuracyRate < 60 ? "text-red-600" : "text-amber-600"
+                                                    gap.accuracyRate < 60 ? "text-ds-danger" : "text-ds-warning"
                                                 )}>
                                                     {gap.accuracyRate}% {isRTL ? 'دقة' : 'Accuracy'}
                                                 </span>
                                             </div>
-                                            <p className="text-xs font-semibold text-slate-800 line-clamp-2 leading-relaxed group-hover:text-amber-900 transition-colors">
+                                            <p className="text-xs font-semibold text-ds-ink line-clamp-2 leading-relaxed group-hover:text-ds-accent transition-colors">
                                                 "{gap.questionText}"
                                             </p>
-                                            <div className="text-[10px] text-slate-400 flex items-center justify-between pt-1 border-t border-slate-100">
+                                            <div className="text-[10px] text-ds-muted flex items-center justify-between pt-1 border-t border-ds-border/60">
                                                 <span>{gap.attempts} {isRTL ? 'محاولة' : 'attempts'}</span>
-                                                <span className="text-hotel-gold font-bold flex items-center gap-0.5">
+                                                <span className="text-ds-accent font-semibold flex items-center gap-0.5">
                                                     {isRTL ? 'تفاصيل' : 'Inspect'}
-                                                    <ArrowRight className="h-2.5 w-2.5" />
+                                                    <ArrowRight className="h-2.5 w-2.5 rtl:rotate-180" />
                                                 </span>
                                             </div>
                                         </div>
@@ -1070,19 +1064,19 @@ export function TrainingTrackCommandCenter({
                     </Card>
 
                     {/* Course Health & Pass Rate Matrix */}
-                    <Card className="shadow-sm">
+                    <Card className="shadow-none border border-ds-border bg-ds-surface rounded-[8px]">
                         <CardHeader className="flex flex-col gap-3 pb-3 sm:flex-row sm:items-center sm:justify-between">
                             <div>
-                                <CardTitle className="text-base font-bold text-slate-900">
+                                <CardTitle className="text-base font-semibold text-ds-ink">
                                     {isRTL ? 'مؤشرات أداء وصحة المقررات التدريبية' : 'Course Performance & Completion Funnels'}
                                 </CardTitle>
-                                <CardDescription className="text-xs">
+                                <CardDescription className="text-xs text-ds-muted">
                                     {isRTL ? 'اضغط على أي مقرر للاطلاع على مسار التسرب ونقاط التوقف وقائمة المتدربين' : 'Click on any course for full drop-off funnel analysis, block completions, and learner roster'}
                                 </CardDescription>
                             </div>
                             <div className="flex flex-wrap items-center gap-2">
                                 <Select value={moduleHealthFilter} onValueChange={(v: any) => setModuleHealthFilter(v)}>
-                                    <SelectTrigger className="h-8 w-[140px] text-xs font-semibold bg-slate-50">
+                                    <SelectTrigger className="h-8 w-[140px] text-xs font-medium bg-ds-surface border-ds-border text-ds-ink">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -1093,12 +1087,12 @@ export function TrainingTrackCommandCenter({
                                 </Select>
 
                                 <div className="relative w-44">
-                                    <Search className="absolute start-2.5 top-2.5 h-3.5 w-3.5 text-slate-400" />
+                                    <Search className="absolute start-2.5 top-2.5 h-3.5 w-3.5 text-ds-muted" />
                                     <Input
                                         value={moduleSearch}
                                         onChange={(e) => setModuleSearch(e.target.value)}
                                         placeholder={isRTL ? 'بحث في المقررات...' : 'Filter courses...'}
-                                        className="h-8 text-xs ps-8"
+                                        className="h-8 text-xs ps-8 bg-ds-surface border-ds-border text-ds-ink"
                                     />
                                 </div>
                             </div>
@@ -1106,7 +1100,7 @@ export function TrainingTrackCommandCenter({
                         <CardContent>
                             <div className="overflow-x-auto">
                                 <table className="w-full text-start text-xs">
-                                    <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-y border-slate-200">
+                                    <thead className="bg-ds-surface-subtle text-ds-muted uppercase tracking-wider font-semibold border-y border-ds-border">
                                         <tr>
                                             <th className="py-3 px-4">{isRTL ? 'عنوان المقرر' : 'Course Title'}</th>
                                             <th className="py-3 px-4 text-center">{isRTL ? 'الحالة' : 'Status'}</th>
@@ -1117,21 +1111,21 @@ export function TrainingTrackCommandCenter({
                                             <th className="py-3 px-4 text-end">{isRTL ? 'التحليل' : 'Deep Dive'}</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-slate-100">
+                                    <tbody className="divide-y divide-ds-border/60">
                                         {displayedModules.length === 0 ? (
                                             <tr>
-                                                <td colSpan={7} className="py-8 text-center text-slate-400">
+                                                <td colSpan={7} className="py-8 text-center text-ds-muted">
                                                     {isRTL ? 'لم يتم العثور على مقررات مطابقة' : 'No matching courses found.'}
                                                 </td>
                                             </tr>
                                         ) : (
                                             displayedModules.map((mod) => (
-                                                <tr key={mod.id} className="hover:bg-slate-50/80 transition-colors">
-                                                    <td className="py-3 px-4 font-bold text-slate-900 max-w-xs">
+                                                <tr key={mod.id} className="hover:bg-ds-surface-subtle/80 transition-colors">
+                                                    <td className="py-3 px-4 font-semibold text-ds-ink max-w-xs">
                                                         <div className="flex items-center gap-2">
                                                             <div className={cn(
                                                                 "h-2 w-2 rounded-full shrink-0",
-                                                                mod.isHealthy ? "bg-emerald-500" : "bg-amber-500 animate-ping"
+                                                                mod.isHealthy ? "bg-ds-success" : "bg-ds-warning"
                                                             )} />
                                                             <span className="truncate">{mod.title}</span>
                                                         </div>
@@ -1141,43 +1135,43 @@ export function TrainingTrackCommandCenter({
                                                             {mod.status || 'published'}
                                                         </Badge>
                                                     </td>
-                                                    <td className="py-3 px-4 text-center font-semibold text-slate-700">
+                                                    <td className="py-3 px-4 text-center font-medium text-ds-ink">
                                                         {mod.enrolled}
                                                     </td>
                                                     <td className="py-3 px-4 text-center">
                                                         <div className="flex items-center justify-center gap-2">
-                                                            <div className="w-14 bg-slate-200 h-1.5 rounded-full overflow-hidden hidden sm:block">
+                                                            <div className="w-14 bg-ds-border h-1.5 rounded-full overflow-hidden hidden sm:block">
                                                                 <div
                                                                     className={cn(
                                                                         "h-full rounded-full",
-                                                                        mod.completionRate >= 80 ? "bg-emerald-500" :
-                                                                        mod.completionRate >= 50 ? "bg-amber-500" : "bg-slate-400"
+                                                                        mod.completionRate >= 80 ? "bg-ds-success" :
+                                                                        mod.completionRate >= 50 ? "bg-ds-warning" : "bg-ds-muted"
                                                                     )}
                                                                     style={{ width: `${mod.completionRate}%` }}
                                                                 />
                                                             </div>
-                                                            <span className="font-bold text-slate-800">{mod.completionRate}%</span>
+                                                            <span className="font-semibold text-ds-ink">{mod.completionRate}%</span>
                                                         </div>
                                                     </td>
                                                     <td className="py-3 px-4 text-center">
                                                         {mod.avgScore !== null ? (
-                                                            <Badge className={cn(
-                                                                "border-none text-[10px] font-bold",
-                                                                mod.avgScore >= mod.passingScore ? "bg-emerald-100 text-emerald-800" : "bg-red-100 text-red-800"
+                                                            <span className={cn(
+                                                                "px-1.5 py-0.5 rounded text-[10px] font-semibold",
+                                                                mod.avgScore >= mod.passingScore ? "bg-ds-success-soft text-ds-success" : "bg-ds-danger-soft text-ds-danger"
                                                             )}>
                                                                 {mod.avgScore}%
-                                                            </Badge>
+                                                            </span>
                                                         ) : (
-                                                            <span className="text-slate-400">—</span>
+                                                            <span className="text-ds-muted">—</span>
                                                         )}
                                                     </td>
                                                     <td className="py-3 px-4 text-center">
                                                         {mod.worstDropBlock ? (
-                                                            <Badge variant="outline" className="border-amber-300 bg-amber-50 text-amber-900 text-[10px]">
+                                                            <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-ds-warning-soft text-ds-warning border border-ds-warning/30">
                                                                 {isRTL ? `تسرب في الخطوة ${mod.worstDropBlock.order}` : `Drop-off at Step ${mod.worstDropBlock.order}`}
-                                                            </Badge>
+                                                            </span>
                                                         ) : (
-                                                            <span className="text-[11px] text-emerald-600 font-semibold">{isRTL ? 'سلس ومتواصل' : 'Smooth Flow'}</span>
+                                                            <span className="text-[11px] text-ds-success font-medium">{isRTL ? 'سلس ومتواصل' : 'Smooth Flow'}</span>
                                                         )}
                                                     </td>
                                                     <td className="py-3 px-4 text-end">
@@ -1185,9 +1179,9 @@ export function TrainingTrackCommandCenter({
                                                             variant="outline"
                                                             size="sm"
                                                             onClick={() => setSelectedModuleForDrilldown(mod)}
-                                                            className="h-7 text-xs font-semibold text-hotel-navy border-slate-300 hover:bg-slate-100"
+                                                            className="h-7 text-xs font-medium border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle"
                                                         >
-                                                            <Eye className="me-1 h-3.5 w-3.5" />
+                                                            <Eye className="me-1 h-3.5 w-3.5 text-ds-muted" />
                                                             {isRTL ? 'تحليل تفصيلي' : 'Analyze'}
                                                         </Button>
                                                     </td>
@@ -1204,81 +1198,76 @@ export function TrainingTrackCommandCenter({
                 {/* ─── TAB 4: CERTIFICATIONS & AUDIT READINESS ─── */}
                 <TabsContent value="certifications" className="space-y-6 animate-in fade-in duration-300">
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-                        <Card className="border-s-4 border-s-purple-500 bg-white shadow-sm">
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-xs font-semibold text-slate-500">{isRTL ? 'إجمالي الشهادات المعتمدة' : 'Issued Credentials'}</span>
-                                    <Award className="h-5 w-5 text-purple-600" />
-                                </div>
-                                <div className="mt-2 text-2xl font-black text-slate-900">
-                                    {rawData?.certificates.length || 0}
-                                </div>
-                                <p className="mt-1 text-[11px] text-slate-400">
-                                    {isRTL ? 'شهادات مهنية مشفرة وموثقة' : 'Verified QR-encoded credentials'}
-                                </p>
-                            </CardContent>
-                        </Card>
+                        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 space-y-2 shadow-none transition-colors hover:border-ds-border-strong">
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'إجمالي الشهادات المعتمدة' : 'Issued Credentials'}</span>
+                                <Award className="h-5 w-5 text-ds-accent" />
+                            </div>
+                            <div className="text-2xl font-bold font-mono text-ds-ink tracking-tight">
+                                {rawData?.certificates.length || 0}
+                            </div>
+                            <p className="text-[11px] text-ds-muted">
+                                {isRTL ? 'شهادات مهنية مشفرة وموثقة' : 'Verified QR-encoded credentials'}
+                            </p>
+                        </div>
 
-                        <Card className="border-s-4 border-s-emerald-500 bg-white shadow-sm">
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-xs font-semibold text-slate-500">{isRTL ? 'شهادات سارية المفعول' : 'Active & Compliant'}</span>
-                                    <ShieldCheck className="h-5 w-5 text-emerald-600" />
-                                </div>
-                                <div className="mt-2 text-2xl font-black text-emerald-600">
-                                    {(rawData?.certificates || []).filter((c: any) => c.status === 'active' && (!c.expiry_date || new Date(c.expiry_date).getTime() > Date.now())).length}
-                                </div>
-                                <p className="mt-1 text-[11px] text-slate-400">
-                                    {isRTL ? '100% صالحة للتدقيق والتفتيش' : 'Audit-compliant for inspections'}
-                                </p>
-                            </CardContent>
-                        </Card>
+                        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 space-y-2 shadow-none transition-colors hover:border-ds-border-strong">
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'شهادات سارية المفعول' : 'Active & Compliant'}</span>
+                                <ShieldCheck className="h-5 w-5 text-ds-success" />
+                            </div>
+                            <div className="text-2xl font-bold font-mono text-ds-success tracking-tight">
+                                {(rawData?.certificates || []).filter((c: any) => c.status === 'active' && (!c.expiry_date || new Date(c.expiry_date).getTime() > Date.now())).length}
+                            </div>
+                            <p className="text-[11px] text-ds-muted">
+                                {isRTL ? '100% صالحة للتدقيق والتفتيش' : 'Audit-compliant for inspections'}
+                            </p>
+                        </div>
 
-                        <Card className="border-s-4 border-s-amber-500 bg-white shadow-sm">
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-xs font-semibold text-slate-500">{isRTL ? 'تنتهي خلال 30 يوماً' : 'Expiring in 30 Days'}</span>
-                                    <AlertCircle className="h-5 w-5 text-amber-600" />
-                                </div>
-                                <div className="mt-2 text-2xl font-black text-amber-600">
-                                    {metrics.expiringCertificatesCount}
-                                </div>
-                                <p className="mt-1 text-[11px] text-slate-400">
-                                    {isRTL ? 'تتطلب إعادة تكليف المتدربين' : 'Require recertification re-assignment'}
-                                </p>
-                            </CardContent>
-                        </Card>
+                        <div className={cn(
+                            "rounded-[8px] border p-4 space-y-2 shadow-none transition-colors",
+                            metrics.expiringCertificatesCount > 0 ? "border-ds-warning/40 bg-ds-warning-soft/20 hover:border-ds-warning" : "border-ds-border bg-ds-surface hover:border-ds-border-strong"
+                        )}>
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'تنتهي خلال 30 يوماً' : 'Expiring in 30 Days'}</span>
+                                <AlertCircle className="h-5 w-5 text-ds-warning" />
+                            </div>
+                            <div className="text-2xl font-bold font-mono text-ds-warning tracking-tight">
+                                {metrics.expiringCertificatesCount}
+                            </div>
+                            <p className="text-[11px] text-ds-muted">
+                                {isRTL ? 'تتطلب إعادة تكليف المتدربين' : 'Require recertification re-assignment'}
+                            </p>
+                        </div>
 
-                        <Card className="border-s-4 border-s-hotel-gold bg-white shadow-sm">
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-xs font-semibold text-slate-500">{isRTL ? 'جاهزية وزارة السياحة' : 'Ministry Audit Ready'}</span>
-                                    <CheckCircle2 className="h-5 w-5 text-hotel-gold" />
-                                </div>
-                                <div className="mt-2 text-2xl font-black text-slate-900">
-                                    98.8%
-                                </div>
-                                <p className="mt-1 text-[11px] text-slate-400">
-                                    {isRTL ? 'مطابق للوائح الضيافة السعودية' : 'KSA Hospitality Standards'}
-                                </p>
-                            </CardContent>
-                        </Card>
+                        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 space-y-2 shadow-none transition-colors hover:border-ds-border-strong">
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'جاهزية وزارة السياحة' : 'Ministry Audit Ready'}</span>
+                                <CheckCircle2 className="h-5 w-5 text-ds-accent" />
+                            </div>
+                            <div className="text-2xl font-bold font-mono text-ds-ink tracking-tight">
+                                98.8%
+                            </div>
+                            <p className="text-[11px] text-ds-muted">
+                                {isRTL ? 'مطابق للوائح الضيافة السعودية' : 'KSA Hospitality Standards'}
+                            </p>
+                        </div>
                     </div>
 
                     {/* Certificate Search & Action Bar */}
-                    <Card className="shadow-sm">
+                    <Card className="shadow-none border border-ds-border bg-ds-surface rounded-[8px]">
                         <CardHeader className="flex flex-col gap-3 pb-3 sm:flex-row sm:items-center sm:justify-between">
                             <div>
-                                <CardTitle className="text-base font-bold text-slate-900">
+                                <CardTitle className="text-base font-semibold text-ds-ink">
                                     {isRTL ? 'سجل الشهادات المهنية المعتمدة' : 'Official Certificate Registry & Recertification'}
                                 </CardTitle>
-                                <CardDescription className="text-xs">
+                                <CardDescription className="text-xs text-ds-muted">
                                     {isRTL ? 'إمكانية تنزيل نسخة PDF الرسمية، معاينة الشهادة، أو إعادة تأهيل الموظف بضغطة زر' : 'Download official PDF certificates, view digital verification, or trigger recertifications with 1 click'}
                                 </CardDescription>
                             </div>
                             <div className="flex flex-wrap items-center gap-2">
                                 <Select value={certStatusFilter} onValueChange={(v: any) => setCertStatusFilter(v)}>
-                                    <SelectTrigger className="h-8 w-[140px] text-xs font-semibold bg-slate-50">
+                                    <SelectTrigger className="h-8 w-[140px] text-xs font-medium bg-ds-surface border-ds-border text-ds-ink">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -1291,12 +1280,12 @@ export function TrainingTrackCommandCenter({
                                 </Select>
 
                                 <div className="relative w-52">
-                                    <Search className="absolute start-2.5 top-2.5 h-3.5 w-3.5 text-slate-400" />
+                                    <Search className="absolute start-2.5 top-2.5 h-3.5 w-3.5 text-ds-muted" />
                                     <Input
                                         value={certSearch}
                                         onChange={(e) => setCertSearch(e.target.value)}
                                         placeholder={isRTL ? 'رقم الشهادة / اسم الموظف...' : 'Search by name, number...'}
-                                        className="h-8 text-xs ps-8"
+                                        className="h-8 text-xs ps-8 bg-ds-surface border-ds-border text-ds-ink"
                                     />
                                 </div>
                             </div>
@@ -1304,7 +1293,7 @@ export function TrainingTrackCommandCenter({
                         <CardContent>
                             <div className="overflow-x-auto">
                                 <table className="w-full text-start text-xs">
-                                    <thead className="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-y border-slate-200">
+                                    <thead className="bg-ds-surface-subtle text-ds-muted uppercase tracking-wider font-semibold border-y border-ds-border">
                                         <tr>
                                             <th className="py-3 px-4">{isRTL ? 'رقم الشهادة' : 'Certificate No.'}</th>
                                             <th className="py-3 px-4">{isRTL ? 'اسم الموظف' : 'Recipient'}</th>
@@ -1316,10 +1305,10 @@ export function TrainingTrackCommandCenter({
                                             <th className="py-3 px-4 text-end">{isRTL ? 'إجراءات' : 'Actions'}</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-slate-100">
+                                    <tbody className="divide-y divide-ds-border/60">
                                         {metrics.filteredCertificates.length === 0 ? (
                                             <tr>
-                                                <td colSpan={8} className="py-8 text-center text-slate-400">
+                                                <td colSpan={8} className="py-8 text-center text-ds-muted">
                                                     {isRTL ? 'لا توجد شهادات مطابقة للمعايير المحددة' : 'No certificates found matching filters.'}
                                                 </td>
                                             </tr>
@@ -1330,49 +1319,49 @@ export function TrainingTrackCommandCenter({
                                                 const isExpired = exp && exp <= Date.now()
 
                                                 return (
-                                                    <tr key={cert.id} className="hover:bg-slate-50/80 transition-colors">
-                                                        <td className="py-3 px-4 font-mono font-bold text-hotel-navy">
+                                                    <tr key={cert.id} className="hover:bg-ds-surface-subtle/80 transition-colors">
+                                                        <td className="py-3 px-4 font-mono font-semibold text-ds-ink">
                                                             {cert.certificate_number}
                                                         </td>
-                                                        <td className="py-3 px-4 font-bold text-slate-900">
+                                                        <td className="py-3 px-4 font-medium text-ds-ink">
                                                             <div>{cert.recipient_name || 'Staff Member'}</div>
-                                                            <div className="text-[10px] font-normal text-slate-400">{cert.recipient_email}</div>
+                                                            <div className="text-[10px] text-ds-muted">{cert.recipient_email}</div>
                                                         </td>
-                                                        <td className="py-3 px-4 font-medium text-slate-800 max-w-xs truncate">
+                                                        <td className="py-3 px-4 font-normal text-ds-ink max-w-xs truncate">
                                                             {cert.title}
                                                         </td>
                                                         <td className="py-3 px-4 text-center">
                                                             {cert.score !== null ? (
-                                                                <Badge className="bg-slate-100 text-slate-800 border-none text-[10px] font-bold">
+                                                                <span className="px-1.5 py-0.5 rounded bg-ds-surface-subtle text-ds-ink border border-ds-border text-[10px] font-mono font-medium">
                                                                     {cert.score}%
-                                                                </Badge>
+                                                                </span>
                                                             ) : (
-                                                                <span className="text-slate-400">—</span>
+                                                                <span className="text-ds-muted">—</span>
                                                             )}
                                                         </td>
-                                                        <td className="py-3 px-4 text-center text-slate-600">
+                                                        <td className="py-3 px-4 text-center text-ds-muted">
                                                             {cert.completion_date ? new Date(cert.completion_date).toLocaleDateString() : '—'}
                                                         </td>
-                                                        <td className="py-3 px-4 text-center text-slate-600">
+                                                        <td className="py-3 px-4 text-center text-ds-muted">
                                                             {cert.expiry_date ? new Date(cert.expiry_date).toLocaleDateString() : (isRTL ? 'دائم' : 'Lifetime')}
                                                         </td>
                                                         <td className="py-3 px-4 text-center">
                                                             {cert.status === 'revoked' ? (
-                                                                <Badge className="bg-red-100 text-red-800 border-none text-[10px]">
+                                                                <span className="px-1.5 py-0.5 rounded bg-ds-danger-soft text-ds-danger text-[10px] font-semibold">
                                                                     {isRTL ? 'ملغاة' : 'Revoked'}
-                                                                </Badge>
+                                                                </span>
                                                             ) : isExpired ? (
-                                                                <Badge className="bg-red-100 text-red-800 border-none text-[10px]">
+                                                                <span className="px-1.5 py-0.5 rounded bg-ds-danger-soft text-ds-danger text-[10px] font-semibold">
                                                                     {isRTL ? 'منتهية' : 'Expired'}
-                                                                </Badge>
+                                                                </span>
                                                             ) : isExpiring ? (
-                                                                <Badge className="bg-amber-100 text-amber-800 border-none text-[10px] animate-pulse">
+                                                                <span className="px-1.5 py-0.5 rounded bg-ds-warning-soft text-ds-warning text-[10px] font-semibold">
                                                                     {isRTL ? 'تنتهي قريباً' : 'Expiring Soon'}
-                                                                </Badge>
+                                                                </span>
                                                             ) : (
-                                                                <Badge className="bg-emerald-100 text-emerald-800 border-none text-[10px]">
+                                                                <span className="px-1.5 py-0.5 rounded bg-ds-success-soft text-ds-success text-[10px] font-semibold">
                                                                     {isRTL ? 'سارية' : 'Active'}
-                                                                </Badge>
+                                                                </span>
                                                             )}
                                                         </td>
                                                         <td className="py-3 px-4 text-end">
@@ -1381,7 +1370,7 @@ export function TrainingTrackCommandCenter({
                                                                     variant="ghost"
                                                                     size="sm"
                                                                     onClick={() => setPreviewCertificate(cert)}
-                                                                    className="h-7 w-7 p-0 text-slate-600 hover:text-hotel-navy"
+                                                                    className="h-7 w-7 p-0 text-ds-muted hover:text-ds-ink hover:bg-ds-surface-subtle"
                                                                     title={isRTL ? 'معاينة الشهادة' : 'Preview Certificate'}
                                                                 >
                                                                     <Eye className="h-3.5 w-3.5" />
@@ -1391,7 +1380,7 @@ export function TrainingTrackCommandCenter({
                                                                     size="sm"
                                                                     onClick={() => handleDownloadCertificatePdf(cert)}
                                                                     disabled={isGeneratingPdf}
-                                                                    className="h-7 w-7 p-0 text-slate-600 hover:text-hotel-navy"
+                                                                    className="h-7 w-7 p-0 text-ds-muted hover:text-ds-ink hover:bg-ds-surface-subtle"
                                                                     title={isRTL ? 'طباعة / تنزيل PDF' : 'Download PDF'}
                                                                 >
                                                                     <Download className="h-3.5 w-3.5" />
@@ -1406,7 +1395,7 @@ export function TrainingTrackCommandCenter({
                                                                             moduleId: cert.training_module_id,
                                                                             moduleTitle: cert.title
                                                                         })}
-                                                                        className="h-7 text-[11px] font-bold border-amber-300 text-amber-900 bg-amber-50 hover:bg-amber-100"
+                                                                        className="h-7 text-[11px] font-medium border-ds-warning/40 text-ds-warning bg-ds-warning-soft hover:bg-ds-warning-soft/80"
                                                                     >
                                                                         <RefreshCw className="me-1 h-3 w-3" />
                                                                         {isRTL ? 'إعادة تأهيل' : 'Recertify'}
@@ -1428,18 +1417,18 @@ export function TrainingTrackCommandCenter({
 
             {/* ─── MODAL 1: COURSE DRILLDOWN INSPECTOR ─── */}
             <Dialog open={!!selectedModuleForDrilldown} onOpenChange={(open) => !open && setSelectedModuleForDrilldown(null)}>
-                <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
+                <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto border border-ds-border bg-ds-surface text-ds-ink">
                     <DialogHeader>
                         <div className="flex items-center justify-between pe-6">
-                            <Badge className="bg-hotel-gold text-slate-950 font-bold text-xs">
+                            <span className="px-2 py-0.5 rounded-[4px] bg-ds-accent-soft text-ds-accent font-semibold text-xs border border-ds-accent/30">
                                 {isRTL ? 'تحليل مسار المقرر' : 'Course Performance Inspector'}
-                            </Badge>
-                            <span className="text-xs text-slate-400">{selectedModuleForDrilldown?.durationMinutes} mins</span>
+                            </span>
+                            <span className="text-xs text-ds-muted">{selectedModuleForDrilldown?.durationMinutes} mins</span>
                         </div>
-                        <DialogTitle className="text-lg font-bold text-slate-900 pt-1">
+                        <DialogTitle className="text-lg font-semibold text-ds-ink pt-1">
                             {selectedModuleForDrilldown?.title}
                         </DialogTitle>
-                        <DialogDescription className="text-xs">
+                        <DialogDescription className="text-xs text-ds-muted">
                             {selectedModuleForDrilldown?.description || (isRTL ? 'تحليل تفصيلي لمعدل إكمال الخطوات والتسرب وقائمة المتدربين' : 'Detailed block retention funnel and learner engagement data')}
                         </DialogDescription>
                     </DialogHeader>
@@ -1448,49 +1437,49 @@ export function TrainingTrackCommandCenter({
                         <div className="space-y-6 pt-2">
                             {/* Summary Metrics */}
                             <div className="grid grid-cols-4 gap-3 text-center">
-                                <div className="rounded-xl bg-slate-50 p-3 border border-slate-200">
-                                    <div className="text-xs text-slate-500 font-medium">{isRTL ? 'المسجلون' : 'Enrollments'}</div>
-                                    <div className="text-xl font-bold text-slate-900 mt-1">{selectedModuleForDrilldown.enrolled}</div>
+                                <div className="rounded-[6px] bg-ds-surface-subtle p-3 border border-ds-border">
+                                    <div className="text-xs text-ds-muted font-medium">{isRTL ? 'المسجلون' : 'Enrollments'}</div>
+                                    <div className="text-xl font-bold font-mono text-ds-ink mt-1">{selectedModuleForDrilldown.enrolled}</div>
                                 </div>
-                                <div className="rounded-xl bg-slate-50 p-3 border border-slate-200">
-                                    <div className="text-xs text-slate-500 font-medium">{isRTL ? 'المكتمل' : 'Completed'}</div>
-                                    <div className="text-xl font-bold text-emerald-600 mt-1">{selectedModuleForDrilldown.completed}</div>
+                                <div className="rounded-[6px] bg-ds-surface-subtle p-3 border border-ds-border">
+                                    <div className="text-xs text-ds-muted font-medium">{isRTL ? 'المكتمل' : 'Completed'}</div>
+                                    <div className="text-xl font-bold font-mono text-ds-success mt-1">{selectedModuleForDrilldown.completed}</div>
                                 </div>
-                                <div className="rounded-xl bg-slate-50 p-3 border border-slate-200">
-                                    <div className="text-xs text-slate-500 font-medium">{isRTL ? 'نسبة الإكمال' : 'Completion Rate'}</div>
-                                    <div className="text-xl font-bold text-hotel-navy mt-1">{selectedModuleForDrilldown.completionRate}%</div>
+                                <div className="rounded-[6px] bg-ds-surface-subtle p-3 border border-ds-border">
+                                    <div className="text-xs text-ds-muted font-medium">{isRTL ? 'نسبة الإكمال' : 'Completion Rate'}</div>
+                                    <div className="text-xl font-bold font-mono text-ds-ink mt-1">{selectedModuleForDrilldown.completionRate}%</div>
                                 </div>
-                                <div className="rounded-xl bg-slate-50 p-3 border border-slate-200">
-                                    <div className="text-xs text-slate-500 font-medium">{isRTL ? 'متوسط الدرجة' : 'Avg Quiz Score'}</div>
-                                    <div className="text-xl font-bold text-purple-600 mt-1">{selectedModuleForDrilldown.avgScore ?? '—'}%</div>
+                                <div className="rounded-[6px] bg-ds-surface-subtle p-3 border border-ds-border">
+                                    <div className="text-xs text-ds-muted font-medium">{isRTL ? 'متوسط الدرجة' : 'Avg Quiz Score'}</div>
+                                    <div className="text-xl font-bold font-mono text-ds-ink mt-1">{selectedModuleForDrilldown.avgScore ?? '—'}%</div>
                                 </div>
                             </div>
 
                             {/* Block Retention & Drop-Off Funnel */}
                             <div className="space-y-3">
-                                <h4 className="text-sm font-bold text-slate-800 flex items-center justify-between">
+                                <h4 className="text-sm font-semibold text-ds-ink flex items-center justify-between">
                                     <span>{isRTL ? 'مسار استبقاء وإكمال خطوات المقرر (Funnel)' : 'Step-by-Step Drop-Off & Retention Funnel'}</span>
-                                    <span className="text-xs text-slate-400 font-normal">{selectedModuleForDrilldown.blocks.length} {isRTL ? 'خطوات' : 'content blocks'}</span>
+                                    <span className="text-xs text-ds-muted font-normal">{selectedModuleForDrilldown.blocks.length} {isRTL ? 'خطوات' : 'content blocks'}</span>
                                 </h4>
                                 {selectedModuleForDrilldown.blocks.length === 0 ? (
-                                    <p className="text-xs text-slate-400 py-4 text-center">{isRTL ? 'لا توجد خطوات محتوى مسجلة لهذا المقرر' : 'No content blocks configured for this module.'}</p>
+                                    <p className="text-xs text-ds-muted py-4 text-center">{isRTL ? 'لا توجد خطوات محتوى مسجلة لهذا المقرر' : 'No content blocks configured for this module.'}</p>
                                 ) : (
                                     <div className="space-y-2">
                                         {selectedModuleForDrilldown.blocks.map((block: any) => (
-                                            <div key={block.id} className="rounded-lg border border-slate-200 bg-slate-50 p-2.5 text-xs space-y-1.5">
+                                            <div key={block.id} className="rounded-[6px] border border-ds-border bg-ds-surface-subtle p-2.5 text-xs space-y-1.5">
                                                 <div className="flex items-center justify-between font-semibold">
-                                                    <span className="text-slate-800 flex items-center gap-2">
-                                                        <Badge variant="outline" className="text-[10px] bg-white">#{block.order}</Badge>
+                                                    <span className="text-ds-ink flex items-center gap-2">
+                                                        <Badge variant="outline" className="text-[10px] bg-ds-surface border-ds-border">#{block.order}</Badge>
                                                         {block.title}
                                                     </span>
-                                                    <span className="text-hotel-navy font-bold">{block.retentionRate}% {isRTL ? 'أكملوا الخطوة' : 'retained'}</span>
+                                                    <span className="text-ds-accent font-mono font-bold">{block.retentionRate}% {isRTL ? 'أكملوا الخطوة' : 'retained'}</span>
                                                 </div>
-                                                <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
+                                                <div className="h-1.5 w-full bg-ds-border rounded-full overflow-hidden">
                                                     <div
                                                         className={cn(
                                                             "h-full rounded-full transition-all",
-                                                            block.retentionRate >= 80 ? "bg-emerald-500" :
-                                                            block.retentionRate >= 50 ? "bg-amber-500" : "bg-red-500"
+                                                            block.retentionRate >= 80 ? "bg-ds-success" :
+                                                            block.retentionRate >= 50 ? "bg-ds-warning" : "bg-ds-danger"
                                                         )}
                                                         style={{ width: `${block.retentionRate}%` }}
                                                     />
@@ -1503,23 +1492,23 @@ export function TrainingTrackCommandCenter({
 
                             {/* Enrolled Learners Roster for this module */}
                             <div className="space-y-3">
-                                <h4 className="text-sm font-bold text-slate-800">
+                                <h4 className="text-sm font-semibold text-ds-ink">
                                     {isRTL ? 'المتدربون المسجلون في هذا المقرر' : 'Enrolled Learners'} ({selectedModuleForDrilldown.learners.length})
                                 </h4>
-                                <div className="max-h-48 overflow-y-auto border border-slate-200 rounded-lg divide-y divide-slate-100 text-xs">
+                                <div className="max-h-48 overflow-y-auto border border-ds-border rounded-[6px] divide-y divide-ds-border/60 text-xs">
                                     {selectedModuleForDrilldown.learners.length === 0 ? (
-                                        <div className="p-4 text-center text-slate-400">{isRTL ? 'لا يوجد متدربون مسجلون حالياً' : 'No learners currently assigned.'}</div>
+                                        <div className="p-4 text-center text-ds-muted">{isRTL ? 'لا يوجد متدربون مسجلون حالياً' : 'No learners currently assigned.'}</div>
                                     ) : (
                                         selectedModuleForDrilldown.learners.map((lr: any) => {
                                             const prof = lr.profiles as any
                                             return (
-                                                <div key={lr.id} className="p-2.5 flex items-center justify-between hover:bg-slate-50">
+                                                <div key={lr.id} className="p-2.5 flex items-center justify-between hover:bg-ds-surface-subtle transition-colors">
                                                     <div>
-                                                        <div className="font-bold text-slate-800">{prof?.full_name || 'Staff Member'}</div>
-                                                        <div className="text-[10px] text-slate-400">{prof?.email}</div>
+                                                        <div className="font-semibold text-ds-ink">{prof?.full_name || 'Staff Member'}</div>
+                                                        <div className="text-[10px] text-ds-muted">{prof?.email}</div>
                                                     </div>
                                                     <div className="flex items-center gap-3">
-                                                        <span className="font-semibold text-slate-600">{lr.progress_percentage || 0}%</span>
+                                                        <span className="font-mono text-xs font-semibold text-ds-muted">{lr.progress_percentage || 0}%</span>
                                                         <Badge variant={lr.status === 'completed' ? 'default' : 'secondary'} className="text-[10px] capitalize">
                                                             {lr.status}
                                                         </Badge>
@@ -1541,12 +1530,12 @@ export function TrainingTrackCommandCenter({
                                     onNavigateToBuilder?.(selectedModuleForDrilldown?.id)
                                     setSelectedModuleForDrilldown(null)
                                 }}
-                                className="text-xs"
+                                className="text-xs border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle"
                             >
                                 {isRTL ? 'تعديل المقرر في المحرر' : 'Open in Builder'}
                             </Button>
                         )}
-                        <Button onClick={() => setSelectedModuleForDrilldown(null)} className="text-xs">
+                        <Button onClick={() => setSelectedModuleForDrilldown(null)} className="text-xs bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90">
                             {t('common:action.close', 'Close')}
                         </Button>
                     </DialogFooter>
@@ -1555,46 +1544,46 @@ export function TrainingTrackCommandCenter({
 
             {/* ─── MODAL 2: QUESTION GAP DETAIL MODAL ─── */}
             <Dialog open={!!selectedQuestionForDetail} onOpenChange={(open) => !open && setSelectedQuestionForDetail(null)}>
-                <DialogContent className="max-w-lg">
+                <DialogContent className="max-w-lg border border-ds-border bg-ds-surface text-ds-ink">
                     <DialogHeader>
-                        <Badge className="w-fit bg-red-100 text-red-800 border-none text-[10px] font-bold">
+                        <span className="w-fit px-1.5 py-0.5 rounded bg-ds-danger-soft text-ds-danger text-[10px] font-semibold">
                             {selectedQuestionForDetail?.accuracyRate}% {isRTL ? 'نسبة الإجابة الصحيحة' : 'Accuracy Rate'}
-                        </Badge>
-                        <DialogTitle className="text-base font-bold text-slate-900 pt-1">
+                        </span>
+                        <DialogTitle className="text-base font-semibold text-ds-ink pt-1">
                             {selectedQuestionForDetail?.category}
                         </DialogTitle>
-                        <DialogDescription className="text-xs">
+                        <DialogDescription className="text-xs text-ds-muted">
                             {isRTL ? 'تفاصيل السؤال المسجل كفجوة تدريبية بناءً على محاولات المتدربين' : 'Detailed breakdown of the question identified as a team knowledge gap'}
                         </DialogDescription>
                     </DialogHeader>
 
                     {selectedQuestionForDetail && (
                         <div className="space-y-4 pt-2 text-xs">
-                            <div className="p-3 bg-slate-50 rounded-xl border border-slate-200">
-                                <span className="font-semibold text-slate-500 uppercase tracking-wider text-[10px]">{isRTL ? 'نص السؤال' : 'Question Prompt'}</span>
-                                <p className="font-bold text-slate-900 mt-1 text-sm leading-relaxed">
+                            <div className="p-3 bg-ds-surface-subtle rounded-[6px] border border-ds-border">
+                                <span className="font-semibold text-ds-muted uppercase tracking-wider text-[10px]">{isRTL ? 'نص السؤال' : 'Question Prompt'}</span>
+                                <p className="font-semibold text-ds-ink mt-1 text-sm leading-relaxed">
                                     "{selectedQuestionForDetail.questionText}"
                                 </p>
                             </div>
 
-                            <div className="p-3 bg-amber-50/60 rounded-xl border border-amber-200/80">
-                                <span className="font-semibold text-amber-900 uppercase tracking-wider text-[10px] flex items-center gap-1">
-                                    <Sparkles className="h-3 w-3 text-amber-600" />
+                            <div className="p-3 bg-ds-accent-soft/30 rounded-[6px] border border-ds-accent/30">
+                                <span className="font-semibold text-ds-accent uppercase tracking-wider text-[10px] flex items-center gap-1">
+                                    <Sparkles className="h-3 w-3 text-ds-accent" />
                                     {isRTL ? 'التوجيه المعياري المعتمد (SOP)' : 'Official SOP Explanation & Guidance'}
                                 </span>
-                                <p className="text-slate-800 mt-1 leading-relaxed">
+                                <p className="text-ds-ink mt-1 leading-relaxed">
                                     {selectedQuestionForDetail.explanation}
                                 </p>
                             </div>
 
-                            <div className="text-[11px] text-slate-500">
+                            <div className="text-[11px] text-ds-muted">
                                 {isRTL ? `تم تحليل ${selectedQuestionForDetail.attempts} محاولة إجابة مسجلة من موظفي الفنادق.` : `Analyzed across ${selectedQuestionForDetail.attempts} recorded staff quiz attempts.`}
                             </div>
                         </div>
                     )}
 
                     <DialogFooter>
-                        <Button onClick={() => setSelectedQuestionForDetail(null)} className="text-xs">
+                        <Button onClick={() => setSelectedQuestionForDetail(null)} className="text-xs bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90">
                             {t('common:action.close', 'Close')}
                         </Button>
                     </DialogFooter>
@@ -1603,41 +1592,41 @@ export function TrainingTrackCommandCenter({
 
             {/* ─── MODAL 3: CERTIFICATE PREVIEW MODAL ─── */}
             <Dialog open={!!previewCertificate} onOpenChange={(open) => !open && setPreviewCertificate(null)}>
-                <DialogContent className="max-w-md">
+                <DialogContent className="max-w-md border border-ds-border bg-ds-surface text-ds-ink">
                     <DialogHeader>
-                        <Badge className="w-fit bg-emerald-100 text-emerald-800 border-none text-[10px] font-bold">
+                        <span className="w-fit px-1.5 py-0.5 rounded bg-ds-success-soft text-ds-success text-[10px] font-semibold">
                             {isRTL ? 'شهادة معتمدة موثقة' : 'Verified Official Certificate'}
-                        </Badge>
-                        <DialogTitle className="text-base font-bold text-slate-900 pt-1">
+                        </span>
+                        <DialogTitle className="text-base font-semibold text-ds-ink pt-1">
                             {previewCertificate?.title}
                         </DialogTitle>
-                        <DialogDescription className="text-xs">
+                        <DialogDescription className="text-xs font-mono text-ds-muted">
                             {previewCertificate?.certificate_number}
                         </DialogDescription>
                     </DialogHeader>
 
                     {previewCertificate && (
                         <div className="space-y-4 pt-2 text-xs">
-                            <div className="rounded-xl border-2 border-hotel-gold/40 bg-gradient-to-br from-amber-50/50 via-white to-amber-50/20 p-5 text-center shadow-xs space-y-3">
-                                <Award className="h-10 w-10 text-hotel-gold mx-auto" />
+                            <div className="rounded-[8px] border-2 border-ds-brass/40 bg-ds-surface-subtle p-5 text-center space-y-3">
+                                <Award className="h-10 w-10 text-ds-accent mx-auto" />
                                 <div>
-                                    <div className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">{isRTL ? 'تمنح هذه الشهادة إلى' : 'This Certificate is Presented To'}</div>
-                                    <div className="text-lg font-black text-slate-900 mt-1">{previewCertificate.recipient_name}</div>
+                                    <div className="text-[10px] uppercase tracking-widest text-ds-muted font-semibold">{isRTL ? 'تمنح هذه الشهادة إلى' : 'This Certificate is Presented To'}</div>
+                                    <div className="text-lg font-bold text-ds-ink mt-1">{previewCertificate.recipient_name}</div>
                                 </div>
-                                <div className="text-xs text-slate-600 leading-relaxed font-medium">
+                                <div className="text-xs text-ds-muted leading-relaxed">
                                     {previewCertificate.title}
                                 </div>
-                                <div className="flex items-center justify-center gap-4 text-[11px] text-slate-500 pt-2 border-t border-amber-200/60">
+                                <div className="flex items-center justify-center gap-4 text-[11px] text-ds-muted pt-2 border-t border-ds-border/60">
                                     <span>{isRTL ? 'تاريخ الإنجاز' : 'Issued'}: {new Date(previewCertificate.completion_date || previewCertificate.created_at).toLocaleDateString()}</span>
                                     {previewCertificate.score && <span>{isRTL ? 'الدرجة' : 'Score'}: <strong>{previewCertificate.score}%</strong></span>}
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-between p-2.5 bg-slate-50 rounded-lg text-[11px] text-slate-600">
-                                <span>{isRTL ? 'رمز التحقق الرقمي' : 'Verification Code'}: <strong>{previewCertificate.verification_code}</strong></span>
-                                <Badge variant="outline" className="text-[10px] border-emerald-300 text-emerald-800">
+                            <div className="flex items-center justify-between p-2.5 bg-ds-surface-subtle rounded-[6px] border border-ds-border text-[11px] text-ds-ink">
+                                <span>{isRTL ? 'رمز التحقق الرقمي' : 'Verification Code'}: <strong className="font-mono">{previewCertificate.verification_code}</strong></span>
+                                <span className="px-1.5 py-0.5 rounded bg-ds-success-soft text-ds-success text-[10px] font-semibold">
                                     {isRTL ? 'صالح وموثق' : 'Authentic'}
-                                </Badge>
+                                </span>
                             </div>
                         </div>
                     )}
@@ -1646,12 +1635,12 @@ export function TrainingTrackCommandCenter({
                         <Button
                             onClick={() => handleDownloadCertificatePdf(previewCertificate)}
                             disabled={isGeneratingPdf}
-                            className="bg-hotel-navy text-white text-xs"
+                            className="bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90 text-xs"
                         >
                             {isGeneratingPdf ? <Loader2 className="me-1.5 h-3.5 w-3.5 animate-spin" /> : <Download className="me-1.5 h-3.5 w-3.5" />}
                             {isRTL ? 'تنزيل PDF الرسمي' : 'Download PDF'}
                         </Button>
-                        <Button variant="outline" onClick={() => setPreviewCertificate(null)} className="text-xs">
+                        <Button variant="outline" onClick={() => setPreviewCertificate(null)} className="text-xs border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle">
                             {t('common:action.close', 'Close')}
                         </Button>
                     </DialogFooter>
@@ -1660,44 +1649,44 @@ export function TrainingTrackCommandCenter({
 
             {/* ─── MODAL 4: RECERTIFICATION DIALOG ─── */}
             <Dialog open={!!recertTarget} onOpenChange={(open) => !open && setRecertTarget(null)}>
-                <DialogContent className="max-w-md">
+                <DialogContent className="max-w-md border border-ds-border bg-ds-surface text-ds-ink">
                     <DialogHeader>
                         <div className="flex items-center gap-2">
-                            <RefreshCw className="h-5 w-5 text-amber-600" />
-                            <DialogTitle className="text-base font-bold text-slate-900">
+                            <RefreshCw className="h-5 w-5 text-ds-accent" />
+                            <DialogTitle className="text-base font-semibold text-ds-ink">
                                 {isRTL ? 'إعادة تكليف الموظف بالشهادة' : 'Trigger Recertification Assignment'}
                             </DialogTitle>
                         </div>
-                        <DialogDescription className="text-xs">
+                        <DialogDescription className="text-xs text-ds-muted">
                             {isRTL ? 'سيتم إعادة جدولة المقرر للموظف مع مهلة 14 يوماً وتحديث إشعار التذكير' : 'Re-assign this mandatory training course to ensure compliance validity before audit expiration.'}
                         </DialogDescription>
                     </DialogHeader>
 
                     {recertTarget && (
-                        <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs space-y-2">
+                        <div className="p-3 bg-ds-surface-subtle rounded-[6px] border border-ds-border text-xs space-y-2">
                             <div>
-                                <span className="text-slate-500 font-medium">{isRTL ? 'الموظف' : 'Employee'}:</span>{' '}
-                                <strong className="text-slate-900">{recertTarget.userName}</strong>
+                                <span className="text-ds-muted font-medium">{isRTL ? 'الموظف' : 'Employee'}:</span>{' '}
+                                <strong className="text-ds-ink">{recertTarget.userName}</strong>
                             </div>
                             <div>
-                                <span className="text-slate-500 font-medium">{isRTL ? 'المقرر' : 'Course'}:</span>{' '}
-                                <strong className="text-slate-900">{recertTarget.moduleTitle}</strong>
+                                <span className="text-ds-muted font-medium">{isRTL ? 'المقرر' : 'Course'}:</span>{' '}
+                                <strong className="text-ds-ink">{recertTarget.moduleTitle}</strong>
                             </div>
                             <div>
-                                <span className="text-slate-500 font-medium">{isRTL ? 'المهلة' : 'Due Window'}:</span>{' '}
-                                <span className="text-amber-900 font-bold">{isRTL ? '14 يوماً من اليوم' : '14 Days (Standard)'}</span>
+                                <span className="text-ds-muted font-medium">{isRTL ? 'المهلة' : 'Due Window'}:</span>{' '}
+                                <span className="text-ds-accent font-semibold">{isRTL ? '14 يوماً من اليوم' : '14 Days (Standard)'}</span>
                             </div>
                         </div>
                     )}
 
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setRecertTarget(null)} className="text-xs">
+                        <Button variant="outline" onClick={() => setRecertTarget(null)} className="text-xs border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle">
                             {t('common:action.cancel', 'Cancel')}
                         </Button>
                         <Button
                             onClick={() => recertifyMutation.mutate({ userId: recertTarget.userId, moduleId: recertTarget.moduleId })}
                             disabled={recertifyMutation.isPending}
-                            className="bg-amber-600 text-white hover:bg-amber-700 text-xs font-bold"
+                            className="bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90 text-xs font-semibold"
                         >
                             {recertifyMutation.isPending ? <Loader2 className="me-1.5 h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="me-1.5 h-3.5 w-3.5" />}
                             {isRTL ? 'تأكيد التكليف' : 'Confirm Recertification'}

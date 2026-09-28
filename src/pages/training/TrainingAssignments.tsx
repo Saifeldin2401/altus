@@ -71,26 +71,26 @@ function TrainingAssignmentsPanelInner() {
         onValueChange={(value) => setActiveTab(value as 'overview' | 'assignments' | 'grading')}
         className="space-y-6"
       >
-        <TabsList className="w-full sm:w-auto bg-white p-1 border rounded-lg">
+        <TabsList className="w-full sm:w-auto bg-ds-surface-subtle p-1 border border-ds-border rounded-[8px]">
           <TabsTrigger
             value="overview"
-            className="flex-1 sm:flex-none data-[state=active]:bg-hotel-navy data-[state=active]:text-white"
+            className="flex-1 sm:flex-none text-xs font-medium text-ds-muted data-[state=active]:bg-ds-surface data-[state=active]:text-ds-ink data-[state=active]:shadow-xs rounded-[6px]"
           >
-            <BarChart3 className={cn('w-4 h-4', 'me-2')} />
+            <BarChart3 className={cn('w-4 h-4 text-ds-accent', 'me-2')} />
             {t('overview')}
           </TabsTrigger>
           <TabsTrigger
             value="assignments"
-            className="flex-1 sm:flex-none data-[state=active]:bg-hotel-navy data-[state=active]:text-white"
+            className="flex-1 sm:flex-none text-xs font-medium text-ds-muted data-[state=active]:bg-ds-surface data-[state=active]:text-ds-ink data-[state=active]:shadow-xs rounded-[6px]"
           >
-            <Edit className={cn('w-4 h-4', 'me-2')} />
+            <Edit className={cn('w-4 h-4 text-ds-accent', 'me-2')} />
             {t('manageAssignments')}
           </TabsTrigger>
           <TabsTrigger
             value="grading"
-            className="flex-1 sm:flex-none data-[state=active]:bg-hotel-navy data-[state=active]:text-white"
+            className="flex-1 sm:flex-none text-xs font-medium text-ds-muted data-[state=active]:bg-ds-surface data-[state=active]:text-ds-ink data-[state=active]:shadow-xs rounded-[6px]"
           >
-            <Settings className={cn('w-4 h-4', 'me-2')} />
+            <Settings className={cn('w-4 h-4 text-ds-accent', 'me-2')} />
             {t('submissionsAndGrading', 'Submissions & Grading')}
           </TabsTrigger>
         </TabsList>

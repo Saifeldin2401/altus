@@ -211,74 +211,66 @@ export function SubmissionsGradingTab() {
     <div className="space-y-6">
       {/* Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <Card className="border-slate-200">
-          <CardContent className="p-4 flex items-center justify-between">
-            <div>
-              <p className="text-xs font-semibold text-muted-foreground uppercase">{t('totalSubmissions', 'Total Submissions')}</p>
-              <p className="text-2xl font-bold text-hotel-navy mt-1">{submissions.length}</p>
-            </div>
-            <div className="h-10 w-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600">
-              <FileText className="h-5 w-5" />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 transition-colors hover:border-ds-border-strong flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold text-ds-muted uppercase tracking-wider">{t('totalSubmissions', 'Total Submissions')}</p>
+            <p className="font-mono text-2xl font-bold text-ds-ink mt-1">{submissions.length}</p>
+          </div>
+          <div className="h-10 w-10 rounded-[6px] border border-ds-border bg-ds-surface-subtle flex items-center justify-center text-ds-muted">
+            <FileText className="h-5 w-5" />
+          </div>
+        </div>
 
-        <Card className="border-amber-200 bg-amber-50/40">
-          <CardContent className="p-4 flex items-center justify-between">
-            <div>
-              <p className="text-xs font-semibold text-amber-800 uppercase">{t('pendingReview', 'Pending Review')}</p>
-              <p className="text-2xl font-bold text-amber-900 mt-1">{pendingCount}</p>
-            </div>
-            <div className="h-10 w-10 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-700">
-              <Clock className="h-5 w-5" />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 transition-colors hover:border-ds-border-strong flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold text-ds-warning uppercase tracking-wider">{t('pendingReview', 'Pending Review')}</p>
+            <p className="font-mono text-2xl font-bold text-ds-warning mt-1">{pendingCount}</p>
+          </div>
+          <div className="h-10 w-10 rounded-[6px] border border-ds-warning/30 bg-ds-warning-soft flex items-center justify-center text-ds-warning">
+            <Clock className="h-5 w-5" />
+          </div>
+        </div>
 
-        <Card className="border-emerald-200 bg-emerald-50/40">
-          <CardContent className="p-4 flex items-center justify-between">
-            <div>
-              <p className="text-xs font-semibold text-emerald-800 uppercase">{t('approved', 'Approved')}</p>
-              <p className="text-2xl font-bold text-emerald-900 mt-1">{approvedCount}</p>
-            </div>
-            <div className="h-10 w-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-700">
-              <CheckCircle2 className="h-5 w-5" />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 transition-colors hover:border-ds-border-strong flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold text-ds-success uppercase tracking-wider">{t('approved', 'Approved')}</p>
+            <p className="font-mono text-2xl font-bold text-ds-success mt-1">{approvedCount}</p>
+          </div>
+          <div className="h-10 w-10 rounded-[6px] border border-ds-success/30 bg-ds-success-soft flex items-center justify-center text-ds-success">
+            <CheckCircle2 className="h-5 w-5" />
+          </div>
+        </div>
 
-        <Card className="border-rose-200 bg-rose-50/40">
-          <CardContent className="p-4 flex items-center justify-between">
-            <div>
-              <p className="text-xs font-semibold text-rose-800 uppercase">{t('revisionRequired', 'Revision Required')}</p>
-              <p className="text-2xl font-bold text-rose-900 mt-1">{revisionCount}</p>
-            </div>
-            <div className="h-10 w-10 rounded-xl bg-rose-500/20 flex items-center justify-center text-rose-700">
-              <RotateCcw className="h-5 w-5" />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 transition-colors hover:border-ds-border-strong flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold text-ds-danger uppercase tracking-wider">{t('revisionRequired', 'Revision Required')}</p>
+            <p className="font-mono text-2xl font-bold text-ds-danger mt-1">{revisionCount}</p>
+          </div>
+          <div className="h-10 w-10 rounded-[6px] border border-ds-danger/30 bg-ds-danger-soft flex items-center justify-center text-ds-danger">
+            <RotateCcw className="h-5 w-5" />
+          </div>
+        </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-xl border border-slate-200">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-ds-surface p-3.5 rounded-[8px] border border-ds-border shadow-none">
         <div className="relative w-full sm:w-80">
-          <Search className="h-4 w-4 absolute start-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search className="h-4 w-4 absolute start-3 top-1/2 -translate-y-1/2 text-ds-muted" />
           <Input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t('searchLearnerOrModule', 'Search by associate or module...')}
-            className="ps-9 h-9 text-xs"
+            className="ps-9 h-9 text-xs bg-ds-surface-subtle border-ds-border text-ds-ink placeholder:text-ds-muted focus:border-ds-border-strong"
           />
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Filter className="h-4 w-4 text-slate-400" />
+          <Filter className="h-4 w-4 text-ds-muted" />
           <Select
             value={statusFilter}
             onValueChange={(val) => setStatusFilter(val as SubmissionStatus | 'all')}
           >
-            <SelectTrigger className="h-9 w-full sm:w-48 text-xs">
+            <SelectTrigger className="h-9 w-full sm:w-48 text-xs bg-ds-surface-subtle border-ds-border text-ds-ink">
               <SelectValue placeholder={t('filterByStatus', 'Filter by status')} />
             </SelectTrigger>
             <SelectContent>
@@ -292,10 +284,10 @@ export function SubmissionsGradingTab() {
       </div>
 
       {/* Submissions Table */}
-      <Card className="border-slate-200 overflow-hidden">
+      <Card className="border-ds-border bg-ds-surface rounded-[8px] overflow-hidden shadow-none">
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-start">
-            <thead className="bg-slate-50 border-b border-slate-200 text-xs uppercase font-semibold text-slate-600">
+            <thead className="bg-ds-surface-subtle border-b border-ds-border text-xs uppercase tracking-wider font-semibold text-ds-muted">
               <tr>
                 <th className="px-4 py-3">{t('learner', 'Learner')}</th>
                 <th className="px-4 py-3">{t('trainingModule', 'Module & Item')}</th>
@@ -305,67 +297,67 @@ export function SubmissionsGradingTab() {
                 <th className="px-4 py-3 text-end">{t('actions', 'Actions')}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-ds-border/60">
               {isLoading ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-muted-foreground">
-                    <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2 text-hotel-gold" />
+                  <td colSpan={6} className="py-12 text-center text-ds-muted">
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2 text-ds-accent" />
                     <p className="text-xs">{t('loadingSubmissions', 'Loading assignment submissions...')}</p>
                   </td>
                 </tr>
               ) : filteredSubmissions.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-muted-foreground">
-                    <FileCheck className="h-8 w-8 mx-auto mb-2 text-slate-300" />
-                    <p className="font-medium text-slate-600">{t('noSubmissionsFound', 'No assignment submissions found.')}</p>
-                    <p className="text-xs text-slate-400 mt-1">{t('submissionsAppearHint', 'Learner practical submissions will appear here for grading.')}</p>
+                  <td colSpan={6} className="py-12 text-center text-ds-muted">
+                    <FileCheck className="h-8 w-8 mx-auto mb-2 text-ds-muted opacity-40" />
+                    <p className="font-medium text-ds-ink">{t('noSubmissionsFound', 'No assignment submissions found.')}</p>
+                    <p className="text-xs text-ds-muted mt-1">{t('submissionsAppearHint', 'Learner practical submissions will appear here for grading.')}</p>
                   </td>
                 </tr>
               ) : (
                 filteredSubmissions.map((sub) => (
-                  <tr key={sub.id} className="hover:bg-slate-50/70 transition-colors">
+                  <tr key={sub.id} className="hover:bg-ds-surface-subtle/80 transition-colors text-ds-ink">
                     <td className="px-4 py-3">
-                      <div className="font-semibold text-hotel-navy">{sub.learner?.full_name || sub.learner?.email || 'Unknown Learner'}</div>
-                      <div className="text-xs text-muted-foreground">{sub.learner?.job_title || sub.learner?.email || ''}</div>
+                      <div className="font-semibold text-ds-ink">{sub.learner?.full_name || sub.learner?.email || 'Unknown Learner'}</div>
+                      <div className="text-xs text-ds-muted">{sub.learner?.job_title || sub.learner?.email || ''}</div>
                     </td>
                     <td className="px-4 py-3">
-                      <div className="font-medium text-slate-800">{sub.module?.title || 'Training Module'}</div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className="font-medium text-ds-ink">{sub.module?.title || 'Training Module'}</div>
+                      <div className="text-xs text-ds-muted">
                         {sub.attempt_number > 1 ? `Attempt #${sub.attempt_number}` : 'First Attempt'}
                         {sub.attachment_urls?.length > 0 && ` • ${sub.attachment_urls.length} file(s)`}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-xs text-slate-600">
+                    <td className="px-4 py-3 text-xs text-ds-muted">
                       {sub.submitted_at ? new Date(sub.submitted_at).toLocaleDateString() : '-'}
                     </td>
                     <td className="px-4 py-3">
                       {sub.status === 'approved' && (
-                        <Badge className="bg-emerald-600 text-white text-xs gap-1">
+                        <Badge className="bg-ds-success-soft text-ds-success border border-ds-success/30 font-medium text-xs gap-1 shadow-none">
                           <CheckCircle2 className="h-3 w-3" />
                           {t('approved', 'Approved')}
                         </Badge>
                       )}
                       {(sub.status === 'submitted' || sub.status === 'under_review') && (
-                        <Badge className="bg-amber-500 text-white text-xs gap-1">
+                        <Badge className="bg-ds-warning-soft text-ds-warning border border-ds-warning/30 font-medium text-xs gap-1 shadow-none">
                           <Clock className="h-3 w-3" />
                           {t('underReview', 'Under Review')}
                         </Badge>
                       )}
                       {(sub.status === 'revision_required' || sub.status === 'rejected') && (
-                        <Badge className="bg-rose-600 text-white text-xs gap-1">
+                        <Badge className="bg-ds-danger-soft text-ds-danger border border-ds-danger/30 font-medium text-xs gap-1 shadow-none">
                           <RotateCcw className="h-3 w-3" />
                           {t('revisionRequired', 'Revision Required')}
                         </Badge>
                       )}
                     </td>
-                    <td className="px-4 py-3 font-mono font-semibold text-xs text-slate-700">
+                    <td className="px-4 py-3 font-mono font-semibold text-xs text-ds-ink">
                       {sub.score !== null && sub.score !== undefined ? `${sub.score}%` : '-'}
                     </td>
                     <td className="px-4 py-3 text-end">
                       <Button
                         size="sm"
                         onClick={() => openReviewModal(sub)}
-                        className="h-8 text-xs bg-hotel-navy hover:bg-hotel-navy-light text-white gap-1.5 shadow-sm"
+                        className="h-8 text-xs bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90 gap-1.5 shadow-none rounded-md"
                       >
                         <FileCheck className="h-3.5 w-3.5" />
                         {sub.status === 'approved' ? t('editGrade', 'Review / Edit') : t('gradeSubmission', 'Review & Grade')}
@@ -381,15 +373,15 @@ export function SubmissionsGradingTab() {
 
       {/* Review & Grading Modal */}
       <Dialog open={reviewDialogOpen} onOpenChange={setReviewDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-ds-surface border border-ds-border text-ds-ink">
           <DialogHeader>
             <div className="flex items-center justify-between pe-6">
-              <DialogTitle className="text-lg font-bold text-hotel-navy flex items-center gap-2">
-                <FileCheck className="h-5 w-5 text-hotel-gold" />
+              <DialogTitle className="text-base font-bold text-ds-ink flex items-center gap-2">
+                <FileCheck className="h-5 w-5 text-ds-accent" />
                 {t('gradePracticalAssignment', 'Evaluate Practical Assignment')}
               </DialogTitle>
             </div>
-            <DialogDescription className="text-xs">
+            <DialogDescription className="text-xs text-ds-muted">
               {selectedSubmission?.learner?.full_name || 'Learner'} — {selectedSubmission?.module?.title}
             </DialogDescription>
           </DialogHeader>
@@ -397,20 +389,20 @@ export function SubmissionsGradingTab() {
           {selectedSubmission && (
             <div className="space-y-5 py-2">
               {/* AI Evaluator Co-Pilot Card */}
-              <div className="rounded-xl border border-indigo-100 bg-gradient-to-br from-indigo-50/70 via-white to-amber-50/40 p-4 shadow-sm space-y-3">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-indigo-100/80 pb-2.5">
+              <div className="rounded-[8px] border border-ds-accent/30 bg-ds-accent-soft/20 p-4 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-ds-accent/20 pb-2.5">
                   <div className="flex items-center gap-2">
-                    <div className="h-7 w-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-sm">
+                    <div className="h-7 w-7 rounded-[6px] bg-ds-accent flex items-center justify-center text-ds-ink-contrast shadow-none">
                       <Sparkles className="h-4 w-4" />
                     </div>
                     <div>
-                      <h4 className="text-xs font-bold text-indigo-950 flex items-center gap-1.5">
+                      <h4 className="text-xs font-bold text-ds-ink flex items-center gap-1.5">
                         {t('aiGradingCoPilot', 'AI Evaluation Co-Pilot')}
-                        <Badge variant="outline" className="text-[10px] font-medium py-0 px-1.5 text-indigo-700 border-indigo-300 bg-indigo-50">
+                        <Badge variant="outline" className="text-[10px] font-medium py-0 px-1.5 text-ds-accent border-ds-accent/30 bg-ds-accent-soft">
                           OpenRouter AI
                         </Badge>
                       </h4>
-                      <p className="text-[11px] text-muted-foreground">
+                      <p className="text-[11px] text-ds-muted">
                         {t('aiGradingHint', 'Automated rubric comparison & feedback generator for hotel instructors.')}
                       </p>
                     </div>
@@ -421,7 +413,7 @@ export function SubmissionsGradingTab() {
                     size="sm"
                     onClick={handleRunAIEvaluation}
                     disabled={isEvaluatingAI}
-                    className="h-8 text-xs bg-indigo-600 hover:bg-indigo-700 text-white gap-1.5 shadow-sm shrink-0"
+                    className="h-8 text-xs bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90 gap-1.5 shadow-none shrink-0 rounded-md font-semibold"
                   >
                     {isEvaluatingAI ? (
                       <>
@@ -440,21 +432,21 @@ export function SubmissionsGradingTab() {
                 {/* AI Results Presentation */}
                 {aiResult ? (
                   <div className="space-y-3 pt-1">
-                    <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-lg bg-white border border-indigo-100 shadow-xs">
+                    <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-[6px] bg-ds-surface border border-ds-border">
                       <div className="flex items-center gap-3">
-                        <div className="text-center px-2 py-1 bg-slate-50 rounded-md border border-slate-200">
-                          <span className="block text-[10px] text-muted-foreground uppercase font-semibold">{t('suggestedScore', 'Suggested Score')}</span>
-                          <span className="font-mono font-bold text-base text-indigo-700">{aiResult.score}%</span>
+                        <div className="text-center px-2.5 py-1 bg-ds-surface-subtle rounded-md border border-ds-border">
+                          <span className="block text-[10px] text-ds-muted uppercase font-semibold">{t('suggestedScore', 'Suggested Score')}</span>
+                          <span className="font-mono font-bold text-base text-ds-accent">{aiResult.score}%</span>
                         </div>
                         <div>
-                          <span className="block text-[10px] text-muted-foreground uppercase font-semibold">{t('recommendation', 'AI Recommendation')}</span>
+                          <span className="block text-[10px] text-ds-muted uppercase font-semibold">{t('recommendation', 'AI Recommendation')}</span>
                           {aiResult.decision === 'approved' ? (
-                            <Badge className="bg-emerald-600 text-white text-[11px] gap-1 mt-0.5">
+                            <Badge className="bg-ds-success-soft text-ds-success border border-ds-success/30 font-medium text-[11px] gap-1 mt-0.5 shadow-none">
                               <CheckCircle2 className="h-3 w-3" />
                               {t('approveAndPass', 'Approve & Pass')}
                             </Badge>
                           ) : (
-                            <Badge className="bg-rose-600 text-white text-[11px] gap-1 mt-0.5">
+                            <Badge className="bg-ds-danger-soft text-ds-danger border border-ds-danger/30 font-medium text-[11px] gap-1 mt-0.5 shadow-none">
                               <RotateCcw className="h-3 w-3" />
                               {t('requestRevision', 'Request Revision')}
                             </Badge>
@@ -466,7 +458,7 @@ export function SubmissionsGradingTab() {
                         type="button"
                         size="sm"
                         onClick={handleApplyAIAssessment}
-                        className="h-8 text-xs bg-hotel-gold hover:bg-hotel-gold/90 text-hotel-navy font-semibold gap-1.5 shadow-sm"
+                        className="h-8 text-xs bg-ds-accent text-ds-ink-contrast hover:bg-ds-accent/90 font-semibold gap-1.5 shadow-none rounded-md"
                       >
                         <Check className="h-3.5 w-3.5" />
                         {t('applyAIAssessment', 'Apply AI Score & Notes')}
@@ -476,12 +468,12 @@ export function SubmissionsGradingTab() {
                     {/* Strengths & Improvements */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                       {aiResult.strengths?.length > 0 && (
-                        <div className="p-2.5 rounded-lg bg-emerald-50/60 border border-emerald-200/70">
-                          <p className="font-semibold text-emerald-900 flex items-center gap-1 mb-1">
-                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                        <div className="p-2.5 rounded-[6px] bg-ds-success-soft/60 border border-ds-success/30">
+                          <p className="font-semibold text-ds-success flex items-center gap-1 mb-1">
+                            <CheckCircle2 className="h-3.5 w-3.5 text-ds-success shrink-0" />
                             {t('keyStrengths', 'Key Strengths')}
                           </p>
-                          <ul className="list-disc list-inside space-y-0.5 text-[11px] text-emerald-800 ps-1">
+                          <ul className="list-disc list-inside space-y-0.5 text-[11px] text-ds-ink ps-1">
                             {aiResult.strengths.map((st, i) => (
                               <li key={i}>{st}</li>
                             ))}
@@ -490,12 +482,12 @@ export function SubmissionsGradingTab() {
                       )}
 
                       {aiResult.improvements?.length > 0 && (
-                        <div className="p-2.5 rounded-lg bg-amber-50/60 border border-amber-200/70">
-                          <p className="font-semibold text-amber-900 flex items-center gap-1 mb-1">
-                            <Lightbulb className="h-3.5 w-3.5 text-amber-600 shrink-0" />
+                        <div className="p-2.5 rounded-[6px] bg-ds-warning-soft/60 border border-ds-warning/30">
+                          <p className="font-semibold text-ds-warning flex items-center gap-1 mb-1">
+                            <Lightbulb className="h-3.5 w-3.5 text-ds-warning shrink-0" />
                             {t('areasForImprovement', 'Suggestions for Improvement')}
                           </p>
-                          <ul className="list-disc list-inside space-y-0.5 text-[11px] text-amber-800 ps-1">
+                          <ul className="list-disc list-inside space-y-0.5 text-[11px] text-ds-ink ps-1">
                             {aiResult.improvements.map((im, i) => (
                               <li key={i}>{im}</li>
                             ))}
@@ -505,8 +497,8 @@ export function SubmissionsGradingTab() {
                     </div>
                   </div>
                 ) : isEvaluatingAI ? (
-                  <div className="py-4 text-center text-xs text-indigo-700 flex flex-col items-center justify-center gap-2">
-                    <Loader2 className="h-5 w-5 animate-spin text-indigo-600" />
+                  <div className="py-4 text-center text-xs text-ds-accent flex flex-col items-center justify-center gap-2">
+                    <Loader2 className="h-5 w-5 animate-spin text-ds-accent" />
                     <p className="font-medium">{t('aiAnalyzingRubric', 'Comparing submission with 5-star hotel operational standards...')}</p>
                   </div>
                 ) : null}
@@ -514,18 +506,18 @@ export function SubmissionsGradingTab() {
 
               {/* Learner's Submitted Text */}
               <div>
-                <Label className="text-xs font-semibold text-slate-600 uppercase">
+                <Label className="text-xs font-semibold text-ds-muted uppercase tracking-wider">
                   {t('learnerWrittenWork', "Learner's Response")}
                 </Label>
-                <div className="mt-1.5 p-4 rounded-xl border border-slate-200 bg-slate-50 text-xs text-slate-800 whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto">
-                  {selectedSubmission.submission_content || <span className="italic text-muted-foreground">{t('noWrittenResponse', 'No written text provided.')}</span>}
+                <div className="mt-1.5 p-3.5 rounded-[6px] border border-ds-border bg-ds-surface-subtle text-xs text-ds-ink whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto">
+                  {selectedSubmission.submission_content || <span className="italic text-ds-muted">{t('noWrittenResponse', 'No written text provided.')}</span>}
                 </div>
               </div>
 
               {/* Attachments */}
               {selectedSubmission.attachment_urls?.length > 0 && (
                 <div>
-                  <Label className="text-xs font-semibold text-slate-600 uppercase">
+                  <Label className="text-xs font-semibold text-ds-muted uppercase tracking-wider">
                     {t('submittedFiles', 'Submitted Documents & Media')} ({selectedSubmission.attachment_urls.length})
                   </Label>
                   <div className="mt-1.5 grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -535,13 +527,13 @@ export function SubmissionsGradingTab() {
                         href={file.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex items-center justify-between p-2.5 rounded-lg border border-slate-200 hover:border-hotel-navy hover:bg-slate-50 transition-colors text-xs text-slate-700 font-medium"
+                        className="flex items-center justify-between p-2.5 rounded-[6px] border border-ds-border hover:border-ds-border-strong bg-ds-surface hover:bg-ds-surface-subtle transition-colors text-xs text-ds-ink font-medium"
                       >
                         <span className="flex items-center gap-2 truncate">
-                          <Paperclip className="h-4 w-4 text-hotel-gold shrink-0" />
+                          <Paperclip className="h-4 w-4 text-ds-accent shrink-0" />
                           <span className="truncate">{file.name}</span>
                         </span>
-                        <Download className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                        <Download className="h-3.5 w-3.5 text-ds-muted shrink-0" />
                       </a>
                     ))}
                   </div>
@@ -549,20 +541,20 @@ export function SubmissionsGradingTab() {
               )}
 
               {/* Score Input */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-ds-border">
                 <div>
-                  <Label className="text-xs font-semibold">{t('scorePercentage', 'Score Percentage (0 - 100%)')}</Label>
+                  <Label className="text-xs font-semibold text-ds-ink">{t('scorePercentage', 'Score Percentage (0 - 100%)')}</Label>
                   <Input
                     type="number"
                     min={0}
                     max={100}
                     value={score}
                     onChange={(e) => setScore(Number(e.target.value))}
-                    className="mt-1 h-9 text-xs"
+                    className="mt-1 h-9 text-xs bg-ds-surface-subtle border-ds-border text-ds-ink"
                   />
                 </div>
                 <div className="flex flex-col justify-end">
-                  <p className="text-[11px] text-muted-foreground leading-tight">
+                  <p className="text-[11px] text-ds-muted leading-tight">
                     {score >= 80 ? '✓ Meets 5-Star Hotel Passing Benchmark (≥80%)' : '⚠ Below standard passing threshold (<80%)'}
                   </p>
                 </div>
@@ -570,24 +562,24 @@ export function SubmissionsGradingTab() {
 
               {/* Instructor Feedback */}
               <div>
-                <Label className="text-xs font-semibold">{t('instructorFeedbackForLearner', 'Instructor Feedback & Notes for Associate')}</Label>
+                <Label className="text-xs font-semibold text-ds-ink">{t('instructorFeedbackForLearner', 'Instructor Feedback & Notes for Associate')}</Label>
                 <Textarea
                   value={feedback}
                   onChange={(e) => setFeedback(e.target.value)}
                   placeholder={t('feedbackPlaceholder', 'Explain what was done well, or specific corrections needed if requesting revision...')}
-                  className="mt-1.5 min-h-[90px] text-xs"
+                  className="mt-1.5 min-h-[90px] text-xs bg-ds-surface-subtle border-ds-border text-ds-ink placeholder:text-ds-muted"
                 />
               </div>
             </div>
           )}
 
-          <DialogFooter className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-slate-100">
+          <DialogFooter className="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-ds-border">
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={() => setReviewDialogOpen(false)}
-              className="text-xs"
+              className="text-xs border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle rounded-md"
             >
               {t('cancel', 'Cancel')}
             </Button>
@@ -598,7 +590,7 @@ export function SubmissionsGradingTab() {
                 size="sm"
                 onClick={() => handleSaveReview('revision_required')}
                 disabled={isSubmittingReview}
-                className="text-xs text-rose-600 border-rose-200 hover:bg-rose-50 gap-1"
+                className="text-xs text-ds-danger border-ds-danger/30 hover:bg-ds-danger-soft gap-1 rounded-md"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
                 {t('requestRevision', 'Request Revision')}
@@ -608,7 +600,7 @@ export function SubmissionsGradingTab() {
                 size="sm"
                 onClick={() => handleSaveReview('approved')}
                 disabled={isSubmittingReview}
-                className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white gap-1 shadow-sm"
+                className="text-xs bg-ds-success text-white hover:bg-ds-success/90 gap-1 shadow-none rounded-md"
               >
                 {isSubmittingReview ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
                 {t('approveAndPass', 'Approve & Pass')}

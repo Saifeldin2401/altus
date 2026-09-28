@@ -37,7 +37,7 @@
     "src/pages/admin/components/OrganizationProfileSettings.tsx",
     "src/pages/admin/components/RolesManagement.tsx",
     "src/pages/admin/components/SubscriptionEntitlementsCard.tsx",
-    "src/pages/assessments/QuestionBank.tsx",
+    "src/pages/assessments/components/GenerateQuizDialog.tsx",
     "src/pages/auth/ChangePassword.tsx",
     "src/pages/auth/CompleteInvite.tsx",
     "src/pages/auth/ForgotPassword.tsx",

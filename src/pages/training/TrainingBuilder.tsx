@@ -224,21 +224,21 @@ function TrainingBuilderInner() {
   }
 
   return (
-    <div className={`h-[calc(100vh-4rem)] max-h-[calc(100vh-4rem)] flex flex-col w-full max-w-full overflow-hidden bg-background ${'text-start'}`}>
+    <div className="h-[calc(100vh-4rem)] max-h-[calc(100vh-4rem)] flex flex-col w-full max-w-full overflow-hidden bg-ds-surface-subtle text-ds-ink text-start">
 
       {/* Draft restore banner */}
       {ctx.showRestorePrompt && (
-        <div className="bg-amber-50 dark:bg-amber-900/20 border-b border-amber-200 dark:border-amber-800 p-3">
+        <div className="bg-ds-surface border-b border-ds-border p-3 text-ds-ink shadow-2xs">
           <div className="container mx-auto flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Loader2 className="w-4 h-4 text-amber-600 animate-spin" />
-              <span className="text-xs font-medium text-amber-800 dark:text-amber-300">
+              <Loader2 className="w-4 h-4 text-ds-accent animate-spin" />
+              <span className="text-xs font-medium text-ds-ink">
                 {t('builder.draftRestoredBanner', 'Draft training module restored from previous session')}
               </span>
             </div>
             <div className="flex gap-2">
-              <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => ctx.setShowRestorePrompt(false)}>{t('builder.keepDraft', 'Keep')}</Button>
-              <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => {
+              <Button variant="ghost" size="sm" className="h-7 text-xs text-ds-muted hover:text-ds-ink hover:bg-ds-surface-subtle" onClick={() => ctx.setShowRestorePrompt(false)}>{t('builder.keepDraft', 'Keep')}</Button>
+              <Button variant="outline" size="sm" className="h-7 text-xs border-ds-border text-ds-ink hover:bg-ds-surface-subtle" onClick={() => {
                 ctx.clearDraft()
                 // Only blank the form for a brand new, never-saved module -- for an
                 // existing module this banner means "we recovered a newer local
@@ -284,7 +284,7 @@ function TrainingBuilderInner() {
           <div className="flex-1">{renderStepContent()}</div>
 
           {/* Sticky Step Navigation Footer Bar */}
-          <footer className="sticky bottom-0 z-30 border-t border-slate-200 dark:border-slate-800 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 py-3 px-4 md:px-8 shadow-xs">
+          <footer className="sticky bottom-0 z-30 border-t border-ds-border bg-ds-surface/95 backdrop-blur supports-[backdrop-filter]:bg-ds-surface/80 py-3 px-4 md:px-8 shadow-xs">
             <div className={cn("max-w-4xl mx-auto flex items-center justify-between gap-4")}>
               <div>
                 <Button
@@ -292,14 +292,14 @@ function TrainingBuilderInner() {
                   size="sm"
                   onClick={ctx.goPrevStep}
                   disabled={ctx.currentStepIndex <= 0}
-                  className={cn("h-8 text-xs font-semibold")}
+                  className="h-8 text-xs font-semibold border-ds-border text-ds-ink hover:bg-ds-surface-subtle"
                 >
                   <ChevronLeft className={cn("h-3.5 w-3.5", "me-1.5 rtl:rotate-180")} />
                   <span>{t('builder.back', 'Back')}</span>
                 </Button>
               </div>
 
-              <div className="text-xs text-muted-foreground text-center hidden sm:block">
+              <div className="text-xs text-ds-muted text-center hidden sm:block">
                 <span>{ctx.steps[ctx.currentStepIndex]?.description}</span>
               </div>
 
@@ -308,9 +308,7 @@ function TrainingBuilderInner() {
                   <Button
                     size="sm"
                     onClick={ctx.goNextStep}
-                    className={cn(
-                      "h-8 px-4 text-xs font-bold bg-ds-brass hover:bg-ds-accent-hover text-white shadow-xs"
-                    )}
+                    className="h-8 px-4 text-xs font-semibold bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90 shadow-2xs"
                   >
                     <span>
                       {t('builder.nextStep', {
@@ -325,9 +323,7 @@ function TrainingBuilderInner() {
                     size="sm"
                     onClick={ctx.publishTraining}
                     disabled={!ctx.publishReady || ctx.builderBusy}
-                    className={cn(
-                      "h-8 px-4 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
-                    )}
+                    className="h-8 px-4 text-xs font-semibold bg-ds-accent text-white hover:bg-ds-accent-hover shadow-2xs disabled:opacity-50"
                   >
                     <CheckCircle2 className={cn("h-3.5 w-3.5", "me-1.5")} />
                     <span>{t('builder.publish', 'Publish Course')}</span>
@@ -339,7 +335,7 @@ function TrainingBuilderInner() {
         </main>
 
         {/* Right sidebar */}
-        <BuilderSidebar className="hidden lg:flex w-[260px] xl:w-[280px] shrink-0 border-s bg-slate-50/40 dark:bg-slate-900/30">
+        <BuilderSidebar className="hidden lg:flex w-[260px] xl:w-[280px] shrink-0 border-s border-ds-border bg-ds-surface">
           <RightPanel
             builderStep={ctx.builderStep} sections={ctx.sections} totalItems={ctx.totalItems}
             totalPoints={ctx.totalPoints} displayDuration={ctx.displayDuration}

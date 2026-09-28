@@ -772,7 +772,7 @@
     },
     "quizzes": {
         "title": "Quizzes",
-        "description": "Create and manage assessments",
+        "description": "Create and manage quizzes",
         "generate_from_document": "Generate from Document",
         "create_quiz": "Create Quiz",
         "search_placeholder": "Search quizzes...",
@@ -2062,5 +2062,22 @@
             "high": "High",
             "compliance": "Compliance"
         }
+    },
+    "trash": {
+        "filter_label": "Trash",
+        "empty_title": "Trash is Empty",
+        "empty_desc": "No deleted courses in trash. Trashed courses will appear here where they can be restored or purged.",
+        "moved_to_trash_title": "Moved to Trash",
+        "moved_to_trash_desc": "Course moved to Trash. You can restore it anytime from the Trash tab.",
+        "restored_title": "Course Restored",
+        "restored_desc": "The course has been restored from Trash to active status.",
+        "restore_error": "Failed to restore course.",
+        "restore_btn": "Restore Course",
+        "purge_btn": "Permanently Purge",
+        "purge_dialog_title": "Permanently Purge Course?",
+        "purge_dialog_desc": "This will permanently remove the course and its draft lessons. This action CANNOT be undone and will only succeed if no learners have recorded completions or certificates.",
+        "purged_title": "Course Permanently Purged",
+        "purged_desc": "Course and draft assets were permanently removed from the database.",
+        "purge_failed_title": "Purge Denied"
     }
 }

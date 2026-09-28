@@ -7,7 +7,7 @@ import {
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
-import { CheckCircle2, Copy, Edit, Eye, MoreVertical, RefreshCw, SendHorizonal, Trash2, Users, XCircle } from 'lucide-react'
+import { CheckCircle2, Copy, Edit, Eye, MoreVertical, RefreshCw, RotateCcw, SendHorizonal, Trash2, Users, XCircle } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 interface TrainingModule {
@@ -28,6 +28,9 @@ interface ModuleQuickActionsProps {
   onSyncWithMaster?: () => void
   isMaster?: boolean
   hasUpdate?: boolean
+  isTrash?: boolean
+  onRestore?: () => void
+  onPurge?: () => void
 }
 
 export function ModuleQuickActions({
@@ -42,10 +45,53 @@ export function ModuleQuickActions({
   onReject,
   onSyncWithMaster,
   isMaster,
-  hasUpdate
+  hasUpdate,
+  isTrash = false,
+  onRestore,
+  onPurge,
 }: ModuleQuickActionsProps) {
   const { t, i18n } = useTranslation('training')
   const isRTL = i18n.dir() === 'rtl'
+
+  if (isTrash) {
+    return (
+      <div className={cn("grid grid-cols-2 gap-2")}>
+        <Button
+          variant="default"
+          size="sm"
+          onClick={onRestore}
+          className={cn("bg-hotel-gold hover:bg-hotel-gold-dark text-white font-medium")}
+          title={t('trash.restore_btn', 'Restore Course')}
+        >
+          <RotateCcw className={cn("h-4 w-4", "me-1.5")} />
+          {t('trash.restore_btn', 'Restore')}
+        </Button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className={cn("w-full border-rose-200 hover:border-rose-300 text-rose-700")}>
+              <MoreVertical className={cn("h-4 w-4", "me-1")} />
+              {t('common:action.more')}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align={isRTL ? 'start' : 'end'} className={cn("text-start")}>
+            <DropdownMenuItem onClick={onRestore} className="text-emerald-700 focus:text-emerald-700">
+              <RotateCcw className={cn("h-4 w-4", "me-2")} />
+              {t('trash.restore_btn', 'Restore Course')}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={onPurge || onDelete}
+              className={cn("text-rose-600 focus:text-rose-600 font-semibold")}
+            >
+              <Trash2 className={cn("h-4 w-4", "me-2")} />
+              {t('trash.purge_btn', 'Permanently Purge')}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    )
+  }
 
   return (
     <div className={cn("grid grid-cols-2 gap-2")}>

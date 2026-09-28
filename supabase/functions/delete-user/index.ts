@@ -90,29 +90,33 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    const { data: roleRows, error: roleError } = await userClient
+    const { data: roleRows } = await adminClient
       .from("user_roles")
       .select("role")
       .eq("user_id", user.id);
 
-    if (roleError) {
-      return new Response(
-        JSON.stringify({ error: "Failed to verify permissions" }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        },
-      );
-    }
+    const { data: membershipRows } = await adminClient
+      .from("organization_memberships")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("is_active", true);
 
-    const hasPermission = roleRows?.some((r) =>
+    const combinedRoles = [
+      ...(roleRows || []).map((r) => r.role),
+      ...(membershipRows || []).map((m) => m.role),
+    ];
+
+    const hasPermission = combinedRoles.some((role) =>
       [
+        "admin",
         "administrator",
         "super_admin",
         "corporate_admin",
         "regional_admin",
         "regional_hr",
-      ].includes(r.role),
+        "organization_admin",
+        "organization_owner",
+      ].includes(role),
     );
 
     if (!hasPermission) {

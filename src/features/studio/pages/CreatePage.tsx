@@ -10,6 +10,8 @@ import { BookOpen, ChevronRight, FilePlus2, FileText, LayoutTemplate, ListChecks
 
 import { useCapabilities } from '@/hooks/useCapabilities'
 
+import { WorkspaceHeader, headerActionClass } from '@/ui'
+
 interface Option {
   to: string
   icon: LucideIcon
@@ -22,28 +24,28 @@ function OptionList({ heading, id, options, aiNote }: { heading: string; id: str
   return (
     <section aria-labelledby={id} className="space-y-3">
       <h2 id={id} className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ds-muted">{heading}</h2>
-      <ul className="divide-y divide-ds-border overflow-hidden rounded-[6px] border border-ds-border bg-ds-surface">
+      <ul className="divide-y divide-ds-border overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface shadow-2xs">
         {options.map((o) => (
           <li key={o.to}>
             <Link
               to={o.to}
-              className="group flex min-h-[72px] items-center gap-4 px-4 py-3 transition-colors hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ds-accent"
+              className="group flex min-h-[76px] items-center gap-4 px-5 py-4 transition-colors hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ds-accent"
             >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[6px] bg-ds-accent-soft text-ds-accent" aria-hidden="true">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[8px] bg-ds-accent-soft text-ds-accent transition-transform duration-200 group-hover:scale-105" aria-hidden="true">
                 <o.icon className="h-5 w-5" />
               </span>
               <span className="min-w-0 flex-1">
                 <span className="flex flex-wrap items-center gap-2 text-sm font-semibold text-ds-ink">
                   {o.title}
                   {o.ai && (
-                    <span className="rounded-[3px] border border-ds-accent/40 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-ds-accent">
+                    <span className="rounded-[4px] border border-ds-accent/40 bg-ds-accent-soft/50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-ds-accent">
                       {aiNote}
                     </span>
                   )}
                 </span>
-                <span className="mt-0.5 block text-sm text-ds-muted">{o.body}</span>
+                <span className="mt-1 block text-sm text-ds-muted">{o.body}</span>
               </span>
-              <ChevronRight aria-hidden="true" className="h-4 w-4 shrink-0 text-ds-muted transition-transform group-hover:translate-x-0.5 rtl:rotate-180 rtl:group-hover:-translate-x-0.5" />
+              <ChevronRight aria-hidden="true" className="h-4 w-4 shrink-0 text-ds-muted transition-transform group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1" />
             </Link>
           </li>
         ))}
@@ -68,26 +70,28 @@ export default function CreatePage() {
     { to: '/studio/quizzes/generate', icon: Sparkles, ai: true, title: t('studioCreate.aiQuestions', 'Questions from a document'), body: t('studioCreate.aiQuestionsHint', 'AI proposes questions with answers and sources; nothing is published until approved.') },
   ]
 
+  const contextText = can('content.publish')
+    ? t('studioCreate.subtitlePublisher', 'New content starts as a draft. You or another reviewer approve it before learners see it.')
+    : t('studioCreate.subtitleAuthor', 'New content starts as a draft. When it is ready, submit it for review; a reviewer publishes it.')
+
   return (
-    <div className="mx-auto max-w-3xl space-y-8">
-      <header className="space-y-1.5 border-b border-ds-border pb-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ds-accent">{t('studioCreate.eyebrow', 'Studio')}</p>
-        <h1 className="text-2xl font-semibold tracking-tight text-ds-ink sm:text-[28px]">{t('studioCreate.title', 'What would you like to create?')}</h1>
-        <p className="max-w-prose text-sm text-ds-muted">
-          {can('content.publish')
-            ? t('studioCreate.subtitlePublisher', 'New content starts as a draft. You or another reviewer approve it before learners see it.')
-            : t('studioCreate.subtitleAuthor', 'New content starts as a draft. When it is ready, submit it for review; a reviewer publishes it.')}
-        </p>
-      </header>
+    <div className="mx-auto max-w-4xl space-y-8">
+      <WorkspaceHeader
+        eyebrow={t('studioCreate.eyebrow', 'Studio')}
+        title={t('studioCreate.title', 'What would you like to create?')}
+        context={contextText}
+      />
 
       <OptionList id="create-courses" heading={t('studioCreate.courses', 'Courses')} options={courses} aiNote={aiNote} />
       <OptionList id="create-other" heading={t('studioCreate.knowledgeAndQuizzes', 'Knowledge and quizzes')} options={other} aiNote={aiNote} />
 
-      <p className="flex items-center gap-2 text-sm text-ds-muted">
-        <BookOpen aria-hidden="true" className="h-4 w-4" />
-        {t('studioCreate.continue', 'Looking for a draft?')}{' '}
-        <Link to="/studio" className="font-semibold text-ds-accent hover:underline">{t('studioCreate.goToContent', 'Open My content')}</Link>
-      </p>
+      <div className="rounded-[8px] border border-ds-border bg-ds-surface-subtle/60 p-4">
+        <p className="flex items-center gap-2 text-sm text-ds-muted">
+          <BookOpen aria-hidden="true" className="h-4 w-4 text-ds-accent" />
+          {t('studioCreate.continue', 'Looking for a draft?')}{' '}
+          <Link to="/studio" className="font-semibold text-ds-accent hover:underline">{t('studioCreate.goToContent', 'Open My content')}</Link>
+        </p>
+      </div>
     </div>
   )
 }

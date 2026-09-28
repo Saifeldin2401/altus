@@ -261,21 +261,28 @@ serve(async (req) => {
           "administrator",
           "super_admin",
         ];
-        const { data: roleRows, error: roleError } = await serviceClient
+        const { data: roleRows } = await serviceClient
           .from("user_roles")
           .select("role")
           .eq("user_id", user.id)
           .in("role", adminRoles);
 
-        if (roleError) {
-          return jsonResponse(
-            { error: "Failed to validate permissions" },
-            500,
-            corsHeaders,
-          );
-        }
+        const { data: memberRows } = await serviceClient
+          .from("organization_memberships")
+          .select("role")
+          .eq("user_id", user.id)
+          .eq("is_active", true)
+          .in("role", [
+            "organization_admin",
+            "organization_owner",
+            "brand_admin",
+            "hotel_admin",
+            "department_manager",
+            "training_manager",
+            "knowledge_manager",
+          ]);
 
-        isAdmin = Boolean(roleRows && roleRows.length > 0);
+        isAdmin = Boolean((roleRows && roleRows.length > 0) || (memberRows && memberRows.length > 0));
       }
 
       const normalizedUserEmail = (user.email || "").trim().toLowerCase();

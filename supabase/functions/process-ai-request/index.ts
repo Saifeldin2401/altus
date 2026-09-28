@@ -1374,6 +1374,18 @@ serve(async (req) => {
           streamed: false,
         },
       }).then(() => {});
+
+      if (callerOrgId) {
+        const creditsToConsume = billable ? Math.max(1, Math.ceil(totalTokens / 1000)) : 1;
+        void supabaseAdmin.rpc("consume_ai_credit", {
+          p_org_id: callerOrgId,
+          p_credits: creditsToConsume,
+          p_tokens: totalTokens,
+          p_cost: Number(estimatedCost.toFixed(6))
+        }).then(({ error: creditErr }: { error: unknown }) => {
+          if (creditErr) console.warn("[AI Gateway] Failed to deduct credits:", creditErr);
+        });
+      }
     } catch { /* non-blocking */ }
 
     return new Response(

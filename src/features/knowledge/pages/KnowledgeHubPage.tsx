@@ -21,7 +21,7 @@ import {
 } from 'lucide-react'
 
 import { useTenant } from '@/contexts/TenantContext'
-import { useAccountContext } from '@/hooks/useAccountContext'
+import { useAccountContext } from '@/contexts/auth/AccountContext'
 import { useAuth } from '@/hooks/useAuth'
 import { useCapabilities } from '@/hooks/useCapabilities'
 import { useDebounce } from '@/hooks/useDebounce'

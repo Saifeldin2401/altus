@@ -70,7 +70,7 @@ export function usePageTracking(pageName: string, properties?: Record<string, un
 
     try {
       if (window.va) {
-        window.va('page', { name: pageName, data: properties })
+        window.va('pageview', { route: pageName, data: properties })
       }
     } catch (error) {
       console.error('[Analytics] Failed to track page:', error)

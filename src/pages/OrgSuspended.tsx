@@ -1,11 +1,11 @@
-import { useAccountContext } from '@/hooks/useAccountContext'
-import { useAuth } from '@/hooks/useAuth'
+import { useAccountContext } from '@/contexts/auth/AccountContext'
+import { useAuthActions } from '@/contexts/auth'
 import { Button } from '@/components/ui/button'
 import { AlertOctagon } from 'lucide-react'
 
 export default function OrgSuspended() {
   const account = useAccountContext()
-  const { signOut } = useAuth()
+  const { signOut } = useAuthActions()
   const org = account.tenantMemberships[0]
 
   return (

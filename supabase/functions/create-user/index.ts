@@ -146,8 +146,13 @@ function isProvisioningMethod(value: unknown): value is ProvisioningMethod {
 }
 
 type AppRole =
+  | "admin"
   | "administrator"
   | "super_admin"
+  | "organization_owner"
+  | "organization_admin"
+  | "brand_admin"
+  | "hotel_admin"
   | "corporate_admin"
   | "regional_admin"
   | "training_manager"
@@ -162,8 +167,13 @@ type AppRole =
   | "staff";
 
 const APP_ROLE_PRIORITY: Record<AppRole, number> = {
+  admin: 0,
   administrator: 0,
   super_admin: 0,
+  organization_owner: 0,
+  organization_admin: 1,
+  brand_admin: 1,
+  hotel_admin: 2,
   corporate_admin: 1,
   training_manager: 2,
   regional_admin: 2,
@@ -179,8 +189,13 @@ const APP_ROLE_PRIORITY: Record<AppRole, number> = {
 };
 
 const CREATOR_ROLES = new Set<AppRole>([
+  "admin",
   "super_admin",
   "administrator",
+  "organization_owner",
+  "organization_admin",
+  "brand_admin",
+  "hotel_admin",
   "corporate_admin",
   "regional_admin",
   "regional_hr",
@@ -421,22 +436,23 @@ Deno.serve(async (req: Request) => {
       // Use adminClient to bypass RLS — the caller's identity is already verified
       // via getUser() above. Using userClient here was causing false permission
       // denials when RLS policies didn't return the caller's own role rows.
-      const { data: roles, error: rolesError } = await adminClient
+      const { data: roles } = await adminClient
         .from("user_roles")
         .select("role")
         .eq("user_id", user.id);
 
-      if (rolesError) {
-        return new Response(
-          JSON.stringify({ error: "Failed to verify inviter permissions" }),
-          {
-            status: 500,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
-        );
-      }
+      const { data: memberships } = await adminClient
+        .from("organization_memberships")
+        .select("role")
+        .eq("user_id", user.id)
+        .eq("is_active", true);
 
-      const inviterRoles = (roles || []).map((r) => r.role).filter(isAppRole);
+      const combinedRoleRows = [
+        ...(roles || []),
+        ...(memberships || [])
+      ];
+
+      const inviterRoles = combinedRoleRows.map((r) => r.role).filter(isAppRole);
       const inviterBestRole = getMostPrivilegedRole(inviterRoles);
       const hasPermission = inviterRoles.some((currentRole) =>
         CREATOR_ROLES.has(currentRole),

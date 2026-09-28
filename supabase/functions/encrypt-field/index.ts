@@ -65,7 +65,14 @@ serve(async (req) => {
       .eq('user_id', user.id)
       .in('role', ['regional_admin', 'corporate_admin', 'super_admin']);
 
-    if (!roles || roles.length === 0) {
+    const { data: memberships } = await supabaseClient
+      .from('organization_memberships')
+      .select('role')
+      .eq('user_id', user.id)
+      .eq('is_active', true)
+      .in('role', ['organization_admin', 'organization_owner']);
+
+    if ((!roles || roles.length === 0) && (!memberships || memberships.length === 0)) {
       return new Response(JSON.stringify({ error: 'Admin permission required' }), {
         status: 403,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

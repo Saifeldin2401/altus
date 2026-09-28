@@ -78,58 +78,46 @@ export function AssignmentsTab() {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-        <Card className="border-slate-200">
-          <CardContent className="p-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-slate-500">{t('totalAssignments', 'Total')}</span>
-              <span className="text-lg font-bold text-slate-900">{assignmentStats.total}</span>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border-rose-200 bg-rose-50/30">
-          <CardContent className="p-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-rose-600">{t('compliancePriority', 'Compliance')}</span>
-              <span className="text-lg font-bold text-rose-700">{assignmentStats.byPriority.compliance}</span>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border-amber-200 bg-amber-50/30">
-          <CardContent className="p-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-amber-600">{t('highPriority', 'High')}</span>
-              <span className="text-lg font-bold text-amber-700">{assignmentStats.byPriority.high}</span>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border-rose-200 bg-rose-50/30">
-          <CardContent className="p-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-rose-600">{t('overdue', 'Overdue')}</span>
-              <span className="text-lg font-bold text-rose-700">{assignmentStats.overdue}</span>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border-blue-200 bg-blue-50/30">
-          <CardContent className="p-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-blue-600">{t('dueSoon', 'Due Soon')}</span>
-              <span className="text-lg font-bold text-blue-700">{assignmentStats.dueSoon}</span>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border-slate-200">
-          <CardContent className="p-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-slate-500">{t('everyone', 'Everyone')}</span>
-              <span className="text-lg font-bold text-slate-900">{assignmentStats.byTargetType.everyone}</span>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-3 transition-colors hover:border-ds-border-strong">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-ds-muted uppercase tracking-wider">{t('totalAssignments', 'Total')}</span>
+            <span className="font-mono text-xl font-bold text-ds-ink">{assignmentStats.total}</span>
+          </div>
+        </div>
+        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-3 transition-colors hover:border-ds-border-strong">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-ds-danger uppercase tracking-wider">{t('compliancePriority', 'Compliance')}</span>
+            <span className="font-mono text-xl font-bold text-ds-danger">{assignmentStats.byPriority.compliance}</span>
+          </div>
+        </div>
+        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-3 transition-colors hover:border-ds-border-strong">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-ds-warning uppercase tracking-wider">{t('highPriority', 'High')}</span>
+            <span className="font-mono text-xl font-bold text-ds-warning">{assignmentStats.byPriority.high}</span>
+          </div>
+        </div>
+        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-3 transition-colors hover:border-ds-border-strong">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-ds-danger uppercase tracking-wider">{t('overdue', 'Overdue')}</span>
+            <span className="font-mono text-xl font-bold text-ds-danger">{assignmentStats.overdue}</span>
+          </div>
+        </div>
+        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-3 transition-colors hover:border-ds-border-strong">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-ds-accent uppercase tracking-wider">{t('dueSoon', 'Due Soon')}</span>
+            <span className="font-mono text-xl font-bold text-ds-accent">{assignmentStats.dueSoon}</span>
+          </div>
+        </div>
+        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-3 transition-colors hover:border-ds-border-strong">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-ds-muted uppercase tracking-wider">{t('everyone', 'Everyone')}</span>
+            <span className="font-mono text-xl font-bold text-ds-ink">{assignmentStats.byTargetType.everyone}</span>
+          </div>
+        </div>
       </div>
 
-      <div className="flex flex-col gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div className="flex flex-col gap-4 rounded-[8px] border border-ds-border bg-ds-surface p-4 shadow-none">
         <div className={cn(
           "flex flex-col sm:flex-row items-stretch sm:items-center gap-3",
           hideCreateButton ? "justify-start" : "justify-between"
@@ -137,63 +125,63 @@ export function AssignmentsTab() {
           <div className="relative flex-1 max-w-none sm:max-w-md">
             <div className={cn(
               "absolute inset-y-0 flex items-center pointer-events-none",
-              "start-0 ps-4"
+              "start-0 ps-3.5"
             )}>
-              <Search className="w-4 h-4 text-slate-400" />
+              <Search className="w-4 h-4 text-ds-muted" />
             </div>
             <Input
               placeholder={t('searchAssignments')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className={cn(
-                "h-10 bg-slate-50 border-slate-200 focus:bg-white focus:border-hotel-gold/50 focus:ring-2 focus:ring-hotel-gold/20 transition-all",
-                "ps-11"
+                "h-9 bg-ds-surface-subtle border-ds-border text-ds-ink placeholder:text-ds-muted focus:border-ds-border-strong transition-all text-xs",
+                "ps-9"
               )}
             />
             {search && (
               <button
                 onClick={() => setSearch('')}
                 className={cn(
-                  "absolute inset-y-0 flex items-center text-slate-400 hover:text-slate-600 transition-colors",
+                  "absolute inset-y-0 flex items-center text-ds-muted hover:text-ds-ink transition-colors",
                   "end-0 pe-3"
                 )}
               >
-                <X className="w-4 h-4" />
+                <X className="w-3.5 h-3.5" />
               </button>
             )}
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="flex items-center bg-slate-100 rounded-lg p-1">
+            <div className="flex items-center bg-ds-surface-subtle rounded-md p-0.5 border border-ds-border">
               <button
                 onClick={() => setAssignmentsViewMode('grid')}
                 className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all",
+                  "flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium transition-all",
                   assignmentsViewMode === 'grid'
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-500 hover:text-slate-700"
+                    ? "bg-ds-surface text-ds-ink shadow-2xs font-semibold"
+                    : "text-ds-muted hover:text-ds-ink"
                 )}
               >
-                <Grid3X3 className="w-4 h-4" />
+                <Grid3X3 className="w-3.5 h-3.5" />
                 {t('grid', 'Grid')}
               </button>
               <button
                 onClick={() => setAssignmentsViewMode('list')}
                 className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all",
+                  "flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium transition-all",
                   assignmentsViewMode === 'list'
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-500 hover:text-slate-700"
+                    ? "bg-ds-surface text-ds-ink shadow-2xs font-semibold"
+                    : "text-ds-muted hover:text-ds-ink"
                 )}
               >
-                <LayoutList className="w-4 h-4" />
+                <LayoutList className="w-3.5 h-3.5" />
                 {t('list', 'List')}
               </button>
             </div>
 
             <Select value={assignmentsSortBy} onValueChange={(v) => setAssignmentsSortBy(v as 'date' | 'priority' | 'module' | 'dueDate')}>
-              <SelectTrigger className="w-[140px] h-10 bg-slate-50 border-slate-200">
-                <SlidersHorizontal className="w-4 h-4 me-2" />
+              <SelectTrigger className="w-[140px] h-9 bg-ds-surface-subtle border-ds-border text-ds-ink text-xs">
+                <SlidersHorizontal className="w-3.5 h-3.5 me-1.5 text-ds-muted" />
                 <SelectValue placeholder={t('sortBy', 'Sort by')} />
               </SelectTrigger>
               <SelectContent>
@@ -209,23 +197,23 @@ export function AssignmentsTab() {
               size="sm"
               onClick={() => setShowFilters(!showFilters)}
               className={cn(
-                "h-10 px-3 transition-all",
-                showFilters && "bg-slate-100 border-slate-300"
+                "h-9 px-3 border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle text-xs transition-all",
+                showFilters && "bg-ds-surface-subtle border-ds-border-strong"
               )}
             >
-              <Filter className="w-4 h-4 me-2" />
+              <Filter className="w-3.5 h-3.5 me-1.5 text-ds-muted" />
               {t('filters', 'Filters')}
               {(assignmentsFilterPriority !== 'all' || assignmentsFilterTargetType !== 'all' || assignmentsFilterDueStatus !== 'all') && (
-                <span className="ms-1.5 w-2 h-2 rounded-full bg-hotel-gold" />
+                <span className="ms-1.5 w-2 h-2 rounded-full bg-ds-accent" />
               )}
             </Button>
 
             {!hideCreateButton && (
               <Button
                 onClick={() => setShowAssignmentDialog(true)}
-                className="bg-hotel-navy hover:bg-hotel-navy/90 text-white h-10 px-4 shadow-sm hover:shadow transition-all"
+                className="bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90 h-9 px-3.5 text-xs font-semibold shadow-none transition-all rounded-md"
               >
-                <Plus className={cn("w-4 h-4", "me-2")} />
+                <Plus className={cn("w-3.5 h-3.5", "me-1.5")} />
                 {t('create')}
               </Button>
             )}
@@ -233,31 +221,31 @@ export function AssignmentsTab() {
         </div>
 
         {showFilters && (
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-3 border-t border-slate-100">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-3 border-t border-ds-border">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm text-slate-500 font-medium">{t('filterBy', 'Filter by')}:</span>
+              <span className="text-xs text-ds-muted font-medium">{t('filterBy', 'Filter by')}:</span>
 
               <Select value={assignmentsFilterPriority} onValueChange={setAssignmentsFilterPriority}>
-                <SelectTrigger className="w-[130px] h-9 bg-slate-50 border-slate-200 text-sm">
+                <SelectTrigger className="w-[130px] h-8 bg-ds-surface-subtle border-ds-border text-xs text-ds-ink">
                   <SelectValue placeholder={t('priority', 'Priority')} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t('allPriorities', 'All Priorities')}</SelectItem>
                   <SelectItem value="compliance">
                     <span className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-rose-500" />
+                      <span className="w-2 h-2 rounded-full bg-ds-danger" />
                       {t('compliance', 'Compliance')}
                     </span>
                   </SelectItem>
                   <SelectItem value="high">
                     <span className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-amber-500" />
+                      <span className="w-2 h-2 rounded-full bg-ds-warning" />
                       {t('high', 'High')}
                     </span>
                   </SelectItem>
                   <SelectItem value="normal">
                     <span className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-slate-400" />
+                      <span className="w-2 h-2 rounded-full bg-ds-muted" />
                       {t('normal', 'Normal')}
                     </span>
                   </SelectItem>
@@ -265,7 +253,7 @@ export function AssignmentsTab() {
               </Select>
 
               <Select value={assignmentsFilterTargetType} onValueChange={setAssignmentsFilterTargetType}>
-                <SelectTrigger className="w-[130px] h-9 bg-slate-50 border-slate-200 text-sm">
+                <SelectTrigger className="w-[130px] h-8 bg-ds-surface-subtle border-ds-border text-xs text-ds-ink">
                   <SelectValue placeholder={t('targetType', 'Target')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -278,7 +266,7 @@ export function AssignmentsTab() {
               </Select>
 
               <Select value={assignmentsFilterDueStatus} onValueChange={setAssignmentsFilterDueStatus}>
-                <SelectTrigger className="w-[130px] h-9 bg-slate-50 border-slate-200 text-sm">
+                <SelectTrigger className="w-[130px] h-8 bg-ds-surface-subtle border-ds-border text-xs text-ds-ink">
                   <SelectValue placeholder={t('dueStatus', 'Due Status')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -296,9 +284,9 @@ export function AssignmentsTab() {
                 variant="ghost"
                 size="sm"
                 onClick={resetOrganizationState}
-                className="text-slate-500 hover:text-rose-600 hover:bg-rose-50 ms-auto"
+                className="text-xs text-ds-muted hover:text-ds-danger hover:bg-ds-danger-soft ms-auto h-8 px-2"
               >
-                <X className="w-3.5 h-3.5 me-1.5" />
+                <X className="w-3 h-3 me-1" />
                 {t('clearAll', 'Clear All')}
               </Button>
             )}
@@ -306,29 +294,29 @@ export function AssignmentsTab() {
         )}
       </div>
 
-      <div className="flex items-center justify-between text-sm text-slate-500">
+      <div className="flex items-center justify-between text-xs text-ds-muted">
         <span>
-          {t('showing', 'Showing')} <strong className="text-slate-900">{groupedAssignments.length}</strong> {t('assignmentGroups', 'assignment groups')}
+          {t('showing', 'Showing')} <strong className="text-ds-ink">{groupedAssignments.length}</strong> {t('assignmentGroups', 'assignment groups')}
         </span>
         {(assignmentsFilterPriority !== 'all' || assignmentsFilterTargetType !== 'all' || assignmentsFilterDueStatus !== 'all') && (
           <div className="flex items-center gap-2">
             <span>{t('activeFilters', 'Active filters')}:</span>
             {assignmentsFilterPriority !== 'all' && (
-              <Badge variant="outline" className="text-xs bg-slate-50">
+              <Badge variant="outline" className="text-xs border-ds-border bg-ds-surface-subtle text-ds-ink font-normal">
                 {t('priority')}: {t(assignmentsFilterPriority)}
-                <button onClick={() => setAssignmentsFilterPriority('all')} className="ms-1 hover:text-rose-600"><X className="w-3 h-3" /></button>
+                <button onClick={() => setAssignmentsFilterPriority('all')} className="ms-1 hover:text-ds-danger"><X className="w-3 h-3" /></button>
               </Badge>
             )}
             {assignmentsFilterTargetType !== 'all' && (
-              <Badge variant="outline" className="text-xs bg-slate-50">
+              <Badge variant="outline" className="text-xs border-ds-border bg-ds-surface-subtle text-ds-ink font-normal">
                 {t('target')}: {t(assignmentsFilterTargetType)}
-                <button onClick={() => setAssignmentsFilterTargetType('all')} className="ms-1 hover:text-rose-600"><X className="w-3 h-3" /></button>
+                <button onClick={() => setAssignmentsFilterTargetType('all')} className="ms-1 hover:text-ds-danger"><X className="w-3 h-3" /></button>
               </Badge>
             )}
             {assignmentsFilterDueStatus !== 'all' && (
-              <Badge variant="outline" className="text-xs bg-slate-50">
+              <Badge variant="outline" className="text-xs border-ds-border bg-ds-surface-subtle text-ds-ink font-normal">
                 {t('status')}: {t(assignmentsFilterDueStatus)}
-                <button onClick={() => setAssignmentsFilterDueStatus('all')} className="ms-1 hover:text-rose-600"><X className="w-3 h-3" /></button>
+                <button onClick={() => setAssignmentsFilterDueStatus('all')} className="ms-1 hover:text-ds-danger"><X className="w-3 h-3" /></button>
               </Badge>
             )}
           </div>
@@ -342,11 +330,8 @@ export function AssignmentsTab() {
       )}>
         {isLoadingAssignments ? (
           <div className="col-span-full flex flex-col items-center justify-center py-16">
-            <div className="relative">
-              <Loader2 className="w-10 h-10 animate-spin text-hotel-gold" />
-              <div className="absolute inset-0 w-10 h-10 animate-ping rounded-full bg-hotel-gold/20" />
-            </div>
-            <p className="mt-4 text-sm text-slate-500">{t('loadingAssignments', 'Loading assignments...')}</p>
+            <Loader2 className="w-8 h-8 animate-spin text-ds-accent" />
+            <p className="mt-3 text-xs text-ds-muted">{t('loadingAssignments', 'Loading assignments...')}</p>
           </div>
         ) : groupedAssignments.length > 0 ? (
           groupedAssignments.map((group) => {
@@ -360,70 +345,72 @@ export function AssignmentsTab() {
             }))
 
             return (
-              <Card key={group.key} className="group overflow-hidden border-0 bg-white shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
-                <div className={cn(
-                  "h-1.5 w-full",
-                  primaryAssignment.priority === 'compliance' && "bg-gradient-to-r from-rose-500 to-rose-600",
-                  primaryAssignment.priority === 'high' && "bg-gradient-to-r from-amber-500 to-orange-500",
-                  (!primaryAssignment.priority || primaryAssignment.priority === 'normal') && "bg-gradient-to-r from-blue-500 to-indigo-500"
-                )} />
+              <Card key={group.key} className="group overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface transition-all duration-200 hover:border-ds-border-strong shadow-none flex flex-col justify-between">
+                <div>
+                  <div className={cn(
+                    "h-1 w-full",
+                    primaryAssignment.priority === 'compliance' && "bg-ds-danger",
+                    primaryAssignment.priority === 'high' && "bg-ds-warning",
+                    (!primaryAssignment.priority || primaryAssignment.priority === 'normal') && "bg-ds-border"
+                  )} />
 
-                <CardHeader className="pb-3 pt-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex flex-wrap gap-2">
-                      <Badge variant="outline" className="border-blue-200 bg-blue-50/80 text-blue-700 font-medium text-[11px] px-2 py-0.5">
-                        <BookOpen className="w-3 h-3 me-1" />
-                        {t('module')}
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className={cn(
-                          "font-medium text-[11px] px-2 py-0.5",
-                          primaryAssignment.priority === 'compliance' && "border-rose-200 bg-rose-50 text-rose-700",
-                          primaryAssignment.priority === 'high' && "border-amber-200 bg-amber-50 text-amber-700",
-                          (!primaryAssignment.priority || primaryAssignment.priority === 'normal') && "border-slate-200 bg-slate-50 text-slate-700"
+                  <CardHeader className="pb-3 pt-3.5 px-4">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex flex-wrap gap-1.5">
+                        <Badge variant="outline" className="border-ds-border bg-ds-surface-subtle text-ds-muted font-medium text-[10px] px-1.5 py-0.5">
+                          <BookOpen className="w-3 h-3 me-1" />
+                          {t('module')}
+                        </Badge>
+                        <Badge
+                          variant="outline"
+                          className={cn(
+                            "font-medium text-[10px] px-1.5 py-0.5",
+                            primaryAssignment.priority === 'compliance' && "border-ds-danger/30 bg-ds-danger-soft text-ds-danger",
+                            primaryAssignment.priority === 'high' && "border-ds-warning/30 bg-ds-warning-soft text-ds-warning",
+                            (!primaryAssignment.priority || primaryAssignment.priority === 'normal') && "border-ds-border bg-ds-surface-subtle text-ds-muted"
+                          )}
+                        >
+                          {t(primaryAssignment.priority || 'normal', primaryAssignment.priority || 'normal')}
+                        </Badge>
+                        {primaryAssignment.requires_acknowledgement && (
+                          <Badge variant="outline" className="border-ds-warning/30 bg-ds-warning-soft text-ds-warning font-medium text-[10px] px-1.5 py-0.5">
+                            <CheckCircle2 className="w-3 h-3 me-1" />
+                            {t('ackRequired', 'Ack required')}
+                          </Badge>
                         )}
-                      >
-                        {t(primaryAssignment.priority || 'normal', primaryAssignment.priority || 'normal')}
-                      </Badge>
-                      {primaryAssignment.requires_acknowledgement && (
-                        <Badge variant="outline" className="border-amber-300 bg-amber-100/50 text-amber-800 font-medium text-[11px] px-2 py-0.5">
-                          <CheckCircle2 className="w-3 h-3 me-1" />
-                          {t('ackRequired', 'Ack required')}
-                        </Badge>
-                      )}
+                      </div>
+                      <div className="flex gap-1">
+                        {targets.length > 1 && (
+                          <Badge variant="outline" className="border-ds-border bg-ds-surface-subtle text-ds-ink font-medium text-[10px] px-1.5 py-0.5">
+                            <Users className="w-3 h-3 me-1" />
+                            {targets.length} {t('targets', 'targets')}
+                          </Badge>
+                        )}
+                        {exemptedCount > 0 && (
+                          <Badge variant="outline" className="border-ds-danger/30 bg-ds-danger-soft text-ds-danger font-medium text-[10px] px-1.5 py-0.5">
+                            <X className="w-3 h-3 me-1" />
+                            {exemptedCount} {t('exempted', 'exempted')}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex gap-1.5">
-                      {targets.length > 1 && (
-                        <Badge variant="outline" className="bg-hotel-gold/10 text-hotel-navy border-hotel-gold/30 font-medium text-[11px]">
-                          <Users className="w-3 h-3 me-1" />
-                          {targets.length} {t('targets', 'targets')}
-                        </Badge>
-                      )}
-                      {exemptedCount > 0 && (
-                        <Badge variant="outline" className="bg-rose-50 text-rose-700 border-rose-200 font-medium text-[11px]">
-                          <X className="w-3 h-3 me-1" />
-                          {exemptedCount} {t('exempted', 'exempted')}
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                  <CardTitle className="text-lg font-semibold mt-3 line-clamp-2 leading-snug text-slate-900" title={primaryAssignment.courses?.title}>
-                    {primaryAssignment.courses?.title || t('unknownModule')}
-                  </CardTitle>
-                </CardHeader>
+                    <CardTitle className="text-base font-semibold mt-2.5 line-clamp-2 leading-snug text-ds-ink group-hover:text-ds-accent transition-colors" title={primaryAssignment.courses?.title}>
+                      {primaryAssignment.courses?.title || t('unknownModule')}
+                    </CardTitle>
+                  </CardHeader>
+                </div>
 
-                <CardContent className="pt-0">
+                <CardContent className="px-4 pb-4 pt-0">
                   <div className="space-y-3">
                     <div className="space-y-1.5">
                       {targets.length === 1 ? (
                         <div className="flex items-start justify-between gap-2">
                           <div className="space-y-0.5 min-w-0 flex-1">
-                            <div className="text-sm font-medium text-slate-900 truncate">
+                            <div className="text-xs font-semibold text-ds-ink truncate">
                               {targets[0].label}
                             </div>
                             {targets[0].meta && targets[0].meta !== targets[0].label && (
-                              <div className="text-xs text-slate-500 truncate">
+                              <div className="text-[11px] text-ds-muted truncate">
                                 {targets[0].meta}
                               </div>
                             )}
@@ -431,41 +418,41 @@ export function AssignmentsTab() {
                           <Button
                             size="icon"
                             variant="ghost"
-                            className="h-7 w-7 shrink-0 text-slate-400 hover:text-rose-600 hover:bg-rose-50 -me-2"
+                            className="h-6 w-6 shrink-0 text-ds-muted hover:text-ds-danger hover:bg-ds-danger-soft -me-1"
                             onClick={() => handleDelete(targets[0].assignmentId)}
                             aria-label={t('accessibility.deleteAssignment', 'Delete assignment')}
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <Trash2 className="w-3.5 h-3.5" />
                           </Button>
                         </div>
                       ) : (
                         <>
-                          <div className="flex items-center gap-2 text-sm">
-                            <span className="text-slate-500">{getTargetIcon(targetType)}</span>
-                            <span className="text-slate-600">{targetTypeLabel}</span>
-                            <Badge variant="outline" className="text-[10px] px-1.5 py-0.5 shrink-0 whitespace-nowrap bg-slate-50">
+                          <div className="flex items-center gap-1.5 text-xs">
+                            <span className="text-ds-muted">{getTargetIcon(targetType)}</span>
+                            <span className="text-ds-ink font-medium">{targetTypeLabel}</span>
+                            <Badge variant="outline" className="text-[10px] px-1.5 py-0 shrink-0 whitespace-nowrap bg-ds-surface-subtle border-ds-border text-ds-muted">
                               {targets.length}
                             </Badge>
                           </div>
-                          <div className="ps-6 space-y-1">
+                          <div className="ps-5 space-y-1">
                             {targets.slice(0, 3).map((target) => (
                               <div key={target.assignmentId} className="flex items-start justify-between gap-2">
-                                <div className="text-sm text-slate-900 truncate min-w-0 flex-1">
+                                <div className="text-xs text-ds-ink truncate min-w-0 flex-1">
                                   {target.label}
                                 </div>
                                 <Button
                                   size="icon"
                                   variant="ghost"
-                                  className="h-6 w-6 shrink-0 text-slate-400 hover:text-rose-600 hover:bg-rose-50 -me-1"
+                                  className="h-5 w-5 shrink-0 text-ds-muted hover:text-ds-danger hover:bg-ds-danger-soft -me-1"
                                   onClick={() => handleDelete(target.assignmentId)}
                                   aria-label={t('accessibility.deleteAssignment', 'Delete assignment')}
                                 >
-                                  <Trash2 className="w-3.5 h-3.5" />
+                                  <Trash2 className="w-3 h-3" />
                                 </Button>
                               </div>
                             ))}
                             {targets.length > 3 && (
-                              <div className="text-xs text-slate-500">
+                              <div className="text-[11px] text-ds-muted">
                                 +{targets.length - 3} {t('more', 'more')}
                               </div>
                             )}
@@ -474,16 +461,16 @@ export function AssignmentsTab() {
                       )}
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 pt-2 border-t border-slate-100">
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-ds-muted pt-2 border-t border-ds-border">
                       <span>{formatDate(primaryAssignment.created_at)}</span>
                       {primaryAssignment.due_date && (
                         <>
-                          <span className="text-slate-300">|</span>
+                          <span className="text-ds-border">|</span>
                           <span className={cn(
-                            "px-2 py-0.5 rounded-full",
+                            "px-2 py-0.5 rounded text-[11px] font-medium",
                             new Date(primaryAssignment.due_date) < new Date()
-                              ? "bg-rose-50 text-rose-700"
-                              : "bg-blue-50 text-blue-700"
+                              ? "bg-ds-danger-soft text-ds-danger"
+                              : "bg-ds-surface-subtle text-ds-muted"
                           )}>
                             {t('due')}: {formatDate(primaryAssignment.due_date)}
                           </span>
@@ -494,10 +481,10 @@ export function AssignmentsTab() {
                     <Button
                       type="button"
                       variant="outline"
-                      className="w-full border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-medium h-9"
+                      className="w-full border-ds-border hover:bg-ds-surface-subtle text-ds-ink text-xs font-semibold h-8 rounded-md"
                       onClick={() => openManageAssignees(primaryAssignment.content_id, primaryAssignment.courses?.title)}
                     >
-                      <Users className={cn("h-4 w-4 text-slate-500", "me-2")} />
+                      <Users className={cn("h-3.5 w-3.5 text-ds-muted", "me-1.5")} />
                       {t('manageAssignees', 'Manage assignees')}
                     </Button>
                   </div>
@@ -506,23 +493,18 @@ export function AssignmentsTab() {
             )
           })
         ) : (
-          <div className="col-span-full flex flex-col items-center justify-center py-16 px-8">
-            <div className="relative mb-6">
-              <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-50 flex items-center justify-center shadow-inner">
-                <BookOpen className="w-12 h-12 text-slate-300" />
-              </div>
-              <div className="absolute -bottom-2 -end-2 w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center shadow-sm">
-                <Plus className="w-5 h-5 text-slate-400" />
-              </div>
+          <div className="col-span-full rounded-[8px] border border-dashed border-ds-border bg-ds-surface-subtle p-12 text-center">
+            <div className="h-12 w-12 rounded-[8px] bg-ds-surface border border-ds-border flex items-center justify-center text-ds-muted mx-auto mb-3 shadow-2xs">
+              <BookOpen className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-semibold text-slate-900 text-center">{t('noAssignments')}</h3>
-            <p className="mt-2 text-sm text-slate-500 text-center max-w-md">{t('startAssigning', 'Get started by creating your first training assignment. Assign modules to individuals, departments, or entire properties.')}</p>
+            <h3 className="text-base font-semibold text-ds-ink">{t('noAssignments')}</h3>
+            <p className="mt-1 text-xs text-ds-muted max-w-sm mx-auto">{t('startAssigning', 'Get started by creating your first training assignment. Assign modules to individuals, departments, or entire properties.')}</p>
             {!hideCreateButton && (
               <Button
                 onClick={() => setShowAssignmentDialog(true)}
-                className="mt-6 bg-hotel-navy hover:bg-hotel-navy/90 text-white px-6 shadow-sm hover:shadow transition-all"
+                className="mt-4 bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90 text-xs font-semibold px-4 h-9 shadow-none rounded-md"
               >
-                <Plus className={cn("w-4 h-4", "me-2")} />
+                <Plus className={cn("w-3.5 h-3.5", "me-1.5")} />
                 {t('createAssignment')}
               </Button>
             )}

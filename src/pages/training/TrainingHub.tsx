@@ -1,4 +1,4 @@
-import { PageHeader } from '@/components/layout/PageHeader'
+import { WorkspaceHeader, headerActionClass } from '@/ui'
 import { DeleteConfirmation } from '@/components/shared/DeleteConfirmation'
 import { ModuleQuickActions } from '@/components/training/hub/ModuleQuickActions'
 import { ModuleQuickPreviewSheet } from '@/components/training/hub/ModuleQuickPreviewSheet'
@@ -76,7 +76,7 @@ import { platformService } from '@/services/platformService'
 // Lazy load heavy chart component
 type ModuleStatus = 'draft' | 'pending_review' | 'published' | 'archived'
 type ViewMode = 'list' | 'builder' | 'assignments' | 'insights'
-type StatusFilterType = 'all' | 'published' | 'draft' | 'pending_review' | 'archived' | 'assigned'
+type StatusFilterType = 'all' | 'published' | 'draft' | 'pending_review' | 'archived' | 'assigned' | 'trash'
 type LayoutMode = 'grid' | 'table'
 
 interface TrainingModule {
@@ -198,12 +198,16 @@ export default function TrainingHub() {
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
   const [moduleToDelete, setModuleToDelete] = useState<TrainingModule | null>(null)
 
+  // Purge states
+  const [purgeConfirmOpen, setPurgeConfirmOpen] = useState(false)
+  const [moduleToPurge, setModuleToPurge] = useState<TrainingModule | null>(null)
+
   // Review states
   const [moduleToReject, setModuleToReject] = useState<TrainingModule | null>(null)
   const [rejectReason, setRejectReason] = useState('')
 
   // Data fetching: fetch all non-deleted modules scoped to tenant
-  const { data: rawModules, isLoading } = useQuery({
+  const { data: activeModules, isLoading: isActiveLoading } = useQuery({
     queryKey: ['training-modules', currentOrganization?.id, currentBrand?.id],
     queryFn: async () => {
       if (!currentOrganization?.id) return []
@@ -222,6 +226,30 @@ export default function TrainingHub() {
     },
     enabled: !!currentOrganization?.id && canManageModules
   })
+
+  // Data fetching: fetch soft-deleted modules in trash scoped to tenant
+  const { data: trashModules, isLoading: isTrashLoading } = useQuery({
+    queryKey: ['training-modules-trash', currentOrganization?.id, currentBrand?.id],
+    queryFn: async () => {
+      if (!currentOrganization?.id) return []
+
+      let query = supabase
+        .from('courses')
+        .select('*')
+        .eq('is_deleted', true)
+        .order('updated_at', { ascending: false })
+
+      query = query.or(`organization_id.eq.${currentOrganization.id},is_master_template.eq.true`)
+
+      const { data, error } = await query
+      if (error) throw error
+      return data as TrainingModule[]
+    },
+    enabled: !!currentOrganization?.id && canManageModules
+  })
+
+  const rawModules = statusFilter === 'trash' ? trashModules : activeModules
+  const isLoading = statusFilter === 'trash' ? isTrashLoading : isActiveLoading
 
   const { data: assignmentLinks } = useQuery({
     queryKey: ['learning-assignments-module-links', currentOrganization?.id],
@@ -278,23 +306,23 @@ export default function TrainingHub() {
     return Array.from(cats).sort()
   }, [rawModules])
 
-  // Compute status counts & KPIs
+  // Compute status counts & KPIs from active courses catalog
   const statusCounts = useMemo(() => {
-    if (!rawModules) return { all: 0, published: 0, draft: 0, pending_review: 0, archived: 0, assigned: 0 }
+    if (!activeModules) return { all: 0, published: 0, draft: 0, pending_review: 0, archived: 0, assigned: 0 }
     return {
-      all: rawModules.length,
-      published: rawModules.filter((m) => m.status === 'published').length,
-      draft: rawModules.filter((m) => !m.status || m.status === 'draft').length,
-      pending_review: rawModules.filter((m) => m.status === 'pending_review').length,
-      archived: rawModules.filter((m) => m.status === 'archived').length,
-      assigned: rawModules.filter((m) => assignedModuleIds.has(m.id)).length
+      all: activeModules.length,
+      published: activeModules.filter((m) => m.status === 'published').length,
+      draft: activeModules.filter((m) => !m.status || m.status === 'draft').length,
+      pending_review: activeModules.filter((m) => m.status === 'pending_review').length,
+      archived: activeModules.filter((m) => m.status === 'archived').length,
+      assigned: activeModules.filter((m) => assignedModuleIds.has(m.id)).length
     }
-  }, [rawModules, assignedModuleIds])
+  }, [activeModules, assignedModuleIds])
 
   const totalCatalogMinutes = useMemo(() => {
-    if (!rawModules) return 0
-    return rawModules.reduce((acc, m) => acc + (m.estimated_duration_minutes || 0), 0)
-  }, [rawModules])
+    if (!activeModules) return 0
+    return activeModules.reduce((acc, m) => acc + (m.estimated_duration_minutes || 0), 0)
+  }, [activeModules])
 
   const totalCatalogHoursFormatted = useMemo(() => {
     const hours = Math.floor(totalCatalogMinutes / 60)
@@ -466,22 +494,69 @@ export default function TrainingHub() {
 
   const deleteModuleMutation = useMutation({
     mutationFn: async (id: string) => {
+      const now = new Date().toISOString()
       const { error } = await supabase
         .from('courses')
-        .update({ is_deleted: true, updated_at: new Date().toISOString() })
+        .update({ is_deleted: true, deleted_at: now, updated_at: now })
         .eq('id', id)
 
       if (error) throw error
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['training-modules'] })
+      queryClient.invalidateQueries({ queryKey: ['training-modules-trash'] })
       toast({
-        title: t('moduleDeleted'),
-        description: t('moduleDeletedDesc')
+        title: t('trash.moved_to_trash_title', 'Moved to Trash'),
+        description: t('trash.moved_to_trash_desc', 'Course moved to Trash. You can restore it anytime from the Trash tab.')
       })
     },
     onError: () => {
       toast({ title: t('error'), description: t('moduleDeleteError'), variant: 'destructive' })
+    }
+  })
+
+  const restoreModuleMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('courses')
+        .update({ is_deleted: false, deleted_at: null, updated_at: new Date().toISOString() })
+        .eq('id', id)
+
+      if (error) throw error
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['training-modules'] })
+      queryClient.invalidateQueries({ queryKey: ['training-modules-trash'] })
+      toast({
+        title: t('trash.restored_title', 'Course Restored'),
+        description: t('trash.restored_desc', 'The course has been restored from Trash to active status.')
+      })
+    },
+    onError: () => {
+      toast({ title: t('error'), description: t('trash.restore_error', 'Failed to restore course.'), variant: 'destructive' })
+    }
+  })
+
+  const purgeModuleMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.rpc('purge_course', { p_course_id: id })
+      if (error) throw error
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['training-modules-trash'] })
+      setPurgeConfirmOpen(false)
+      setModuleToPurge(null)
+      toast({
+        title: t('trash.purged_title', 'Course Permanently Purged'),
+        description: t('trash.purged_desc', 'Course and draft assets were permanently removed from the database.')
+      })
+    },
+    onError: (err: any) => {
+      toast({
+        title: t('trash.purge_failed_title', 'Purge Denied'),
+        description: err.message || t('error'),
+        variant: 'destructive'
+      })
     }
   })
 
@@ -531,19 +606,21 @@ export default function TrainingHub() {
 
   const bulkDeleteMutation = useMutation({
     mutationFn: async (ids: string[]) => {
+      const now = new Date().toISOString()
       const { error } = await supabase
         .from('courses')
-        .update({ is_deleted: true, updated_at: new Date().toISOString() })
+        .update({ is_deleted: true, deleted_at: now, updated_at: now })
         .in('id', ids)
 
       if (error) throw error
     },
     onSuccess: (_, ids) => {
       queryClient.invalidateQueries({ queryKey: ['training-modules'] })
+      queryClient.invalidateQueries({ queryKey: ['training-modules-trash'] })
       setSelectedModuleIds(new Set())
       setBulkDeleteConfirmOpen(false)
       toast({
-        title: t('moduleDeleted'),
+        title: t('trash.moved_to_trash_title', 'Moved to Trash'),
         description: t('bulkDeleteSuccess', { count: ids.length })
       })
     },
@@ -642,6 +719,17 @@ export default function TrainingHub() {
     }
   }
 
+  const handlePurge = (module: TrainingModule) => {
+    setModuleToPurge(module)
+    setPurgeConfirmOpen(true)
+  }
+
+  const confirmPurge = async () => {
+    if (moduleToPurge) {
+      await purgeModuleMutation.mutateAsync(moduleToPurge.id)
+    }
+  }
+
   const handleAssign = (id: string) => {
     setViewMode('assignments', { assignModuleId: id, openAssign: true })
   }
@@ -712,29 +800,29 @@ export default function TrainingHub() {
     if (viewMode === 'list') {
       if (!canManageModules) return null
       return (
-        <div className={cn("flex w-full flex-wrap items-center gap-2 sm:w-auto")}>
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
           <Button
             data-tour="training-create-course-btn"
             onClick={() => setShowSmartAIModal(true)}
-            className={cn("w-full sm:w-auto bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black shadow-md border-none")}
+            className="h-9 px-4 text-xs font-semibold bg-ds-accent text-ds-ink-contrast hover:bg-ds-accent/90 shadow-none rounded-md"
           >
-            <Sparkles className={cn("h-4 w-4", "me-2")} />
+            <Sparkles className={cn("h-3.5 w-3.5", "me-1.5")} />
             {t('createWithAI', 'Create with AI')}
           </Button>
           <Button
             variant="outline"
             onClick={handleCreateFromTemplate}
-            className={cn("w-full sm:w-auto")}
+            className="h-9 px-3.5 text-xs font-medium border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle rounded-md"
           >
-            <Layers className={cn("h-4 w-4", "me-2")} />
+            <Layers className={cn("h-3.5 w-3.5", "me-1.5")} />
             {t('createFromTemplate', 'From Template')}
           </Button>
           <Button
             variant="outline"
             onClick={handleStartFromScratch}
-            className={cn("w-full sm:w-auto")}
+            className="h-9 px-3.5 text-xs font-medium border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle rounded-md"
           >
-            <Plus className={cn("h-4 w-4", "me-2")} />
+            <Plus className={cn("h-3.5 w-3.5", "me-1.5")} />
             {t('startFromScratch', 'Start Blank')}
           </Button>
         </div>
@@ -743,20 +831,20 @@ export default function TrainingHub() {
     if (viewMode === 'assignments') {
       if (!canAssignTraining) return null
       return (
-        <div className={cn("flex w-full flex-wrap items-center gap-2 sm:w-auto")}>
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
           <Button
             variant="outline"
             onClick={() => navigate('/manage/assignments/rules')}
-            className={cn("w-full sm:w-auto")}
+            className="h-9 px-3.5 text-xs font-medium border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle rounded-md"
           >
-            <Settings className={cn("h-4 w-4", "me-2")} />
+            <Settings className={cn("h-3.5 w-3.5", "me-1.5")} />
             {t('autoAssignRules')}
           </Button>
           <Button
             onClick={() => setViewMode('assignments', { openAssign: true, assignModuleId })}
-            className={cn("w-full sm:w-auto")}
+            className="h-9 px-4 text-xs font-semibold bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90 rounded-md shadow-none"
           >
-            <Plus className={cn("h-4 w-4", "me-2")} />
+            <Plus className={cn("h-3.5 w-3.5", "me-1.5")} />
             {t('createAssignment')}
           </Button>
         </div>
@@ -765,21 +853,21 @@ export default function TrainingHub() {
     if (viewMode === 'builder') {
       if (!canManageModules) return null
       return (
-        <div className={cn("flex w-full flex-wrap items-center gap-2 sm:w-auto")}>
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
           <Button
             variant="outline"
             onClick={() => setViewMode('list')}
-            className={cn("w-full sm:w-auto")}
+            className="h-9 px-3.5 text-xs font-medium border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle rounded-md"
           >
-            <BookOpen className={cn("h-4 w-4", "me-2")} />
+            <BookOpen className={cn("h-3.5 w-3.5", "me-1.5")} />
             {t('library')}
           </Button>
           {moduleId && moduleId !== 'new' && (
             <Button
               onClick={() => handleAssign(moduleId)}
-              className={cn("w-full sm:w-auto")}
+              className="h-9 px-4 text-xs font-semibold bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90 rounded-md shadow-none"
             >
-              <Users className={cn("h-4 w-4", "me-2")} />
+              <Users className={cn("h-3.5 w-3.5", "me-1.5")} />
               {t('assign')}
             </Button>
           )}
@@ -789,13 +877,13 @@ export default function TrainingHub() {
     if (viewMode === 'insights') {
       if (!canAssignTraining && !canManageModules) return null
       return (
-        <div className={cn("flex w-full flex-wrap items-center gap-2 sm:w-auto")}>
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
           <Button
             variant="outline"
             onClick={() => setViewMode('assignments')}
-            className={cn("w-full sm:w-auto")}
+            className="h-9 px-3.5 text-xs font-medium border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle rounded-md"
           >
-            <Users className={cn("h-4 w-4", "me-2")} />
+            <Users className={cn("h-3.5 w-3.5", "me-1.5")} />
             {t('manageAssignments')}
           </Button>
         </div>
@@ -805,20 +893,18 @@ export default function TrainingHub() {
   })()
 
   const renderAccessNotice = (actionLabel?: string, onAction?: () => void) => (
-    <Card className="border-dashed border-2">
-      <CardContent className="flex flex-col items-center justify-center py-16 text-center">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-500 mb-4">
-          <AlertCircle className="h-6 w-6" />
-        </div>
-        <h3 className="text-lg font-semibold text-gray-700 mb-2">{t('accessRestrictedTitle')}</h3>
-        <p className="text-gray-500 mb-6 max-w-md">{t('accessRestrictedDesc')}</p>
-        {actionLabel && onAction && (
-          <Button onClick={onAction} variant="outline">
-            {actionLabel}
-          </Button>
-        )}
-      </CardContent>
-    </Card>
+    <div className="rounded-[8px] border border-dashed border-ds-border bg-ds-surface-subtle p-12 text-center">
+      <div className="flex h-12 w-12 items-center justify-center rounded-[8px] bg-ds-danger-soft text-ds-danger mb-4 mx-auto border border-ds-danger/20">
+        <AlertCircle className="h-6 w-6" />
+      </div>
+      <h3 className="text-base font-semibold text-ds-ink mb-1">{t('accessRestrictedTitle')}</h3>
+      <p className="text-xs text-ds-muted mb-6 max-w-md mx-auto">{t('accessRestrictedDesc')}</p>
+      {actionLabel && onAction && (
+        <Button onClick={onAction} variant="outline" className="border-ds-border text-xs h-9">
+          {actionLabel}
+        </Button>
+      )}
+    </div>
   )
 
   if (viewMode === 'builder' && moduleId && canManageModules) {
@@ -830,50 +916,14 @@ export default function TrainingHub() {
     label: string
     count: number
     dotColor: string
-    activeClass: string
   }> = [
-    {
-      id: 'all',
-      label: t('allModules'),
-      count: statusCounts.all,
-      dotColor: 'bg-hotel-navy',
-      activeClass: 'bg-hotel-navy text-white shadow-sm'
-    },
-    {
-      id: 'published',
-      label: t('published', 'Published'),
-      count: statusCounts.published,
-      dotColor: 'bg-emerald-500',
-      activeClass: 'bg-emerald-600 text-white shadow-sm'
-    },
-    {
-      id: 'draft',
-      label: t('draft', 'Draft'),
-      count: statusCounts.draft,
-      dotColor: 'bg-slate-400',
-      activeClass: 'bg-slate-700 text-white shadow-sm'
-    },
-    {
-      id: 'pending_review',
-      label: t('pending_review', 'Pending Review'),
-      count: statusCounts.pending_review,
-      dotColor: 'bg-amber-500',
-      activeClass: 'bg-amber-600 text-white shadow-sm'
-    },
-    {
-      id: 'assigned',
-      label: t('assigned', 'Assigned'),
-      count: statusCounts.assigned,
-      dotColor: 'bg-blue-500',
-      activeClass: 'bg-blue-600 text-white shadow-sm'
-    },
-    {
-      id: 'archived',
-      label: t('archived', 'Archived'),
-      count: statusCounts.archived,
-      dotColor: 'bg-rose-500',
-      activeClass: 'bg-rose-600 text-white shadow-sm'
-    }
+    { id: 'all', label: t('allModules'), count: statusCounts.all, dotColor: 'bg-ds-ink' },
+    { id: 'published', label: t('published', 'Published'), count: statusCounts.published, dotColor: 'bg-ds-success' },
+    { id: 'draft', label: t('draft', 'Draft'), count: statusCounts.draft, dotColor: 'bg-ds-muted' },
+    { id: 'pending_review', label: t('pending_review', 'Pending Review'), count: statusCounts.pending_review, dotColor: 'bg-ds-warning' },
+    { id: 'assigned', label: t('assigned', 'Assigned'), count: statusCounts.assigned, dotColor: 'bg-ds-accent' },
+    { id: 'archived', label: t('archived', 'Archived'), count: statusCounts.archived, dotColor: 'bg-ds-danger' },
+    { id: 'trash', label: t('trash.filter_label', 'Trash'), count: trashModules?.length ?? 0, dotColor: 'bg-rose-600' }
   ]
 
   const isAllOnPageSelected = paginatedModules.length > 0 && paginatedModules.every((m) => selectedModuleIds.has(m.id))
@@ -903,44 +953,38 @@ export default function TrainingHub() {
     }
   ]
 
+  const tenantContextLabel = [currentOrganization?.name, currentBrand?.name].filter(Boolean).join(' › ')
+
   return (
-    <div className={`container mx-auto overflow-x-hidden px-3 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-4 sm:py-6 ${'text-start'}`}>
-      <PageHeader
+    <div className="mx-auto max-w-6xl space-y-6 px-3 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-4 sm:py-6 text-start">
+      <WorkspaceHeader
+        eyebrow={t('myContent.eyebrow', 'Studio')}
         title={t('studio.title', 'Courses')}
-        description={t('studio.description', 'Create, edit, review and publish your organization’s courses.')}
+        context={tenantContextLabel || t('studio.description', 'Create, edit, review and publish your organization’s courses.')}
         actions={headerActions}
       />
 
-      <div className="mb-6" data-tour="training-workflow-steps">
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3">
-          {workflowSteps.map((step) => {
-            const Icon = step.icon
-            const isActive = viewMode === step.key
-            return (
-              <button
-                key={step.key}
-                type="button"
-                onClick={() => setViewMode(step.key, step.key === 'builder' ? { moduleId: moduleId || 'new' } : undefined)}
-                className={cn(
-                  "flex min-h-[4.5rem] items-start gap-3 rounded-xl border p-4 text-start transition-all",
-                  isRTL && "text-end",
-                  isActive ? "border-hotel-gold bg-hotel-gold/10 shadow-sm" : "border-gray-200 hover:border-hotel-gold/50 hover:bg-white"
-                )}
-              >
-                <div className={cn(
-                  "mt-0.5 flex h-9 w-9 items-center justify-center rounded-lg",
-                  isActive ? "bg-hotel-gold text-hotel-navy" : "bg-gray-100 text-gray-600"
-                )}>
-                  <Icon className="h-4 w-4" />
-                </div>
-                <div className="flex-1">
-                  <div className="text-sm font-semibold text-hotel-navy">{step.label}</div>
-                  <div className="text-xs text-muted-foreground">{step.description}</div>
-                </div>
-              </button>
-            )
-          })}
-        </div>
+      <div className="flex items-center gap-1.5 p-1 rounded-[8px] bg-ds-surface-subtle border border-ds-border w-fit" data-tour="training-workflow-steps">
+        {workflowSteps.map((step) => {
+          const Icon = step.icon
+          const isActive = viewMode === step.key
+          return (
+            <button
+              key={step.key}
+              type="button"
+              onClick={() => setViewMode(step.key, step.key === 'builder' ? { moduleId: moduleId || 'new' } : undefined)}
+              className={cn(
+                "flex items-center gap-2 px-3 py-1.5 rounded-[6px] text-xs font-semibold transition-all",
+                isActive
+                  ? "bg-ds-surface text-ds-ink shadow-2xs border border-ds-border"
+                  : "text-ds-muted hover:text-ds-ink"
+              )}
+            >
+              <Icon className="h-3.5 w-3.5" />
+              <span>{step.label}</span>
+            </button>
+          )
+        })}
       </div>
 
       <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as ViewMode)} className="w-full">
@@ -951,72 +995,64 @@ export default function TrainingHub() {
             <>
               {/* Executive KPI Summary Strip */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                <Card
+                <div
                   onClick={() => { setStatusFilter('all'); setCurrentPage(1) }}
-                  className="cursor-pointer hover:shadow-md hover:border-hotel-gold/40 transition-all border-slate-200/80 bg-white/70 backdrop-blur-xs"
+                  className="rounded-[8px] border border-ds-border bg-ds-surface p-4 transition-colors hover:border-ds-border-strong cursor-pointer flex items-center justify-between shadow-none"
                 >
-                  <CardContent className="p-3.5 flex items-center justify-between">
-                    <div>
-                      <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">{t('allModules', 'Total Modules')}</p>
-                      <h4 className="text-2xl font-bold text-hotel-navy mt-0.5">{statusCounts.all}</h4>
-                      <p className="text-[10px] text-slate-400 mt-0.5">
-                        {statusCounts.draft} {t('draft', 'drafts')} · {statusCounts.published} {t('published', 'published')}
-                      </p>
-                    </div>
-                    <div className="h-10 w-10 rounded-xl bg-slate-100 flex items-center justify-center text-hotel-navy shrink-0">
-                      <BookOpen className="h-5 w-5" />
-                    </div>
-                  </CardContent>
-                </Card>
+                  <div>
+                    <p className="text-xs font-semibold text-ds-muted uppercase tracking-wider">{t('allModules', 'Total Modules')}</p>
+                    <h4 className="font-mono text-2xl font-bold text-ds-ink mt-1">{statusCounts.all}</h4>
+                    <p className="text-[11px] text-ds-muted mt-0.5">
+                      {statusCounts.draft} {t('draft', 'drafts')} · {statusCounts.published} {t('published', 'published')}
+                    </p>
+                  </div>
+                  <div className="h-10 w-10 rounded-[6px] border border-ds-border bg-ds-surface-subtle flex items-center justify-center text-ds-muted shrink-0">
+                    <BookOpen className="h-5 w-5" />
+                  </div>
+                </div>
 
-                <Card
+                <div
                   onClick={() => { setStatusFilter('published'); setCurrentPage(1) }}
-                  className="cursor-pointer hover:shadow-md hover:border-emerald-300 transition-all border-slate-200/80 bg-white/70 backdrop-blur-xs"
+                  className="rounded-[8px] border border-ds-border bg-ds-surface p-4 transition-colors hover:border-ds-border-strong cursor-pointer flex items-center justify-between shadow-none"
                 >
-                  <CardContent className="p-3.5 flex items-center justify-between">
-                    <div>
-                      <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">{t('readyRate', 'Published')}</p>
-                      <h4 className="text-2xl font-bold text-emerald-700 mt-0.5">{statusCounts.published}</h4>
-                      <p className="text-[10px] text-emerald-600 font-medium mt-0.5">
-                        {statusCounts.all > 0 ? Math.round((statusCounts.published / statusCounts.all) * 100) : 0}% {t('readyRate', 'readiness')}
-                      </p>
-                    </div>
-                    <div className="h-10 w-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                      <CheckCircle2 className="h-5 w-5" />
-                    </div>
-                  </CardContent>
-                </Card>
+                  <div>
+                    <p className="text-xs font-semibold text-ds-success uppercase tracking-wider">{t('readyRate', 'Published')}</p>
+                    <h4 className="font-mono text-2xl font-bold text-ds-success mt-1">{statusCounts.published}</h4>
+                    <p className="text-[11px] text-ds-success font-medium mt-0.5">
+                      {statusCounts.all > 0 ? Math.round((statusCounts.published / statusCounts.all) * 100) : 0}% {t('readyRate', 'readiness')}
+                    </p>
+                  </div>
+                  <div className="h-10 w-10 rounded-[6px] border border-ds-success/30 bg-ds-success-soft text-ds-success flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="h-5 w-5" />
+                  </div>
+                </div>
 
-                <Card
+                <div
                   onClick={() => { setStatusFilter('assigned'); setCurrentPage(1) }}
-                  className="cursor-pointer hover:shadow-md hover:border-blue-300 transition-all border-slate-200/80 bg-white/70 backdrop-blur-xs"
+                  className="rounded-[8px] border border-ds-border bg-ds-surface p-4 transition-colors hover:border-ds-border-strong cursor-pointer flex items-center justify-between shadow-none"
                 >
-                  <CardContent className="p-3.5 flex items-center justify-between">
-                    <div>
-                      <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">{t('coverageRate', 'Assigned')}</p>
-                      <h4 className="text-2xl font-bold text-blue-700 mt-0.5">{statusCounts.assigned}</h4>
-                      <p className="text-[10px] text-blue-600 font-medium mt-0.5">
-                        {statusCounts.all > 0 ? Math.round((statusCounts.assigned / statusCounts.all) * 100) : 0}% {t('coverageRate', 'coverage')}
-                      </p>
-                    </div>
-                    <div className="h-10 w-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-                      <Users className="h-5 w-5" />
-                    </div>
-                  </CardContent>
-                </Card>
+                  <div>
+                    <p className="text-xs font-semibold text-ds-accent uppercase tracking-wider">{t('coverageRate', 'Assigned')}</p>
+                    <h4 className="font-mono text-2xl font-bold text-ds-accent mt-1">{statusCounts.assigned}</h4>
+                    <p className="text-[11px] text-ds-accent font-medium mt-0.5">
+                      {statusCounts.all > 0 ? Math.round((statusCounts.assigned / statusCounts.all) * 100) : 0}% {t('coverageRate', 'coverage')}
+                    </p>
+                  </div>
+                  <div className="h-10 w-10 rounded-[6px] border border-ds-accent/30 bg-ds-accent-soft text-ds-accent flex items-center justify-center shrink-0">
+                    <Users className="h-5 w-5" />
+                  </div>
+                </div>
 
-                <Card className="border-slate-200/80 bg-white/70 backdrop-blur-xs">
-                  <CardContent className="p-3.5 flex items-center justify-between">
-                    <div>
-                      <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">{t('totalTrainingHours', 'Content Duration')}</p>
-                      <h4 className="text-2xl font-bold text-hotel-gold mt-0.5">{totalCatalogHoursFormatted}</h4>
-                      <p className="text-[10px] text-slate-400 mt-0.5">{t('allModules', 'across catalog')}</p>
-                    </div>
-                    <div className="h-10 w-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
-                      <Clock className="h-5 w-5" />
-                    </div>
-                  </CardContent>
-                </Card>
+                <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 transition-colors hover:border-ds-border-strong flex items-center justify-between shadow-none">
+                  <div>
+                    <p className="text-xs font-semibold text-ds-muted uppercase tracking-wider">{t('totalTrainingHours', 'Content Duration')}</p>
+                    <h4 className="font-mono text-2xl font-bold text-ds-ink mt-1">{totalCatalogHoursFormatted}</h4>
+                    <p className="text-[11px] text-ds-muted mt-0.5">{t('allModules', 'across catalog')}</p>
+                  </div>
+                  <div className="h-10 w-10 rounded-[6px] border border-ds-border bg-ds-surface-subtle flex items-center justify-center text-ds-muted shrink-0">
+                    <Clock className="h-5 w-5" />
+                  </div>
+                </div>
               </div>
 
               {/* Status Filter Pills Bar */}
@@ -1032,17 +1068,17 @@ export default function TrainingHub() {
                         setCurrentPage(1)
                       }}
                       className={cn(
-                        "inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border",
+                        "inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all border",
                         isSelected
-                          ? pill.activeClass
-                          : "bg-white border-slate-200 text-slate-700 hover:border-hotel-gold/60 hover:bg-slate-50"
+                          ? "bg-ds-ink text-ds-on-ink border-ds-ink shadow-2xs"
+                          : "bg-ds-surface border-ds-border text-ds-ink hover:border-ds-border-strong hover:bg-ds-surface-subtle"
                       )}
                     >
-                      <span className={cn("h-2 w-2 rounded-full", isSelected ? "bg-white" : pill.dotColor)} />
+                      <span className={cn("h-2 w-2 rounded-full", isSelected ? "bg-ds-on-ink" : pill.dotColor)} />
                       <span>{pill.label}</span>
                       <span className={cn(
-                        "px-1.5 py-0.5 rounded-full text-[10px] font-bold",
-                        isSelected ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600"
+                        "px-1.5 py-0.2 rounded-full text-[10px] font-bold font-mono",
+                        isSelected ? "bg-white/20 text-ds-on-ink" : "bg-ds-surface-subtle text-ds-muted border border-ds-border"
                       )}>
                         {pill.count}
                       </span>
@@ -1052,10 +1088,10 @@ export default function TrainingHub() {
               </div>
 
               {/* Multi-Filters & Search Toolbar */}
-              <div data-tour="training-search-toolbar" className="p-3 sm:p-4 bg-white rounded-xl border border-slate-200 shadow-sm space-y-3">
+              <div data-tour="training-search-toolbar" className="p-3.5 bg-ds-surface rounded-[8px] border border-ds-border shadow-none space-y-3">
                 <div className="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between">
                   <div className="relative flex-1 min-w-[240px]">
-                    <Search className={cn("absolute top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 font-bold", "start-3")} />
+                    <Search className={cn("absolute top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-ds-muted", "start-3")} />
                     <Input
                       data-tour="training-search-input"
                       type="text"
@@ -1067,7 +1103,7 @@ export default function TrainingHub() {
                       }}
                       className={cn(
                         "ps-9 pe-8",
-                        "h-9 text-sm border-slate-200 bg-slate-50/50 focus:border-hotel-gold focus:ring-hotel-gold transition-all"
+                        "h-9 text-xs border-ds-border bg-ds-surface-subtle text-ds-ink placeholder:text-ds-muted focus:border-ds-border-strong transition-all"
                       )}
                     />
                     {search && (
@@ -1077,7 +1113,7 @@ export default function TrainingHub() {
                           setSearch('')
                           setCurrentPage(1)
                         }}
-                        className={cn("absolute top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1", "end-2")}
+                        className={cn("absolute top-1/2 -translate-y-1/2 text-ds-muted hover:text-ds-ink p-1", "end-2")}
                         aria-label="Clear search"
                       >
                         <X className="h-3.5 w-3.5" />
@@ -1094,8 +1130,8 @@ export default function TrainingHub() {
                         setCurrentPage(1)
                       }}
                     >
-                      <SelectTrigger className="h-9 w-[130px] sm:w-[150px] text-xs border-slate-200 bg-slate-50/50">
-                        <Tag className="h-3.5 w-3.5 me-1.5 text-slate-400" />
+                      <SelectTrigger className="h-9 w-[130px] sm:w-[150px] text-xs border-ds-border bg-ds-surface-subtle text-ds-ink">
+                        <Tag className="h-3.5 w-3.5 me-1.5 text-ds-muted" />
                         <SelectValue placeholder={t('allCategories', 'Category')} />
                       </SelectTrigger>
                       <SelectContent>
@@ -1114,8 +1150,8 @@ export default function TrainingHub() {
                         setCurrentPage(1)
                       }}
                     >
-                      <SelectTrigger className="h-9 w-[130px] sm:w-[150px] text-xs border-slate-200 bg-slate-50/50">
-                        <Users className="h-3.5 w-3.5 me-1.5 text-slate-400" />
+                      <SelectTrigger className="h-9 w-[130px] sm:w-[150px] text-xs border-ds-border bg-ds-surface-subtle text-ds-ink">
+                        <Users className="h-3.5 w-3.5 me-1.5 text-ds-muted" />
                         <SelectValue placeholder={t('assignedFilter', 'Assignment')} />
                       </SelectTrigger>
                       <SelectContent>
@@ -1133,8 +1169,8 @@ export default function TrainingHub() {
                         setCurrentPage(1)
                       }}
                     >
-                      <SelectTrigger className="h-9 w-[120px] sm:w-[140px] text-xs border-slate-200 bg-slate-50/50">
-                        <Clock className="h-3.5 w-3.5 me-1.5 text-slate-400" />
+                      <SelectTrigger className="h-9 w-[120px] sm:w-[140px] text-xs border-ds-border bg-ds-surface-subtle text-ds-ink">
+                        <Clock className="h-3.5 w-3.5 me-1.5 text-ds-muted" />
                         <SelectValue placeholder={t('durationFilter', 'Duration')} />
                       </SelectTrigger>
                       <SelectContent>
@@ -1148,8 +1184,8 @@ export default function TrainingHub() {
 
                     {/* Sort Dropdown */}
                     <Select value={sortBy} onValueChange={setSortBy}>
-                      <SelectTrigger className="h-9 w-[140px] sm:w-[160px] text-xs border-slate-200 bg-slate-50/50">
-                        <ArrowUpDown className="h-3.5 w-3.5 me-1.5 text-slate-400" />
+                      <SelectTrigger className="h-9 w-[140px] sm:w-[160px] text-xs border-ds-border bg-ds-surface-subtle text-ds-ink">
+                        <ArrowUpDown className="h-3.5 w-3.5 me-1.5 text-ds-muted" />
                         <SelectValue placeholder={t('sortBy')} />
                       </SelectTrigger>
                       <SelectContent>
@@ -1168,7 +1204,7 @@ export default function TrainingHub() {
                         variant="ghost"
                         size="sm"
                         onClick={handleClearFilters}
-                        className="h-9 px-2.5 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50 gap-1"
+                        className="h-9 px-2.5 text-xs text-ds-muted hover:text-ds-danger hover:bg-ds-danger-soft gap-1"
                         title={t('clearFilters', 'Clear Filters')}
                       >
                         <FilterX className="h-3.5 w-3.5" />
@@ -1177,13 +1213,13 @@ export default function TrainingHub() {
                     )}
 
                     {/* View Switcher: Grid vs Table */}
-                    <div className="flex items-center bg-slate-100 rounded-lg p-0.5 border border-slate-200">
+                    <div className="flex items-center bg-ds-surface-subtle rounded-md p-0.5 border border-ds-border">
                       <Button
                         variant={layoutMode === 'grid' ? 'default' : 'ghost'}
                         size="icon"
                         className={cn(
-                          "h-7 w-7 rounded-md",
-                          layoutMode === 'grid' ? "bg-hotel-navy text-white shadow-xs" : "text-slate-500 hover:text-slate-900"
+                          "h-7 w-7 rounded",
+                          layoutMode === 'grid' ? "bg-ds-surface text-ds-ink shadow-2xs font-semibold" : "text-ds-muted hover:text-ds-ink"
                         )}
                         onClick={() => setLayoutMode('grid')}
                         aria-label={t('viewAsGrid', 'Grid view')}
@@ -1195,8 +1231,8 @@ export default function TrainingHub() {
                         variant={layoutMode === 'table' ? 'default' : 'ghost'}
                         size="icon"
                         className={cn(
-                          "h-7 w-7 rounded-md",
-                          layoutMode === 'table' ? "bg-hotel-navy text-white shadow-xs" : "text-slate-500 hover:text-slate-900"
+                          "h-7 w-7 rounded",
+                          layoutMode === 'table' ? "bg-ds-surface text-ds-ink shadow-2xs font-semibold" : "text-ds-muted hover:text-ds-ink"
                         )}
                         onClick={() => setLayoutMode('table')}
                         aria-label={t('viewAsTable', 'Table view')}
@@ -1208,9 +1244,9 @@ export default function TrainingHub() {
                   </div>
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 text-xs text-slate-500">
+                <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-ds-border text-xs text-ds-muted">
                   <div className="flex items-center gap-3">
-                    <label className="flex items-center gap-2 cursor-pointer font-medium hover:text-slate-900">
+                    <label className="flex items-center gap-2 cursor-pointer font-medium hover:text-ds-ink">
                       <Checkbox
                         checked={isAllOnPageSelected ? true : isSomeOnPageSelected ? 'indeterminate' : false}
                         onCheckedChange={handleSelectAllOnPage}
@@ -1218,7 +1254,7 @@ export default function TrainingHub() {
                       />
                       <span>{t('selectAll', 'Select All on Page')}</span>
                     </label>
-                    <span className="text-slate-300">|</span>
+                    <span className="text-ds-border">|</span>
                     <span>
                       {t('showingModules', {
                         from: totalItems === 0 ? 0 : (safeCurrentPage - 1) * pageSize + 1,
@@ -1238,7 +1274,7 @@ export default function TrainingHub() {
                         setCurrentPage(1)
                       }}
                     >
-                      <SelectTrigger className="h-7 w-[70px] text-xs border-slate-200 bg-white">
+                      <SelectTrigger className="h-7 w-[70px] text-xs border-ds-border bg-ds-surface text-ds-ink">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -1254,12 +1290,12 @@ export default function TrainingHub() {
 
               {/* Bulk Action Sticky Toolbar */}
               {selectedModuleIds.size > 0 && (
-                <div className="sticky top-4 z-30 p-3 bg-slate-900 text-white rounded-xl shadow-xl flex flex-wrap items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="sticky top-4 z-30 p-3 bg-ds-ink text-ds-on-ink rounded-[8px] border border-ds-border shadow-lg flex flex-wrap items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
                   <div className="flex items-center gap-3">
-                    <Badge className="bg-hotel-gold text-slate-950 font-bold px-2.5 py-0.5">
+                    <Badge className="bg-ds-accent text-ds-ink-contrast font-bold px-2.5 py-0.5">
                       {t('selectedCount_other', { count: selectedModuleIds.size, defaultValue: `${selectedModuleIds.size} modules selected` })}
                     </Badge>
-                    <span className="text-xs text-slate-300 hidden md:inline">
+                    <span className="text-xs text-ds-on-ink/80 hidden md:inline">
                       {t('chooseBulkAction', { defaultValue: 'Perform batch actions on selected modules' })}
                     </span>
                   </div>
@@ -1277,7 +1313,7 @@ export default function TrainingHub() {
                     <Button
                       size="sm"
                       variant="secondary"
-                      className="h-8 text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white border-0"
+                      className="h-8 text-xs font-semibold bg-ds-success hover:bg-ds-success/90 text-white border-0"
                       onClick={() => bulkPublishMutation.mutate(Array.from(selectedModuleIds))}
                       disabled={bulkPublishMutation.isPending}
                     >
@@ -1291,7 +1327,7 @@ export default function TrainingHub() {
                     <Button
                       size="sm"
                       variant="secondary"
-                      className="h-8 text-xs font-semibold bg-slate-700 hover:bg-slate-600 text-white border-0"
+                      className="h-8 text-xs font-semibold bg-white/20 hover:bg-white/30 text-white border-0"
                       onClick={() => bulkArchiveMutation.mutate(Array.from(selectedModuleIds))}
                       disabled={bulkArchiveMutation.isPending}
                     >
@@ -1305,7 +1341,7 @@ export default function TrainingHub() {
                     <Button
                       size="sm"
                       variant="destructive"
-                      className="h-8 text-xs font-semibold bg-rose-600 hover:bg-rose-500 text-white border-0"
+                      className="h-8 text-xs font-semibold bg-ds-danger hover:bg-ds-danger/90 text-white border-0"
                       onClick={() => setBulkDeleteConfirmOpen(true)}
                     >
                       <Trash2 className="h-3.5 w-3.5 me-1.5" />
@@ -1314,7 +1350,7 @@ export default function TrainingHub() {
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="h-8 text-xs text-slate-400 hover:text-white hover:bg-white/10"
+                      className="h-8 text-xs text-white/70 hover:text-white hover:bg-white/10"
                       onClick={handleDeselectAll}
                     >
                       <X className="h-3.5 w-3.5 me-1" />
@@ -1326,59 +1362,74 @@ export default function TrainingHub() {
 
               {/* Main Results View */}
               {isLoading ? (
-                <div className="flex flex-col items-center justify-center py-24 bg-white rounded-xl border border-slate-100">
-                  <Loader2 className="h-10 w-10 animate-spin text-hotel-gold mb-3" />
-                  <p className="text-sm font-medium text-slate-500">{t('loading', 'Loading training modules...')}</p>
+                <div className="flex flex-col items-center justify-center py-20 bg-ds-surface rounded-[8px] border border-ds-border">
+                  <Loader2 className="h-8 w-8 animate-spin text-ds-accent mb-3" />
+                  <p className="text-xs font-medium text-ds-muted">{t('loading', 'Loading training modules...')}</p>
                 </div>
               ) : paginatedModules.length === 0 ? (
-                <Card className="border-dashed border-2 bg-slate-50/50">
-                  <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-                    <div className="h-14 w-14 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-4">
-                      {hasActiveFilters ? <FilterX className="h-7 w-7" /> : <Sparkles className="h-7 w-7 text-hotel-gold" />}
-                    </div>
-                    <h3 className="text-lg font-semibold text-slate-800 mb-1">
-                      {hasActiveFilters ? t('noMatchingModules', 'No matching modules found') : t('noModules', 'Build your training catalog')}
-                    </h3>
-                    <p className="text-sm text-slate-500 mb-6 max-w-md">
-                      {hasActiveFilters
-                        ? t('noMatchingModulesDesc', 'No training modules match your current filters or search terms.')
-                        : t('noModulesDesc', 'Create rich interactive modules or start with AI-generated Saudi hospitality courses.')}
-                    </p>
-
-                    {hasActiveFilters ? (
-                      <Button variant="outline" onClick={handleClearFilters} className="gap-2">
-                        <FilterX className="h-4 w-4" />
-                        {t('clearFilters', 'Clear Filters')}
-                      </Button>
+                <div className="rounded-[8px] border border-dashed border-ds-border bg-ds-surface-subtle p-12 text-center">
+                  <div className="h-12 w-12 rounded-[8px] bg-ds-surface border border-ds-border flex items-center justify-center text-ds-muted mb-3 mx-auto shadow-2xs">
+                    {statusFilter === 'trash' ? (
+                      <Trash2 className="h-6 w-6 text-ds-muted" />
+                    ) : hasActiveFilters ? (
+                      <FilterX className="h-6 w-6" />
                     ) : (
-                      <div className="w-full max-w-xl space-y-4">
-                        <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                          {t('popularAiStarters', 'Start from a suggested course:')}
-                        </p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                          {hospitalityAiStarters.map((starter) => {
-                            const StarterIcon = starter.icon
-                            return (
-                              <button
-                                key={starter.title}
-                                type="button"
-                                onClick={() => setShowSmartAIModal(true)}
-                                className="flex items-center gap-2.5 p-3 rounded-lg border border-slate-200 bg-white hover:border-hotel-gold hover:bg-amber-50/30 text-start transition-all group"
-                              >
-                                <div className="h-7 w-7 rounded-md bg-amber-50 text-hotel-gold flex items-center justify-center shrink-0 group-hover:bg-hotel-gold group-hover:text-slate-950 transition-colors">
-                                  <StarterIcon className="h-3.5 w-3.5" />
-                                </div>
-                                <span className="text-xs font-semibold text-slate-800 group-hover:text-hotel-gold transition-colors line-clamp-1">
-                                  {starter.title}
-                                </span>
-                              </button>
-                            )
-                          })}
-                        </div>
-                      </div>
+                      <Sparkles className="h-6 w-6 text-ds-accent" />
                     )}
-                  </CardContent>
-                </Card>
+                  </div>
+                  <h3 className="text-base font-semibold text-ds-ink mb-1">
+                    {statusFilter === 'trash'
+                      ? t('trash.empty_title', 'Trash is Empty')
+                      : hasActiveFilters
+                      ? t('noMatchingModules', 'No matching modules found')
+                      : t('noModules', 'Build your training catalog')}
+                  </h3>
+                  <p className="text-xs text-ds-muted mb-6 max-w-md mx-auto">
+                    {statusFilter === 'trash'
+                      ? t('trash.empty_desc', 'No deleted courses in trash. Trashed courses will appear here where they can be restored or purged.')
+                      : hasActiveFilters
+                      ? t('noMatchingModulesDesc', 'No training modules match your current filters or search terms.')
+                      : t('noModulesDesc', 'Create rich interactive modules or start with AI-generated Saudi hospitality courses.')}
+                  </p>
+
+                  {statusFilter === 'trash' ? (
+                    <Button variant="outline" onClick={() => setStatusFilter('all')} className="border-ds-border text-xs h-9 gap-1.5">
+                      <BookOpen className="h-3.5 w-3.5" />
+                      {t('allModules', 'Back to Catalog')}
+                    </Button>
+                  ) : hasActiveFilters ? (
+                    <Button variant="outline" onClick={handleClearFilters} className="border-ds-border text-xs h-9 gap-1.5">
+                      <FilterX className="h-3.5 w-3.5" />
+                      {t('clearFilters', 'Clear Filters')}
+                    </Button>
+                  ) : (
+                    <div className="w-full max-w-xl mx-auto space-y-3">
+                      <p className="text-[11px] font-semibold uppercase tracking-wider text-ds-muted">
+                        {t('popularAiStarters', 'Start from a suggested course:')}
+                      </p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {hospitalityAiStarters.map((starter) => {
+                          const StarterIcon = starter.icon
+                          return (
+                            <button
+                              key={starter.title}
+                              type="button"
+                              onClick={() => setShowSmartAIModal(true)}
+                              className="flex items-center gap-2.5 p-3 rounded-[6px] border border-ds-border bg-ds-surface hover:border-ds-border-strong hover:bg-ds-surface-subtle text-start transition-all group"
+                            >
+                              <div className="h-7 w-7 rounded-[4px] bg-ds-surface-subtle border border-ds-border text-ds-accent flex items-center justify-center shrink-0 group-hover:bg-ds-accent group-hover:text-ds-ink-contrast transition-colors">
+                                <StarterIcon className="h-3.5 w-3.5" />
+                              </div>
+                              <span className="text-xs font-semibold text-ds-ink group-hover:text-ds-accent transition-colors line-clamp-1">
+                                {starter.title}
+                              </span>
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
               ) : layoutMode === 'grid' ? (
                 /* GRID VIEW */
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
@@ -1395,21 +1446,21 @@ export default function TrainingHub() {
                       <Card
                         key={module.id}
                         className={cn(
-                          "group relative hover:shadow-lg transition-all duration-200 border-slate-200 overflow-hidden bg-white flex flex-col justify-between",
-                          isSelected && "ring-2 ring-hotel-gold border-hotel-gold bg-amber-50/20"
+                          "group relative rounded-[8px] border border-ds-border bg-ds-surface hover:border-ds-border-strong transition-all duration-200 overflow-hidden flex flex-col justify-between shadow-none",
+                          isSelected && "ring-1 ring-ds-accent border-ds-accent bg-ds-accent-soft/10"
                         )}
                       >
                         {/* Status bar header accent */}
                         <div
                           className={cn(
-                            "h-1.5 w-full",
+                            "h-1 w-full",
                             module.status === 'published'
-                              ? 'bg-emerald-500'
+                              ? 'bg-ds-success'
                               : module.status === 'archived'
-                              ? 'bg-rose-500'
+                              ? 'bg-ds-danger'
                               : module.status === 'pending_review'
-                              ? 'bg-amber-500'
-                              : 'bg-slate-300'
+                              ? 'bg-ds-warning'
+                              : 'bg-ds-border'
                           )}
                         />
 
@@ -1420,12 +1471,12 @@ export default function TrainingHub() {
                               checked={isSelected}
                               onCheckedChange={() => handleToggleSelect(module.id)}
                               aria-label={`Select ${module.title}`}
-                              className="data-[state=checked]:bg-hotel-navy shrink-0"
+                              className="data-[state=checked]:bg-ds-ink shrink-0"
                             />
                             <TrainingCategoryBadge category={module.category} size="sm" />
                             {isMaster && (
-                              <Badge className="bg-indigo-50 text-indigo-700 border-indigo-200 text-[10px] px-2 py-0.5 font-semibold whitespace-nowrap shrink-0 flex items-center gap-1">
-                                <Crown className="h-2.5 w-2.5 text-indigo-600 shrink-0" />
+                              <Badge className="border-ds-border bg-ds-surface-subtle text-ds-ink text-[10px] px-2 py-0.5 font-semibold whitespace-nowrap shrink-0 flex items-center gap-1">
+                                <Crown className="h-2.5 w-2.5 text-ds-accent shrink-0" />
                                 <span>Platform Master</span>
                               </Badge>
                             )}
@@ -1436,7 +1487,7 @@ export default function TrainingHub() {
                                   e.stopPropagation()
                                   setSyncModalState({ open: true, module })
                                 }}
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500 hover:bg-amber-600 text-slate-950 text-[10px] font-bold shadow-sm transition-transform hover:scale-105 animate-pulse cursor-pointer"
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-ds-warning text-ds-ink-contrast text-[10px] font-bold shadow-2xs transition-transform hover:scale-105 animate-pulse cursor-pointer"
                                 title="Click to view upstream master changes and synchronize"
                               >
                                 <span>🔔</span>
@@ -1446,45 +1497,51 @@ export default function TrainingHub() {
                           </div>
 
                           <div className="flex items-center gap-1.5 shrink-0">
-                            {/* Inline status switcher dropdown */}
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <button
-                                  type="button"
-                                  className={cn(
-                                    "text-[10px] font-bold rounded-sm px-2 py-0.5 inline-flex items-center gap-1 cursor-pointer transition-opacity hover:opacity-80",
-                                    module.status === 'published'
-                                      ? 'bg-emerald-100 text-emerald-800'
-                                      : module.status === 'archived'
-                                      ? 'bg-rose-100 text-rose-800'
-                                      : module.status === 'pending_review'
-                                      ? 'bg-amber-100 text-amber-800'
-                                      : 'bg-slate-100 text-slate-700'
-                                  )}
-                                >
-                                  <span>{t(module.status || 'draft')}</span>
-                                  <ChevronDown className="h-2.5 w-2.5 opacity-60" />
-                                </button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="text-xs">
-                                <DropdownMenuLabel>{t('filterByStatus', 'Set Status')}</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => updateStatusMutation.mutate({ id: module.id, status: 'published' })}>
-                                  <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 me-2" />
-                                  {t('published', 'Published')}
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => updateStatusMutation.mutate({ id: module.id, status: 'draft' })}>
-                                  <Clock className="h-3.5 w-3.5 text-slate-500 me-2" />
-                                  {t('draft', 'Draft')}
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => updateStatusMutation.mutate({ id: module.id, status: 'archived' })}>
-                                  <Archive className="h-3.5 w-3.5 text-rose-500 me-2" />
-                                  {t('archived', 'Archived')}
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                            {/* Inline status switcher or trash badge */}
+                            {statusFilter === 'trash' ? (
+                              <span className="text-[10px] font-bold rounded-sm px-2 py-0.5 inline-flex items-center gap-1 bg-rose-500/10 text-rose-600 border border-rose-200">
+                                <span>{t('trash.filter_label', 'Trash')}</span>
+                              </span>
+                            ) : (
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <button
+                                    type="button"
+                                    className={cn(
+                                      "text-[10px] font-bold rounded-sm px-2 py-0.5 inline-flex items-center gap-1 cursor-pointer transition-opacity hover:opacity-80 border",
+                                      module.status === 'published'
+                                        ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
+                                        : module.status === 'archived'
+                                        ? 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
+                                        : module.status === 'pending_review'
+                                        ? 'bg-ds-warning-soft text-ds-warning border-ds-warning/30'
+                                        : 'bg-ds-surface-subtle text-ds-muted border-ds-border'
+                                    )}
+                                  >
+                                    <span>{t(module.status || 'draft')}</span>
+                                    <ChevronDown className="h-2.5 w-2.5 opacity-60" />
+                                  </button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="text-xs">
+                                  <DropdownMenuLabel>{t('filterByStatus', 'Set Status')}</DropdownMenuLabel>
+                                  <DropdownMenuItem onClick={() => updateStatusMutation.mutate({ id: module.id, status: 'published' })}>
+                                    <CheckCircle2 className="h-3.5 w-3.5 text-ds-success me-2" />
+                                    {t('published', 'Published')}
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => updateStatusMutation.mutate({ id: module.id, status: 'draft' })}>
+                                    <Clock className="h-3.5 w-3.5 text-ds-muted me-2" />
+                                    {t('draft', 'Draft')}
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => updateStatusMutation.mutate({ id: module.id, status: 'archived' })}>
+                                    <Archive className="h-3.5 w-3.5 text-ds-danger me-2" />
+                                    {t('archived', 'Archived')}
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            )}
 
                             {isAssigned && (
-                              <Badge variant="outline" className="text-[10px] font-semibold bg-blue-50 text-blue-700 border-blue-200 px-1.5 py-0.5">
+                              <Badge variant="outline" className="text-[10px] font-medium bg-ds-surface-subtle text-ds-muted border-ds-border px-1.5 py-0.5">
                                 {t('assigned')}
                               </Badge>
                             )}
@@ -1495,28 +1552,28 @@ export default function TrainingHub() {
                         <CardHeader className="p-4 pt-3 pb-2 flex-1">
                           <CardTitle
                             onClick={() => handleOpenPreview(module.id)}
-                            className="text-base font-semibold text-slate-900 line-clamp-1 group-hover:text-hotel-gold cursor-pointer transition-colors"
+                            className="text-base font-semibold text-ds-ink line-clamp-1 group-hover:text-ds-accent cursor-pointer transition-colors"
                             title={module.title}
                           >
                             {module.title || t('untitledModule', 'Untitled Module')}
                           </CardTitle>
-                          <p className={cn("text-xs text-slate-500 line-clamp-2 mt-1 min-h-[32px]", "text-start")}>
+                          <p className={cn("text-xs text-ds-muted line-clamp-2 mt-1 min-h-[32px]", "text-start")}>
                             {module.description || t('noDescription', 'No description provided')}
                           </p>
                         </CardHeader>
 
                         {/* Card Footer: Metadata & Quick Actions */}
                         <CardContent className="p-4 pt-0 space-y-3">
-                          <div className="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-100">
+                          <div className="flex items-center justify-between text-xs text-ds-muted pt-2 border-t border-ds-border">
                             <div className="flex items-center gap-1" title={t('estimatedDuration')}>
-                              <Clock className="h-3.5 w-3.5 text-slate-400" />
+                              <Clock className="h-3.5 w-3.5 text-ds-muted" />
                               <span>{module.estimated_duration_minutes ? `${module.estimated_duration_minutes} ${t('min')}` : `0 ${t('min')}`}</span>
                             </div>
 
                             <button
                               type="button"
                               onClick={() => handleOpenPreview(module.id)}
-                              className="text-[11px] font-medium text-slate-400 hover:text-hotel-gold flex items-center gap-1 transition-colors"
+                              className="text-[11px] font-medium text-ds-muted hover:text-ds-ink flex items-center gap-1 transition-colors"
                             >
                               <Eye className="h-3 w-3" />
                               <span>{t('quickPreview', 'Preview')}</span>
@@ -1536,6 +1593,9 @@ export default function TrainingHub() {
                             onSubmitForReview={module.status === 'draft' ? () => handleSubmitForReview(module) : undefined}
                             onApprove={module.status === 'pending_review' && canReviewModules ? () => handleApprove(module) : undefined}
                             onReject={module.status === 'pending_review' && canReviewModules ? () => handleRequestReject(module) : undefined}
+                            isTrash={statusFilter === 'trash'}
+                            onRestore={() => restoreModuleMutation.mutate(module.id)}
+                            onPurge={() => handlePurge(module)}
                           />
                         </CardContent>
                       </Card>
@@ -1544,10 +1604,10 @@ export default function TrainingHub() {
                 </div>
               ) : (
                 /* COMPACT TABLE VIEW */
-                <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="rounded-[8px] border border-ds-border bg-ds-surface shadow-none overflow-hidden">
                   <Table>
-                    <TableHeader className="bg-slate-50/80">
-                      <TableRow className="border-b border-slate-200 text-xs text-slate-500">
+                    <TableHeader className="bg-ds-surface-subtle">
+                      <TableRow className="border-b border-ds-border text-xs text-ds-muted">
                         <TableHead className="w-10 px-3">
                           <Checkbox
                             checked={isAllOnPageSelected ? true : isSomeOnPageSelected ? 'indeterminate' : false}
@@ -1557,35 +1617,35 @@ export default function TrainingHub() {
                         </TableHead>
                         <TableHead
                           onClick={() => handleSortColumn('title')}
-                          className="min-w-[240px] cursor-pointer hover:text-slate-900 transition-colors select-none"
+                          className="min-w-[240px] cursor-pointer hover:text-ds-ink transition-colors select-none text-ds-muted"
                         >
                           <div className="flex items-center gap-1.5">
                             <span>{t('title', 'Module')}</span>
-                            {sortBy === 'title_asc' ? <ArrowUp className="h-3 w-3 text-hotel-gold" /> : sortBy === 'title_desc' ? <ArrowDown className="h-3 w-3 text-hotel-gold" /> : <ArrowUpDown className="h-3 w-3 opacity-40" />}
+                            {sortBy === 'title_asc' ? <ArrowUp className="h-3 w-3 text-ds-accent" /> : sortBy === 'title_desc' ? <ArrowDown className="h-3 w-3 text-ds-accent" /> : <ArrowUpDown className="h-3 w-3 opacity-40" />}
                           </div>
                         </TableHead>
-                        <TableHead className="hidden md:table-cell min-w-[130px] whitespace-nowrap">{t('category', 'Category')}</TableHead>
-                        <TableHead className="min-w-[110px] whitespace-nowrap">{t('filterByStatus', 'Status')}</TableHead>
-                        <TableHead className="hidden sm:table-cell min-w-[100px] whitespace-nowrap">{t('assignedFilter', 'Assigned')}</TableHead>
+                        <TableHead className="hidden md:table-cell min-w-[130px] whitespace-nowrap text-ds-muted">{t('category', 'Category')}</TableHead>
+                        <TableHead className="min-w-[110px] whitespace-nowrap text-ds-muted">{t('filterByStatus', 'Status')}</TableHead>
+                        <TableHead className="hidden sm:table-cell min-w-[100px] whitespace-nowrap text-ds-muted">{t('assignedFilter', 'Assigned')}</TableHead>
                         <TableHead
                           onClick={() => handleSortColumn('duration')}
-                          className="hidden lg:table-cell min-w-[110px] whitespace-nowrap cursor-pointer hover:text-slate-900 transition-colors select-none"
+                          className="hidden lg:table-cell min-w-[110px] whitespace-nowrap cursor-pointer hover:text-ds-ink transition-colors select-none text-ds-muted"
                         >
                           <div className="flex items-center gap-1.5">
                             <span>{t('duration', 'Duration')}</span>
-                            {sortBy === 'duration_asc' ? <ArrowUp className="h-3 w-3 text-hotel-gold" /> : sortBy === 'duration_desc' ? <ArrowDown className="h-3 w-3 text-hotel-gold" /> : <ArrowUpDown className="h-3 w-3 opacity-40" />}
+                            {sortBy === 'duration_asc' ? <ArrowUp className="h-3 w-3 text-ds-accent" /> : sortBy === 'duration_desc' ? <ArrowDown className="h-3 w-3 text-ds-accent" /> : <ArrowUpDown className="h-3 w-3 opacity-40" />}
                           </div>
                         </TableHead>
                         <TableHead
                           onClick={() => handleSortColumn('updated')}
-                          className="hidden xl:table-cell min-w-[120px] whitespace-nowrap cursor-pointer hover:text-slate-900 transition-colors select-none"
+                          className="hidden xl:table-cell min-w-[120px] whitespace-nowrap cursor-pointer hover:text-ds-ink transition-colors select-none text-ds-muted"
                         >
                           <div className="flex items-center gap-1.5">
                             <span>{t('updated', 'Modified')}</span>
-                            {sortBy === 'updated_at_desc' ? <ArrowDown className="h-3 w-3 text-hotel-gold" /> : <ArrowUpDown className="h-3 w-3 opacity-40" />}
+                            {sortBy === 'updated_at_desc' ? <ArrowDown className="h-3 w-3 text-ds-accent" /> : <ArrowUpDown className="h-3 w-3 opacity-40" />}
                           </div>
                         </TableHead>
-                        <TableHead className="text-end px-4 min-w-[150px] whitespace-nowrap">{t('action', 'Actions')}</TableHead>
+                        <TableHead className="text-end px-4 min-w-[150px] whitespace-nowrap text-ds-muted">{t('action', 'Actions')}</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -1602,8 +1662,8 @@ export default function TrainingHub() {
                           <TableRow
                             key={module.id}
                             className={cn(
-                              "border-b border-slate-100 hover:bg-slate-50/80 transition-colors group",
-                              isSelected && "bg-amber-50/40"
+                              "border-b border-ds-border/60 hover:bg-ds-surface-subtle/80 transition-colors group text-ds-ink",
+                              isSelected && "bg-ds-accent-soft/20"
                             )}
                           >
                             <TableCell className="px-3">
@@ -1619,13 +1679,13 @@ export default function TrainingHub() {
                                 <div className="flex items-center gap-1.5 flex-wrap">
                                   <span
                                     onClick={() => handleOpenPreview(module.id)}
-                                    className="font-semibold text-sm text-slate-900 group-hover:text-hotel-gold cursor-pointer transition-colors line-clamp-1"
+                                    className="font-semibold text-sm text-ds-ink group-hover:text-ds-accent cursor-pointer transition-colors line-clamp-1"
                                   >
                                     {module.title || t('untitledModule', 'Untitled Module')}
                                   </span>
                                   {isMaster && (
-                                    <Badge className="bg-indigo-50 text-indigo-700 border-indigo-200 text-[10px] px-2 py-0.5 font-semibold whitespace-nowrap shrink-0 flex items-center gap-0.5">
-                                      <Crown className="h-2.5 w-2.5 text-indigo-600 shrink-0" />
+                                    <Badge className="border-ds-border bg-ds-surface-subtle text-ds-ink text-[10px] px-2 py-0.5 font-semibold whitespace-nowrap shrink-0 flex items-center gap-0.5">
+                                      <Crown className="h-2.5 w-2.5 text-ds-accent shrink-0" />
                                       <span>Platform Master</span>
                                     </Badge>
                                   )}
@@ -1636,7 +1696,7 @@ export default function TrainingHub() {
                                         e.stopPropagation()
                                         setSyncModalState({ open: true, module })
                                       }}
-                                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-amber-500 hover:bg-amber-600 text-slate-950 text-[9px] font-bold shadow-sm animate-pulse cursor-pointer"
+                                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-ds-warning text-ds-ink-contrast text-[9px] font-bold shadow-2xs animate-pulse cursor-pointer"
                                       title="Click to view upstream master changes and synchronize"
                                     >
                                       <span>🔔</span>
@@ -1645,7 +1705,7 @@ export default function TrainingHub() {
                                   )}
                                 </div>
                                 {module.description && (
-                                  <span className="text-xs text-slate-400 line-clamp-1 mt-0.5">
+                                  <span className="text-xs text-ds-muted line-clamp-1 mt-0.5">
                                     {module.description}
                                   </span>
                                 )}
@@ -1657,61 +1717,67 @@ export default function TrainingHub() {
                             </TableCell>
 
                             <TableCell>
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <button
-                                    type="button"
-                                    className={cn(
-                                      "text-[10px] font-bold px-2 py-0.5 rounded-sm whitespace-nowrap inline-flex items-center gap-1 cursor-pointer transition-opacity hover:opacity-80",
-                                      module.status === 'published'
-                                        ? 'bg-emerald-100 text-emerald-800'
-                                        : module.status === 'archived'
-                                        ? 'bg-rose-100 text-rose-800'
-                                        : module.status === 'pending_review'
-                                        ? 'bg-amber-100 text-amber-800'
-                                        : 'bg-slate-100 text-slate-700'
-                                    )}
-                                  >
-                                    <span>{t(module.status || 'draft')}</span>
-                                    <ChevronDown className="h-2.5 w-2.5 opacity-60" />
-                                  </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="start" className="text-xs">
-                                  <DropdownMenuItem onClick={() => updateStatusMutation.mutate({ id: module.id, status: 'published' })}>
-                                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 me-2" />
-                                    {t('published', 'Published')}
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => updateStatusMutation.mutate({ id: module.id, status: 'draft' })}>
-                                    <Clock className="h-3.5 w-3.5 text-slate-500 me-2" />
-                                    {t('draft', 'Draft')}
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => updateStatusMutation.mutate({ id: module.id, status: 'archived' })}>
-                                    <Archive className="h-3.5 w-3.5 text-rose-500 me-2" />
-                                    {t('archived', 'Archived')}
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
+                              {statusFilter === 'trash' ? (
+                                <span className="text-[10px] font-bold px-2 py-0.5 rounded-sm whitespace-nowrap inline-flex items-center gap-1 bg-rose-500/10 text-rose-600 border border-rose-200">
+                                  <span>{t('trash.filter_label', 'Trash')}</span>
+                                </span>
+                              ) : (
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <button
+                                      type="button"
+                                      className={cn(
+                                        "text-[10px] font-bold px-2 py-0.5 rounded-sm whitespace-nowrap inline-flex items-center gap-1 cursor-pointer transition-opacity hover:opacity-80 border",
+                                        module.status === 'published'
+                                          ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
+                                          : module.status === 'archived'
+                                          ? 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
+                                          : module.status === 'pending_review'
+                                          ? 'bg-ds-warning-soft text-ds-warning border-ds-warning/30'
+                                          : 'bg-ds-surface-subtle text-ds-muted border-ds-border'
+                                      )}
+                                    >
+                                      <span>{t(module.status || 'draft')}</span>
+                                      <ChevronDown className="h-2.5 w-2.5 opacity-60" />
+                                    </button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="start" className="text-xs">
+                                    <DropdownMenuItem onClick={() => updateStatusMutation.mutate({ id: module.id, status: 'published' })}>
+                                      <CheckCircle2 className="h-3.5 w-3.5 text-ds-success me-2" />
+                                      {t('published', 'Published')}
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => updateStatusMutation.mutate({ id: module.id, status: 'draft' })}>
+                                      <Clock className="h-3.5 w-3.5 text-ds-muted me-2" />
+                                      {t('draft', 'Draft')}
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => updateStatusMutation.mutate({ id: module.id, status: 'archived' })}>
+                                      <Archive className="h-3.5 w-3.5 text-ds-danger me-2" />
+                                      {t('archived', 'Archived')}
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              )}
                             </TableCell>
 
                             <TableCell className="hidden sm:table-cell">
                               {isAssigned ? (
-                                <Badge variant="outline" className="text-[10px] font-medium bg-blue-50 text-blue-700 border-blue-200">
+                                <Badge variant="outline" className="text-[10px] font-medium bg-ds-surface-subtle text-ds-muted border-ds-border">
                                   <Check className="h-3 w-3 me-1" />
                                   {t('assigned')}
                                 </Badge>
                               ) : (
-                                <span className="text-xs text-slate-400">{t('unassigned', 'No')}</span>
+                                <span className="text-xs text-ds-muted">{t('unassigned', 'No')}</span>
                               )}
                             </TableCell>
 
-                            <TableCell className="hidden lg:table-cell text-xs text-slate-500">
+                            <TableCell className="hidden lg:table-cell text-xs text-ds-muted">
                               <div className="flex items-center gap-1">
-                                <Clock className="h-3.5 w-3.5 text-slate-400" />
+                                <Clock className="h-3.5 w-3.5 text-ds-muted" />
                                 <span>{module.estimated_duration_minutes ? `${module.estimated_duration_minutes} ${t('min')}` : `0 ${t('min')}`}</span>
                               </div>
                             </TableCell>
 
-                            <TableCell className="hidden xl:table-cell text-xs text-slate-400">
+                            <TableCell className="hidden xl:table-cell text-xs text-ds-muted">
                               {module.updated_at ? new Date(module.updated_at).toLocaleDateString() : module.created_at ? new Date(module.created_at).toLocaleDateString() : '—'}
                             </TableCell>
 
@@ -1721,21 +1787,23 @@ export default function TrainingHub() {
                                   variant="ghost"
                                   size="sm"
                                   onClick={() => handleOpenPreview(module.id)}
-                                  className="h-8 px-2 text-slate-500 hover:text-hotel-navy"
+                                  className="h-8 px-2 text-ds-muted hover:text-ds-ink"
                                   title={t('quickPreview', 'Preview')}
                                 >
                                   <Eye className="h-3.5 w-3.5" />
                                 </Button>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => handleEdit(module)}
-                                  className="h-8 px-2 text-slate-600 hover:text-hotel-gold font-medium"
-                                  title={t('common:action.edit')}
-                                >
-                                  <Wand2 className="h-3.5 w-3.5" />
-                                </Button>
-                                <div className="w-[80px]">
+                                {statusFilter !== 'trash' && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleEdit(module)}
+                                    className="h-8 px-2 text-ds-muted hover:text-ds-ink font-medium"
+                                    title={t('common:action.edit')}
+                                  >
+                                    <Wand2 className="h-3.5 w-3.5" />
+                                  </Button>
+                                )}
+                                <div className={cn(statusFilter === 'trash' ? "w-[150px]" : "w-[80px]")}>
                                   <ModuleQuickActions
                                     module={module}
                                     onEdit={() => handleEdit(module)}
@@ -1749,6 +1817,9 @@ export default function TrainingHub() {
                                     onSubmitForReview={module.status === 'draft' ? () => handleSubmitForReview(module) : undefined}
                                     onApprove={module.status === 'pending_review' && canReviewModules ? () => handleApprove(module) : undefined}
                                     onReject={module.status === 'pending_review' && canReviewModules ? () => handleRequestReject(module) : undefined}
+                                    isTrash={statusFilter === 'trash'}
+                                    onRestore={() => restoreModuleMutation.mutate(module.id)}
+                                    onPurge={() => handlePurge(module)}
                                   />
                                 </div>
                               </div>
@@ -1764,8 +1835,8 @@ export default function TrainingHub() {
               {/* Pagination Bar */}
               {totalPages > 1 && (
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-                  <span className="text-xs text-slate-500">
-                    {t('page')} <span className="font-semibold text-slate-800">{safeCurrentPage}</span> {t('of')} <span className="font-semibold text-slate-800">{totalPages}</span>
+                  <span className="text-xs text-ds-muted">
+                    {t('page')} <span className="font-semibold text-ds-ink">{safeCurrentPage}</span> {t('of')} <span className="font-semibold text-ds-ink">{totalPages}</span>
                   </span>
 
                   <div className="flex items-center gap-1">
@@ -1774,7 +1845,7 @@ export default function TrainingHub() {
                       size="sm"
                       onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                       disabled={safeCurrentPage <= 1}
-                      className="h-8 px-2.5 text-xs gap-1 border-slate-200"
+                      className="h-8 px-2.5 text-xs gap-1 border-ds-border text-ds-ink hover:bg-ds-surface-subtle"
                     >
                       <ChevronLeft className="h-3.5 w-3.5" />
                       <span>{t('previous', 'Previous')}</span>
@@ -1788,14 +1859,14 @@ export default function TrainingHub() {
                           const showEllipsis = prev && p - prev > 1
                           return (
                             <div key={p} className="flex items-center gap-1">
-                              {showEllipsis && <span className="px-1 text-slate-400 text-xs">...</span>}
+                              {showEllipsis && <span className="px-1 text-ds-muted text-xs">...</span>}
                               <Button
                                 variant={p === safeCurrentPage ? 'default' : 'ghost'}
                                 size="sm"
                                 onClick={() => setCurrentPage(p)}
                                 className={cn(
-                                  "h-8 w-8 p-0 text-xs",
-                                  p === safeCurrentPage ? "bg-hotel-navy text-white" : "text-slate-600 hover:bg-slate-100"
+                                  "h-8 w-8 p-0 text-xs font-semibold rounded",
+                                  p === safeCurrentPage ? "bg-ds-ink text-ds-on-ink shadow-2xs" : "text-ds-muted hover:text-ds-ink hover:bg-ds-surface-subtle"
                                 )}
                               >
                                 {p}
@@ -1810,7 +1881,7 @@ export default function TrainingHub() {
                       size="sm"
                       onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                       disabled={safeCurrentPage >= totalPages}
-                      className="h-8 px-2.5 text-xs gap-1 border-slate-200"
+                      className="h-8 px-2.5 text-xs gap-1 border-ds-border text-ds-ink hover:bg-ds-surface-subtle"
                     >
                       <span>{t('next', 'Next')}</span>
                       <ChevronRight className="h-3.5 w-3.5" />
@@ -1829,23 +1900,23 @@ export default function TrainingHub() {
           ) : moduleId ? (
             <TrainingBuilder />
           ) : (
-            <Card className="border-dashed border-2">
-              <CardContent className="flex flex-col items-center justify-center py-16">
-                <Sparkles className="h-16 w-16 text-gray-300 mb-4" />
-                <h3 className="text-lg font-semibold text-gray-700 mb-2">{t('builderReady')}</h3>
-                <p className="text-gray-500 mb-6 text-center max-w-md">{t('builderReadyDesc')}</p>
-                <div className={cn("flex w-full flex-wrap gap-2 justify-center")}>
-                  <Button variant="outline" onClick={() => setViewMode('list')} className={cn("w-full sm:w-auto")}>
-                    <BookOpen className={cn("h-4 w-4", "me-2")} />
-                    {t('library')}
-                  </Button>
-                  <Button onClick={handleCreateWithAI} className={cn("w-full sm:w-auto bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 font-black shadow-md border-none")}>
-                    <Sparkles className={cn("h-4 w-4", "me-2")} />
-                    {t('createWithAI', 'Create with AI')}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="rounded-[8px] border border-dashed border-ds-border bg-ds-surface p-12 text-center shadow-2xs">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-ds-accent-soft text-ds-accent mb-4">
+                <Sparkles className="h-7 w-7" />
+              </div>
+              <h3 className="text-lg font-semibold text-ds-ink mb-1.5">{t('builderReady')}</h3>
+              <p className="text-sm text-ds-muted mb-6 max-w-md mx-auto">{t('builderReadyDesc')}</p>
+              <div className="flex w-full flex-wrap gap-3 justify-center">
+                <Button variant="outline" onClick={() => setViewMode('list')} className="w-full sm:w-auto border-ds-border text-ds-ink hover:bg-ds-surface-subtle">
+                  <BookOpen className="h-4 w-4 me-2 text-ds-muted" />
+                  {t('library')}
+                </Button>
+                <Button onClick={handleCreateWithAI} className="w-full sm:w-auto bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90 font-semibold shadow-2xs">
+                  <Sparkles className="h-4 w-4 me-2 text-ds-accent" />
+                  {t('createWithAI', 'Create with AI')}
+                </Button>
+              </div>
+            </div>
           )}
         </TabsContent>
 
@@ -1902,6 +1973,15 @@ export default function TrainingHub() {
         title={t('deleteModule')}
         description={t('deleteModuleDesc')}
         itemName={moduleToDelete?.title}
+      />
+
+      <DeleteConfirmation
+        open={purgeConfirmOpen}
+        onOpenChange={setPurgeConfirmOpen}
+        onConfirm={confirmPurge}
+        title={t('trash.purge_dialog_title', 'Permanently Purge Course?')}
+        description={t('trash.purge_dialog_desc', 'This will permanently remove the course and its draft lessons. This action CANNOT be undone and will only succeed if no learners have recorded completions or certificates.')}
+        itemName={moduleToPurge?.title}
       />
 
       <Dialog open={!!moduleToReject} onOpenChange={(open) => !open && setModuleToReject(null)}>

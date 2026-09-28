@@ -52,15 +52,15 @@ export function OverviewTab() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row gap-3 items-center justify-between rounded-xl border bg-white p-4 shadow-sm">
+      <div className="flex flex-col md:flex-row gap-3 items-center justify-between rounded-[8px] border border-ds-border bg-ds-surface p-4 shadow-none">
         <div className="flex flex-1 items-center gap-3 w-full md:w-auto flex-wrap">
           <div className="relative w-full md:w-64 min-w-0">
-            <Search className={cn("absolute top-2.5 h-4 w-4 text-muted-foreground", "start-3")} />
+            <Search className={cn("absolute top-2.5 h-4 w-4 text-ds-muted", "start-3")} />
             <Input
               placeholder={t('searchEmployeeOrModule')}
               value={overviewSearch}
               onChange={(e) => setOverviewSearch(e.target.value)}
-              className={cn("ps-9", "bg-slate-50/50 border-slate-200")}
+              className={cn("ps-9", "bg-ds-surface border-ds-border text-ds-ink")}
             />
           </div>
           <GroupedDepartmentSelector
@@ -70,10 +70,10 @@ export function OverviewTab() {
             placeholder={t('filterByDept')}
             generalLabel={t('allDepartments')}
             generalValue="all"
-            className="w-full sm:w-[180px] bg-slate-50/50 border-slate-200"
+            className="w-full sm:w-[180px] bg-ds-surface border-ds-border text-ds-ink"
           />
           <Select value={overviewFilterStatus} onValueChange={setOverviewFilterStatus}>
-            <SelectTrigger className="w-full sm:w-[150px] bg-slate-50/50 border-slate-200">
+            <SelectTrigger className="w-full sm:w-[150px] bg-ds-surface border-ds-border text-ds-ink text-xs font-medium">
               <SelectValue placeholder={t('filterByStatus')} />
             </SelectTrigger>
             <SelectContent>
@@ -94,98 +94,99 @@ export function OverviewTab() {
                 setOverviewFilterDept('all')
                 setOverviewFilterStatus('all')
               }}
-              className="text-rose-600 hover:text-rose-700 hover:bg-rose-50"
+              className="text-ds-danger hover:text-ds-danger hover:bg-ds-danger-soft text-xs"
             >
               <X className="w-3.5 h-3.5 me-1.5" />
               {t('clearFilters')}
             </Button>
           )}
-          <Button variant="outline" size="sm" onClick={handleExport}>
-            <Download className={cn("w-4 h-4", "me-2")} />
+          <Button variant="outline" size="sm" onClick={handleExport} className="border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle text-xs">
+            <Download className={cn("w-4 h-4 text-ds-muted", "me-2")} />
             {t('export')}
           </Button>
         </div>
       </div>
 
       <div className="grid gap-3 grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
-        <Card className="border-s-4 border-s-hotel-gold">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-amber-50">
-                <BookOpen className="size-4 text-hotel-gold" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-2xl font-bold text-slate-900">{progressMetrics.uniqueModules}</p>
-                <p className="truncate text-xs text-muted-foreground">{t('modules', 'Modules')}</p>
-              </div>
+        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 shadow-none hover:border-ds-border-strong transition-colors">
+          <div className="flex items-center gap-3">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-[6px] bg-ds-accent-soft text-ds-accent">
+              <BookOpen className="size-4" />
             </div>
-          </CardContent>
-        </Card>
-        <Card className="border-s-4 border-s-indigo-500">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-indigo-50">
-                <Users className="size-4 text-indigo-600" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-2xl font-bold text-slate-900">{employeeTrackingSummary.employeeCount}</p>
-                <p className="truncate text-xs text-muted-foreground">{t('staff', 'Staff')}</p>
-              </div>
+            <div className="min-w-0">
+              <p className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{progressMetrics.uniqueModules}</p>
+              <p className="truncate text-xs text-ds-muted">{t('modules', 'Modules')}</p>
             </div>
-          </CardContent>
-        </Card>
-        <Card className="border-s-4 border-s-blue-500">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-blue-50">
-                <TrendingUp className="size-4 text-blue-600" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-2xl font-bold text-slate-900">{progressMetrics.total}</p>
-                <p className="truncate text-xs text-muted-foreground">{t('totalEnrollments', 'Total Enrollments')}</p>
-              </div>
+          </div>
+        </div>
+
+        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 shadow-none hover:border-ds-border-strong transition-colors">
+          <div className="flex items-center gap-3">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-[6px] bg-ds-accent-soft text-ds-accent">
+              <Users className="size-4" />
             </div>
-          </CardContent>
-        </Card>
-        <Card className="border-s-4 border-s-sky-500">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-sky-50">
-                <Clock className="size-4 text-sky-600" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-2xl font-bold text-slate-900">{progressMetrics.in_progress}</p>
-                <p className="truncate text-xs text-muted-foreground">{t('inProgress')} · {employeeTrackingSummary.averageProgress}%</p>
-              </div>
+            <div className="min-w-0">
+              <p className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{employeeTrackingSummary.employeeCount}</p>
+              <p className="truncate text-xs text-ds-muted">{t('staff', 'Staff')}</p>
             </div>
-          </CardContent>
-        </Card>
-        <Card className="border-s-4 border-s-rose-500">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-rose-50">
-                <AlertTriangle className="size-4 text-rose-600" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-2xl font-bold text-slate-900">{progressMetrics.overdue}</p>
-                <p className="truncate text-xs text-muted-foreground">{t('overdue')} · {employeeTrackingSummary.employeesNeedingFollowUp} {t('followUpFlag', 'follow-up')}</p>
-              </div>
+          </div>
+        </div>
+
+        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 shadow-none hover:border-ds-border-strong transition-colors">
+          <div className="flex items-center gap-3">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-[6px] bg-ds-accent-soft text-ds-accent">
+              <TrendingUp className="size-4" />
             </div>
-          </CardContent>
-        </Card>
-        <Card className="border-s-4 border-s-emerald-500">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50">
-                <CheckCircle2 className="size-4 text-emerald-600" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-2xl font-bold text-slate-900">{progressMetrics.completed}</p>
-                <p className="truncate text-xs text-muted-foreground">{t('completed')} · {employeeTrackingSummary.completionRate}%</p>
-              </div>
+            <div className="min-w-0">
+              <p className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{progressMetrics.total}</p>
+              <p className="truncate text-xs text-ds-muted">{t('totalEnrollments', 'Total Enrollments')}</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+
+        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 shadow-none hover:border-ds-border-strong transition-colors">
+          <div className="flex items-center gap-3">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-[6px] bg-ds-accent-soft text-ds-accent">
+              <Clock className="size-4" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{progressMetrics.in_progress}</p>
+              <p className="truncate text-xs text-ds-muted">{t('inProgress')} · {employeeTrackingSummary.averageProgress}%</p>
+            </div>
+          </div>
+        </div>
+
+        <div className={cn(
+          "rounded-[8px] border p-4 shadow-none transition-colors",
+          progressMetrics.overdue > 0 ? "border-ds-danger/40 bg-ds-danger-soft/20 hover:border-ds-danger" : "border-ds-border bg-ds-surface hover:border-ds-border-strong"
+        )}>
+          <div className="flex items-center gap-3">
+            <div className={cn(
+              "flex size-9 shrink-0 items-center justify-center rounded-[6px]",
+              progressMetrics.overdue > 0 ? "bg-ds-danger-soft text-ds-danger" : "bg-ds-surface-subtle text-ds-muted"
+            )}>
+              <AlertTriangle className="size-4" />
+            </div>
+            <div className="min-w-0">
+              <p className={cn("text-2xl font-bold font-mono tracking-tight", progressMetrics.overdue > 0 ? "text-ds-danger" : "text-ds-ink")}>
+                {progressMetrics.overdue}
+              </p>
+              <p className="truncate text-xs text-ds-muted">{t('overdue')} · {employeeTrackingSummary.employeesNeedingFollowUp} {t('followUpFlag', 'follow-up')}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 shadow-none hover:border-ds-border-strong transition-colors">
+          <div className="flex items-center gap-3">
+            <div className="flex size-9 shrink-0 items-center justify-center rounded-[6px] bg-ds-success-soft text-ds-success">
+              <CheckCircle2 className="size-4" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{progressMetrics.completed}</p>
+              <p className="truncate text-xs text-ds-muted">{t('completed')} · {employeeTrackingSummary.completionRate}%</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <EmployeeProgressTracker

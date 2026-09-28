@@ -188,22 +188,34 @@ async function requirePrivilegedUser(
 
   if (!user) return null;
 
-  const { data: roles } = await userClient
+  const { data: roles } = await adminClient
     .from("user_roles")
     .select("role")
     .eq("user_id", user.id);
 
-  const hasPermission = (
-    roles as Array<{ role: string }> | null | undefined
-  )?.some((r: { role: string }) =>
+  const { data: memberships } = await adminClient
+    .from("organization_memberships")
+    .select("role")
+    .eq("user_id", user.id)
+    .eq("is_active", true);
+
+  const combinedRoles = [
+    ...((roles as Array<{ role: string }> | null) || []).map((r) => r.role),
+    ...((memberships as Array<{ role: string }> | null) || []).map((m) => m.role),
+  ];
+
+  const hasPermission = combinedRoles.some((role: string) =>
     [
+      "admin",
       "administrator",
       "super_admin",
       "corporate_admin",
       "regional_admin",
       "training_manager",
       "regional_hr",
-    ].includes(r.role),
+      "organization_admin",
+      "organization_owner",
+    ].includes(role),
   );
   if (!hasPermission) return null;
 

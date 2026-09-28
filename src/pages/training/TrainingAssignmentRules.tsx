@@ -1,5 +1,4 @@
-import { WorkspaceHeader, headerActionClass } from '@/ui'
-import { Badge } from '@/components/ui/badge'
+import { WorkspaceHeader, headerActionClass, StatusBadge } from '@/ui'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
@@ -129,21 +128,21 @@ export default function TrainingAssignmentRules() {
                             {t('rules.new_rule')}
                         </button>
                     </DialogTrigger>
-                    <DialogContent>
+                    <DialogContent className="bg-ds-surface border-ds-border text-ds-ink sm:max-w-md">
                         <DialogHeader>
-                            <DialogTitle>{editingRule ? t('rules.edit_title', { defaultValue: 'Edit Rule' }) : t('rules.create_title')}</DialogTitle>
+                            <DialogTitle className="text-ds-ink">{editingRule ? t('rules.edit_title', { defaultValue: 'Edit Rule' }) : t('rules.create_title')}</DialogTitle>
                         </DialogHeader>
                         <div className="space-y-4 py-4">
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">{t('rules.target_role')}</label>
+                                <label className="text-sm font-medium text-ds-ink">{t('rules.target_role')}</label>
                                 <Select
                                     value={newRule.target_role}
                                     onValueChange={(val) => setNewRule(prev => ({ ...prev, target_role: val }))}
                                 >
-                                    <SelectTrigger>
+                                    <SelectTrigger className="border-ds-border bg-ds-surface text-ds-ink">
                                         <SelectValue placeholder={t('rules.select_role')} />
                                     </SelectTrigger>
-                                    <SelectContent>
+                                    <SelectContent className="bg-ds-surface border-ds-border text-ds-ink">
                                         {roles.map(role => (
                                             <SelectItem key={role} value={role}>{t(`common:roles.${role}`)}</SelectItem>
                                         ))}
@@ -152,15 +151,15 @@ export default function TrainingAssignmentRules() {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-sm font-medium">{t('module')}</label>
+                                <label className="text-sm font-medium text-ds-ink">{t('module')}</label>
                                 <Select
                                     value={newRule.training_module_id}
                                     onValueChange={(val) => setNewRule(prev => ({ ...prev, training_module_id: val }))}
                                 >
-                                    <SelectTrigger>
+                                    <SelectTrigger className="border-ds-border bg-ds-surface text-ds-ink">
                                         <SelectValue placeholder={t('rules.select_module')} />
                                     </SelectTrigger>
-                                    <SelectContent>
+                                    <SelectContent className="bg-ds-surface border-ds-border text-ds-ink">
                                         {modules?.map(module => (
                                             <SelectItem key={module.id} value={module.id}>{module.title}</SelectItem>
                                         ))}
@@ -169,7 +168,7 @@ export default function TrainingAssignmentRules() {
                             </div>
                             <Button
                                 onClick={handleSave}
-                                className="w-full"
+                                className="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium shadow-xs"
                                 disabled={(createMutation.isPending || updateMutation.isPending) || !newRule.target_role || !newRule.training_module_id}
                             >
                                 {(createMutation.isPending || updateMutation.isPending)
@@ -186,33 +185,35 @@ export default function TrainingAssignmentRules() {
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {isLoading ? (
-                    <div>{t('loading')}</div>
+                    <div className="col-span-full text-center py-12 text-ds-muted">{t('loading')}</div>
                 ) : rules?.map((rule) => (
-                    <Card key={rule.id} className={cn("transition-all hover:shadow-md", !rule.is_active && "opacity-60")}>
+                    <Card key={rule.id} className={cn("bg-ds-surface border border-ds-border rounded-[8px] shadow-2xs transition-all hover:border-amber-500/40 hover:shadow-xs", !rule.is_active && "opacity-60")}>
                         <CardHeader className="pb-2">
                             <div className="flex justify-between items-start">
                                 <div className="space-y-1">
-                                    <CardTitle className="text-lg font-bold flex items-center gap-2">
-                                        <Shield className="w-4 h-4 text-ds-accent" />
+                                    <CardTitle className="text-base font-semibold flex items-center gap-2 text-ds-ink">
+                                        <Shield className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                                         {rule.target_role ? t(`common:roles.${rule.target_role}`) : t('unknown')}
                                     </CardTitle>
-                                    <p className="text-sm text-ds-muted">{t('rules.auto_assigns_to')} {t('rules.by_role')}</p>
+                                    <p className="text-xs text-ds-muted">{t('rules.auto_assigns_to')} {t('rules.by_role')}</p>
                                 </div>
-                                <Badge variant={rule.is_active ? 'default' : 'secondary'}>
-                                    {rule.is_active ? t('common:status_options.active') : t('common:status_options.inactive')}
-                                </Badge>
+                                <StatusBadge
+                                    variant={rule.is_active ? 'success' : 'neutral'}
+                                    label={rule.is_active ? t('common:status_options.active') : t('common:status_options.inactive')}
+                                    size="sm"
+                                />
                             </div>
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-4">
-                                <p className="font-medium text-ds-ink">
+                                <p className="font-medium text-sm text-ds-ink line-clamp-2">
                                     {modules?.find(m => m.id === rule.training_module_id)?.title || rule.training_module_id}
                                 </p>
-                                <div className="flex items-center gap-2 pt-2 border-t mt-4">
+                                <div className="flex items-center gap-2 pt-3 border-t border-ds-border mt-3">
                                     <Button
                                         variant="ghost"
                                         size="sm"
-                                        className="flex-1"
+                                        className="flex-1 text-xs text-ds-muted hover:text-ds-ink hover:bg-ds-surface-subtle"
                                         onClick={() => handleToggle(rule.id, rule.is_active)}
                                     >
                                         {rule.is_active ? t('rules.deactivate') : t('rules.activate')}
@@ -221,18 +222,19 @@ export default function TrainingAssignmentRules() {
                                         variant="ghost"
                                         size="icon"
                                         aria-label={t('accessibility.edit_rule', 'Edit Rule')}
+                                        className="h-8 w-8 text-ds-muted hover:text-ds-ink hover:bg-ds-surface-subtle"
                                         onClick={() => startEdit(rule)}
                                     >
-                                        <Pencil className="w-4 h-4" />
+                                        <Pencil className="w-3.5 h-3.5" />
                                     </Button>
                                     <Button
                                         variant="ghost"
                                         size="icon"
                                         aria-label={t('accessibility.delete_rule', 'Delete Rule')}
-                                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                        className="h-8 w-8 text-ds-muted hover:text-destructive hover:bg-destructive/10"
                                         onClick={() => handleDelete(rule.id)}
                                     >
-                                        <Trash2 className="w-4 h-4" />
+                                        <Trash2 className="w-3.5 h-3.5" />
                                     </Button>
                                 </div>
                             </div>
@@ -240,9 +242,9 @@ export default function TrainingAssignmentRules() {
                     </Card>
                 ))}
                 {!isLoading && rules?.length === 0 && (
-                    <div className="col-span-full text-center py-12 text-ds-muted border border-dashed rounded-lg">
+                    <div className="col-span-full text-center py-12 text-ds-muted border border-dashed border-ds-border rounded-[8px] bg-ds-surface-subtle/30">
                         <p>{t('rules.no_rules')}</p>
-                        <Button variant="link" onClick={() => setIsCreateOpen(true)}>{t('rules.create_first')}</Button>
+                        <Button variant="link" onClick={() => setIsCreateOpen(true)} className="text-amber-600 dark:text-amber-400 font-semibold">{t('rules.create_first')}</Button>
                     </div>
                 )}
             </div>

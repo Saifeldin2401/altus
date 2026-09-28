@@ -1863,6 +1863,7 @@ export type Database = {
           course_type: string | null
           created_at: string | null
           created_by: string | null
+          deleted_at: string | null
           department_id: string | null
           description: string | null
           difficulty_level: string | null
@@ -1911,6 +1912,7 @@ export type Database = {
           course_type?: string | null
           created_at?: string | null
           created_by?: string | null
+          deleted_at?: string | null
           department_id?: string | null
           description?: string | null
           difficulty_level?: string | null
@@ -1959,6 +1961,7 @@ export type Database = {
           course_type?: string | null
           created_at?: string | null
           created_by?: string | null
+          deleted_at?: string | null
           department_id?: string | null
           description?: string | null
           difficulty_level?: string | null
@@ -11190,6 +11193,12 @@ export type Database = {
       }
     }
     Functions: {
+      purge_course: {
+        Args: {
+          p_course_id: string
+        }
+        Returns: Json
+      }
       reset_training_progress: {
         Args: {
           p_training_module_id: string
