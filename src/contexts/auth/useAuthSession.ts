@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase'
+import { isRecoveryFlowActive } from '@/lib/authFlowState'
 import { useCallback, useRef } from 'react'
 
 /**
@@ -66,6 +67,14 @@ export function useAuthSession() {
           onCleared()
           return
         }
+      }
+
+      // Guard: Suppress global signOut when a recovery flow is active in any tab
+      // (checked via localStorage flag set by onAuthStateChange on PASSWORD_RECOVERY).
+      if (isRecoveryFlowActive()) {
+        console.warn(`[Auth] Suppressed clearLocalSession ('${reason}') because a recovery flow is active in another tab`)
+        onCleared()
+        return
       }
 
       // If a clear is already in flight, wait for it then reset state

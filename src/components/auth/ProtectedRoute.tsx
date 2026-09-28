@@ -16,6 +16,7 @@ import { CapabilityGate } from './CapabilityGate'
 import { PasswordEnforcementGuard } from './PasswordEnforcementGuard'
 import { useEffect } from 'react'
 import { safeLocalStorage, safeSessionStorage } from '@/lib/storage'
+import { isRecoveryFlowActive } from '@/lib/authFlowState'
 
 interface ProtectedRouteProps {
   children: ReactNode
@@ -61,8 +62,9 @@ export function ProtectedRoute({
 
   // Unregistered users (e.g. external Google accounts not invited/provisioned by an admin)
   // are immediately signed out and redirected to /login with not_registered notice.
+  // GUARD: Skip eviction when a recovery flow is active in another tab.
   useEffect(() => {
-    if (user && !account.loading && !account.resolveFailed && !isRegisteredUser) {
+    if (user && !account.loading && !account.resolveFailed && !isRegisteredUser && !isRecoveryFlowActive()) {
       safeSessionStorage.removeItem('altus_session_active')
       safeLocalStorage.removeItem('altus_active_tenant_id')
       if (user?.id) {
@@ -88,7 +90,7 @@ export function ProtectedRoute({
     return <Navigate to={loginUrl} replace />
   }
 
-  if (user && !account.loading && !account.resolveFailed && !isRegisteredUser) {
+  if (user && !account.loading && !account.resolveFailed && !isRegisteredUser && !isRecoveryFlowActive()) {
     const unregEmail = user.email ? encodeURIComponent(user.email) : ''
     return <Navigate to={`/login?error=not_registered${unregEmail ? `&email=${unregEmail}` : ''}`} replace />
   }

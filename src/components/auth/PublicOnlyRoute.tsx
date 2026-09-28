@@ -1,7 +1,7 @@
 import { useAuth } from '@/hooks/useAuth'
 import { useAccountContext } from '@/hooks/useAccountContext'
 import { consumePostLoginRedirect, getRedirectFromSearch, peekPostLoginRedirect } from '@/lib/authRedirect'
-import { clearAuthFlowState, getAuthFlowRedirectPath } from '@/lib/authFlowState'
+import { clearAuthFlowState, getAuthFlowRedirectPath, isRecoveryFlowActive } from '@/lib/authFlowState'
 import { safeLocalStorage, safeSessionStorage } from '@/lib/storage'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -35,8 +35,10 @@ export function PublicOnlyRoute({ children }: PublicOnlyRouteProps) {
 
     // Unregistered users (e.g. external Google accounts not invited/provisioned by an admin)
     // are immediately signed out and have their local session state purged.
+    // GUARD: Skip eviction when a recovery flow is active in another tab — the session
+    // belongs to a password-reset or invite flow and must not be destroyed.
     useEffect(() => {
-        if (user && !account.loading && !account.resolveFailed && !isRegisteredUser) {
+        if (user && !account.loading && !account.resolveFailed && !isRegisteredUser && !isRecoveryFlowActive()) {
             safeSessionStorage.removeItem('altus_session_active')
             safeLocalStorage.removeItem('altus_active_tenant_id')
             if (user?.id) {
@@ -93,7 +95,7 @@ export function PublicOnlyRoute({ children }: PublicOnlyRouteProps) {
     }
 
     // Bounce unregistered users to /login with not_registered notice
-    if (user && !account.loading && !account.resolveFailed && !isRegisteredUser) {
+    if (user && !account.loading && !account.resolveFailed && !isRegisteredUser && !isRecoveryFlowActive()) {
         const unregEmail = user.email ? encodeURIComponent(user.email) : ''
         const notRegisteredUrl = `/login?error=not_registered${unregEmail ? `&email=${unregEmail}` : ''}`
         if (location.pathname !== '/login' || !location.search.includes('error=not_registered')) {

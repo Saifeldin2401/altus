@@ -9,7 +9,7 @@ import {
     classifyAuthLinkError,
     withAuthLinkTimeout,
 } from '@/lib/authLinkRecovery'
-import { clearAuthFlowState, setAuthFlowState } from '@/lib/authFlowState'
+import { clearAuthFlowState, setAuthFlowState, setRecoveryFlowActive } from '@/lib/authFlowState'
 import { securityConfig } from '@/lib/security-config'
 import { supabase } from '@/lib/supabase'
 import { AlertCircle, CheckCircle, Eye, EyeOff, Loader2, Lock, ShieldCheck, UserRound } from 'lucide-react'
@@ -63,6 +63,8 @@ export default function CompleteInvite() {
         sessionRef.current = session
         safeSessionStorage.setItem('altus_session_active', 'true')
         safeLocalStorage.setItem(REMEMBER_ME_KEY, 'true')
+        // Signal other tabs that a recovery/invite flow is active
+        setRecoveryFlowActive()
     }, [])
 
     useEffect(() => {

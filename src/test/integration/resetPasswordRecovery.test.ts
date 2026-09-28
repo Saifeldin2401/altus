@@ -1,7 +1,13 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 import { useAuthSession } from '@/contexts/auth/useAuthSession'
-import { shouldSuppressAuthenticatedAppState, setAuthFlowState, clearAuthFlowState } from '@/lib/authFlowState'
+import {
+  shouldSuppressAuthenticatedAppState,
+  setAuthFlowState,
+  clearAuthFlowState,
+  setRecoveryFlowActive,
+  clearRecoveryFlowActive,
+} from '@/lib/authFlowState'
 import { supabase } from '@/lib/supabase'
 
 vi.mock('@/lib/supabase', () => ({
@@ -85,6 +91,28 @@ describe('Password Reset & Auth Recovery Session Protection', () => {
 
     expect(supabase.auth.signOut).toHaveBeenCalledWith({ scope: 'global' })
     expect(onCleared).toHaveBeenCalledTimes(1)
+  })
+
+  it('suppresses clearLocalSession signOut on non-recovery routes (/login) when a recovery flow is active in another tab', async () => {
+    Object.defineProperty(window, 'location', {
+      writable: true,
+      value: new URL('https://phg-connect.com/login'),
+    })
+
+    setRecoveryFlowActive()
+
+    const onCleared = vi.fn()
+    const { result } = renderHook(() => useAuthSession())
+
+    await act(async () => {
+      await result.current.clearLocalSession('Unregistered user eviction', onCleared)
+    })
+
+    // Must NOT call global signOut because another tab has an active recovery flow
+    expect(supabase.auth.signOut).not.toHaveBeenCalled()
+    expect(onCleared).toHaveBeenCalledTimes(1)
+
+    clearRecoveryFlowActive()
   })
 
   it('correctly suppresses authenticated app state during active reset-password flow', () => {

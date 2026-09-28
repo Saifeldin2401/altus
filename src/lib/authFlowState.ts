@@ -1,7 +1,63 @@
 import { hasAuthRecoveryParams, normalizePathname } from './runtimeRecovery'
+import { safeLocalStorage } from './storage'
 
 const AUTH_FLOW_STATE_KEY = '__altus_auth_flow_state__'
 const AUTH_FLOW_TTL_MS = 15 * 60 * 1000
+
+// ── Cross-tab recovery flow signal ──────────────────────────────────────────
+// Written to localStorage (not sessionStorage) so every tab can see it.
+// Prevents the "unregistered user → signOut()" guard in PublicOnlyRoute,
+// ProtectedRoute, and RootIndex from killing a recovery session that was
+// initiated in a different tab.
+const RECOVERY_FLOW_ACTIVE_KEY = '__altus_recovery_flow_active__'
+const RECOVERY_FLOW_TTL_MS = 15 * 60 * 1000 // 15 minutes
+
+/**
+ * Mark that a password-recovery (or invite) flow is active.
+ * Called from onAuthStateChange when the event is PASSWORD_RECOVERY.
+ */
+export function setRecoveryFlowActive(): void {
+  try {
+    safeLocalStorage.setItem(RECOVERY_FLOW_ACTIVE_KEY, String(Date.now()))
+  } catch {
+    // Storage unavailable — best-effort
+  }
+}
+
+/**
+ * Clear the cross-tab recovery flow flag.
+ * Called when the flow completes (password updated) or is abandoned.
+ */
+export function clearRecoveryFlowActive(): void {
+  try {
+    safeLocalStorage.removeItem(RECOVERY_FLOW_ACTIVE_KEY)
+  } catch {
+    // Storage unavailable
+  }
+}
+
+/**
+ * Check whether a recovery flow is currently active in any tab.
+ * Returns true if the flag was set within the last 15 minutes.
+ */
+export function isRecoveryFlowActive(): boolean {
+  try {
+    const raw = safeLocalStorage.getItem(RECOVERY_FLOW_ACTIVE_KEY)
+    if (!raw) return false
+    const ts = Number(raw)
+    if (Number.isNaN(ts)) {
+      safeLocalStorage.removeItem(RECOVERY_FLOW_ACTIVE_KEY)
+      return false
+    }
+    if (Date.now() - ts > RECOVERY_FLOW_TTL_MS) {
+      safeLocalStorage.removeItem(RECOVERY_FLOW_ACTIVE_KEY)
+      return false
+    }
+    return true
+  } catch {
+    return false
+  }
+}
 
 const AUTH_FLOW_PATHS = {
   'reset-password': '/reset-password',

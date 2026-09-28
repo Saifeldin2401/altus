@@ -7,7 +7,7 @@ import {
     classifyAuthLinkError,
     withAuthLinkTimeout,
 } from '@/lib/authLinkRecovery'
-import { clearAuthFlowState, setAuthFlowState } from '@/lib/authFlowState'
+import { clearAuthFlowState, setAuthFlowState, clearRecoveryFlowActive, setRecoveryFlowActive } from '@/lib/authFlowState'
 import { auditLog } from '@/lib/auditLog'
 import { securityConfig } from '@/lib/security-config'
 import { SecurityMiddleware, rateLimitConfig } from '@/lib/security-middleware'
@@ -51,6 +51,8 @@ export default function ResetPassword() {
         sessionRef.current = session
         safeSessionStorage.setItem('altus_session_active', 'true')
         safeLocalStorage.setItem(REMEMBER_ME_KEY, 'true')
+        // Signal other tabs that a recovery flow is active so they don't call signOut()
+        setRecoveryFlowActive()
     }, [])
 
     const getInitialEmail = () => {
@@ -443,6 +445,10 @@ export default function ResetPassword() {
 
             setSuccess(true)
             await auditLog.passwordChange().catch(() => undefined)
+
+            // Clear the cross-tab recovery flag before signing out,
+            // so the signOut in the timeout below is not suppressed.
+            clearRecoveryFlowActive()
 
             window.setTimeout(() => {
                 signOut().finally(() => {

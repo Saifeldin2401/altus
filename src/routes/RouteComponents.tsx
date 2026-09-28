@@ -11,7 +11,7 @@ import {
     getRedirectFromSearch,
     getSpaRedirectFromSearch,
 } from '@/lib/authRedirect'
-import { clearAuthFlowState, getAuthFlowRedirectPath } from '@/lib/authFlowState'
+import { clearAuthFlowState, getAuthFlowRedirectPath, isRecoveryFlowActive } from '@/lib/authFlowState'
 import { safeLocalStorage, safeSessionStorage } from '@/lib/storage'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import {
@@ -54,8 +54,9 @@ export const RootIndex = () => {
 
     // Unregistered users (e.g. external Google accounts not invited/provisioned by an admin)
     // are immediately signed out and redirected to /login with not_registered notice.
+    // GUARD: Skip eviction when a recovery flow is active in another tab.
     useEffect(() => {
-        if (user && !account.loading && !account.resolveFailed && !isRegisteredUser) {
+        if (user && !account.loading && !account.resolveFailed && !isRegisteredUser && !isRecoveryFlowActive()) {
             safeSessionStorage.removeItem('altus_session_active')
             safeLocalStorage.removeItem('altus_active_tenant_id')
             if (user?.id) {
@@ -112,7 +113,7 @@ export const RootIndex = () => {
         return <PageSkeleton />
     }
 
-    if (user && !account.loading && !account.resolveFailed && !isRegisteredUser) {
+    if (user && !account.loading && !account.resolveFailed && !isRegisteredUser && !isRecoveryFlowActive()) {
         const unregEmail = user.email ? encodeURIComponent(user.email) : ''
         return <Navigate to={`/login?error=not_registered${unregEmail ? `&email=${unregEmail}` : ''}`} replace />
     }

@@ -12,7 +12,7 @@ import type { User } from '@supabase/supabase-js'
 import type { ReactNode } from 'react'
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { supabase } from '@/lib/supabase'
-import { shouldSuppressAuthenticatedAppState } from '@/lib/authFlowState'
+import { shouldSuppressAuthenticatedAppState, setRecoveryFlowActive } from '@/lib/authFlowState'
 import { classifyAuthError, getErrorMessage, getErrorCode, getRetryDelay } from '@/lib/authErrorUtils'
 import { recordAuthEvent } from '@/lib/authMonitor'
 import { useAuthSession } from './useAuthSession'
@@ -205,8 +205,15 @@ export function AuthIdentityProvider({ children }: { children: ReactNode }) {
     })
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!mounted) return
+
+      // When a PASSWORD_RECOVERY event fires, set a cross-tab flag so that
+      // other tabs (e.g., /login wrapped in PublicOnlyRoute) won't call
+      // signOut() on the "unregistered user" guard and kill the session.
+      if (event === 'PASSWORD_RECOVERY') {
+        setRecoveryFlowActive()
+      }
 
       if (session?.user && shouldDeferAuthenticatedAppState()) {
         safeSessionStorage.setItem('altus_session_active', 'true')

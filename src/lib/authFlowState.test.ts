@@ -2,8 +2,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
   clearAuthFlowState,
+  clearRecoveryFlowActive,
   getAuthFlowRedirectPath,
+  isRecoveryFlowActive,
   setAuthFlowState,
+  setRecoveryFlowActive,
   shouldSuppressAuthenticatedAppState,
 } from './authFlowState'
 
@@ -16,7 +19,9 @@ describe('authFlowState', () => {
 
   afterEach(() => {
     clearAuthFlowState()
+    clearRecoveryFlowActive()
     window.sessionStorage.clear()
+    window.localStorage.clear()
     vi.useRealTimers()
   })
 
@@ -65,5 +70,24 @@ describe('authFlowState', () => {
 
     expect(getAuthFlowRedirectPath()).toBeNull()
     expect(shouldSuppressAuthenticatedAppState('/complete-invite')).toBe(false)
+  })
+
+  it('manages cross-tab recovery flow state in localStorage', () => {
+    expect(isRecoveryFlowActive()).toBe(false)
+
+    setRecoveryFlowActive()
+    expect(isRecoveryFlowActive()).toBe(true)
+
+    clearRecoveryFlowActive()
+    expect(isRecoveryFlowActive()).toBe(false)
+  })
+
+  it('expires cross-tab recovery flow state after 15 minutes', () => {
+    setRecoveryFlowActive()
+    expect(isRecoveryFlowActive()).toBe(true)
+
+    // Advance 16 minutes
+    vi.setSystemTime(new Date('2026-03-25T12:16:00Z'))
+    expect(isRecoveryFlowActive()).toBe(false)
   })
 })
