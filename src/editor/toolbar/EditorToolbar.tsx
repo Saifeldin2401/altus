@@ -177,19 +177,19 @@ function EditorToolbar({
     editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
 
   const disabledAll = disabled || !editor
-  const primaryBtn = 'h-8 gap-1 px-2 text-xs'
+  const primaryBtn = 'h-8 gap-1.5 px-2.5 text-xs shrink-0 whitespace-nowrap inline-flex items-center'
 
   const activeCls = useMemo(() => 'border-hotel-gold/60 bg-hotel-gold/15 text-hotel-navy', [])
 
   return (
     <>
       <div className="editor-toolbar sticky top-0 z-20 rounded-t-xl border-b bg-card p-1.5">
-        <div className="flex items-center gap-0.5 overflow-x-auto">
+        <div className="flex items-center gap-1 overflow-x-auto flex-nowrap py-0.5 scrollbar-none">
           {config.features.history && (
             <>
               <ToolbarButton icon={Undo2} label="Undo (Ctrl+Z)" disabled={disabledAll || !s?.canUndo} onClick={() => editor?.chain().focus().undo().run()} />
               <ToolbarButton icon={Redo2} label="Redo (Ctrl+Shift+Z)" disabled={disabledAll || !s?.canRedo} onClick={() => editor?.chain().focus().redo().run()} />
-              <Separator orientation="vertical" className="mx-1 h-6" />
+              <Separator orientation="vertical" className="mx-1 h-6 shrink-0" />
             </>
           )}
 
@@ -210,7 +210,7 @@ function EditorToolbar({
 
           {config.features.formatting && (
             <>
-              <Separator orientation="vertical" className="mx-1 h-6" />
+              <Separator orientation="vertical" className="mx-1 h-6 shrink-0" />
               <ToolbarButton icon={Bold} label="Bold (Ctrl+B)" active={s?.isBold} disabled={disabledAll} onClick={() => editor?.chain().focus().toggleBold().run()} />
               <ToolbarButton icon={Italic} label="Italic (Ctrl+I)" active={s?.isItalic} disabled={disabledAll} onClick={() => editor?.chain().focus().toggleItalic().run()} />
               <ToolbarButton icon={Underline} label="Underline (Ctrl+U)" active={s?.isUnderline} disabled={disabledAll} onClick={() => editor?.chain().focus().toggleUnderline().run()} />
@@ -219,7 +219,7 @@ function EditorToolbar({
 
           {config.features.lists && (
             <>
-              <Separator orientation="vertical" className="mx-1 h-6" />
+              <Separator orientation="vertical" className="mx-1 h-6 shrink-0" />
               <ToolbarButton icon={List} label="Bullet list" active={s?.isBulletList} disabled={disabledAll} onClick={() => editor?.chain().focus().toggleBulletList().run()} />
               <ToolbarButton icon={ListOrdered} label="Numbered list" active={s?.isOrderedList} disabled={disabledAll} onClick={() => editor?.chain().focus().toggleOrderedList().run()} />
             </>
@@ -233,9 +233,9 @@ function EditorToolbar({
                   title="Link"
                   aria-label="Link"
                   disabled={disabledAll}
-                  className={`inline-flex h-8 w-8 items-center justify-center rounded-md border text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground disabled:opacity-40 ${s?.isLink ? activeCls : ''}`}
+                  className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground disabled:opacity-40 ${s?.isLink ? activeCls : ''}`}
                 >
-                  <Link2 className="h-4 w-4" />
+                  <Link2 className="h-4 w-4 shrink-0" />
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-80 space-y-3">
@@ -258,11 +258,11 @@ function EditorToolbar({
           {/* Media — dedicated, visible buttons */}
           {config.features.media && (
             <>
-              <Separator orientation="vertical" className="mx-1 h-6" />
+              <Separator orientation="vertical" className="mx-1 h-6 shrink-0" />
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className={primaryBtn} disabled={disabledAll} title="Image">
-                    <ImageIcon className="h-4 w-4" /> Image
+                    <ImageIcon className="h-4 w-4 shrink-0" /> Image
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
@@ -278,17 +278,17 @@ function EditorToolbar({
               </DropdownMenu>
 
               <Button variant="outline" size="sm" className={primaryBtn} disabled={disabledAll} onClick={() => setVideoDialogOpen(true)} title="Video">
-                <Video className="h-4 w-4" /> Video
+                <Video className="h-4 w-4 shrink-0" /> Video
               </Button>
             </>
           )}
 
           {/* Insert menu — blocks */}
-          <Separator orientation="vertical" className="mx-1 h-6" />
+          <Separator orientation="vertical" className="mx-1 h-6 shrink-0" />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className={primaryBtn} disabled={disabledAll}>
-                <Plus className="h-4 w-4" /> Insert
+                <Plus className="h-4 w-4 shrink-0" /> Insert
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-52">
@@ -333,16 +333,16 @@ function EditorToolbar({
               onClick={onOpenAiPanel}
               disabled={disabledAll}
             >
-              <Sparkles className="h-4 w-4" /> AI Assist
+              <Sparkles className="h-4 w-4 shrink-0" /> AI Assist
             </Button>
           )}
 
-          <div className="ms-auto flex items-center gap-0.5">
+          <div className="ms-auto flex items-center gap-1 shrink-0 ps-2">
             {/* Everything rarely-used collapses here */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button type="button" title="More" aria-label="More options" disabled={disabledAll} className="inline-flex h-8 w-8 items-center justify-center rounded-md border text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground disabled:opacity-40">
-                  <MoreHorizontal className="h-4 w-4" />
+                <button type="button" title="More" aria-label="More options" disabled={disabledAll} className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground disabled:opacity-40">
+                  <MoreHorizontal className="h-4 w-4 shrink-0" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">

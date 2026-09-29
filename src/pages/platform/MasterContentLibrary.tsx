@@ -663,7 +663,7 @@ export default function MasterContentLibrary() {
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={() => navigate(`/knowledge/edit/${sop.id}?isMaster=true`)}
+                                onClick={() => navigate(`/studio/articles/${sop.id}/edit?isMaster=true`)}
                                 className="h-8 px-2.5 text-xs gap-1 text-ds-accent hover:text-ds-accent hover:bg-ds-accent-soft"
                                 title="Open in Full Authoring Studio"
                               >

@@ -61,10 +61,13 @@ import {
     type ChecklistItem,
     type FAQItem,
     type KnowledgeVisibility,
-    CONTENT_TYPE_CONFIG
+    CONTENT_TYPE_CONFIG,
+    STANDARD_HOTEL_DISCIPLINES,
 } from '@/types/knowledge'
 import { useQueryClient } from '@tanstack/react-query'
 import {
+  ArrowLeft,
+  Crown,
   Languages,
   Loader2,
   Palette,
@@ -319,10 +322,13 @@ export default function KnowledgeAuthor() {
     const [localAddendumAr, setLocalAddendumAr] = useState('')
     const [masterDeploymentCount, setMasterDeploymentCount] = useState<number | null>(null)
 
-    // Handle isMaster query param for direct authoring from Platform Library
+    // Handle isMaster / master query param for direct authoring from Platform Library
+    const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search])
+    const isMasterParam = searchParams.get('isMaster') === 'true' || searchParams.get('master') === 'true'
+    const isMasterMode = Boolean(formData.is_master_template || (isMasterParam && isPlatformAdmin))
+
     useEffect(() => {
-        const searchParams = new URLSearchParams(location.search)
-        if (searchParams.get('isMaster') === 'true' && !id && isPlatformAdmin) {
+        if (isMasterParam && !id && isPlatformAdmin) {
             setFormData(prev => ({
                 ...prev,
                 is_master_template: true,
@@ -330,7 +336,7 @@ export default function KnowledgeAuthor() {
                 visibility: 'all_properties'
             }))
         }
-    }, [location.search, id, isPlatformAdmin])
+    }, [isMasterParam, id, isPlatformAdmin])
 
     // "Write this article" from the knowledge hub's content-gap card: start a
     // new article with the searched-for phrase as its working title.
@@ -477,6 +483,12 @@ export default function KnowledgeAuthor() {
     const { data: categories } = useCategories(formData.department_id || undefined)
     const { data: trainingModules } = useTrainingModules()
 
+    const activeDepartments = useMemo(() => {
+        if (departments && departments.length > 0) return departments
+        if (isMasterMode) return STANDARD_HOTEL_DISCIPLINES as unknown as typeof departments
+        return []
+    }, [departments, isMasterMode])
+
     // Duplicate detection and tag suggestions
     const { checkForDuplicates, isReady, result: duplicateResult } = useDuplicateDetection()
     const { suggestions: tagSuggestions, isGenerating: isGeneratingTags, generateSuggestions, clearSuggestions } = useTagSuggestions()
@@ -513,9 +525,9 @@ export default function KnowledgeAuthor() {
 
     // Extract unique department names for group selection
     const uniqueDepartmentNames = useMemo(() => {
-        if (!departments) return []
-        return Array.from(new Set(departments.map(d => d.name))).sort()
-    }, [departments])
+        const source = activeDepartments?.length ? activeDepartments : (departments || [])
+        return Array.from(new Set(source.map(d => d.name))).sort()
+    }, [activeDepartments, departments])
 
     // Helper function to notify reviewers when a document is submitted for review
     const notifyReviewersOfSubmission = async (documentId: string, documentTitle: string) => {
@@ -593,28 +605,54 @@ export default function KnowledgeAuthor() {
         }
     }
 
-    const VISIBILITY_OPTIONS: { value: KnowledgeVisibility; label: string; description: string }[] = [
-        {
-            value: 'all_properties' as KnowledgeVisibility,
-            label: t('editor.visibility.simple_org', 'Everyone in the organization'),
-            description: t('editor.visibility.simple_org_desc', 'Every active member can read this.')
-        },
-        {
-            value: 'department',
-            label: t('editor.visibility.simple_team', 'One team'),
-            description: t('editor.visibility.simple_team_desc', 'Only members of one department can read this.')
-        },
-        {
-            value: 'specific_departments',
-            label: t('editor.visibility.simple_teams', 'Several teams'),
-            description: t('editor.visibility.simple_teams_desc', 'Pick the departments that can read this.')
-        },
-        {
-            value: 'role',
-            label: t('editor.visibility.simple_role_advanced', 'By role (Advanced)'),
-            description: t('editor.visibility.simple_role_advanced_desc', 'Use role-based visibility rules.')
-        },
-    ]
+    const visibilityOptions: { value: KnowledgeVisibility; label: string; description: string }[] = useMemo(() => {
+        if (isMasterMode) {
+            return [
+                {
+                    value: 'all_properties' as KnowledgeVisibility,
+                    label: t('editor.visibility.master_all_properties', 'All Hotel Properties (Chain-Wide)'),
+                    description: t('editor.visibility.master_all_properties_desc', 'Applies across every hotel property and brand in the chain.')
+                },
+                {
+                    value: 'department' as KnowledgeVisibility,
+                    label: t('editor.visibility.master_discipline', 'Specific Operational Discipline'),
+                    description: t('editor.visibility.master_discipline_desc', 'Applies to this department/discipline across all hotels.')
+                },
+                {
+                    value: 'specific_departments' as KnowledgeVisibility,
+                    label: t('editor.visibility.master_multiple_disciplines', 'Multiple Operational Disciplines'),
+                    description: t('editor.visibility.master_multiple_disciplines_desc', 'Applies to selected departments across all hotels.')
+                },
+                {
+                    value: 'role' as KnowledgeVisibility,
+                    label: t('editor.visibility.master_role', 'By Staff Role (Chain-Wide)'),
+                    description: t('editor.visibility.master_role_desc', 'Applies to specific job roles across all properties.')
+                },
+            ]
+        }
+        return [
+            {
+                value: 'all_properties' as KnowledgeVisibility,
+                label: t('editor.visibility.simple_org', 'Everyone in the organization'),
+                description: t('editor.visibility.simple_org_desc', 'Every active member can read this.')
+            },
+            {
+                value: 'department' as KnowledgeVisibility,
+                label: t('editor.visibility.simple_team', 'One team'),
+                description: t('editor.visibility.simple_team_desc', 'Only members of one department can read this.')
+            },
+            {
+                value: 'specific_departments' as KnowledgeVisibility,
+                label: t('editor.visibility.simple_teams', 'Several teams'),
+                description: t('editor.visibility.simple_teams_desc', 'Pick the departments that can read this.')
+            },
+            {
+                value: 'role' as KnowledgeVisibility,
+                label: t('editor.visibility.simple_role_advanced', 'By role (Advanced)'),
+                description: t('editor.visibility.simple_role_advanced_desc', 'Use role-based visibility rules.')
+            },
+        ]
+    }, [isMasterMode, t])
 
     const [mainWorkspaceTab, setMainWorkspaceTab] = useState<'content' | 'protocols' | 'preview'>('content')
     const [inspectorTab, setInspectorTab] = useState<'publishing' | 'media' | 'governance'>('publishing')
@@ -945,12 +983,12 @@ export default function KnowledgeAuthor() {
 
     // Permission check
     useEffect(() => {
-        if (primaryRole === 'staff' || primaryRole === 'learner') {
+        if ((primaryRole === 'staff' || primaryRole === 'learner') && !isPlatformAdmin) {
             setIsForbidden(true)
             toast.error('You do not have permission to create or edit articles.')
             navigate('/studio/articles')
         }
-    }, [primaryRole, navigate])
+    }, [primaryRole, isPlatformAdmin, navigate])
 
     // Load Data Effect
     useEffect(() => {
@@ -1131,10 +1169,35 @@ export default function KnowledgeAuthor() {
 
     const selectedDepartmentName = useMemo(() => {
         if (!formData.department_id) return null
-        return departments?.find(d => d.id === formData.department_id)?.name || null
+        const found = (departments || []).find(d => d.id === formData.department_id) || (STANDARD_HOTEL_DISCIPLINES as readonly { id: string; name: string }[]).find(d => d.id === formData.department_id)
+        return found?.name || null
     }, [departments, formData.department_id])
 
     const visibilitySummary = useMemo(() => {
+        if (isMasterMode) {
+            switch (formData.visibility) {
+                case 'all_properties':
+                    return t('editor.visibility.summary_master_all', {
+                        defaultValue: 'Platform Master SOP available across all hotel properties.'
+                    })
+                case 'department':
+                    return t('editor.visibility.summary_master_dept', {
+                        defaultValue: 'Master SOP targeted to {{department}} across all properties.',
+                        department: selectedDepartmentName || t('editor.all_departments_brand', 'All Departments')
+                    })
+                case 'specific_departments':
+                    return t('editor.visibility.summary_master_specific', {
+                        defaultValue: 'Master SOP targeted to {{count}} operational disciplines.',
+                        count: formData.specific_department_ids.length
+                    })
+                case 'role':
+                    return t('editor.visibility.summary_master_role', {
+                        defaultValue: 'Master SOP governed by role across all properties.'
+                    })
+                default:
+                    return ''
+            }
+        }
         switch (formData.visibility) {
             case 'all_properties':
                 return t('editor.visibility.summary_org', {
@@ -1158,6 +1221,7 @@ export default function KnowledgeAuthor() {
                 return ''
         }
     }, [
+        isMasterMode,
         formData.specific_department_ids.length,
         formData.visibility,
         selectedDepartmentName,
@@ -1640,10 +1704,14 @@ ${aiLanguage === 'Arabic' ? 'مثال: "إجراءات التعامل مع شك�
                 queryClient.invalidateQueries({ queryKey: ['knowledge-related', savedArticleId] })
             }
 
-            // Always navigate to the article detail page after publish or new article creation
+            // Navigate to master library if global master template, or article detail page
             const targetArticleId = savedArticleId || savedArticleData?.id || id
             if (targetArticleId) {
-                navigate(`/knowledge/${targetArticleId}`, { replace: true })
+                if (formData.is_master_template && isPlatformAdmin) {
+                    navigate('/platform/master-library', { replace: true })
+                } else {
+                    navigate(`/knowledge/${targetArticleId}`, { replace: true })
+                }
             }
         } catch (error: any) {
             console.error('Error in saveArticle:', error)
@@ -1803,7 +1871,7 @@ ${aiLanguage === 'Arabic' ? 'مثال: "إجراءات التعامل مع شك�
         setIsReadinessDrawerOpen(false)
     }, [])
 
-    if (isForbidden || primaryRole === 'staff' || primaryRole === 'learner') {
+    if (isForbidden || ((primaryRole === 'staff' || primaryRole === 'learner') && !isPlatformAdmin)) {
         return null
     }
 
@@ -1846,12 +1914,12 @@ ${aiLanguage === 'Arabic' ? 'مثال: "إجراءات التعامل مع شك�
 
             {/* Zone 1: Sticky Command & Article Health Bar */}
             <AuthorTopBar
-                onBack={() => navigate(-1)}
+                onBack={() => isMasterMode ? navigate('/platform/master-library') : navigate(-1)}
                 isEditing={isEditing}
                 title={formData.title}
                 sopCode={formData.sop_code}
                 status={(formData as any).status || 'draft'}
-                isMasterTemplate={Boolean(formData.is_master_template)}
+                isMasterTemplate={isMasterMode}
                 isSaving={isSaving}
                 isAutoSaving={false}
                 lastSavedAt={null}
@@ -1876,28 +1944,33 @@ ${aiLanguage === 'Arabic' ? 'مثال: "إجراءات التعامل مع شك�
             />
 
             {/* Master article */}
-            {formData.is_master_template && (
-                <div className="flex flex-col gap-4 rounded-[6px] border border-ds-border bg-ds-surface px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="min-w-0">
-                        <p className="text-sm font-semibold text-ds-ink">
-                            Master article
-                            {isEditing && <span className="ms-2 font-mono text-xs font-normal text-ds-muted">v{(formData as any).current_version || 1}</span>}
-                        </p>
-                        <p className="text-sm text-ds-muted">
-                            {isEditing && masterDeploymentCount !== null
-                                ? `Used by ${masterDeploymentCount} organization${masterDeploymentCount === 1 ? '' : 's'}. Publishing a change tells them an update is available.`
-                                : 'Published to the platform master library, ready to deploy to organizations.'}
-                        </p>
+            {isMasterMode && (
+                <div className="flex flex-col gap-4 rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent px-5 py-4 sm:flex-row sm:items-center sm:justify-between shadow-xs">
+                    <div className="min-w-0 flex items-start gap-3">
+                        <div className="w-9 h-9 rounded-lg bg-amber-500/20 text-amber-700 dark:text-amber-300 flex items-center justify-center shrink-0 mt-0.5">
+                            <Crown className="w-5 h-5" />
+                        </div>
+                        <div>
+                            <p className="text-sm font-bold text-amber-950 dark:text-amber-100 flex items-center gap-2">
+                                {t('editor.master_brand_sop_title', 'Platform Master Standard Operating Procedure')}
+                                {isEditing && <span className="font-mono text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-200">v{(formData as any).current_version || 1}</span>}
+                            </p>
+                            <p className="text-xs text-amber-800/90 dark:text-amber-300/90 mt-0.5">
+                                {isEditing && masterDeploymentCount !== null
+                                    ? t('editor.master_deployed_notice', { count: masterDeploymentCount, defaultValue: `Active brand standard deployed across ${masterDeploymentCount} property library(ies). Updating releases a new brand standard revision.` })
+                                    : t('editor.master_new_notice', 'Authoring a chain-wide corporate master template. Upon publishing, this standard will be cataloged in the Platform Master Library.')}
+                            </p>
+                        </div>
                     </div>
                     {isEditing && (
                         <div className="shrink-0 sm:w-80">
-                            <Label htmlFor="release-notes" className="mb-1 block text-xs font-medium text-ds-ink">What changed in this version</Label>
+                            <Label htmlFor="release-notes" className="mb-1 block text-xs font-semibold text-amber-950 dark:text-amber-200">{t('editor.release_notes_label', 'Master Revision Notes')}</Label>
                             <Input
                                 id="release-notes"
-                                placeholder="e.g. Updated the allergen escalation step"
+                                placeholder={t('editor.release_notes_placeholder', 'e.g. Updated HACCP temperature thresholds')}
                                 value={releaseNotes}
                                 onChange={e => setReleaseNotes(e.target.value)}
-                                className="min-h-[40px] text-sm"
+                                className="min-h-[38px] text-xs bg-background/80 border-amber-500/30"
                             />
                         </div>
                     )}
@@ -2151,13 +2224,14 @@ ${aiLanguage === 'Arabic' ? 'مثال: "إجراءات التعامل مع شك�
                         onActiveTabChange={setInspectorTab}
                         formData={formData}
                         onUpdateField={updateField}
-                        departments={departments || []}
+                        departments={activeDepartments}
                         categories={categories || []}
                         trainingModules={trainingModules || []}
                         currentBrand={currentBrand}
                         isPlatformAdmin={isPlatformAdmin}
+                        isMasterTemplate={isMasterMode}
                         user={user}
-                        visibilityOptions={VISIBILITY_OPTIONS}
+                        visibilityOptions={visibilityOptions}
                         visibilitySummary={visibilitySummary}
                         onOpenDocumentPicker={() => setShowDocumentPicker(true)}
                         onOpenMediaPicker={() => {

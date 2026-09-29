@@ -148,8 +148,21 @@ export function ProtectedRoute({
   // the role check for anyone else.
   const operatorInSession = account.isPlatformOperator && !!account.activePlatformSession
 
+  // Global Master Content mode: Platform operators authoring or previewing global templates
+  // from the Platform Master Library (or previewing master player content).
+  // These operate at the platform plane rather than inside a specific tenant,
+  // so tenant-scoped capabilities do not apply.
+  const searchParams = new URLSearchParams(location.search)
+  const isMasterMode =
+    searchParams.get('master') === 'true' ||
+    searchParams.get('isMaster') === 'true' ||
+    (location.pathname.startsWith('/learn/player/') && account.isPlatformOperator)
+
+  const isOperatorAuthorized =
+    operatorInSession || (account.isPlatformOperator && isMasterMode)
+
   if (allowedRoles && allowedRoles.length > 0) {
-    if (!canRoleAccess(primaryRole, allowedRoles) && !operatorInSession) {
+    if (!canRoleAccess(primaryRole, allowedRoles) && !isOperatorAuthorized) {
       if (smartFallback && primaryRole) {
         return <Navigate to="/dashboard" replace />
       }
@@ -160,7 +173,7 @@ export function ProtectedRoute({
   if (
     requiredPermission &&
     !hasPermission(requiredPermission, requiredDepartmentId) &&
-    !operatorInSession
+    !isOperatorAuthorized
   ) {
     if (smartFallback && primaryRole) {
       return <Navigate to="/dashboard" replace />
@@ -170,7 +183,7 @@ export function ProtectedRoute({
 
   return (
     <PasswordEnforcementGuard>
-      {requiredCapability && !operatorInSession ? (
+      {requiredCapability && !isOperatorAuthorized ? (
         <CapabilityGate required={requiredCapability} fallbackPath={fallbackPath}>
           {children}
         </CapabilityGate>

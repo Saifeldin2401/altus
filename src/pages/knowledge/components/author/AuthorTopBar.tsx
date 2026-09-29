@@ -73,13 +73,27 @@ export function AuthorTopBar({
             size="sm"
             onClick={onBack}
             className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground shrink-0"
-            title="Return to Knowledge Library"
+            title={isMasterTemplate ? t('editor.back_to_master', 'Return to Master Library') : t('editor.back_to_knowledge', 'Return to Knowledge Library')}
           >
             <ArrowLeft className="w-4 h-4 me-1" />
-            <span className="hidden sm:inline">{t('common.back', 'Back')}</span>
+            <span className="hidden sm:inline">
+              {isMasterTemplate ? t('editor.back_to_master', 'Master Library') : t('common.back', 'Back')}
+            </span>
           </Button>
 
           <div className="h-4 w-px bg-border shrink-0 hidden sm:block" />
+
+          {/* Explicit Mode Indicator */}
+          {isMasterTemplate ? (
+            <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500/20 via-amber-500/30 to-amber-600/20 border border-amber-500/40 text-amber-900 dark:text-amber-200 text-xs font-bold uppercase tracking-wider shrink-0 shadow-xs">
+              <Crown className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 fill-amber-500/30" />
+              <span>{t('editor.master_studio', 'Master Studio')}</span>
+            </div>
+          ) : (
+            <Badge variant="outline" className="text-[11px] font-medium text-muted-foreground shrink-0 hidden sm:inline-flex bg-muted/40">
+              {t('editor.property_studio', 'Property Studio')}
+            </Badge>
+          )}
 
           <div className="flex items-center gap-2 truncate">
             {sopCode ? (
@@ -91,13 +105,6 @@ export function AuthorTopBar({
             <span className="font-semibold text-xs sm:text-sm truncate text-foreground" title={title}>
               {title.trim() || t('editor.untitled_document', 'Untitled SOP Document')}
             </span>
-
-            {isMasterTemplate && (
-              <Badge variant="secondary" className="gap-1 bg-amber-500/15 text-amber-800 dark:text-amber-300 text-[10px] shrink-0 border border-amber-500/30">
-                <Crown className="w-3 h-3 text-amber-600" />
-                Master Standard
-              </Badge>
-            )}
 
             <Badge
               variant="outline"
@@ -193,7 +200,9 @@ export function AuthorTopBar({
             className="h-8 text-xs font-medium gap-1.5"
           >
             {isSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-            <span>{t('editor.save_draft', 'Save Draft')}</span>
+            <span>
+              {isMasterTemplate ? t('editor.save_master_draft', 'Save Master Draft') : t('editor.save_draft', 'Save Draft')}
+            </span>
           </Button>
 
           <Button
@@ -208,7 +217,11 @@ export function AuthorTopBar({
             ) : (
               <Send className="w-3.5 h-3.5" />
             )}
-            <span>{isEditing ? t('editor.update_publish', 'Update & Publish') : t('editor.submit_review', 'Publish / Review')}</span>
+            <span>
+              {isMasterTemplate
+                ? (isEditing ? t('editor.update_master', 'Update Master Standard') : t('editor.publish_master', 'Publish Master Standard'))
+                : (isEditing ? t('editor.update_publish', 'Update & Publish') : t('editor.submit_review', 'Publish / Review'))}
+            </span>
           </Button>
         </div>
 

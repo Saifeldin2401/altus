@@ -13,6 +13,7 @@ import { VisualContentBuilder } from '@/components/knowledge'
 import type { KnowledgeVisibility } from '@/types/knowledge'
 import {
   ChevronDown,
+  Crown,
   ExternalLink,
   FileText,
   FolderOpen,
@@ -43,6 +44,7 @@ interface AuthorInspectorProps {
   trainingModules?: Array<{ id: string; title: string }>
   currentBrand: any
   isPlatformAdmin: boolean
+  isMasterTemplate?: boolean
   user: any
   visibilityOptions: Array<{ value: KnowledgeVisibility; label: string; description: string }>
   visibilitySummary: string
@@ -72,6 +74,7 @@ export function AuthorInspector({
   trainingModules,
   currentBrand,
   isPlatformAdmin,
+  isMasterTemplate = false,
   user,
   visibilityOptions,
   visibilitySummary,
@@ -88,6 +91,7 @@ export function AuthorInspector({
   masterDeploymentCount,
 }: AuthorInspectorProps) {
   const { t } = useTranslation(['knowledge', 'common'])
+  const isMasterMode = Boolean(isMasterTemplate || formData.is_master_template)
   const [currentTab, setCurrentTab] = useState<'publishing' | 'media' | 'governance'>(activeTab)
   const [showComplianceNotes, setShowComplianceNotes] = useState(false)
 
@@ -123,20 +127,53 @@ export function AuthorInspector({
         {/* TAB 1: PUBLISHING & SCOPE                                                 */}
         {/* ========================================================================= */}
         <TabsContent value="publishing" className="space-y-4 mt-3">
+          {/* Master Mode Banner */}
+          {isMasterMode && (
+            <div className="p-3 rounded-xl bg-gradient-to-r from-amber-500/15 via-amber-500/10 to-transparent border border-amber-500/30 shadow-xs">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-md bg-amber-500/20 flex items-center justify-center text-amber-700 dark:text-amber-300 shrink-0">
+                  <Crown className="w-3.5 h-3.5" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-amber-900 dark:text-amber-200">
+                    {t('editor.master_studio_mode', 'Master Studio Mode')}
+                  </span>
+                  <span className="block text-[10px] text-amber-800/80 dark:text-amber-300/80">
+                    {t('editor.master_studio_desc', 'Chain-wide brand template. Deploys to all hotel properties.')}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
           
           {/* 1. Department & Classification */}
           <Card className="shadow-xs border-border">
             <CardHeader className="py-3 px-4">
               <CardTitle className="text-xs font-bold flex items-center gap-1.5 text-muted-foreground uppercase tracking-wider">
                 <List className="h-3.5 w-3.5 text-ds-accent" />
-                <span>Team & Classification</span>
+                <span>
+                  {isMasterMode
+                    ? t('editor.brand_classification_title', 'Brand Discipline & Classification')
+                    : t('editor.team_classification_title', 'Team & Classification')}
+                </span>
               </CardTitle>
             </CardHeader>
             <CardContent className="px-4 pb-4 pt-0 space-y-3">
               <div>
-                <Label className="text-xs font-semibold mb-1 block">
-                  {t('editor.main_team_topic', 'Department / Team')} <span className="text-ds-danger">*</span>
-                </Label>
+                {isMasterMode ? (
+                  <div className="flex items-center justify-between mb-1">
+                    <Label className="text-xs font-semibold">
+                      {t('editor.target_discipline', 'Target Operational Discipline')}
+                    </Label>
+                    <span className="text-[10px] text-muted-foreground font-normal">
+                      {t('editor.optional_all_depts', '(Defaults to All Departments)')}
+                    </span>
+                  </div>
+                ) : (
+                  <Label className="text-xs font-semibold mb-1 block">
+                    {t('editor.main_team_topic', 'Department / Team')} <span className="text-ds-danger">*</span>
+                  </Label>
+                )}
                 <GroupedDepartmentSelector
                   departments={departments}
                   value={formData.department_id || 'none'}
@@ -144,10 +181,23 @@ export function AuthorInspector({
                     onUpdateField('department_id', v === 'none' ? null : v)
                     onUpdateField('category_id', null)
                   }}
-                  placeholder={t('editor.select_department', 'Select main team...')}
-                  generalLabel={t('editor.general_department')}
+                  placeholder={
+                    isMasterMode
+                      ? t('editor.select_discipline', 'Select discipline (e.g. Front Office, F&B)...')
+                      : t('editor.select_department', 'Select main team...')
+                  }
+                  generalLabel={
+                    isMasterMode
+                      ? t('editor.all_departments_brand', 'All Departments (General Brand Standard)')
+                      : t('editor.general_department', 'All departments')
+                  }
                   className="w-full text-xs"
                 />
+                {isMasterMode && (
+                  <p className="text-[10px] text-muted-foreground mt-1">
+                    {t('editor.master_dept_hint', 'Applies to this department across all properties, or across the whole hotel if All Departments is chosen.')}
+                  </p>
+                )}
               </div>
 
               {formData.department_id && (
@@ -229,20 +279,40 @@ export function AuthorInspector({
 
               {/* Multi-Tenant Scope Level */}
               <div className="pt-2 border-t space-y-1">
-                <Label className="text-xs font-semibold block">Tenant Scope Level</Label>
+                <Label className="text-xs font-semibold block">
+                  {isMasterMode ? t('editor.scope_level_master', 'Master Distribution Scope') : t('editor.scope_level', 'Tenant Scope Level')}
+                </Label>
                 <Select
-                  value={formData.scope_type}
+                  value={formData.scope_type || (isMasterMode ? 'global' : 'organization')}
                   onValueChange={(v) => onUpdateField('scope_type', v as any)}
                 >
                   <SelectTrigger className="w-full text-xs bg-background">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="organization">Whole organization</SelectItem>
-                    <SelectItem value="brand">Brand-specific ({currentBrand?.name || 'Brand'})</SelectItem>
-                    <SelectItem value="department">Department-specific</SelectItem>
+                    {isMasterMode ? (
+                      <>
+                        <SelectItem value="global">
+                          <span className="font-semibold text-amber-700 dark:text-amber-300">
+                            {t('editor.master_scope_level', 'Platform Master Library (Chain-wide)')}
+                          </span>
+                        </SelectItem>
+                        <SelectItem value="brand">Brand-specific ({currentBrand?.name || 'Brand'})</SelectItem>
+                      </>
+                    ) : (
+                      <>
+                        <SelectItem value="organization">Whole organization</SelectItem>
+                        <SelectItem value="brand">Brand-specific ({currentBrand?.name || 'Brand'})</SelectItem>
+                        <SelectItem value="department">Department-specific</SelectItem>
+                      </>
+                    )}
                   </SelectContent>
                 </Select>
+                {isMasterMode && (
+                  <p className="text-[10px] text-muted-foreground mt-0.5">
+                    {t('editor.master_scope_desc', 'Chain-wide brand standard. Deploys to all hotel properties via the Master Content Library.')}
+                  </p>
+                )}
               </div>
 
               {/* Mandatory Read Confirmation */}
@@ -280,13 +350,20 @@ export function AuthorInspector({
 
               {/* Master SOP Template Toggle */}
               {isPlatformAdmin && (
-                <div className="pt-2 border-t flex items-center justify-between p-2.5 rounded-lg bg-ds-warning-soft border border-ds-warning/30">
+                <div className={`pt-2 border-t flex items-center justify-between p-2.5 rounded-lg border ${
+                  isMasterMode
+                    ? 'bg-amber-500/10 border-amber-500/30 text-amber-900 dark:text-amber-200'
+                    : 'bg-ds-warning-soft border-ds-warning/30 text-ds-warning'
+                }`}>
                   <div className="space-y-0.5">
-                    <Label className="text-xs font-bold text-ds-warning cursor-pointer" htmlFor="master-switch">
-                      Master SOP Template
+                    <Label className="text-xs font-bold cursor-pointer flex items-center gap-1.5" htmlFor="master-switch">
+                      <Crown className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                      <span>{t('editor.master_sop_template', 'Master SOP Template')}</span>
                     </Label>
-                    <p className="text-[10px] text-ds-warning">
-                      Publish to Platform Master Library for cross-tenant distribution
+                    <p className="text-[10px] text-muted-foreground">
+                      {isMasterMode
+                        ? t('editor.master_template_active_desc', 'Active Master Template — Stored in Platform Master Library for cross-property distribution')
+                        : t('editor.master_template_toggle_desc', 'Publish to Platform Master Library for cross-tenant distribution')}
                     </p>
                   </div>
                   <Switch

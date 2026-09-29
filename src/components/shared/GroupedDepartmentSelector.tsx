@@ -57,7 +57,7 @@ export function GroupedDepartmentSelector({
                 {sorted.map((dept) => (
                     <SelectItem key={dept.id} value={dept.id}>{dept.name}</SelectItem>
                 ))}
-                {sorted.length === 0 && (
+                {sorted.length === 0 && !showGeneral && (
                     <div className="p-4 text-center text-sm text-ds-muted">
                         {t('common.no_departments_found', 'No departments found')}
                     </div>

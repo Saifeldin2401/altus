@@ -186,3 +186,19 @@
   }
 }
 
+/* Ensure editor toolbar buttons and controls are never distorted by touch target overrides */
+.editor-toolbar button,
+.editor-toolbar [role="button"] {
+  min-height: unset;
+  min-width: unset;
+}
+
+.editor-toolbar .scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.editor-toolbar .scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

@@ -287,3 +287,17 @@ export const STATUS_CONFIG = {
     PUBLISHED: { label: 'Published', color: 'green' },
     REJECTED: { label: 'Rejected', color: 'red' }
 } as const
+
+export const STANDARD_HOTEL_DISCIPLINES = [
+    { id: 'front-office', name: 'Front Office & Reception', name_ar: 'المكاتب الأمامية والاستقبال' },
+    { id: 'housekeeping', name: 'Housekeeping & Laundry', name_ar: 'التدبير الفندقي والمغسلة' },
+    { id: 'food-beverage', name: 'Food & Beverage Service', name_ar: 'الأغذية والمشروبات' },
+    { id: 'kitchen', name: 'Kitchen & Culinary Arts', name_ar: 'المطبخ وفنون الطهي' },
+    { id: 'engineering', name: 'Engineering & Facilities', name_ar: 'الهندسة والمرافق والتشغيل' },
+    { id: 'security', name: 'Security & Safety', name_ar: 'الأمن والسلامة والصحة المهنية' },
+    { id: 'human-resources', name: 'Human Resources & Training', name_ar: 'الموارد البشرية والتدريب' },
+    { id: 'finance', name: 'Finance & Accounting', name_ar: 'المالية والحسابات' },
+    { id: 'sales-marketing', name: 'Sales, Marketing & Events', name_ar: 'المبيعات والتسويق والفعاليات' },
+    { id: 'it-tech', name: 'IT & Technology', name_ar: 'تقنية المعلومات والأنظمة' },
+    { id: 'executive', name: 'Executive Management', name_ar: 'الإدارة التنفيذية والقيادة' },
+] as const

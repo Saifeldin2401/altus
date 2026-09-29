@@ -19,23 +19,42 @@ interface Department {
 export function useDepartments() {
   const queryClient = useQueryClient();
   const { user, primaryRole } = useAuth();
-  const { currentOrganization } = useTenant();
+  const { currentOrganization, isPlatformAdmin } = useTenant();
 
   const canManage = ['administrator', 'super_admin', 'corporate_admin', 'training_manager', 'regional_admin', 'regional_hr', 'property_manager', 'property_hr'].includes(primaryRole || '');
 
   const { data: departments = [], isLoading, error } = useQuery({
-    queryKey: ['departments', currentOrganization?.id],
+    queryKey: ['departments', currentOrganization?.id || (isPlatformAdmin ? 'platform' : 'none')],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from('departments')
         .select('*')
-        .eq('organization_id', currentOrganization!.id)
         .eq('is_active', true)
         .order('name');
+
+      if (currentOrganization?.id) {
+        query = query.eq('organization_id', currentOrganization.id);
+      }
+
+      const { data, error } = await query;
       if (error) throw error;
-      return data as Department[];
+
+      if (!currentOrganization?.id && isPlatformAdmin) {
+        const seen = new Set<string>();
+        const unique: Department[] = [];
+        for (const dept of (data as Department[]) || []) {
+          const key = dept.name.trim().toLowerCase();
+          if (!seen.has(key)) {
+            seen.add(key);
+            unique.push(dept);
+          }
+        }
+        return unique;
+      }
+
+      return (data || []) as Department[];
     },
-    enabled: !!currentOrganization?.id,
+    enabled: !!currentOrganization?.id || isPlatformAdmin,
   });
 
   const audit = (entityId: string, metadata: Json) => {

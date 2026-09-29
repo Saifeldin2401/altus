@@ -94,18 +94,27 @@
   min-width: 48px;
 }
 
-/* Button touch targets */
-button,
-[role="button"],
+/* Button touch targets (enforced for mobile & touch devices) */
+@media (pointer: coarse) and (max-width: 768px) {
+  button:not(.no-touch-target),
+  [role="button"]:not(.no-touch-target) {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Form input touch targets */
+  input:not(.no-touch-target),
+  textarea:not(.no-touch-target),
+  select:not(.no-touch-target) {
+    min-height: 44px;
+  }
+}
+
 .btn-touch {
   min-height: 44px;
   min-width: 44px;
 }
 
-/* Form input touch targets */
-input,
-textarea,
-select,
 .input-touch {
   min-height: 44px;
 }

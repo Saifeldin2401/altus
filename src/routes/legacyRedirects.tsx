@@ -78,6 +78,7 @@ export const LEGACY_REDIRECTS: ReadonlyArray<readonly [from: string, to: string]
     ['/questions/:id/edit', '/studio/questions/:id/edit'],
     ['/knowledge/create', '/studio/articles/new'],
     ['/knowledge/:id/edit', '/studio/articles/:id/edit'],
+    ['/knowledge/edit/:id', '/studio/articles/:id/edit'],
     ['/knowledge/review', '/studio/review/articles'],
     ['/manage/review', '/studio/review'],
     ['/manage/review-queue', '/studio/review'],
