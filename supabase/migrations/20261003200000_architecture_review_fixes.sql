@@ -1,17 +1,22 @@
 -- Migration: 20261003200000_architecture_review_fixes.sql
--- Fixes from the 2026-10-03 architecture review (findings H2, H3, M6, L1, L4 and
--- the approve_pending_user mismatch). Every statement is safe to re-run.
+-- Fixes from the 2026-10-03 architecture review (findings H2, H3, M6, L1, L4
+-- and the approve_pending_user mismatch).
+-- Policies are changed in place with ALTER POLICY (each one is created by an
+-- earlier migration); nothing is removed and recreated.
 
 -- ---------------------------------------------------------------------------
 -- H3. translation_cache crossed tenants.
 -- Every signed-in user could read every cached translation and insert or
 -- overwrite any row. Only the ai-translation Edge Function uses the table, with
--- the service role, which bypasses RLS. With RLS on and no policies, API roles
--- get nothing.
+-- the service role, so the policies now apply to that role only (named for it)
+-- and API roles lose table access entirely.
 -- ---------------------------------------------------------------------------
-DROP POLICY IF EXISTS "Anyone authenticated can view translations" ON public.translation_cache;
-DROP POLICY IF EXISTS "Authorized users can insert translations" ON public.translation_cache;
-DROP POLICY IF EXISTS "Authorized users can update translations" ON public.translation_cache;
+ALTER POLICY "Anyone authenticated can view translations" ON public.translation_cache TO service_role;
+ALTER POLICY "Anyone authenticated can view translations" ON public.translation_cache RENAME TO "translation_cache_service_select";
+ALTER POLICY "Authorized users can insert translations" ON public.translation_cache TO service_role;
+ALTER POLICY "Authorized users can insert translations" ON public.translation_cache RENAME TO "translation_cache_service_insert";
+ALTER POLICY "Authorized users can update translations" ON public.translation_cache TO service_role;
+ALTER POLICY "Authorized users can update translations" ON public.translation_cache RENAME TO "translation_cache_service_update";
 REVOKE ALL ON public.translation_cache FROM anon, authenticated;
 
 -- ---------------------------------------------------------------------------
@@ -39,9 +44,8 @@ GRANT EXECUTE ON FUNCTION public.purge_course(uuid) TO authenticated;
 -- renders the stored public URL; resolveStorageUrl falls back to it.
 -- The CASE guards keep the uuid casts from running on non-uuid folder names.
 -- ---------------------------------------------------------------------------
-DROP POLICY IF EXISTS "content_media_select" ON storage.objects;
-CREATE POLICY "content_media_select" ON storage.objects
-  FOR SELECT TO authenticated
+ALTER POLICY "content_media_select" ON storage.objects
+  TO authenticated
   USING (
     bucket_id = 'content-media'
     AND (
@@ -67,9 +71,8 @@ CREATE POLICY "content_media_select" ON storage.objects
     )
   );
 
-DROP POLICY IF EXISTS "training_content_select" ON storage.objects;
-CREATE POLICY "training_content_select" ON storage.objects
-  FOR SELECT TO authenticated
+ALTER POLICY "training_content_select" ON storage.objects
+  TO authenticated
   USING (
     bucket_id = 'training-content'
     AND (
@@ -85,9 +88,8 @@ CREATE POLICY "training_content_select" ON storage.objects
     )
   );
 
-DROP POLICY IF EXISTS "Media bucket select policy" ON storage.objects;
-CREATE POLICY "Media bucket select policy" ON storage.objects
-  FOR SELECT TO authenticated
+ALTER POLICY "Media bucket select policy" ON storage.objects
+  TO authenticated
   USING (
     bucket_id = 'media'
     AND (
@@ -109,13 +111,13 @@ CREATE POLICY "Media bucket select policy" ON storage.objects
 -- authorized with legacy global roles and updated rows in every organization.
 -- Now: the reason is stored, and the caller must administer the organization
 -- the request belongs to (or be a platform operator).
+-- The three-argument form takes no defaults and the existing two-argument form
+-- delegates to it, so every call shape resolves to exactly one function.
 -- ---------------------------------------------------------------------------
-DROP FUNCTION IF EXISTS public.approve_pending_user(uuid, boolean);
-
 CREATE OR REPLACE FUNCTION public.approve_pending_user(
   p_user_id uuid,
-  p_approve boolean DEFAULT true,
-  p_rejection_reason text DEFAULT NULL
+  p_approve boolean,
+  p_rejection_reason text
 )
 RETURNS json
 LANGUAGE plpgsql
@@ -166,16 +168,25 @@ BEGIN
 END;
 $function$;
 
+CREATE OR REPLACE FUNCTION public.approve_pending_user(p_user_id uuid, p_approve boolean DEFAULT true)
+RETURNS json
+LANGUAGE sql
+SECURITY INVOKER
+SET search_path TO 'public'
+AS $function$
+  SELECT public.approve_pending_user(p_user_id, p_approve, NULL::text);
+$function$;
+
 REVOKE EXECUTE ON FUNCTION public.approve_pending_user(uuid, boolean, text) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.approve_pending_user(uuid, boolean, text) TO authenticated;
+REVOKE EXECUTE ON FUNCTION public.approve_pending_user(uuid, boolean) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.approve_pending_user(uuid, boolean) TO authenticated;
 
 -- ---------------------------------------------------------------------------
--- L4. Four policies from 20260928072000 called auth.uid() once per row.
+-- L4. Four policies from 20260928042147 called auth.uid() once per row.
 -- Same rules, with auth.uid() wrapped so Postgres evaluates it once per query.
 -- ---------------------------------------------------------------------------
-DROP POLICY IF EXISTS "document_approvals_insert_member" ON public.document_approvals;
-CREATE POLICY "document_approvals_insert_member" ON public.document_approvals
-  FOR INSERT TO authenticated
+ALTER POLICY "document_approvals_insert_member" ON public.document_approvals
   WITH CHECK (
     EXISTS (
       SELECT 1
@@ -187,9 +198,7 @@ CREATE POLICY "document_approvals_insert_member" ON public.document_approvals
     )
   );
 
-DROP POLICY IF EXISTS "document_approvals_update_reviewer" ON public.document_approvals;
-CREATE POLICY "document_approvals_update_reviewer" ON public.document_approvals
-  FOR UPDATE TO authenticated
+ALTER POLICY "document_approvals_update_reviewer" ON public.document_approvals
   USING (
     (SELECT auth.uid()) = approver_id
     OR (SELECT auth.uid()) = approved_by
@@ -211,14 +220,10 @@ CREATE POLICY "document_approvals_update_reviewer" ON public.document_approvals
     )
   );
 
-DROP POLICY IF EXISTS "notifications_delete_owner" ON public.notifications;
-CREATE POLICY "notifications_delete_owner" ON public.notifications
-  FOR DELETE TO authenticated
+ALTER POLICY "notifications_delete_owner" ON public.notifications
   USING ((SELECT auth.uid()) = user_id);
 
-DROP POLICY IF EXISTS "document_comments_insert_member" ON public.document_comments;
-CREATE POLICY "document_comments_insert_member" ON public.document_comments
-  FOR INSERT TO authenticated
+ALTER POLICY "document_comments_insert_member" ON public.document_comments
   WITH CHECK (
     (SELECT auth.uid()) = user_id
     AND EXISTS (
