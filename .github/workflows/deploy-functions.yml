@@ -1,20 +1,15 @@
 name: Deploy Edge Functions
 
-# Production Edge Functions drifted from the repo when they were deployed by
-# hand: 50 were live against 27 in git, and fixes merged to master never
-# shipped. This deploys every function from master, with the verify_jwt setting
-# each one declares in supabase/config.toml, whenever functions change.
+# Manual fallback only. The Supabase GitHub integration already deploys every
+# function (and applies new migrations) on each push to master, so running this
+# on push as well would deploy everything twice. Use it to redeploy all
+# functions from master, with the verify_jwt setting each one declares in
+# supabase/config.toml, if the integration is disconnected or a deploy failed.
 #
 # Needs the repository secret SUPABASE_ACCESS_TOKEN (a Supabase personal access
 # token with access to the project). Without it the job only warns.
 
 on:
-  push:
-    branches:
-      - master
-    paths:
-      - 'supabase/functions/**'
-      - 'supabase/config.toml'
   workflow_dispatch:
 
 concurrency:

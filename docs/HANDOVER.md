@@ -112,14 +112,20 @@ Live project: Supabase project ref `dhbfaclkfysqwfppuxxa`.
   repository and build every push; `render.yaml` is a third, unconfirmed config.
   Confirm which host serves the production domain before removing any of them.
   The CSP must stay identical across `index.html` and the host configs.
-- Edge Functions: the **Deploy Edge Functions** workflow deploys every function
-  from `master` (with the `verify_jwt` each one declares in `supabase/config.toml`)
-  whenever they change, once the `SUPABASE_ACCESS_TOKEN` repository secret is set.
-  Deploy by hand only in an emergency, and from `master`: hand deploys are how
-  production drifted to 50 functions against 27 in git. Every function must be
-  declared in `config.toml`, and `npm run check:functions` type-checks them all.
-- Migrations: apply with the Supabase CLI (`supabase db push`) so the version in
-  `supabase_migrations.schema_migrations` matches the file name. Tools that assign
+- **Merging to `master` deploys to production.** The Supabase GitHub integration
+  deploys every Edge Function in the repo (with the `verify_jwt` each one declares
+  in `supabase/config.toml`) and applies any new migration file, within a minute
+  or two of each push. Treat a merge as a production release, and never merge a
+  migration you have not tested.
+- Edge Functions: deploy by hand only in an emergency, and from `master`: hand
+  deploys are how production drifted to 50 functions against 27 in git. Every
+  function must be declared in `config.toml`, and `npm run check:functions`
+  type-checks them all. The **Deploy Edge Functions** workflow is a manual
+  fallback (needs the `SUPABASE_ACCESS_TOKEN` repository secret) for when the
+  integration is disconnected.
+- Migrations: the integration records each file under the version in its name.
+  Anything applied another way (dashboard, MCP tools) must be recorded with that
+  same version, or the integration will try to apply it again. Tools that assign
   their own version number recreate the drift fixed on 2026-10-03.
 - **Order matters** when a migration removes access the old frontend used (for
   example the personal-data column lockdown, `20260927091000`): deploy the matching
@@ -151,10 +157,11 @@ Operations (Supabase dashboard - cannot be done from code):
 - Upgrade to a plan with point-in-time recovery and confirm backups.
 - Enable leaked-password protection, confirm MFA (TOTP) and auth rate limits.
   Sign-in throttling is Supabase Auth's job: the app has no client-side lockout.
-- Delete the 23 orphan Edge Functions that exist only in production
-  (`debug-secrets-tmp`, `apply-migrations`, `dummy-func`, `slack-*`, ...).
-- Add the `SUPABASE_ACCESS_TOKEN` repository secret so functions deploy from
-  `master`, and apply migration `20261003200100` (purge_course audit attribution).
+- Delete the 23 orphan Edge Functions that exist only in production. 19 already
+  return 410 (`debug-secrets-tmp`, `apply-migrations`, `dummy-func`, `slack-*`,
+  `password-reminders-test`, `send-eid-greeting`, `automated-greetings`, ...); the
+  other 4 (`fetch-news`, `compute-related-articles`, `refresh-all-relationships`,
+  `track-related-click`) require sign-in and are unused by the app.
 
 Engineering:
 - Verify the stricter CSP in a browser on the deployed build (login, video upload in
