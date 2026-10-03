@@ -112,7 +112,7 @@ function App() {
         <RouterProvider router={router} />
         {isUpdateAvailable && (
           <div className="pointer-events-none fixed inset-x-0 bottom-4 z-50 flex justify-center px-4">
-            <div className="pointer-events-auto flex w-full max-w-xl items-center justify-between gap-3 rounded-xl border bg-background/95 px-4 py-3 shadow-lg backdrop-blur">
+            <div className="pointer-events-auto flex w-full max-w-xl items-center justify-between gap-3 rounded-[8px] border bg-background/95 px-4 py-3 shadow-lg">
               <div className="min-w-0">
                 <p className="text-sm font-medium text-foreground">A new version is ready</p>
                 <p className="text-xs text-muted-foreground">Update when convenient. Your current work stays in place until you reload.</p>

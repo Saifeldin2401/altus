@@ -55,10 +55,10 @@ interface InlineQuizPreviewProps {
 }
 
 const DIFFICULTY_COLORS: Record<string, string> = {
-  easy: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300',
-  medium: 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300',
-  hard: 'bg-orange-100 text-orange-800 dark:bg-orange-950 dark:text-orange-300',
-  expert: 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300'
+  easy: 'bg-ds-success-soft text-ds-success',
+  medium: 'bg-ds-warning-soft text-ds-warning',
+  hard: 'bg-ds-warning-soft text-ds-warning',
+  expert: 'bg-ds-danger-soft text-ds-danger'
 }
 
 const TYPE_LABELS: Record<string, string> = {
@@ -164,7 +164,7 @@ export function InlineQuizPreview({ quizId, onRegenerate, isRTL, compact = false
   if (isError) {
     return (
       <div className="p-4 text-center space-y-2">
-        <AlertTriangle className="h-5 w-5 text-amber-500 mx-auto" />
+        <AlertTriangle className="h-5 w-5 text-ds-warning mx-auto" />
         <p className="text-xs text-muted-foreground">{t('builder.inlinePreview.quizLoadError', 'Could not load quiz questions')}</p>
         <Button variant="ghost" size="sm" onClick={() => refetch()} className="text-xs">
           <RefreshCw className="w-3 h-3 me-1" />
@@ -177,8 +177,8 @@ export function InlineQuizPreview({ quizId, onRegenerate, isRTL, compact = false
   // Empty state
   if (!questions || questions.length === 0) {
     return (
-      <div className="p-4 text-center space-y-2 border border-dashed border-slate-200 rounded-lg">
-        <HelpCircle className="h-5 w-5 text-slate-400 mx-auto" />
+      <div className="p-4 text-center space-y-2 border border-dashed border-ds-border rounded-lg">
+        <HelpCircle className="h-5 w-5 text-ds-muted mx-auto" />
         <p className="text-xs text-muted-foreground">{t('builder.inlinePreview.noQuestions', 'No questions in this quiz yet')}</p>
         {onRegenerate && (
           <Button variant="outline" size="sm" onClick={onRegenerate} className="text-xs">
@@ -197,14 +197,14 @@ export function InlineQuizPreview({ quizId, onRegenerate, isRTL, compact = false
     <div className={cn('space-y-3', 'text-start')}>
       {/* Quiz summary bar */}
       <div className={cn(
-        'flex items-center gap-3 px-3 py-2 bg-purple-50/80 dark:bg-purple-950/30 rounded-lg border border-purple-100 dark:border-purple-900/50'
+        'flex items-center gap-3 px-3 py-2 bg-ds-accent-soft/80 rounded-lg border border-ds-accent/30'
       )}>
-        <FileQuestion className="w-4 h-4 text-purple-600 shrink-0" />
-        <div className="flex-1 flex items-center gap-2 flex-wrap text-xs font-medium text-purple-900 dark:text-purple-200">
+        <FileQuestion className="w-4 h-4 text-ds-accent shrink-0" />
+        <div className="flex-1 flex items-center gap-2 flex-wrap text-xs font-medium text-ds-accent">
           <span>{t('builder.inlinePreview.questionCount', { count: questions.length, defaultValue: '{{count}} questions' })}</span>
-          <span className="text-purple-400">•</span>
+          <span className="text-ds-accent">•</span>
           <span>{totalPoints} {t('builder.inlinePreview.points', 'pts')}</span>
-          <span className="text-purple-400">•</span>
+          <span className="text-ds-accent">•</span>
           <span className="flex items-center gap-1">
             <Clock className="w-3 h-3" />
             ~{estimatedMins} {t('builder.inlinePreview.min', 'min')}
@@ -215,7 +215,7 @@ export function InlineQuizPreview({ quizId, onRegenerate, isRTL, compact = false
             variant="ghost"
             size="sm"
             onClick={onRegenerate}
-            className="h-6 px-2 text-[11px] text-purple-700 hover:text-purple-900 hover:bg-purple-100/60"
+            className="h-6 px-2 text-[11px] text-ds-accent hover:text-ds-accent hover:bg-ds-accent-soft/60"
           >
             <Sparkles className="w-3 h-3 me-1" />
             {t('builder.inlinePreview.regenerate', 'Regenerate')}
@@ -231,28 +231,28 @@ export function InlineQuizPreview({ quizId, onRegenerate, isRTL, compact = false
           return (
             <div
               key={question.id}
-              className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 overflow-hidden transition-all"
+              className="rounded-lg border border-ds-border bg-ds-surface overflow-hidden transition-all"
             >
               {/* Question header */}
               <div className={cn(
                 'flex items-start gap-2.5 p-3'
               )}>
-                <span className="shrink-0 w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 flex items-center justify-center text-[11px] font-bold mt-0.5">
+                <span className="shrink-0 w-6 h-6 rounded-full bg-ds-accent-soft text-ds-accent flex items-center justify-center text-[11px] font-bold mt-0.5">
                   {qIdx + 1}
                 </span>
                 <div className={cn('flex-1 min-w-0', 'text-start')}>
-                  <p className="text-sm font-medium text-slate-900 dark:text-white leading-snug">
+                  <p className="text-sm font-medium text-ds-ink leading-snug">
                     {isRTL && question.question_text_ar ? question.question_text_ar : question.question_text}
                   </p>
                   <div className={cn('flex items-center gap-1.5 mt-1.5 flex-wrap')}>
-                    <Badge variant="outline" className="text-[10px] px-2 py-0.5 min-h-[20px] font-semibold shrink-0 whitespace-nowrap">
+                    <Badge variant="outline" className="text-[11px] px-2 py-0.5 min-h-[20px] font-semibold shrink-0 whitespace-nowrap">
                       {TYPE_LABELS[question.question_type] || question.question_type}
                     </Badge>
-                    <Badge className={cn('text-[10px] px-2 py-0.5 min-h-[20px] font-semibold border-none shrink-0 whitespace-nowrap', DIFFICULTY_COLORS[question.difficulty] || DIFFICULTY_COLORS.medium)}>
+                    <Badge className={cn('text-[11px] px-2 py-0.5 min-h-[20px] font-semibold border-none shrink-0 whitespace-nowrap', DIFFICULTY_COLORS[question.difficulty] || DIFFICULTY_COLORS.medium)}>
                       {question.difficulty}
                     </Badge>
                     {question.points && (
-                      <span className="text-[10px] text-slate-400 font-medium">{question.points} pts</span>
+                      <span className="text-[11px] text-ds-muted font-medium">{question.points} pts</span>
                     )}
                   </div>
                 </div>
@@ -267,18 +267,18 @@ export function InlineQuizPreview({ quizId, onRegenerate, isRTL, compact = false
                       className={cn(
                         'flex items-center gap-2 px-2.5 py-1.5 rounded-md text-xs transition-colors',
                         opt.is_correct
-                          ? 'bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800'
-                          : 'bg-slate-50 dark:bg-slate-900 border border-transparent'
+                          ? 'bg-ds-success-soft border border-ds-success/30'
+                          : 'bg-ds-surface-subtle border border-transparent'
                       )}
                     >
                       {opt.is_correct ? (
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-ds-success shrink-0" />
                       ) : (
-                        <XCircle className="w-3.5 h-3.5 text-slate-300 shrink-0" />
+                        <XCircle className="w-3.5 h-3.5 text-ds-muted shrink-0" />
                       )}
                       <span className={cn(
                         'flex-1',
-                        opt.is_correct ? 'text-emerald-900 dark:text-emerald-200 font-medium' : 'text-slate-600 dark:text-slate-400'
+                        opt.is_correct ? 'text-ds-success font-medium' : 'text-ds-ink-secondary'
                       )}>
                         {isRTL && opt.option_text_ar ? opt.option_text_ar : opt.option_text}
                       </span>
@@ -290,9 +290,9 @@ export function InlineQuizPreview({ quizId, onRegenerate, isRTL, compact = false
               {/* True/False or Fill Blank correct answer */}
               {question.options.length === 0 && question.correct_answer && (
                 <div className={cn('px-3 pb-2', 'ps-12')}>
-                  <div className="flex items-center gap-2 px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-md text-xs">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                    <span className="text-emerald-900 dark:text-emerald-200 font-medium">
+                  <div className="flex items-center gap-2 px-2.5 py-1.5 bg-ds-success-soft border border-ds-success/30 rounded-md text-xs">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-ds-success shrink-0" />
+                    <span className="text-ds-success font-medium">
                       {t('builder.inlinePreview.answer', 'Answer')}: {question.correct_answer}
                     </span>
                   </div>
@@ -304,13 +304,13 @@ export function InlineQuizPreview({ quizId, onRegenerate, isRTL, compact = false
                 <div className={cn('px-3 pb-2', 'ps-12')}>
                   <button
                     onClick={() => toggleExplanation(question.id)}
-                    className="flex items-center gap-1 text-[11px] text-slate-500 hover:text-slate-700 transition-colors"
+                    className="flex items-center gap-1 text-[11px] text-ds-muted hover:text-ds-ink-secondary transition-colors"
                   >
                     {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                     {t('builder.inlinePreview.explanation', 'Explanation')}
                   </button>
                   {isExpanded && (
-                    <p className="mt-1.5 text-xs text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900 rounded p-2 leading-relaxed">
+                    <p className="mt-1.5 text-xs text-ds-ink-secondary bg-ds-surface-subtle rounded p-2 leading-relaxed">
                       {isRTL && question.explanation_ar ? question.explanation_ar : question.explanation}
                     </p>
                   )}

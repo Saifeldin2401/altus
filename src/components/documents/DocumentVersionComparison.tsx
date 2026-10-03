@@ -54,7 +54,7 @@ const VersionCard = ({ version, isSelected, onSelect }: {
 }) => (
   <Card className={cn(
     "cursor-pointer transition-all",
-    isSelected && "ring-2 ring-blue-500 bg-blue-50"
+    isSelected && "ring-2 ring-ds-info bg-ds-info-soft"
   )} onClick={onSelect}>
     <CardHeader className="pb-3">
       <div className="flex items-center justify-between">
@@ -63,7 +63,7 @@ const VersionCard = ({ version, isSelected, onSelect }: {
             v{version.version_number}
           </Badge>
           {version.is_current && (
-            <Badge variant="outline" className="text-green-600 border-green-600">
+            <Badge variant="outline" className="text-ds-success border-ds-success">
               Current
             </Badge>
           )}
@@ -95,15 +95,15 @@ const VersionCard = ({ version, isSelected, onSelect }: {
 
 const ChangeIndicator = ({ type }: { type: 'added' | 'removed' | 'modified' | 'unchanged' }) => {
   const icons = {
-    added: <Plus className="h-4 w-4 text-green-600" />,
-    removed: <Minus className="h-4 w-4 text-red-600" />,
-    modified: <ArrowLeftRight className="h-4 w-4 text-yellow-600" />,
+    added: <Plus className="h-4 w-4 text-ds-success" />,
+    removed: <Minus className="h-4 w-4 text-ds-danger" />,
+    modified: <ArrowLeftRight className="h-4 w-4 text-ds-warning" />,
     unchanged: <div className="h-4 w-4" />
   }
   const colors = {
-    added: 'bg-green-50 border-green-200',
-    removed: 'bg-red-50 border-red-200',
-    modified: 'bg-yellow-50 border-yellow-200',
+    added: 'bg-ds-success-soft border-ds-success/30',
+    removed: 'bg-ds-danger-soft border-ds-danger/30',
+    modified: 'bg-ds-warning-soft border-ds-warning/30',
     unchanged: 'bg-transparent'
   }
 
@@ -274,15 +274,15 @@ export function DocumentVersionComparison({ versions, isLoading = false, classNa
               <span>Comparison Results</span>
               <div className="flex gap-2">
                 <div className="flex items-center gap-1 text-sm">
-                  <Plus className="h-4 w-4 text-green-600" />
+                  <Plus className="h-4 w-4 text-ds-success" />
                   {comparison.stats.added} added
                 </div>
                 <div className="flex items-center gap-1 text-sm">
-                  <Minus className="h-4 w-4 text-red-600" />
+                  <Minus className="h-4 w-4 text-ds-danger" />
                   {comparison.stats.removed} removed
                 </div>
                 <div className="flex items-center gap-1 text-sm">
-                  <ArrowLeftRight className="h-4 w-4 text-yellow-600" />
+                  <ArrowLeftRight className="h-4 w-4 text-ds-warning" />
                   {comparison.stats.modified} modified
                 </div>
               </div>
@@ -335,14 +335,14 @@ export function DocumentVersionComparison({ versions, isLoading = false, classNa
                       <ChangeIndicator type={change.type} />
                       <div className="grid grid-cols-2 gap-4 text-sm font-mono">
                         <div className={cn(
-                          change.type === 'removed' && 'text-red-600 line-through',
+                          change.type === 'removed' && 'text-ds-danger line-through',
                           change.type === 'added' && 'text-muted-foreground'
                         )}>
                           {change.line1 || '<empty>'}
                         </div>
                         <div className={cn(
-                          change.type === 'added' && 'text-green-600',
-                          change.type === 'removed' && 'text-gray-500'
+                          change.type === 'added' && 'text-ds-success',
+                          change.type === 'removed' && 'text-ds-muted'
                         )}>
                           {change.line2 || '<empty>'}
                         </div>
@@ -361,14 +361,14 @@ export function DocumentVersionComparison({ versions, isLoading = false, classNa
                         <ChangeIndicator type={change.type} />
                         <div className="grid grid-cols-2 gap-4 text-sm font-mono p-2">
                           <div className={cn(
-                            change.type === 'removed' && 'text-red-600 line-through',
-                            change.type === 'added' && 'text-gray-500'
+                            change.type === 'removed' && 'text-ds-danger line-through',
+                            change.type === 'added' && 'text-ds-muted'
                           )}>
                             {change.line1 || '<empty>'}
                           </div>
                           <div className={cn(
-                            change.type === 'added' && 'text-green-600',
-                            change.type === 'removed' && 'text-gray-500'
+                            change.type === 'added' && 'text-ds-success',
+                            change.type === 'removed' && 'text-ds-muted'
                           )}>
                             {change.line2 || '<empty>'}
                           </div>

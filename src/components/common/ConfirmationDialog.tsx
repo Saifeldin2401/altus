@@ -50,8 +50,8 @@ export function ConfirmationDialog({
     }
 
     const buttonClasses = {
-        danger: 'bg-red-600 hover:bg-red-700 text-white',
-        warning: 'bg-yellow-600 hover:bg-yellow-700 text-white',
+        danger: 'bg-ds-danger hover:bg-ds-danger text-white',
+        warning: 'bg-ds-warning hover:bg-ds-warning text-white dark:text-ds-on-ink',
         default: 'bg-primary hover:bg-primary/90'
     }
 
@@ -63,13 +63,13 @@ export function ConfirmationDialog({
                 <AlertDialogHeader>
                     <div className="flex items-center gap-3">
                         {variant === 'danger' && (
-                            <div className="p-2 bg-red-100 rounded-full">
-                                <AlertTriangle className="h-5 w-5 text-red-600" />
+                            <div className="p-2 bg-ds-danger-soft rounded-full">
+                                <AlertTriangle className="h-5 w-5 text-ds-danger" />
                             </div>
                         )}
                         {variant === 'warning' && (
-                            <div className="p-2 bg-yellow-100 rounded-full">
-                                <AlertTriangle className="h-5 w-5 text-yellow-600" />
+                            <div className="p-2 bg-ds-warning-soft rounded-full">
+                                <AlertTriangle className="h-5 w-5 text-ds-warning" />
                             </div>
                         )}
                         <AlertDialogTitle>{title}</AlertDialogTitle>

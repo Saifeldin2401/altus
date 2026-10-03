@@ -51,10 +51,10 @@ export function QuestionPreviewSheet({ question, passRate, onClose, onApprove, a
                   {question.options.map((option, idx) => (
                     <li
                       key={option.id || idx}
-                      className={cn('rounded-xl border p-3 text-sm', option.is_correct ? 'border-ds-success/40 bg-ds-success-soft text-ds-ink' : 'border-ds-border bg-ds-surface text-ds-ink')}
+                      className={cn('rounded-[8px] border p-3 text-sm', option.is_correct ? 'border-ds-success/40 bg-ds-success-soft text-ds-ink' : 'border-ds-border bg-ds-surface text-ds-ink')}
                     >
                       <div className="flex items-start gap-2.5">
-                        <span className={cn('mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold', option.is_correct ? 'bg-ds-success text-white' : 'border border-ds-border bg-ds-surface-subtle text-ds-muted')}>
+                        <span className={cn('mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold', option.is_correct ? 'bg-ds-success text-white dark:text-ds-on-ink' : 'border border-ds-border bg-ds-surface-subtle text-ds-muted')}>
                           {option.is_correct ? <Check aria-hidden="true" className="h-3 w-3" /> : String.fromCharCode(65 + idx)}
                         </span>
                         <div className="min-w-0 flex-1">
@@ -68,7 +68,7 @@ export function QuestionPreviewSheet({ question, passRate, onClose, onApprove, a
                   ))}
                 </ol>
               ) : (
-                <p className="rounded-xl border border-ds-border bg-ds-surface-subtle p-3 text-sm">
+                <p className="rounded-[8px] border border-ds-border bg-ds-surface-subtle p-3 text-sm">
                   <span className="font-semibold text-ds-ink">{t('quizBank.correctAnswer', 'Correct answer')}: </span>
                   <span className="text-ds-success">{question.correct_answer || t('quizBank.noAnswerKey', 'No answer key recorded')}</span>
                 </p>
@@ -76,7 +76,7 @@ export function QuestionPreviewSheet({ question, passRate, onClose, onApprove, a
             </section>
 
             {question.explanation && (
-              <section className="space-y-1 rounded-xl border border-ds-warning/30 bg-ds-warning-soft p-4 text-sm">
+              <section className="space-y-1 rounded-[8px] border border-ds-warning/30 bg-ds-warning-soft p-4 text-sm">
                 <h3 className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-ds-warning">
                   <Lightbulb aria-hidden="true" className="h-3.5 w-3.5" />{t('quizBank.explanation', 'Why this is the answer')}
                 </h3>
@@ -86,7 +86,7 @@ export function QuestionPreviewSheet({ question, passRate, onClose, onApprove, a
             )}
 
             {question.hint && (
-              <section className="space-y-1 rounded-xl border border-ds-accent/30 bg-ds-accent-soft p-4 text-sm">
+              <section className="space-y-1 rounded-[8px] border border-ds-accent/30 bg-ds-accent-soft p-4 text-sm">
                 <h3 className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-ds-accent">
                   <HelpCircle aria-hidden="true" className="h-3.5 w-3.5" />{t('quizBank.hint', 'Hint shown to learners')}
                 </h3>
@@ -98,7 +98,7 @@ export function QuestionPreviewSheet({ question, passRate, onClose, onApprove, a
               <Link
                 to={`/knowledge/${question.linked_sop.id}`}
                 onClick={onClose}
-                className="flex items-center gap-2 rounded-xl border border-ds-border p-3 text-sm font-medium text-ds-ink hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent"
+                className="flex items-center gap-2 rounded-[8px] border border-ds-border p-3 text-sm font-medium text-ds-ink hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent"
               >
                 <FileText aria-hidden="true" className="h-4 w-4 text-ds-brass" />
                 <span className="min-w-0 flex-1 truncate">{question.linked_sop.title}</span>
@@ -107,7 +107,7 @@ export function QuestionPreviewSheet({ question, passRate, onClose, onApprove, a
             )}
 
             {passRate && passRate.totalAttempts > 0 && (
-              <section className="space-y-2 rounded-xl border border-ds-border p-4">
+              <section className="space-y-2 rounded-[8px] border border-ds-border p-4">
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-semibold text-ds-ink">{t('quizBank.passRate', 'Answered correctly')}</span>
                   <span className="font-mono tabular-nums text-ds-ink">
@@ -125,7 +125,7 @@ export function QuestionPreviewSheet({ question, passRate, onClose, onApprove, a
 
             <div className="flex flex-wrap items-center justify-end gap-2 border-t border-ds-border pt-4">
               {question.status === 'pending_review' && onApprove && (
-                <Button size="sm" onClick={() => onApprove(question.id)} disabled={approving} className="bg-ds-success text-white hover:bg-ds-success/90">
+                <Button size="sm" onClick={() => onApprove(question.id)} disabled={approving} className="bg-ds-success text-white dark:text-ds-on-ink hover:bg-ds-success/90">
                   <CheckCircle aria-hidden="true" className="me-1.5 h-4 w-4" />{t('quizBank.approve', 'Approve and publish')}
                 </Button>
               )}
@@ -135,7 +135,7 @@ export function QuestionPreviewSheet({ question, passRate, onClose, onApprove, a
                 </Link>
               </Button>
             </div>
-            {question.ai_generated && <Badge variant="outline" className="text-[10px]">{t('quizBank.aiDraft', 'Drafted with AI')}</Badge>}
+            {question.ai_generated && <Badge variant="outline" className="text-[11px]">{t('quizBank.aiDraft', 'Drafted with AI')}</Badge>}
           </>
         )}
       </SheetContent>

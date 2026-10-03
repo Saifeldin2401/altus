@@ -137,7 +137,7 @@ export default function AuditRetentionPolicies() {
                                         </div>
                                         <div className="text-xs text-muted-foreground flex flex-wrap gap-1">
                                             {(policy.applies_to_formats || []).map(fmt => (
-                                                <Badge key={fmt} variant="outline" className="uppercase text-[10px]">{fmt}</Badge>
+                                                <Badge key={fmt} variant="outline" className="uppercase text-[11px]">{fmt}</Badge>
                                             ))}
                                         </div>
                                     </CardContent>

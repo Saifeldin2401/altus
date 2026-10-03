@@ -140,9 +140,9 @@ const FolderNode: React.FC<FolderNodeProps> = ({
         className={cn(
           "group flex items-center gap-1 py-1.5 px-2 rounded-md cursor-pointer transition-all duration-200",
           "hover:bg-accent",
-          isSelected && "bg-ds-ink text-white hover:bg-ds-ink/90",
+          isSelected && "bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90",
           isDragging && "opacity-50",
-          isDragOver && "bg-hotel-gold/20 ring-2 ring-hotel-gold ring-inset",
+          isDragOver && "bg-ds-accent/20 ring-2 ring-ds-accent ring-inset",
           level > 0 && "ms-4"
         )}
         style={{ paddingLeft: `${level * 12 + 8}px` }}
@@ -173,14 +173,14 @@ const FolderNode: React.FC<FolderNodeProps> = ({
             <FolderOpen
               className={cn(
                 "w-5 h-5 shrink-0",
-                isSelected ? "text-hotel-gold" : "text-hotel-gold"
+                isSelected ? "text-ds-accent" : "text-ds-accent"
               )}
             />
           ) : (
             <Folder
               className={cn(
                 "w-5 h-5 shrink-0",
-                isSelected ? "text-hotel-gold" : "text-hotel-gold"
+                isSelected ? "text-ds-accent" : "text-ds-accent"
               )}
             />
           )}
@@ -209,7 +209,7 @@ const FolderNode: React.FC<FolderNodeProps> = ({
             className={cn(
               "text-xs h-5 px-1.5 shrink-0",
               isSelected
-                ? "bg-white/20 text-white border-white/30"
+                ? "bg-ds-on-ink/20 text-ds-on-ink border-ds-on-ink/30"
                 : "bg-muted"
             )}
           >
@@ -262,7 +262,7 @@ const FolderNode: React.FC<FolderNodeProps> = ({
           className="flex items-center gap-2 py-1.5 px-2 ms-4"
           style={{ paddingLeft: `${(level + 1) * 12 + 8}px` }}
         >
-          <Folder className="w-5 h-5 text-hotel-gold shrink-0" />
+          <Folder className="w-5 h-5 text-ds-accent shrink-0" />
           <Input
             ref={createInputRef}
             value={inlineCreateValue}
@@ -519,7 +519,7 @@ export function DocumentFolderTree({
           className={cn(
             "mx-2 mb-2 py-2 px-3 rounded-md border-2 border-dashed text-center text-sm transition-colors",
             dragOverId === null && draggingId
-              ? "border-hotel-gold bg-hotel-gold/10 text-foreground"
+              ? "border-ds-accent bg-ds-accent/10 text-foreground"
               : "border-muted text-muted-foreground"
           )}
         >
@@ -530,7 +530,7 @@ export function DocumentFolderTree({
         {/* Inline Create at Root */}
         {isCreatingInline && inlineCreateParentId === null && (
           <div className="flex items-center gap-2 py-1.5 px-2 mx-2 mb-2">
-            <Folder className="w-5 h-5 text-hotel-gold shrink-0" />
+            <Folder className="w-5 h-5 text-ds-accent shrink-0" />
             <Input
               value={inlineCreateValue}
               onChange={(e) => setInlineCreateValue(e.target.value)}

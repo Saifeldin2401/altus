@@ -28,8 +28,8 @@ const ICONS: Record<PlayerActionIcon, typeof ArrowRight | null> = {
 
 const TONE_CLASS: Record<PlayerStatusTone, string> = {
     info: 'text-muted-foreground',
-    success: 'text-emerald-600 dark:text-emerald-400',
-    warning: 'text-amber-700 dark:text-amber-400',
+    success: 'text-ds-success',
+    warning: 'text-ds-warning',
     danger: 'text-destructive',
 }
 
@@ -51,10 +51,10 @@ export function PlayerActionBar({ defaultPrimary, previousDisabled, stepper, isR
 
     const PrimaryIcon = primary?.icon ? ICONS[primary.icon] : null
     const intentClass = primary?.intent === 'success'
-        ? 'bg-ds-success hover:bg-ds-success/90 text-white rounded-md'
+        ? 'bg-ds-success hover:bg-ds-success/90 text-white dark:text-ds-on-ink rounded-md'
         : primary?.intent === 'destructive'
             ? 'bg-ds-danger hover:bg-ds-danger/90 text-white rounded-md'
-            : 'bg-ds-ink hover:bg-ds-ink/90 text-white rounded-md'
+            : 'bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink rounded-md'
 
     return (
         <footer

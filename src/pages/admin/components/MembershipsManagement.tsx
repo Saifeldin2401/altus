@@ -461,7 +461,7 @@ export function MembershipsManagement() {
                             <span className="font-semibold text-sm">{m.profile?.full_name || 'User'}</span>
                             <span className="text-xs text-muted-foreground">{m.profile?.email || '—'}</span>
                             {m.profile?.job_title && (
-                              <span className="text-[10px] text-muted-foreground/80">{m.profile.job_title}</span>
+                              <span className="text-[11px] text-muted-foreground/80">{m.profile.job_title}</span>
                             )}
                           </div>
                         </div>

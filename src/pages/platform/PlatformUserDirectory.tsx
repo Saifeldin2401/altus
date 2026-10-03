@@ -843,7 +843,7 @@ export default function PlatformUserDirectory() {
                           <div className="min-w-0">
                             <div className="font-semibold text-xs text-foreground flex items-center gap-1.5 flex-wrap">
                               <span className="whitespace-nowrap">{op.full_name || 'Platform Staff'}</span>
-                              <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[9px] px-1.5 py-0.5 font-bold shrink-0 whitespace-nowrap">
+                              <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[11px] px-1.5 py-0.5 font-bold shrink-0 whitespace-nowrap">
                                 {t('admin:operator_internal_badge', 'Platform Staff')}
                               </Badge>
                             </div>
@@ -858,14 +858,14 @@ export default function PlatformUserDirectory() {
                             op.roles.map((r) => (
                               <Badge
                                 key={r}
-                                className="text-[10px] font-bold capitalize bg-ds-warning-soft text-ds-warning border border-ds-warning/30 whitespace-nowrap shrink-0"
+                                className="text-[11px] font-bold capitalize bg-ds-warning-soft text-ds-warning border border-ds-warning/30 whitespace-nowrap shrink-0"
                               >
                                 <ShieldCheck className="h-3 w-3 me-1 text-ds-warning shrink-0" />
                                 {r.replace(/_/g, ' ')}
                               </Badge>
                             ))
                           ) : (
-                            <Badge variant="outline" className="text-[10px] text-muted-foreground whitespace-nowrap shrink-0">
+                            <Badge variant="outline" className="text-[11px] text-muted-foreground whitespace-nowrap shrink-0">
                               Platform Member
                             </Badge>
                           )}
@@ -873,7 +873,7 @@ export default function PlatformUserDirectory() {
                       </TableCell>
 
                       <TableCell className="whitespace-nowrap">
-                        <Badge variant="outline" className="text-[10px] border-border/60 bg-muted/40 font-mono whitespace-nowrap shrink-0">
+                        <Badge variant="outline" className="text-[11px] border-border/60 bg-muted/40 font-mono whitespace-nowrap shrink-0">
                           {op.employment_type || 'Platform Core Staff'}
                         </Badge>
                       </TableCell>
@@ -881,7 +881,7 @@ export default function PlatformUserDirectory() {
                       <TableCell className="whitespace-nowrap">
                         <Badge
                           variant="outline"
-                          className={`text-[10px] font-semibold whitespace-nowrap shrink-0 ${
+                          className={`text-[11px] font-semibold whitespace-nowrap shrink-0 ${
                             op.is_active
                               ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
                               : 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
@@ -1002,7 +1002,7 @@ export default function PlatformUserDirectory() {
                       </div>
                       <Badge
                         variant="outline"
-                        className={`text-[10px] shrink-0 font-semibold ${
+                        className={`text-[11px] shrink-0 font-semibold ${
  op.is_active
  ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
  : 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
@@ -1017,24 +1017,24 @@ export default function PlatformUserDirectory() {
                         op.roles.map((r) => (
                           <Badge
                             key={r}
-                            className="text-[10px] font-bold capitalize bg-ds-warning-soft text-ds-warning border border-ds-warning/30"
+                            className="text-[11px] font-bold capitalize bg-ds-warning-soft text-ds-warning border border-ds-warning/30"
                           >
                             <ShieldCheck className="h-3 w-3 me-1 text-ds-warning" />
                             {r.replace(/_/g, ' ')}
                           </Badge>
                         ))
                       ) : (
-                        <Badge variant="outline" className="text-[10px] text-muted-foreground">
+                        <Badge variant="outline" className="text-[11px] text-muted-foreground">
                           Platform Member
                         </Badge>
                       )}
-                      <Badge variant="outline" className="text-[10px] border-border/60 bg-muted/40 font-mono">
+                      <Badge variant="outline" className="text-[11px] border-border/60 bg-muted/40 font-mono">
                         {op.employment_type || 'Platform Core Staff'}
                       </Badge>
                     </div>
 
                     <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/40">
-                      <span className="text-[10px] text-muted-foreground font-mono">
+                      <span className="text-[11px] text-muted-foreground font-mono">
                         {op.created_at ? format(new Date(op.created_at), 'dd MMM yyyy') : '—'}
                       </span>
                       <div className="flex items-center gap-1.5">
@@ -1402,7 +1402,7 @@ export default function PlatformUserDirectory() {
                     setBulkNote('')
                     setBulkActionDialogOpen(true)
                   }}
-                  className="h-8 text-xs rounded-[8px] font-bold bg-ds-success hover:bg-ds-success/90 text-white gap-1.5"
+                  className="h-8 text-xs rounded-[8px] font-bold bg-ds-success hover:bg-ds-success/90 text-white dark:text-ds-on-ink gap-1.5"
                 >
                   <UserCheck className="h-3.5 w-3.5" />
                   <span>{t('admin:platform_user_mgmt.bulk_reactivate', 'Bulk Reactivate')}</span>
@@ -1504,14 +1504,14 @@ export default function PlatformUserDirectory() {
                               <div className="font-semibold text-xs text-foreground flex items-center gap-1.5 flex-wrap">
                                 <span className="whitespace-nowrap">{u.full_name || 'Anonymous User'}</span>
                                 {u.is_platform_user && (
-                                  <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[9px] px-1.5 py-0.5 font-bold shrink-0 whitespace-nowrap">
+                                  <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[11px] px-1.5 py-0.5 font-bold shrink-0 whitespace-nowrap">
                                     Operator
                                   </Badge>
                                 )}
                               </div>
                               <div className="text-[11px] text-muted-foreground font-mono truncate">{u.email}</div>
                               {u.job_title && (
-                                <div className="text-[10px] text-muted-foreground/80 flex items-center gap-1 mt-0.5 truncate">
+                                <div className="text-[11px] text-muted-foreground/80 flex items-center gap-1 mt-0.5 truncate">
                                   <Briefcase className="h-2.5 w-2.5 text-ds-accent shrink-0" />
                                   <span>{u.job_title}</span>
                                 </div>
@@ -1526,7 +1526,7 @@ export default function PlatformUserDirectory() {
                               <Building2 className="h-3.5 w-3.5 text-ds-accent shrink-0" />
                               <span className="leading-snug">{u.primary_organization_name || t('admin:direct_platform_account', 'Global SaaS Platform')}</span>
                             </div>
-                            <div className="text-[10px] text-muted-foreground font-mono">
+                            <div className="text-[11px] text-muted-foreground font-mono">
                               {u.membership_count > 0 ? (
                                 <span>{t('admin:active_memberships_count', { count: u.membership_count, defaultValue: `${u.membership_count} Active Tenant Memberships` })}</span>
                               ) : (
@@ -1538,12 +1538,12 @@ export default function PlatformUserDirectory() {
 
                         <TableCell className="whitespace-nowrap">
                           {u.platform_role ? (
-                            <Badge variant="secondary" className="text-[10px] font-bold capitalize bg-ds-warning-soft text-ds-warning border border-ds-warning/30 whitespace-nowrap shrink-0">
+                            <Badge variant="secondary" className="text-[11px] font-bold capitalize bg-ds-warning-soft text-ds-warning border border-ds-warning/30 whitespace-nowrap shrink-0">
                               <ShieldCheck className="h-3 w-3 me-1 text-ds-warning shrink-0" />
                               {u.platform_role.replace(/_/g, ' ')}
                             </Badge>
                           ) : u.memberships?.[0]?.role ? (
-                            <Badge variant="secondary" className="text-[10px] font-semibold capitalize bg-ds-accent/10 text-ds-accent border border-ds-accent/20 whitespace-nowrap shrink-0">
+                            <Badge variant="secondary" className="text-[11px] font-semibold capitalize bg-ds-accent/10 text-ds-accent border border-ds-accent/20 whitespace-nowrap shrink-0">
                               {u.memberships[0].role.replace(/_/g, ' ')}
                             </Badge>
                           ) : (
@@ -1555,7 +1555,7 @@ export default function PlatformUserDirectory() {
                           <div className="flex flex-wrap items-center gap-1.5">
                             <Badge
                               variant="outline"
-                              className={`text-[10px] font-semibold whitespace-nowrap shrink-0 ${
+                              className={`text-[11px] font-semibold whitespace-nowrap shrink-0 ${
                                 isSuspended
                                   ? 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
                                   : isLocked
@@ -1582,14 +1582,14 @@ export default function PlatformUserDirectory() {
                             </Badge>
 
                             {u.force_password_reset && (
-                              <Badge variant="outline" className="text-[9px] px-1.5 py-0.5 bg-ds-warning-soft text-ds-warning border-ds-warning/30 font-semibold whitespace-nowrap shrink-0" title={t('admin:platform_user_mgmt.password_reset_required', 'Password Reset Required')}>
+                              <Badge variant="outline" className="text-[11px] px-1.5 py-0.5 bg-ds-warning-soft text-ds-warning border-ds-warning/30 font-semibold whitespace-nowrap shrink-0" title={t('admin:platform_user_mgmt.password_reset_required', 'Password Reset Required')}>
                                 <KeyRound className="h-2.5 w-2.5 me-0.5 shrink-0" />
                                 <span>Reset Req</span>
                               </Badge>
                             )}
 
                             {u.failed_login_attempts && u.failed_login_attempts > 0 ? (
-                              <Badge variant="outline" className="text-[9px] px-1.5 py-0.5 bg-ds-danger-soft text-ds-danger border-ds-danger/30 font-mono whitespace-nowrap shrink-0" title={`${u.failed_login_attempts} failed login attempts`}>
+                              <Badge variant="outline" className="text-[11px] px-1.5 py-0.5 bg-ds-danger-soft text-ds-danger border-ds-danger/30 font-mono whitespace-nowrap shrink-0" title={`${u.failed_login_attempts} failed login attempts`}>
                                 <span>{u.failed_login_attempts} fails</span>
                               </Badge>
                             ) : null}
@@ -1789,7 +1789,7 @@ export default function PlatformUserDirectory() {
                             <div className="font-semibold text-xs text-foreground truncate flex items-center gap-1.5">
                               <span>{u.full_name || 'Anonymous User'}</span>
                               {u.is_platform_user && (
-                                <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[9px] px-1 py-0 font-bold">
+                                <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[11px] px-1 py-0 font-bold">
                                   Operator
                                 </Badge>
                               )}
@@ -1799,7 +1799,7 @@ export default function PlatformUserDirectory() {
                         </div>
                         <Badge
                           variant="outline"
-                          className={`text-[10px] shrink-0 font-semibold ${
+                          className={`text-[11px] shrink-0 font-semibold ${
  isSuspended
  ? 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
  : isLocked
@@ -1816,17 +1816,17 @@ export default function PlatformUserDirectory() {
                           <Building2 className="h-3.5 w-3.5 text-ds-accent shrink-0" />
                           <span className="font-medium text-foreground truncate">{u.primary_organization_name || t('admin:direct_platform_account', 'Global SaaS Platform')}</span>
                         </div>
-                        <div className="flex flex-wrap items-center gap-2 text-[10px] text-muted-foreground font-mono">
+                        <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground font-mono">
                           {u.membership_count > 0 && (
                             <span>{t('admin:active_memberships_count', { count: u.membership_count, defaultValue: `${u.membership_count} Tenants` })}</span>
                           )}
                           {u.platform_role && (
-                            <Badge variant="secondary" className="text-[9px] font-bold capitalize bg-ds-warning-soft text-ds-warning border border-ds-warning/30">
+                            <Badge variant="secondary" className="text-[11px] font-bold capitalize bg-ds-warning-soft text-ds-warning border border-ds-warning/30">
                               {u.platform_role.replace(/_/g, ' ')}
                             </Badge>
                           )}
                           {u.force_password_reset && (
-                            <Badge variant="outline" className="text-[9px] px-1 py-0 bg-ds-warning-soft text-ds-warning border-ds-warning/30">
+                            <Badge variant="outline" className="text-[11px] px-1 py-0 bg-ds-warning-soft text-ds-warning border-ds-warning/30">
                               Reset Req
                             </Badge>
                           )}
@@ -2053,13 +2053,13 @@ export default function PlatformUserDirectory() {
                       <div className="min-w-0">
                         <div className="font-bold text-xs truncate flex items-center gap-1.5 text-foreground">
                           <span>{selectedCandidateUser.full_name || 'Unnamed User'}</span>
-                          <Badge variant="outline" className="text-[10px] py-0 px-1.5 font-normal border-ds-warning/30 text-ds-warning">
+                          <Badge variant="outline" className="text-[11px] py-0 px-1.5 font-normal border-ds-warning/30 text-ds-warning">
                             {t('admin:selected', 'Selected')}
                           </Badge>
                         </div>
                         <div className="text-[11px] text-muted-foreground font-mono truncate">{selectedCandidateUser.email}</div>
                         {selectedCandidateUser.job_title && (
-                          <div className="text-[10px] text-muted-foreground truncate">{selectedCandidateUser.job_title}</div>
+                          <div className="text-[11px] text-muted-foreground truncate">{selectedCandidateUser.job_title}</div>
                         )}
                       </div>
                     </div>
@@ -2132,13 +2132,13 @@ export default function PlatformUserDirectory() {
                                 </div>
                                 <div className="min-w-0">
                                   <div className="font-semibold truncate">{u.full_name || 'Unnamed User'}</div>
-                                  <div className="text-[10px] text-muted-foreground font-mono truncate">{u.email}</div>
+                                  <div className="text-[11px] text-muted-foreground font-mono truncate">{u.email}</div>
                                 </div>
                               </div>
                               {isSelected ? (
                                 <CheckCircle2 className="h-4 w-4 text-ds-warning shrink-0" />
                               ) : (
-                                <span className="text-[10px] text-muted-foreground font-medium shrink-0">
+                                <span className="text-[11px] text-muted-foreground font-medium shrink-0">
                                   {t('admin:click_to_select', 'Select')}
                                 </span>
                               )}
@@ -2217,7 +2217,7 @@ export default function PlatformUserDirectory() {
                     <SelectItem key={opt.value} value={opt.value}>
                       <div className="py-0.5">
                         <div className="font-semibold">{opt.label}</div>
-                        <div className="text-[10px] text-muted-foreground">{opt.description}</div>
+                        <div className="text-[11px] text-muted-foreground">{opt.description}</div>
                       </div>
                     </SelectItem>
                   ))}
@@ -2446,7 +2446,7 @@ export default function PlatformUserDirectory() {
                       <div key={m.organization_id} className="flex items-center gap-2 p-2 rounded-[8px] border border-border/60 bg-muted/20">
                         <div className="flex-1 min-w-0">
                           <div className="font-semibold text-foreground truncate">{m.organization_name}</div>
-                          {m.hotel_name && <div className="text-[10px] text-muted-foreground truncate">{m.hotel_name}</div>}
+                          {m.hotel_name && <div className="text-[11px] text-muted-foreground truncate">{m.hotel_name}</div>}
                         </div>
                         <Select
                           value={m.role}
@@ -2707,7 +2707,7 @@ export default function PlatformUserDirectory() {
                     note: actionNote || undefined,
                   })
                 }}
-                className="rounded-[8px] text-xs font-bold bg-ds-success hover:bg-ds-success/90 text-white"
+                className="rounded-[8px] text-xs font-bold bg-ds-success hover:bg-ds-success/90 text-white dark:text-ds-on-ink"
               >
                 {reactivateUserMutation.isPending ? (
                   <span className="flex items-center gap-1.5">
@@ -2966,7 +2966,7 @@ export default function PlatformUserDirectory() {
                     },
                   })
                 }
-                className="bg-ds-success hover:bg-ds-success/90 text-white font-bold rounded-[8px] text-xs"
+                className="bg-ds-success hover:bg-ds-success/90 text-white dark:text-ds-on-ink font-bold rounded-[8px] text-xs"
               >
                 {updateProfileMutation.isPending ? (
                   <span className="flex items-center gap-1.5">
@@ -3020,7 +3020,7 @@ export default function PlatformUserDirectory() {
                         <SheetTitle className="text-base font-bold flex items-center gap-2 text-foreground">
                           <span>{activeProfile.full_name || 'Anonymous User'}</span>
                           {activeProfile.is_platform_user && (
-                            <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[10px] font-bold">
+                            <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[11px] font-bold">
                               Operator
                             </Badge>
                           )}
@@ -3034,7 +3034,7 @@ export default function PlatformUserDirectory() {
                     <div className="flex flex-col items-end gap-1">
                       <Badge
                         variant="outline"
-                        className={`text-[10px] font-bold ${
+                        className={`text-[11px] font-bold ${
  profileIsSuspended
  ? 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
  : profileIsLocked
@@ -3050,7 +3050,7 @@ export default function PlatformUserDirectory() {
                       </Badge>
 
                       {activeProfile.force_password_reset && (
-                        <Badge variant="outline" className="text-[9px] bg-ds-warning-soft text-ds-warning border-ds-warning/30">
+                        <Badge variant="outline" className="text-[11px] bg-ds-warning-soft text-ds-warning border-ds-warning/30">
                           Reset Req
                         </Badge>
                       )}
@@ -3103,7 +3103,7 @@ export default function PlatformUserDirectory() {
                       </CardHeader>
                       <CardContent className="p-4 pt-2 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                         <div className="space-y-0.5">
-                          <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">
+                          <div className="text-[11px] text-muted-foreground uppercase font-bold tracking-wider">
                             {t('admin:platform_user_mgmt.job_title', 'Job Title')}
                           </div>
                           <div className="font-semibold text-foreground">
@@ -3112,7 +3112,7 @@ export default function PlatformUserDirectory() {
                         </div>
 
                         <div className="space-y-0.5">
-                          <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">
+                          <div className="text-[11px] text-muted-foreground uppercase font-bold tracking-wider">
                             {t('admin:platform_user_mgmt.phone', 'Phone Number')}
                           </div>
                           <div className="font-mono text-foreground">
@@ -3121,7 +3121,7 @@ export default function PlatformUserDirectory() {
                         </div>
 
                         <div className="space-y-0.5">
-                          <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">
+                          <div className="text-[11px] text-muted-foreground uppercase font-bold tracking-wider">
                             {t('admin:platform_user_mgmt.department', 'Department')}
                           </div>
                           <div className="font-semibold text-foreground">
@@ -3130,7 +3130,7 @@ export default function PlatformUserDirectory() {
                         </div>
 
                         <div className="space-y-0.5">
-                          <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">
+                          <div className="text-[11px] text-muted-foreground uppercase font-bold tracking-wider">
                             {t('admin:platform_user_mgmt.property', 'Hotel / Property')}
                           </div>
                           <div className="font-semibold text-foreground">
@@ -3139,7 +3139,7 @@ export default function PlatformUserDirectory() {
                         </div>
 
                         <div className="space-y-0.5">
-                          <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">
+                          <div className="text-[11px] text-muted-foreground uppercase font-bold tracking-wider">
                             Primary Organization
                           </div>
                           <div className="font-semibold text-foreground">
@@ -3148,7 +3148,7 @@ export default function PlatformUserDirectory() {
                         </div>
 
                         <div className="space-y-0.5">
-                          <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">
+                          <div className="text-[11px] text-muted-foreground uppercase font-bold tracking-wider">
                             {t('admin:platform_user_mgmt.hire_date', 'Hire Date')}
                           </div>
                           <div className="font-semibold text-foreground">
@@ -3159,7 +3159,7 @@ export default function PlatformUserDirectory() {
                         </div>
 
                         <div className="space-y-0.5">
-                          <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">
+                          <div className="text-[11px] text-muted-foreground uppercase font-bold tracking-wider">
                             {t('admin:created_at', 'Account Created')}
                           </div>
                           <div className="font-mono text-muted-foreground text-[11px]">
@@ -3170,7 +3170,7 @@ export default function PlatformUserDirectory() {
                         </div>
 
                         <div className="space-y-0.5">
-                          <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">
+                          <div className="text-[11px] text-muted-foreground uppercase font-bold tracking-wider">
                             {t('admin:platform_user_mgmt.last_login', 'Last Login Timestamp')}
                           </div>
                           <div className="font-mono text-muted-foreground text-[11px]">
@@ -3231,7 +3231,7 @@ export default function PlatformUserDirectory() {
                           <span>{t('admin:platform_user_mgmt.account_status_label', 'Account Status')}</span>
                           <Badge
                             variant="outline"
-                            className={`text-[10px] font-bold ${
+                            className={`text-[11px] font-bold ${
  profileIsSuspended
  ? 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
  : profileIsLocked
@@ -3286,14 +3286,14 @@ export default function PlatformUserDirectory() {
                         {/* Lockout & Brute Force Metrics */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                           <div className="p-3 rounded-[8px] border border-border/60 bg-card/60 space-y-1">
-                            <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider flex items-center justify-between">
+                            <div className="text-[11px] text-muted-foreground uppercase font-bold tracking-wider flex items-center justify-between">
                               <span>{t('admin:platform_user_mgmt.failed_logins', 'Failed Login Attempts')}</span>
                               <Lock className="h-3.5 w-3.5 text-ds-warning" />
                             </div>
                             <div className="text-xl font-bold font-mono text-foreground">
                               {activeProfile.failed_login_attempts || 0}
                             </div>
-                            <div className="text-[10px] text-muted-foreground">
+                            <div className="text-[11px] text-muted-foreground">
                               {activeProfile.failed_login_attempts && activeProfile.failed_login_attempts > 0
                                 ? t('admin:warning_failed_logins', 'Multiple failed attempts recorded')
                                 : t('admin:normal_clean_logins', 'No authentication failures')}
@@ -3301,7 +3301,7 @@ export default function PlatformUserDirectory() {
                           </div>
 
                           <div className="p-3 rounded-[8px] border border-border/60 bg-card/60 space-y-1">
-                            <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider flex items-center justify-between">
+                            <div className="text-[11px] text-muted-foreground uppercase font-bold tracking-wider flex items-center justify-between">
                               <span>{t('admin:platform_user_mgmt.locked_until', 'Lockout Expiration')}</span>
                               <Clock className="h-3.5 w-3.5 text-ds-danger" />
                             </div>
@@ -3320,7 +3320,7 @@ export default function PlatformUserDirectory() {
                               <KeyRound className="h-3.5 w-3.5 text-ds-warning" />
                               <span>{t('admin:platform_user_mgmt.password_reset_required', 'Password Reset Required')}</span>
                             </div>
-                            <div className="text-[10px] text-muted-foreground">
+                            <div className="text-[11px] text-muted-foreground">
                               {activeProfile.force_password_reset
                                 ? t('admin:reset_enforced_desc', 'User must change their password on next sign in')
                                 : t('admin:reset_normal_desc', 'Credentials active and in good standing')}
@@ -3355,7 +3355,7 @@ export default function PlatformUserDirectory() {
                               setActionNote('')
                               setActionDialogOpen(true)
                             }}
-                            className="text-xs h-8 rounded-[8px] bg-ds-success hover:bg-ds-success/90 text-white font-bold gap-1.5"
+                            className="text-xs h-8 rounded-[8px] bg-ds-success hover:bg-ds-success/90 text-white dark:text-ds-on-ink font-bold gap-1.5"
                           >
                             <UserCheck className="h-3.5 w-3.5" />
                             <span>{t('admin:platform_user_mgmt.reactivate_account', 'Reactivate Account')}</span>
@@ -3455,17 +3455,17 @@ export default function PlatformUserDirectory() {
                                     <Building2 className="h-3.5 w-3.5 text-ds-accent shrink-0" />
                                     <span>{m.organization_name || m.organizations?.name || 'Organization'}</span>
                                   </div>
-                                  <div className="text-[10px] text-muted-foreground font-mono truncate mt-0.5">
+                                  <div className="text-[11px] text-muted-foreground font-mono truncate mt-0.5">
                                     {m.hotel_name || m.hotels?.name || t('admin:all_properties', 'All Properties')}
                                   </div>
                                 </div>
                                 <div className="flex items-center gap-2 shrink-0">
-                                  <Badge variant="secondary" className="capitalize text-[10px] font-bold">
+                                  <Badge variant="secondary" className="capitalize text-[11px] font-bold">
                                     {m.role}
                                   </Badge>
                                   <Badge
                                     variant="outline"
-                                    className={`text-[9px] ${
+                                    className={`text-[11px] ${
                                       m.is_active !== false
                                         ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
                                         : 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
@@ -3538,7 +3538,7 @@ export default function PlatformUserDirectory() {
                             <div className="space-y-2">
                               {inspectedUserData.actionNotes.map((note: any) => (
                                 <div key={note.id} className="p-3 rounded-[8px] border border-border/60 bg-muted/20 space-y-1 text-xs">
-                                  <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                                  <div className="flex items-center justify-between text-[11px] text-muted-foreground">
                                     <span className="font-bold text-foreground capitalize">
                                       {(note.action || note.action_type || 'Action').replace(/_/g, ' ')}
                                     </span>
@@ -3546,7 +3546,7 @@ export default function PlatformUserDirectory() {
                                   </div>
                                   <p className="text-muted-foreground text-[11px] leading-relaxed whitespace-pre-wrap">{note.note}</p>
                                   {note.created_by && (
-                                    <div className="text-[10px] text-muted-foreground/80 font-mono pt-1">
+                                    <div className="text-[11px] text-muted-foreground/80 font-mono pt-1">
                                       Recorded by ID: {note.created_by}
                                     </div>
                                   )}
@@ -3570,14 +3570,14 @@ export default function PlatformUserDirectory() {
                             <div className="space-y-2">
                               {inspectedUserData.auditLogs.map((log: any) => (
                                 <div key={log.id} className="p-3 rounded-[8px] border border-border/60 bg-muted/20 space-y-1 text-xs">
-                                  <div className="flex items-center justify-between text-[10px] text-muted-foreground">
-                                    <Badge variant="outline" className="font-mono text-[9px]">
+                                  <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+                                    <Badge variant="outline" className="font-mono text-[11px]">
                                       {log.action}
                                     </Badge>
                                     <span className="font-mono">{log.created_at ? format(new Date(log.created_at), 'dd MMM yyyy, HH:mm') : '—'}</span>
                                   </div>
                                   {log.details && (
-                                    <pre className="text-[10px] font-mono bg-background/60 p-1.5 rounded-lg overflow-x-auto text-muted-foreground">
+                                    <pre className="text-[11px] font-mono bg-background/60 p-1.5 rounded-lg overflow-x-auto text-muted-foreground">
                                       {JSON.stringify(log.details, null, 2)}
                                     </pre>
                                   )}

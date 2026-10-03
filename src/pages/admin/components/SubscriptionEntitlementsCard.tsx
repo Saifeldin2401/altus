@@ -325,7 +325,7 @@ export function SubscriptionEntitlementsCard() {
               )}
               <div className="flex flex-col">
                 <span className="font-semibold text-foreground">{t('admin:custom_branding', 'Custom Branding')}</span>
-                <span className="text-[10px] text-muted-foreground">{t('admin:custom_theme_logos', 'White-labeling & colors')}</span>
+                <span className="text-[11px] text-muted-foreground">{t('admin:custom_theme_logos', 'White-labeling & colors')}</span>
               </div>
             </div>
 
@@ -338,7 +338,7 @@ export function SubscriptionEntitlementsCard() {
               )}
               <div className="flex flex-col">
                 <span className="font-semibold text-foreground">{t('admin:ai_generation_engine', 'AI Course Engine')}</span>
-                <span className="text-[10px] text-muted-foreground">{t('admin:ai_course_gen', 'Multi-agent authoring')}</span>
+                <span className="text-[11px] text-muted-foreground">{t('admin:ai_course_gen', 'Multi-agent authoring')}</span>
               </div>
             </div>
 
@@ -351,7 +351,7 @@ export function SubscriptionEntitlementsCard() {
               )}
               <div className="flex flex-col">
                 <span className="font-semibold text-foreground">{t('admin:api_access_webhooks', 'API & Webhooks')}</span>
-                <span className="text-[10px] text-muted-foreground">{t('admin:external_integrations', 'HRMS & SIEM sync')}</span>
+                <span className="text-[11px] text-muted-foreground">{t('admin:external_integrations', 'HRMS & SIEM sync')}</span>
               </div>
             </div>
 
@@ -364,7 +364,7 @@ export function SubscriptionEntitlementsCard() {
               )}
               <div className="flex flex-col">
                 <span className="font-semibold text-foreground">{t('admin:advanced_analytics', 'Advanced Analytics')}</span>
-                <span className="text-[10px] text-muted-foreground">{t('admin:skills_compliance', 'Skills & audit matrices')}</span>
+                <span className="text-[11px] text-muted-foreground">{t('admin:skills_compliance', 'Skills & audit matrices')}</span>
               </div>
             </div>
           </div>

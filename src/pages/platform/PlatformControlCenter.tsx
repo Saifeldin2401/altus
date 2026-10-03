@@ -157,10 +157,10 @@ export default function PlatformControlCenter() {
                       >
                         <div>
                           <div className="font-semibold text-foreground">{org.name}</div>
-                          <div className="text-[10px] text-muted-foreground font-mono">{org.slug}</div>
+                          <div className="text-[11px] text-muted-foreground font-mono">{org.slug}</div>
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <Badge variant="outline" className="text-[10px] capitalize">{org.lifecycle_status || (org.is_active ? 'active' : 'inactive')}</Badge>
+                          <Badge variant="outline" className="text-[11px] capitalize">{org.lifecycle_status || (org.is_active ? 'active' : 'inactive')}</Badge>
                         </div>
                       </div>
                     ))}
@@ -183,11 +183,11 @@ export default function PlatformControlCenter() {
                       >
                         <div>
                           <div className="font-semibold text-foreground">{u.full_name}</div>
-                          <div className="text-[10px] text-muted-foreground">
+                          <div className="text-[11px] text-muted-foreground">
                             {u.email} {u.organization_name ? `· ${u.organization_name}` : ''}
                           </div>
                         </div>
-                        <Badge variant="secondary" className="text-[10px] capitalize">{u.role || 'Member'}</Badge>
+                        <Badge variant="secondary" className="text-[11px] capitalize">{u.role || 'Member'}</Badge>
                       </div>
                     ))}
                   </div>
@@ -209,9 +209,9 @@ export default function PlatformControlCenter() {
                       >
                         <div>
                           <div className="font-semibold text-foreground">{c.title}</div>
-                          <div className="text-[10px] text-muted-foreground">Master Template · {c.category || 'General'}</div>
+                          <div className="text-[11px] text-muted-foreground">Master Template · {c.category || 'General'}</div>
                         </div>
-                        <Badge variant="outline" className="text-[10px] capitalize bg-ds-accent-soft text-ds-accent">Master</Badge>
+                        <Badge variant="outline" className="text-[11px] capitalize bg-ds-accent-soft text-ds-accent">Master</Badge>
                       </div>
                     ))}
                     {(searchResults.tenant_courses || []).map((c: any) => (
@@ -222,9 +222,9 @@ export default function PlatformControlCenter() {
                       >
                         <div>
                           <div className="font-semibold text-foreground">{c.title}</div>
-                          <div className="text-[10px] text-muted-foreground">{c.organization_name || 'Tenant'} · {c.category || 'General'}</div>
+                          <div className="text-[11px] text-muted-foreground">{c.organization_name || 'Tenant'} · {c.category || 'General'}</div>
                         </div>
-                        <Badge variant="secondary" className="text-[10px]">Tenant</Badge>
+                        <Badge variant="secondary" className="text-[11px]">Tenant</Badge>
                       </div>
                     ))}
                   </div>
@@ -246,9 +246,9 @@ export default function PlatformControlCenter() {
                       >
                         <div>
                           <div className="font-semibold text-foreground">{a.title}</div>
-                          <div className="text-[10px] text-muted-foreground">{a.organization_name || 'Global'} · Pass {a.passing_score}%</div>
+                          <div className="text-[11px] text-muted-foreground">{a.organization_name || 'Global'} · Pass {a.passing_score}%</div>
                         </div>
-                        <Badge variant="outline" className="text-[10px]">Assessment</Badge>
+                        <Badge variant="outline" className="text-[11px]">Assessment</Badge>
                       </div>
                     ))}
                     {(searchResults.question_banks || []).map((qb: any) => (
@@ -259,9 +259,9 @@ export default function PlatformControlCenter() {
                       >
                         <div>
                           <div className="font-semibold text-foreground">{qb.name}</div>
-                          <div className="text-[10px] text-muted-foreground">{qb.organization_name || 'Global'}</div>
+                          <div className="text-[11px] text-muted-foreground">{qb.organization_name || 'Global'}</div>
                         </div>
-                        <Badge variant="outline" className="text-[10px]">Bank</Badge>
+                        <Badge variant="outline" className="text-[11px]">Bank</Badge>
                       </div>
                     ))}
                   </div>
@@ -418,7 +418,7 @@ export default function PlatformControlCenter() {
                           <div className="font-bold text-ds-ink capitalize truncate">
                             {job.mode || 'Course Generation'} Job
                           </div>
-                          <div className="text-[10px] text-muted-foreground">
+                          <div className="text-[11px] text-muted-foreground">
                             {format(new Date(job.created_at), 'dd MMM yyyy HH:mm:ss')} • Duration: {job.duration_ms ? `${(job.duration_ms / 1000).toFixed(1)}s` : 'Running'}
                           </div>
                         </div>
@@ -427,7 +427,7 @@ export default function PlatformControlCenter() {
                       <div className="flex items-center gap-2 shrink-0">
                         <Badge
                           variant="outline"
-                          className={`text-[10px] capitalize ${
+                          className={`text-[11px] capitalize ${
  job.status === 'completed' || job.status === 'success'
  ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
  : job.status === 'failed' || job.status === 'error'
@@ -586,11 +586,11 @@ export default function PlatformControlCenter() {
                       <span className="font-bold text-ds-ink capitalize">
                         {log.action.replace(/_/g, ' ')}
                       </span>
-                      <span className="text-[10px] text-muted-foreground">
+                      <span className="text-[11px] text-muted-foreground">
                         {format(new Date(log.created_at), 'HH:mm:ss')}
                       </span>
                     </div>
-                    <div className="text-[10px] text-muted-foreground truncate">
+                    <div className="text-[11px] text-muted-foreground truncate">
                       Actor: <span className="font-semibold text-ds-ink">{log.actor_name}</span> &bull; Tenant: {log.target_organization_name}
                     </div>
                   </div>
@@ -605,7 +605,7 @@ export default function PlatformControlCenter() {
                 <Settings className="h-4 w-4 text-ds-warning" />
                 <span className="font-bold text-xs">Platform Configuration</span>
               </div>
-              <Badge variant="outline" className="text-[10px] border-ds-warning/30 text-ds-warning">
+              <Badge variant="outline" className="text-[11px] border-ds-warning/30 text-ds-warning">
                 Production GA
               </Badge>
             </div>

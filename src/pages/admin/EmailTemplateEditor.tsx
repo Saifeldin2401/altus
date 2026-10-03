@@ -228,7 +228,7 @@ export default function EmailTemplateEditor() {
                 )}
               >
                 {tmpl.template_key}
-                <div className="text-[10px] opacity-70 mt-0.5">v{tmpl.version || 1} • {tmpl.business_domain}</div>
+                <div className="text-[11px] opacity-70 mt-0.5">v{tmpl.version || 1} • {tmpl.business_domain}</div>
               </button>
             ))}
             {!isLoading && templates.length === 0 && (

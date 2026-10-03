@@ -233,7 +233,7 @@ export function PushNotificationSettings() {
         <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
           <div className="flex items-center gap-3">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-              isSubscribed ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600'
+              isSubscribed ? 'bg-ds-success-soft text-ds-success' : 'bg-ds-surface-subtle text-ds-ink-secondary'
             }`}>
               {isSubscribed ? <Check className="h-5 w-5" /> : <BellOff className="h-5 w-5" />}
             </div>

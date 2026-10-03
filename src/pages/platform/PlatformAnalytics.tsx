@@ -76,7 +76,7 @@ export default function PlatformAnalytics() {
           <CardContent>
             <div className="text-2xl font-bold">{stats?.totalOrganizations || 0}</div>
             <div className="flex items-center gap-1.5 mt-1 text-xs text-muted-foreground">
-              <Badge variant="outline" className="bg-ds-success-soft text-ds-success border-ds-success/30 text-[10px]">
+              <Badge variant="outline" className="bg-ds-success-soft text-ds-success border-ds-success/30 text-[11px]">
                 {stats?.activeOrganizations || 0} Active
               </Badge>
             </div>
@@ -209,7 +209,7 @@ export default function PlatformAnalytics() {
               limit={usage?.totals.ai_jobs_total ?? 0}
               colour="bg-ds-danger"
             />
-            <div className="text-[10px] text-muted-foreground pt-1">
+            <div className="text-[11px] text-muted-foreground pt-1">
               {usage?.generated_at ? `Snapshot: ${new Date(usage.generated_at).toLocaleString()}` : ''}
             </div>
           </CardContent>

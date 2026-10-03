@@ -157,14 +157,14 @@ const CommentItem: React.FC<CommentItemProps> = ({
       <div
         className={cn(
           "flex gap-3 p-3 rounded-lg transition-colors",
-          comment.isPinned && "bg-amber-50/50 border border-amber-100",
+          comment.isPinned && "bg-ds-warning-soft/50 border border-ds-warning/30",
           comment.isResolved && "opacity-60 bg-muted/30",
           !comment.isPinned && !comment.isResolved && "hover:bg-muted/30"
         )}
       >
         <Avatar className="w-8 h-8 shrink-0">
           <AvatarImage src={comment.author.avatar} />
-          <AvatarFallback className="text-xs bg-ds-ink text-white">
+          <AvatarFallback className="text-xs bg-ds-ink text-ds-on-ink">
             {comment.author.name
               .split(" ")
               .map((n) => n[0])
@@ -194,7 +194,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             {comment.isPinned && (
               <Badge
                 variant="outline"
-                className="text-xs bg-amber-100 text-amber-700 border-amber-200 gap-1"
+                className="text-xs bg-ds-warning-soft text-ds-warning border-ds-warning/30 gap-1"
               >
                 <Pin className="w-3 h-3" />
                 Pinned
@@ -203,7 +203,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             {comment.isResolved && (
               <Badge
                 variant="outline"
-                className="text-xs bg-green-100 text-green-700 border-green-200 gap-1"
+                className="text-xs bg-ds-success-soft text-ds-success border-ds-success/30 gap-1"
               >
                 <CheckCircle2 className="w-3 h-3" />
                 Resolved
@@ -319,7 +319,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             <div className="mt-3 flex gap-2">
               <Avatar className="w-6 h-6 shrink-0">
                 <AvatarImage src={currentUser.avatar} />
-                <AvatarFallback className="text-[10px] bg-ds-ink text-white">
+                <AvatarFallback className="text-[11px] bg-ds-ink text-ds-on-ink">
                   {currentUser.name
                     .split(" ")
                     .map((n) => n[0])
@@ -537,13 +537,13 @@ export function DocumentComments({
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           {resolvedCount > 0 && (
             <span className="flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-ds-success" />
               {resolvedCount} resolved
             </span>
           )}
           {pinnedCount > 0 && (
             <span className="flex items-center gap-1">
-              <Pin className="w-3.5 h-3.5 text-amber-500" />
+              <Pin className="w-3.5 h-3.5 text-ds-warning" />
               {pinnedCount} pinned
             </span>
           )}
@@ -613,7 +613,7 @@ export function DocumentComments({
         <div className="flex gap-3">
           <Avatar className="w-8 h-8 shrink-0">
             <AvatarImage src={currentUser.avatar} />
-            <AvatarFallback className="text-xs bg-ds-ink text-white">
+            <AvatarFallback className="text-xs bg-ds-ink text-ds-on-ink">
               {currentUser.name
                 .split(" ")
                 .map((n) => n[0])
@@ -662,7 +662,7 @@ export function DocumentComments({
                         >
                           <Avatar className="w-6 h-6">
                             <AvatarImage src={user.avatar} />
-                            <AvatarFallback className="text-[10px]">
+                            <AvatarFallback className="text-[11px]">
                               {user.name
                                 .split(" ")
                                 .map((n) => n[0])

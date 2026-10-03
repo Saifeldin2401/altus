@@ -10,7 +10,7 @@ function StaticFallbackComponent({
   const [imgFailed, setImgFailed] = useState(false);
 
   return (
-    <div className={cn('relative w-full h-full overflow-hidden bg-white', className)}>
+    <div className={cn('relative w-full h-full overflow-hidden bg-ds-surface', className)}>
       {!imgFailed ? (
         <picture className="absolute inset-0 w-full h-full">
           <source srcSet={posterSrc} type="image/webp" />
@@ -27,8 +27,8 @@ function StaticFallbackComponent({
         </picture>
       ) : (
         /* Neutral Altus Connect Visual Fallback if all external imagery fails */
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 p-8 text-center border border-ds-border">
-          <div className="w-20 h-20 rounded-2xl bg-ds-brass/10 border border-ds-brass/30 flex items-center justify-center mb-6 shadow-xs">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-ds-surface-subtle p-8 text-center border border-ds-border">
+          <div className="w-20 h-20 rounded-[8px] bg-ds-brass/10 border border-ds-brass/30 flex items-center justify-center mb-6 shadow-xs">
             <img
               src="/altus-emblem-icon.png"
               alt="Altus Connect"

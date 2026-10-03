@@ -24,7 +24,7 @@ export default function AssessmentPlayer() {
     if (!id) {
         return (
             <div className="container mx-auto py-16 text-center">
-                <div className="max-w-md mx-auto p-6 rounded-2xl border border-destructive/30 bg-destructive/5 text-destructive font-semibold">
+                <div className="max-w-md mx-auto p-6 rounded-[8px] border border-destructive/30 bg-destructive/5 text-destructive font-semibold">
                     {t('quizzes.player.invalid_id', { defaultValue: 'Invalid assessment identifier provided.' })}
                 </div>
             </div>

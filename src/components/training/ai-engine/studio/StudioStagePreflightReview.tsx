@@ -57,14 +57,14 @@ export function StudioStagePreflightReview({
   return (
     <div className="space-y-6 max-w-5xl mx-auto py-2">
       {/* 1. Header & Quality Score Gauge */}
-      <div className="p-5 rounded-2xl border border-purple-200/80 bg-gradient-to-r from-purple-50/90 via-indigo-50/50 to-blue-50/80 dark:from-purple-950/40 dark:via-indigo-950/30 dark:to-blue-950/30 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+      <div className="p-5 rounded-[8px] border border-ds-accent/80 bg-ds-accent-soft/90 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-purple-600" />
+            <Sparkles className="w-5 h-5 text-ds-accent" />
             <h2 className="text-base font-bold text-foreground">
               {t('builder.preflightAudit', 'Pre-Flight Course Quality Audit')}
             </h2>
-            <Badge className="bg-purple-600 text-white text-[10px]">
+            <Badge className="bg-ds-accent text-white dark:text-ds-on-ink text-[11px]">
               Ready to Author
             </Badge>
           </div>
@@ -74,12 +74,12 @@ export function StudioStagePreflightReview({
         </div>
 
         {/* Quality Score Badge */}
-        <div className="flex items-center gap-3 bg-card/80 backdrop-blur p-3 rounded-xl border self-start md:self-auto shadow-xs">
-          <div className="w-10 h-10 rounded-lg bg-purple-600/15 text-purple-600 flex items-center justify-center font-extrabold text-sm">
+        <div className="flex items-center gap-3 bg-card/80 p-3 rounded-[8px] border self-start md:self-auto shadow-xs">
+          <div className="w-10 h-10 rounded-lg bg-ds-accent/15 text-ds-accent flex items-center justify-center font-extrabold text-sm">
             {qualityScore}%
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase text-muted-foreground tracking-wider">
+            <p className="text-[11px] font-bold uppercase text-muted-foreground tracking-wider">
               {t('builder.qualityForecast', 'Pedagogical Quality')}
             </p>
             <p className="text-xs font-bold text-foreground">
@@ -99,18 +99,18 @@ export function StudioStagePreflightReview({
       {/* 3. Comprehensive Summary Card Tree */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {/* Card 1: Basics & Target */}
-        <Card className="border hover:border-purple-300 transition-all">
+        <Card className="border hover:border-ds-accent/30 transition-all">
           <CardContent className="p-4 space-y-2.5">
             <div className="flex items-center justify-between border-b pb-2">
               <span className="text-xs font-bold flex items-center gap-1.5 text-foreground">
-                <Target className="w-3.5 h-3.5 text-purple-600" />
+                <Target className="w-3.5 h-3.5 text-ds-accent" />
                 <span>1. Basics & Audience</span>
               </span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => onJumpToStage('basics')}
-                className="h-6 text-[10px] font-bold text-purple-600 hover:text-purple-700"
+                className="h-6 text-[11px] font-bold text-ds-accent hover:text-ds-accent"
               >
                 Edit
               </Button>
@@ -124,18 +124,18 @@ export function StudioStagePreflightReview({
         </Card>
 
         {/* Card 2: Structure & Granularity */}
-        <Card className="border hover:border-purple-300 transition-all">
+        <Card className="border hover:border-ds-accent/30 transition-all">
           <CardContent className="p-4 space-y-2.5">
             <div className="flex items-center justify-between border-b pb-2">
               <span className="text-xs font-bold flex items-center gap-1.5 text-foreground">
-                <Layers className="w-3.5 h-3.5 text-blue-600" />
+                <Layers className="w-3.5 h-3.5 text-ds-info" />
                 <span>2. Structure & Pace</span>
               </span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => onJumpToStage('design')}
-                className="h-6 text-[10px] font-bold text-purple-600 hover:text-purple-700"
+                className="h-6 text-[11px] font-bold text-ds-accent hover:text-ds-accent"
               >
                 Edit
               </Button>
@@ -151,18 +151,18 @@ export function StudioStagePreflightReview({
         </Card>
 
         {/* Card 3: Content Depth & Mix */}
-        <Card className="border hover:border-purple-300 transition-all">
+        <Card className="border hover:border-ds-accent/30 transition-all">
           <CardContent className="p-4 space-y-2.5">
             <div className="flex items-center justify-between border-b pb-2">
               <span className="text-xs font-bold flex items-center gap-1.5 text-foreground">
-                <FileText className="w-3.5 h-3.5 text-emerald-600" />
+                <FileText className="w-3.5 h-3.5 text-ds-success" />
                 <span>3. Content & Components</span>
               </span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => onJumpToStage('content')}
-                className="h-6 text-[10px] font-bold text-purple-600 hover:text-purple-700"
+                className="h-6 text-[11px] font-bold text-ds-accent hover:text-ds-accent"
               >
                 Edit
               </Button>
@@ -176,18 +176,18 @@ export function StudioStagePreflightReview({
         </Card>
 
         {/* Card 4: Assessments & Quizzes */}
-        <Card className="border hover:border-purple-300 transition-all">
+        <Card className="border hover:border-ds-accent/30 transition-all">
           <CardContent className="p-4 space-y-2.5">
             <div className="flex items-center justify-between border-b pb-2">
               <span className="text-xs font-bold flex items-center gap-1.5 text-foreground">
-                <FileQuestion className="w-3.5 h-3.5 text-amber-600" />
+                <FileQuestion className="w-3.5 h-3.5 text-ds-warning" />
                 <span>4. Assessments</span>
               </span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => onJumpToStage('assessments')}
-                className="h-6 text-[10px] font-bold text-purple-600 hover:text-purple-700"
+                className="h-6 text-[11px] font-bold text-ds-accent hover:text-ds-accent"
               >
                 Edit
               </Button>
@@ -201,18 +201,18 @@ export function StudioStagePreflightReview({
         </Card>
 
         {/* Card 5: Visuals & Media */}
-        <Card className="border hover:border-purple-300 transition-all">
+        <Card className="border hover:border-ds-accent/30 transition-all">
           <CardContent className="p-4 space-y-2.5">
             <div className="flex items-center justify-between border-b pb-2">
               <span className="text-xs font-bold flex items-center gap-1.5 text-foreground">
-                <ImageIcon className="w-3.5 h-3.5 text-orange-600" />
+                <ImageIcon className="w-3.5 h-3.5 text-ds-warning" />
                 <span>5. Visuals & Media</span>
               </span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => onJumpToStage('visuals')}
-                className="h-6 text-[10px] font-bold text-purple-600 hover:text-purple-700"
+                className="h-6 text-[11px] font-bold text-ds-accent hover:text-ds-accent"
               >
                 Edit
               </Button>
@@ -228,18 +228,18 @@ export function StudioStagePreflightReview({
         </Card>
 
         {/* Card 6: AI Engine */}
-        <Card className="border hover:border-purple-300 transition-all">
+        <Card className="border hover:border-ds-accent/30 transition-all">
           <CardContent className="p-4 space-y-2.5">
             <div className="flex items-center justify-between border-b pb-2">
               <span className="text-xs font-bold flex items-center gap-1.5 text-foreground">
-                <Cpu className="w-4 h-4 text-purple-600" />
+                <Cpu className="w-4 h-4 text-ds-accent" />
                 <span>6. AI Engine & Tone</span>
               </span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => onJumpToStage('ai_settings')}
-                className="h-6 text-[10px] font-bold text-purple-600 hover:text-purple-700"
+                className="h-6 text-[11px] font-bold text-ds-accent hover:text-ds-accent"
               >
                 Edit
               </Button>
@@ -254,7 +254,7 @@ export function StudioStagePreflightReview({
       </div>
 
       {/* 4. Pre-Flight Actions Bar */}
-      <div className="p-4 rounded-xl border bg-card flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm">
+      <div className="p-4 rounded-[8px] border bg-card flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm">
         <div className="flex items-center gap-2">
           <Button
             type="button"
@@ -273,7 +273,7 @@ export function StudioStagePreflightReview({
               variant="outline"
               size="sm"
               onClick={onHarmonize}
-              className="text-xs font-bold text-amber-700 border-amber-300 hover:bg-amber-50"
+              className="text-xs font-bold text-ds-warning border-ds-warning/30 hover:bg-ds-warning-soft"
             >
               ⚡ {t('builder.harmonizeAll', 'Harmonize Settings')}
             </Button>
@@ -285,7 +285,7 @@ export function StudioStagePreflightReview({
           size="lg"
           onClick={onGenerateClick}
           disabled={isGenerating}
-          className="w-full sm:w-auto h-11 px-8 text-sm font-extrabold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-md hover:shadow-lg transition-all"
+          className="w-full sm:w-auto h-11 px-8 text-sm font-extrabold bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink hover:shadow-lg transition-all"
         >
           <Rocket className="w-4 h-4 me-2" />
           {t('builder.launchGeneration', 'Generate Full Course Curriculum')}

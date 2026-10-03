@@ -357,14 +357,14 @@ export function AssignmentsTab() {
                   <CardHeader className="pb-3 pt-3.5 px-4">
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex flex-wrap gap-1.5">
-                        <Badge variant="outline" className="border-ds-border bg-ds-surface-subtle text-ds-muted font-medium text-[10px] px-1.5 py-0.5">
+                        <Badge variant="outline" className="border-ds-border bg-ds-surface-subtle text-ds-muted font-medium text-[11px] px-1.5 py-0.5">
                           <BookOpen className="w-3 h-3 me-1" />
                           {t('module')}
                         </Badge>
                         <Badge
                           variant="outline"
                           className={cn(
-                            "font-medium text-[10px] px-1.5 py-0.5",
+                            "font-medium text-[11px] px-1.5 py-0.5",
                             primaryAssignment.priority === 'compliance' && "border-ds-danger/30 bg-ds-danger-soft text-ds-danger",
                             primaryAssignment.priority === 'high' && "border-ds-warning/30 bg-ds-warning-soft text-ds-warning",
                             (!primaryAssignment.priority || primaryAssignment.priority === 'normal') && "border-ds-border bg-ds-surface-subtle text-ds-muted"
@@ -373,7 +373,7 @@ export function AssignmentsTab() {
                           {t(primaryAssignment.priority || 'normal', primaryAssignment.priority || 'normal')}
                         </Badge>
                         {primaryAssignment.requires_acknowledgement && (
-                          <Badge variant="outline" className="border-ds-warning/30 bg-ds-warning-soft text-ds-warning font-medium text-[10px] px-1.5 py-0.5">
+                          <Badge variant="outline" className="border-ds-warning/30 bg-ds-warning-soft text-ds-warning font-medium text-[11px] px-1.5 py-0.5">
                             <CheckCircle2 className="w-3 h-3 me-1" />
                             {t('ackRequired', 'Ack required')}
                           </Badge>
@@ -381,13 +381,13 @@ export function AssignmentsTab() {
                       </div>
                       <div className="flex gap-1">
                         {targets.length > 1 && (
-                          <Badge variant="outline" className="border-ds-border bg-ds-surface-subtle text-ds-ink font-medium text-[10px] px-1.5 py-0.5">
+                          <Badge variant="outline" className="border-ds-border bg-ds-surface-subtle text-ds-ink font-medium text-[11px] px-1.5 py-0.5">
                             <Users className="w-3 h-3 me-1" />
                             {targets.length} {t('targets', 'targets')}
                           </Badge>
                         )}
                         {exemptedCount > 0 && (
-                          <Badge variant="outline" className="border-ds-danger/30 bg-ds-danger-soft text-ds-danger font-medium text-[10px] px-1.5 py-0.5">
+                          <Badge variant="outline" className="border-ds-danger/30 bg-ds-danger-soft text-ds-danger font-medium text-[11px] px-1.5 py-0.5">
                             <X className="w-3 h-3 me-1" />
                             {exemptedCount} {t('exempted', 'exempted')}
                           </Badge>
@@ -430,7 +430,7 @@ export function AssignmentsTab() {
                           <div className="flex items-center gap-1.5 text-xs">
                             <span className="text-ds-muted">{getTargetIcon(targetType)}</span>
                             <span className="text-ds-ink font-medium">{targetTypeLabel}</span>
-                            <Badge variant="outline" className="text-[10px] px-1.5 py-0 shrink-0 whitespace-nowrap bg-ds-surface-subtle border-ds-border text-ds-muted">
+                            <Badge variant="outline" className="text-[11px] px-1.5 py-0 shrink-0 whitespace-nowrap bg-ds-surface-subtle border-ds-border text-ds-muted">
                               {targets.length}
                             </Badge>
                           </div>

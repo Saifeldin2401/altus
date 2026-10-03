@@ -86,7 +86,7 @@ export function PlatformImpersonationBanner() {
               </strong>
             </span>
             {isImpersonating && impersonationSession?.acting_role && (
-              <Badge variant="outline" className="border-current bg-black/15 font-mono text-[10px] uppercase text-current">
+              <Badge variant="outline" className="border-current bg-black/15 font-mono text-[11px] uppercase text-current">
                 {impersonationSession.acting_role}
               </Badge>
             )}

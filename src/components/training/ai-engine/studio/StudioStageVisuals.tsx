@@ -122,16 +122,16 @@ export function StudioStageVisuals({
   return (
     <div className="space-y-6 max-w-5xl mx-auto py-2">
       {/* 1. Main Enable Toggle & Provider Card */}
-      <div className="p-4 rounded-xl border bg-card/80 backdrop-blur-sm space-y-4 shadow-sm">
+      <div className="p-4 rounded-[8px] border bg-card/80 space-y-4 shadow-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-orange-500/15 text-orange-600 flex items-center justify-center font-bold">
+            <div className="w-9 h-9 rounded-[8px] bg-ds-warning/15 text-ds-warning flex items-center justify-center font-bold">
               <ImageIcon className="w-5 h-5" />
             </div>
             <div>
               <Label className="text-sm font-bold text-foreground flex items-center gap-2">
                 <span>{t('builder.generateAIImages', 'AI Visual Assets & Infographics')}</span>
-                <Badge className={cn('text-[9px]', isFlux ? 'bg-purple-600 text-white' : 'bg-emerald-600 text-white')}>
+                <Badge className={cn('text-[11px]', isFlux ? 'bg-ds-accent text-white dark:text-ds-on-ink' : 'bg-ds-success text-white dark:text-ds-on-ink')}>
                   {isFlux ? '✨ FLUX.1 Ultra-HD' : '⚡ Cloudflare Free Tier'}
                 </Badge>
               </Label>
@@ -156,22 +156,22 @@ export function StudioStageVisuals({
             : 0
 
           return (
-            <div className="p-3.5 rounded-xl border bg-gradient-to-r from-orange-50/70 to-amber-50/50 dark:from-orange-950/20 dark:to-amber-950/10 space-y-2">
+            <div className="p-3.5 rounded-[8px] border bg-ds-warning-soft/70 space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Cpu className="w-4 h-4 text-orange-600" />
+                  <Cpu className="w-4 h-4 text-ds-warning" />
                   <span className="text-xs font-bold text-foreground">Cloudflare Workers AI Image Engine</span>
                 </div>
-                <span className="text-xs font-mono font-semibold text-orange-700 dark:text-orange-400">
+                <span className="text-xs font-mono font-semibold text-ds-warning">
                   {usageStats.usedNeurons.toLocaleString()} / {usageStats.totalDailyNeurons.toLocaleString()} Neurons ({usageStats.percentageUsed}% Used)
                 </span>
               </div>
-              <Progress value={Math.max(2, usageStats.percentageUsed)} className="h-1.5 bg-orange-100 dark:bg-orange-950/40" />
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[10px] text-muted-foreground gap-1">
+              <Progress value={Math.max(2, usageStats.percentageUsed)} className="h-1.5 bg-ds-warning-soft" />
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-muted-foreground gap-1">
                 <span>
                   Forecast for this course ({maxImagesPerCourse} images): <strong className="text-foreground">{estimatedCourseNeurons === 0 ? '0 Neurons ($0.00 / Step Free Tier)' : `~${estimatedCourseNeurons.toLocaleString()} Neurons`}</strong>
                 </span>
-                <span className={cn('font-semibold', usageStats.isRateLimited ? 'text-rose-600' : 'text-emerald-600')}>
+                <span className={cn('font-semibold', usageStats.isRateLimited ? 'text-ds-danger' : 'text-ds-success')}>
                   {usageStats.isRateLimited ? '● Quota Rate Limited' : '● Status: Healthy (Online)'}
                 </span>
               </div>
@@ -187,7 +187,7 @@ export function StudioStageVisuals({
             <div className="flex items-center justify-between">
               <div>
                 <Label className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+                  <Sparkles className="w-3.5 h-3.5 text-ds-accent" />
                   <span>{t('builder.preferredStyle', 'Visual Aesthetic & Art Style')}</span>
                 </Label>
                 <p className="text-[11px] text-muted-foreground">
@@ -207,19 +207,19 @@ export function StudioStageVisuals({
                     className={cn(
                       'cursor-pointer transition-all duration-150 border text-start group hover:shadow-sm',
                       isSelected
-                        ? 'border-purple-600 bg-purple-50/60 dark:bg-purple-950/40 ring-1 ring-purple-500 shadow-sm'
-                        : 'bg-card hover:border-purple-300'
+                        ? 'border-ds-accent bg-ds-accent-soft/60 ring-1 ring-ds-accent shadow-sm'
+                        : 'bg-card hover:border-ds-accent/30'
                     )}
                   >
                     <CardContent className="p-3 space-y-1.5">
                       <div className="flex items-center justify-between">
                         <span className="text-lg">{st.icon}</span>
-                        {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-purple-600" />}
+                        {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-ds-accent" />}
                       </div>
                       <p className="text-xs font-bold text-foreground leading-snug">
                         {isRTL ? st.title_ar : st.title}
                       </p>
-                      <p className="text-[10px] text-muted-foreground leading-tight">
+                      <p className="text-[11px] text-muted-foreground leading-tight">
                         {st.desc}
                       </p>
                     </CardContent>
@@ -230,7 +230,7 @@ export function StudioStageVisuals({
           </div>
 
           {/* 3. Visual Density & Primary Model */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl border bg-card/80 backdrop-blur-sm shadow-sm">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-[8px] border bg-card/80 shadow-sm">
             {/* Visual Density */}
             <div className="space-y-1.5">
               <Label className="text-xs font-semibold">{t('builder.imageDensity', 'Image Density Strategy')}</Label>
@@ -294,16 +294,16 @@ export function StudioStageVisuals({
           </div>
 
           {/* 4. Progressive Disclosure: Advanced Resolution & Budgets */}
-          <div className="border rounded-xl bg-muted/10 overflow-hidden">
+          <div className="border rounded-[8px] bg-muted/10 overflow-hidden">
             <button
               type="button"
               onClick={() => setShowAdvanced(!showAdvanced)}
               className="w-full px-4 py-3 flex items-center justify-between text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
             >
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-purple-600" />
+                <Sparkles className="w-4 h-4 text-ds-accent" />
                 <span>{t('builder.advancedVisuals', 'Advanced Aspect Ratios & Course Image Limits')}</span>
-                <Badge variant="outline" className="text-[9px]">Optional</Badge>
+                <Badge variant="outline" className="text-[11px]">Optional</Badge>
               </div>
               {showAdvanced ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
             </button>

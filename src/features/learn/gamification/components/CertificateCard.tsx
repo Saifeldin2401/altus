@@ -57,11 +57,11 @@ export function CertificateCard({ certificate: c, expiringSoon, renewHref, downl
         ref={frame}
         onPointerMove={tilt}
         onPointerLeave={reset}
-        className="relative overflow-hidden rounded-xl border border-ds-brass/40 bg-ds-surface p-1.5 shadow-sm transition-transform duration-200 ease-out will-change-transform"
+        className="relative overflow-hidden rounded-[8px] border border-ds-brass/40 bg-ds-surface p-1.5 shadow-sm transition-transform duration-200 ease-out will-change-transform"
       >
         <div className="relative flex min-h-[220px] flex-col items-center justify-between rounded-lg border border-ds-brass/30 bg-gradient-to-br from-ds-brass/10 via-ds-surface to-ds-accent/5 px-5 py-6 text-center">
           <div aria-hidden="true" className="pointer-events-none absolute inset-2 rounded-md border border-dashed border-ds-brass/25" />
-          <p className="relative text-[10px] font-semibold uppercase tracking-[0.24em] text-ds-brass">
+          <p className="relative text-[11px] font-semibold uppercase tracking-[0.24em] text-ds-brass">
             {t('certs.cardEyebrow', 'Certificate of completion')}
           </p>
           <div className="relative space-y-1.5">
@@ -72,13 +72,13 @@ export function CertificateCard({ certificate: c, expiringSoon, renewHref, downl
           </div>
           <div className="relative flex w-full items-end justify-between gap-3">
             <div className="text-start">
-              <p className="text-[10px] uppercase tracking-wider text-ds-muted">{t('certs.issuedLabel', 'Issued')}</p>
+              <p className="text-[11px] uppercase tracking-wider text-ds-muted">{t('certs.issuedLabel', 'Issued')}</p>
               <p className="text-xs font-medium text-ds-ink">{date(c.completionDate)}</p>
               {c.score != null && <p className="text-xs text-ds-muted">{t('certs.score', 'score {{score}}%', { score: Math.round(c.score) })}</p>}
             </div>
             <CertificateSeal size={64} />
             <div className="text-end">
-              <p className="text-[10px] uppercase tracking-wider text-ds-muted">{t('certs.validLabel', 'Valid')}</p>
+              <p className="text-[11px] uppercase tracking-wider text-ds-muted">{t('certs.validLabel', 'Valid')}</p>
               <p className={cn('text-xs font-medium', expiringSoon ? 'text-ds-warning' : 'text-ds-ink')}>
                 {c.expiryDate ? t('certs.untilDate', 'until {{date}}', { date: date(c.expiryDate) }) : t('certs.noExpiryShort', 'no expiry')}
               </p>

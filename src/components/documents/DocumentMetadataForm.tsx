@@ -88,29 +88,29 @@ const CONFIDENTIALITY_LEVELS: Array<{
       value: "public",
       label: "Public / Company-Wide",
       description: "All hotel properties & group-wide employees (Group policies, brand rules)",
-      color: "text-gray-700",
-      bgColor: "bg-gray-100",
+      color: "text-ds-ink-secondary",
+      bgColor: "bg-ds-surface-subtle",
     },
     {
       value: "internal",
       label: "Internal / Property-Level",
       description: "Assigned hotel property & department team members only",
-      color: "text-blue-700",
-      bgColor: "bg-blue-100",
+      color: "text-ds-info",
+      bgColor: "bg-ds-info-soft",
     },
     {
       value: "confidential",
       label: "Confidential / Management",
       description: "Department Heads (HODs), GMs & Supervisors only",
-      color: "text-orange-700",
-      bgColor: "bg-orange-100",
+      color: "text-ds-warning",
+      bgColor: "bg-ds-warning-soft",
     },
     {
       value: "restricted",
       label: "Restricted / Executive",
       description: "Executive Leadership, HR Directors & Legal only",
-      color: "text-red-700",
-      bgColor: "bg-red-100",
+      color: "text-ds-danger",
+      bgColor: "bg-ds-danger-soft",
     },
   ];
 
@@ -354,9 +354,9 @@ export function DocumentMetadataForm({
     <div className={cn("space-y-6", className)}>
       {/* Smart AI Auto-Fill Action Header */}
       {!readOnly && (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-hotel-navy/5 border border-purple-200 dark:border-purple-900/40">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-[8px] bg-ds-accent/10 border border-ds-accent/30">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+            <div className="w-8 h-8 rounded-lg bg-ds-accent text-white dark:text-ds-on-ink flex items-center justify-center shrink-0 shadow-sm">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
@@ -371,7 +371,7 @@ export function DocumentMetadataForm({
             size="sm"
             onClick={handleSmartAutoFill}
             disabled={isGenerating}
-            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-xs shadow-sm gap-1.5 h-8"
+            className="bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink font-bold text-xs shadow-sm gap-1.5 h-8"
           >
             <Wand2 className={cn("w-3.5 h-3.5", isGenerating && "animate-spin")} />
             {isGenerating ? "Organizing..." : "Magic Auto-Fill"}
@@ -390,7 +390,7 @@ export function DocumentMetadataForm({
             <button
               type="button"
               onClick={handleQuickCleanTitle}
-              className="text-[11px] text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1 font-medium"
+              className="text-[11px] text-ds-accent hover:underline flex items-center gap-1 font-medium"
             >
               <Wand2 className="w-3 h-3" />
               Clean filename format
@@ -441,7 +441,7 @@ export function DocumentMetadataForm({
                 }
               }}
               disabled={isGenerating || !metadata.title}
-              className="text-[11px] text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1 font-medium disabled:opacity-50"
+              className="text-[11px] text-ds-accent hover:underline flex items-center gap-1 font-medium disabled:opacity-50"
             >
               <Sparkles className="w-3 h-3" />
               AI Generate Description
@@ -604,7 +604,7 @@ export function DocumentMetadataForm({
                 )}
               >
                 {metadata.confidentiality === level.value && (
-                  <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                  <div className="w-1.5 h-1.5 rounded-full bg-ds-surface" />
                 )}
               </div>
               <div className="flex-1">

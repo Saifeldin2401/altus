@@ -294,10 +294,10 @@ export function StudioLiveGenerationProgress({
   return (
     <div className="space-y-6 max-w-4xl mx-auto py-4">
       {/* 1. Header Banner */}
-      <div className="p-5 rounded-2xl border border-purple-200 bg-gradient-to-r from-purple-50/90 via-indigo-50/50 to-blue-50/80 dark:from-purple-950/40 dark:via-indigo-950/30 dark:to-blue-950/30 text-start space-y-3 shadow-sm">
+      <div className="p-5 rounded-[8px] border border-ds-accent/30 bg-ds-accent-soft/90 text-start space-y-3 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center shadow-md animate-pulse">
+            <div className="w-10 h-10 rounded-[8px] bg-ds-accent text-white dark:text-ds-on-ink flex items-center justify-center animate-pulse">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
@@ -312,12 +312,12 @@ export function StudioLiveGenerationProgress({
 
           <div className="flex items-center gap-2 self-start sm:self-center">
             {activeModelName && (
-              <Badge variant="outline" className="bg-white/80 dark:bg-slate-900/80 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-800 text-[10px] px-2 py-0.5 font-mono flex items-center gap-1 shadow-xs">
-                <Cpu className="w-3 h-3 text-purple-600" />
+              <Badge variant="outline" className="bg-white/80 text-ds-accent border-ds-accent/30 text-[11px] px-2 py-0.5 font-mono flex items-center gap-1 shadow-xs">
+                <Cpu className="w-3 h-3 text-ds-accent" />
                 <span className="truncate max-w-[150px]">{activeModelName}</span>
               </Badge>
             )}
-            <Badge className="bg-purple-600 text-white text-xs px-2.5 py-1 font-mono">
+            <Badge className="bg-ds-accent text-white dark:text-ds-on-ink text-xs px-2.5 py-1 font-mono">
               {calculatedProgress}%
             </Badge>
           </div>
@@ -325,10 +325,10 @@ export function StudioLiveGenerationProgress({
 
         {/* Real Dynamic Progress Bar */}
         <div className="space-y-1.5 pt-1">
-          <Progress value={calculatedProgress} className="h-2.5 bg-purple-100 dark:bg-purple-950/50" />
+          <Progress value={calculatedProgress} className="h-2.5 bg-ds-accent-soft" />
           <div className="flex items-center justify-between text-[11px] text-muted-foreground">
             <div className="flex items-center gap-1.5 font-medium text-foreground truncate max-w-lg">
-              <Loader2 className="w-3.5 h-3.5 text-purple-600 animate-spin shrink-0" />
+              <Loader2 className="w-3.5 h-3.5 text-ds-accent animate-spin shrink-0" />
               <span className="truncate">{cleanStageDetail || stageName || activePhase.title}</span>
             </div>
             <div className="flex items-center gap-1 font-mono shrink-0">
@@ -341,27 +341,27 @@ export function StudioLiveGenerationProgress({
 
       {/* 2. Actionable Error Recovery Card */}
       {errorState?.hasError && (
-        <Card className="border-rose-300 bg-rose-50/70 dark:bg-rose-950/30 shadow-md">
+        <Card className="border-ds-danger/30 bg-ds-danger-soft/70">
           <CardContent className="p-4 space-y-3 text-start">
             <div className="flex items-start gap-3">
-              <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 text-ds-danger shrink-0 mt-0.5" />
               <div className="space-y-1 flex-1">
-                <h4 className="text-sm font-bold text-rose-900 dark:text-rose-200">
+                <h4 className="text-sm font-bold text-ds-danger">
                   {errorState.failedItemTitle || 'Synthesis Anomaly Detected'}
                 </h4>
-                <p className="text-xs text-rose-700 dark:text-rose-300 leading-relaxed">
+                <p className="text-xs text-ds-danger leading-relaxed">
                   {errorState.errorMessage}
                 </p>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-rose-200 dark:border-rose-900/50">
+            <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-ds-danger/30">
               {errorState.canRetry && (
                 <Button
                   size="sm"
                   variant="default"
                   onClick={errorState.onRetry}
-                  className="bg-rose-600 hover:bg-rose-700 text-white text-xs h-8"
+                  className="bg-ds-danger hover:bg-ds-danger text-white text-xs h-8"
                 >
                   <RotateCcw className="w-3.5 h-3.5 me-1.5" />
                   Retry Agent Step
@@ -372,9 +372,9 @@ export function StudioLiveGenerationProgress({
                   size="sm"
                   variant="outline"
                   onClick={errorState.onFallback}
-                  className="border-rose-300 text-rose-700 hover:bg-rose-100 dark:border-rose-800 dark:text-rose-300 text-xs h-8"
+                  className="border-ds-danger/30 text-ds-danger hover:bg-ds-danger-soft text-xs h-8"
                 >
-                  <Zap className="w-3.5 h-3.5 me-1.5 text-amber-500" />
+                  <Zap className="w-3.5 h-3.5 me-1.5 text-ds-warning" />
                   Failover to Fast Gemini Tier
                 </Button>
               )}
@@ -414,11 +414,11 @@ export function StudioLiveGenerationProgress({
             <div
               key={phase.id}
               className={cn(
-                'p-4 rounded-xl border transition-all duration-300 flex items-center justify-between text-start',
+                'p-4 rounded-[8px] border transition-all duration-300 flex items-center justify-between text-start',
                 isCurrent
-                  ? 'border-purple-500 bg-purple-50/40 dark:bg-purple-950/20 ring-1 ring-purple-500 shadow-sm'
+                  ? 'border-ds-accent bg-ds-accent-soft/40 ring-1 ring-ds-accent shadow-sm'
                   : isDone
-                  ? 'border-emerald-200 bg-emerald-50/30 dark:bg-emerald-950/10'
+                  ? 'border-ds-success/30 bg-ds-success-soft/30'
                   : 'border-border/60 bg-card/40 opacity-70'
               )}
             >
@@ -427,9 +427,9 @@ export function StudioLiveGenerationProgress({
                   className={cn(
                     'w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-sm font-bold',
                     isCurrent
-                      ? 'bg-purple-600 text-white animate-pulse'
+                      ? 'bg-ds-accent text-white dark:text-ds-on-ink animate-pulse'
                       : isDone
-                      ? 'bg-emerald-600 text-white'
+                      ? 'bg-ds-success text-white dark:text-ds-on-ink'
                       : 'bg-muted text-muted-foreground'
                   )}
                 >
@@ -447,11 +447,11 @@ export function StudioLiveGenerationProgress({
                     {isRTL ? phase.title_ar : phase.title}
                   </p>
                   <div className="flex items-center gap-1.5 mt-0.5">
-                    <p className="text-[10px] text-muted-foreground truncate">
+                    <p className="text-[11px] text-muted-foreground truncate">
                       {isDone ? 'Completed' : isCurrent ? 'Active generation...' : 'Queued'}
                     </p>
                     {isCurrent && activeModelName && (
-                      <span className="inline-flex items-center gap-0.5 text-[9px] font-mono px-1.5 py-0.2 rounded bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300">
+                      <span className="inline-flex items-center gap-0.5 text-[11px] font-mono px-1.5 py-0.2 rounded bg-ds-accent-soft text-ds-accent">
                         <Cpu className="w-2.5 h-2.5" />
                         {activeModelName}
                       </span>
@@ -465,11 +465,11 @@ export function StudioLiveGenerationProgress({
                 <Badge
                   variant={isDone ? 'default' : 'secondary'}
                   className={cn(
-                    'text-[10px] font-mono shrink-0 ms-2',
+                    'text-[11px] font-mono shrink-0 ms-2',
                     isDone
-                      ? 'bg-emerald-700 text-white'
+                      ? 'bg-ds-success text-white dark:text-ds-on-ink'
                       : isCurrent
-                      ? 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300'
+                      ? 'bg-ds-accent-soft text-ds-accent'
                       : 'bg-muted text-muted-foreground'
                   )}
                 >

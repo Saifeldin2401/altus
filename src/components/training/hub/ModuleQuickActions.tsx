@@ -60,7 +60,7 @@ export function ModuleQuickActions({
           variant="default"
           size="sm"
           onClick={onRestore}
-          className={cn("bg-hotel-gold hover:bg-hotel-gold-dark text-white font-medium")}
+          className={cn("bg-ds-accent hover:bg-ds-accent-hover text-white dark:text-ds-on-ink font-medium")}
           title={t('trash.restore_btn', 'Restore Course')}
         >
           <RotateCcw className={cn("h-4 w-4", "me-1.5")} />
@@ -69,20 +69,20 @@ export function ModuleQuickActions({
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className={cn("w-full border-rose-200 hover:border-rose-300 text-rose-700")}>
+            <Button variant="outline" size="sm" className={cn("w-full border-ds-danger/30 hover:border-ds-danger/30 text-ds-danger")}>
               <MoreVertical className={cn("h-4 w-4", "me-1")} />
               {t('common:action.more')}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align={isRTL ? 'start' : 'end'} className={cn("text-start")}>
-            <DropdownMenuItem onClick={onRestore} className="text-emerald-700 focus:text-emerald-700">
+            <DropdownMenuItem onClick={onRestore} className="text-ds-success focus:text-ds-success">
               <RotateCcw className={cn("h-4 w-4", "me-2")} />
               {t('trash.restore_btn', 'Restore Course')}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={onPurge || onDelete}
-              className={cn("text-rose-600 focus:text-rose-600 font-semibold")}
+              className={cn("text-ds-danger focus:text-ds-danger font-semibold")}
             >
               <Trash2 className={cn("h-4 w-4", "me-2")} />
               {t('trash.purge_btn', 'Permanently Purge')}
@@ -99,7 +99,7 @@ export function ModuleQuickActions({
         variant="default"
         size="sm"
         onClick={onEdit}
-        className={cn("bg-hotel-gold hover:bg-hotel-gold-dark")}
+        className={cn("bg-ds-accent hover:bg-ds-accent-hover")}
       >
         <Edit className={cn("h-4 w-4", "me-2")} />
         {t('common:action.edit')}
@@ -128,7 +128,7 @@ export function ModuleQuickActions({
               <DropdownMenuItem
                 onClick={onSyncWithMaster}
                 className={cn(
-                  hasUpdate ? "text-amber-700 font-bold focus:text-amber-700 bg-amber-50/50" : "text-indigo-700"
+                  hasUpdate ? "text-ds-warning font-bold focus:text-ds-warning bg-ds-warning-soft/50" : "text-ds-info"
                 )}
               >
                 <RefreshCw className={cn("h-4 w-4", "me-2", hasUpdate ? "animate-spin" : "")} />
@@ -150,13 +150,13 @@ export function ModuleQuickActions({
             </DropdownMenuItem>
           )}
           {onApprove && (
-            <DropdownMenuItem onClick={onApprove} className={cn("text-green-700 focus:text-green-700")}>
+            <DropdownMenuItem onClick={onApprove} className={cn("text-ds-success focus:text-ds-success")}>
               <CheckCircle2 className={cn("h-4 w-4", "me-2")} />
               {t('review.approve')}
             </DropdownMenuItem>
           )}
           {onReject && (
-            <DropdownMenuItem onClick={onReject} className={cn("text-amber-700 focus:text-amber-700")}>
+            <DropdownMenuItem onClick={onReject} className={cn("text-ds-warning focus:text-ds-warning")}>
               <XCircle className={cn("h-4 w-4", "me-2")} />
               {t('review.reject')}
             </DropdownMenuItem>
@@ -164,7 +164,7 @@ export function ModuleQuickActions({
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={onDelete}
-            className={cn("text-red-600 focus:text-red-600")}
+            className={cn("text-ds-danger focus:text-ds-danger")}
           >
             <Trash2 className={cn("h-4 w-4", "me-2")} />
             {t('common:action.delete')}

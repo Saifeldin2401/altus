@@ -398,7 +398,7 @@ export function SubmissionsGradingTab() {
                     <div>
                       <h4 className="text-xs font-bold text-ds-ink flex items-center gap-1.5">
                         {t('aiGradingCoPilot', 'AI Evaluation Co-Pilot')}
-                        <Badge variant="outline" className="text-[10px] font-medium py-0 px-1.5 text-ds-accent border-ds-accent/30 bg-ds-accent-soft">
+                        <Badge variant="outline" className="text-[11px] font-medium py-0 px-1.5 text-ds-accent border-ds-accent/30 bg-ds-accent-soft">
                           OpenRouter AI
                         </Badge>
                       </h4>
@@ -435,11 +435,11 @@ export function SubmissionsGradingTab() {
                     <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-[6px] bg-ds-surface border border-ds-border">
                       <div className="flex items-center gap-3">
                         <div className="text-center px-2.5 py-1 bg-ds-surface-subtle rounded-md border border-ds-border">
-                          <span className="block text-[10px] text-ds-muted uppercase font-semibold">{t('suggestedScore', 'Suggested Score')}</span>
+                          <span className="block text-[11px] text-ds-muted uppercase font-semibold">{t('suggestedScore', 'Suggested Score')}</span>
                           <span className="font-mono font-bold text-base text-ds-accent">{aiResult.score}%</span>
                         </div>
                         <div>
-                          <span className="block text-[10px] text-ds-muted uppercase font-semibold">{t('recommendation', 'AI Recommendation')}</span>
+                          <span className="block text-[11px] text-ds-muted uppercase font-semibold">{t('recommendation', 'AI Recommendation')}</span>
                           {aiResult.decision === 'approved' ? (
                             <Badge className="bg-ds-success-soft text-ds-success border border-ds-success/30 font-medium text-[11px] gap-1 mt-0.5 shadow-none">
                               <CheckCircle2 className="h-3 w-3" />
@@ -600,7 +600,7 @@ export function SubmissionsGradingTab() {
                 size="sm"
                 onClick={() => handleSaveReview('approved')}
                 disabled={isSubmittingReview}
-                className="text-xs bg-ds-success text-white hover:bg-ds-success/90 gap-1 shadow-none rounded-md"
+                className="text-xs bg-ds-success text-white dark:text-ds-on-ink hover:bg-ds-success/90 gap-1 shadow-none rounded-md"
               >
                 {isSubmittingReview ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
                 {t('approveAndPass', 'Approve & Pass')}

@@ -587,7 +587,7 @@ export default function OrganizationsHub() {
                     <div className="pt-3 border-t">
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-xs font-bold text-foreground">Custom Tenant Quotas & Entitlements</span>
-                        <Badge variant="outline" className="text-[10px]">Override Defaults</Badge>
+                        <Badge variant="outline" className="text-[11px]">Override Defaults</Badge>
                       </div>
 
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -1009,7 +1009,7 @@ export default function OrganizationsHub() {
                   placeholder="e.g. Master SOP deployment, Onboarding review, Support ticket #1042"
                   className="h-9 text-xs"
                 />
-                <div className={`text-[10px] ${enterReason.trim().length >= MIN_ACCESS_REASON_LENGTH ? 'text-muted-foreground' : 'text-ds-warning'}`}>
+                <div className={`text-[11px] ${enterReason.trim().length >= MIN_ACCESS_REASON_LENGTH ? 'text-muted-foreground' : 'text-ds-warning'}`}>
                   {enterReason.trim().length}/{MIN_ACCESS_REASON_LENGTH} characters minimum
                 </div>
               </div>

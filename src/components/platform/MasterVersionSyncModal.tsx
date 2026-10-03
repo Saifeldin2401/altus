@@ -356,7 +356,7 @@ export function MasterVersionSyncModal({
                     {/* Title comparison */}
                     <div className="grid grid-cols-2 p-3 border-b gap-3">
                       <div>
-                        <span className="text-[10px] text-muted-foreground uppercase font-bold block mb-0.5">
+                        <span className="text-[11px] text-muted-foreground uppercase font-bold block mb-0.5">
                           {t('admin:title', 'Title')}
                         </span>
                         <p className="font-medium text-foreground">
@@ -366,7 +366,7 @@ export function MasterVersionSyncModal({
                         </p>
                       </div>
                       <div className="bg-primary/5 p-2 rounded">
-                        <span className="text-[10px] text-primary uppercase font-bold block mb-0.5">
+                        <span className="text-[11px] text-primary uppercase font-bold block mb-0.5">
                           {t('admin:master_title', 'Master Title')}
                         </span>
                         <p className="font-medium text-primary">
@@ -380,7 +380,7 @@ export function MasterVersionSyncModal({
                     {/* Description comparison */}
                     <div className="grid grid-cols-2 p-3 border-b gap-3">
                       <div>
-                        <span className="text-[10px] text-muted-foreground uppercase font-bold block mb-0.5">
+                        <span className="text-[11px] text-muted-foreground uppercase font-bold block mb-0.5">
                           {t('admin:description', 'Description')}
                         </span>
                         <p className="text-muted-foreground line-clamp-3">
@@ -390,7 +390,7 @@ export function MasterVersionSyncModal({
                         </p>
                       </div>
                       <div className="bg-primary/5 p-2 rounded">
-                        <span className="text-[10px] text-primary uppercase font-bold block mb-0.5">
+                        <span className="text-[11px] text-primary uppercase font-bold block mb-0.5">
                           {t('admin:master_description', 'Master Description')}
                         </span>
                         <p className="text-foreground line-clamp-3">
@@ -405,7 +405,7 @@ export function MasterVersionSyncModal({
                     {contentType === 'sop' && (
                       <div className="grid grid-cols-2 p-3 gap-3">
                         <div>
-                          <span className="text-[10px] text-muted-foreground uppercase font-bold block mb-0.5">
+                          <span className="text-[11px] text-muted-foreground uppercase font-bold block mb-0.5">
                             Procedure Body (Local)
                           </span>
                           <p className="text-muted-foreground text-[11px] line-clamp-5 whitespace-pre-line leading-relaxed">
@@ -413,7 +413,7 @@ export function MasterVersionSyncModal({
                           </p>
                         </div>
                         <div className="bg-primary/5 p-2 rounded">
-                          <span className="text-[10px] text-primary uppercase font-bold block mb-0.5">
+                          <span className="text-[11px] text-primary uppercase font-bold block mb-0.5">
                             Procedure Body (Master Edition)
                           </span>
                           <p className="text-foreground text-[11px] line-clamp-5 whitespace-pre-line leading-relaxed">
@@ -445,7 +445,7 @@ export function MasterVersionSyncModal({
                           const itemText = typeof item === 'string' ? item : item.text || item.title || `Verification Step ${idx + 1}`
                           return (
                             <div key={idx} className="p-2 rounded-md bg-background border flex items-start gap-2 text-xs">
-                              <span className="h-5 w-5 rounded-full bg-ds-success/10 text-ds-success font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+                              <span className="h-5 w-5 rounded-full bg-ds-success/10 text-ds-success font-mono text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">
                                 {idx + 1}
                               </span>
                               <span className="text-foreground font-medium">{itemText}</span>
@@ -530,7 +530,7 @@ export function MasterVersionSyncModal({
             size="sm"
             onClick={handleSync}
             disabled={isSyncing || isLoadingDiff}
-            className="bg-ds-info hover:bg-ds-info/90 text-white gap-2 font-semibold text-xs"
+            className="bg-ds-info hover:bg-ds-info/90 text-white dark:text-ds-on-ink gap-2 font-semibold text-xs"
           >
             {isSyncing ? (
               <>

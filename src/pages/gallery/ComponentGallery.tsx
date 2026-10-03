@@ -198,7 +198,7 @@ export default function ComponentGallery() {
                   onClick={() => setQueryStateMode(mode)}
                   className={`px-3 py-1.5 min-h-[44px] rounded-[6px] text-xs font-semibold uppercase tracking-wider border transition-colors ${
                     queryStateMode === mode
-                      ? 'bg-ds-brass text-white border-ds-brass'
+                      ? 'bg-ds-brass text-white dark:text-ds-on-ink border-ds-brass'
                       : 'bg-ds-surface dark:bg-ds-surface-subtle border-ds-border dark:border-ds-border-strong text-ds-ink'
                   }`}
                 >

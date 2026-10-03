@@ -63,7 +63,7 @@ export function LanguageSwitcher({ className, variant = "outline", showLabel = t
             <span>{language.flag}</span>
             <span>{t(language.nameKey)}</span>
             {language.code === currentLang && (
-              <span className="text-green-600">✓</span>
+              <span className="text-ds-success">✓</span>
             )}
           </DropdownMenuItem>
         ))}

@@ -147,17 +147,17 @@ export function AITrainingAuditModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[85vh] flex flex-col p-0 overflow-hidden">
-        <DialogHeader className="p-6 pb-4 border-b bg-slate-50/50 dark:bg-slate-900/50">
+        <DialogHeader className="p-6 pb-4 border-b bg-ds-surface-subtle/50">
           <div className={cn('flex items-center justify-between')}>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-950/50 flex items-center justify-center text-purple-600 border border-purple-200">
+              <div className="w-10 h-10 rounded-[8px] bg-ds-accent-soft flex items-center justify-center text-ds-accent border border-ds-accent/30">
                 <Wand2 className="w-5 h-5" />
               </div>
               <div className={'text-start'}>
-                <DialogTitle className="text-lg font-bold text-slate-900 dark:text-white">
+                <DialogTitle className="text-lg font-bold text-ds-ink">
                   {t('builder.auditModalTitle', 'AI Training Audit & Smart Optimizer')}
                 </DialogTitle>
-                <DialogDescription className="text-xs text-slate-500">
+                <DialogDescription className="text-xs text-ds-muted">
                   {t('builder.auditModalDesc', 'Validate instructional structure, fix blockers, and auto-complete missing content.')}
                 </DialogDescription>
               </div>
@@ -167,8 +167,8 @@ export function AITrainingAuditModal({
               className={cn(
                 'text-xs font-semibold px-3 py-1',
                 auditResult.isPublishReady
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                  : 'bg-amber-50 text-amber-700 border-amber-200'
+                  ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
+                  : 'bg-ds-warning-soft text-ds-warning border-ds-warning/30'
               )}
             >
               {auditResult.isPublishReady
@@ -182,40 +182,40 @@ export function AITrainingAuditModal({
         <div className="flex-1 overflow-y-auto p-6 space-y-5">
           {/* Summary Metric Cards */}
           <div className="grid grid-cols-4 gap-3">
-            <Card className="border-slate-200 bg-slate-50/40 shadow-none">
+            <Card className="border-ds-border bg-ds-surface-subtle/40 shadow-none">
               <CardContent className="p-3.5 text-center">
-                <div className="text-2xl font-black text-slate-800 dark:text-white">{auditResult.healthScore}%</div>
-                <div className="text-[11px] font-medium text-slate-500">{t('builder.healthScore', 'Quality Score')}</div>
+                <div className="text-2xl font-black text-ds-ink">{auditResult.healthScore}%</div>
+                <div className="text-[11px] font-medium text-ds-muted">{t('builder.healthScore', 'Quality Score')}</div>
               </CardContent>
             </Card>
 
-            <Card className={cn('shadow-none', auditResult.errors.length > 0 ? 'border-red-200 bg-red-50/30' : 'border-slate-200')}>
+            <Card className={cn('shadow-none', auditResult.errors.length > 0 ? 'border-ds-danger/30 bg-ds-danger-soft/30' : 'border-ds-border')}>
               <CardContent className="p-3.5 text-center">
-                <div className={cn('text-2xl font-black', auditResult.errors.length > 0 ? 'text-red-600' : 'text-slate-700')}>
+                <div className={cn('text-2xl font-black', auditResult.errors.length > 0 ? 'text-ds-danger' : 'text-ds-ink-secondary')}>
                   {auditResult.errors.length}
                 </div>
-                <div className="text-[11px] font-medium text-slate-500">{t('builder.criticalErrors', 'Critical Blockers')}</div>
+                <div className="text-[11px] font-medium text-ds-muted">{t('builder.criticalErrors', 'Critical Blockers')}</div>
               </CardContent>
             </Card>
 
-            <Card className="border-slate-200 shadow-none">
+            <Card className="border-ds-border shadow-none">
               <CardContent className="p-3.5 text-center">
-                <div className="text-2xl font-black text-amber-600">{auditResult.warnings.length}</div>
-                <div className="text-[11px] font-medium text-slate-500">{t('builder.warnings', 'Warnings')}</div>
+                <div className="text-2xl font-black text-ds-warning">{auditResult.warnings.length}</div>
+                <div className="text-[11px] font-medium text-ds-muted">{t('builder.warnings', 'Warnings')}</div>
               </CardContent>
             </Card>
 
-            <Card className="border-purple-200 bg-purple-50/30 shadow-none">
+            <Card className="border-ds-accent/30 bg-ds-accent-soft/30 shadow-none">
               <CardContent className="p-3.5 text-center">
-                <div className="text-2xl font-black text-purple-700">{auditResult.opportunities.length}</div>
-                <div className="text-[11px] font-medium text-purple-700">{t('builder.aiFixable', 'AI Opportunities')}</div>
+                <div className="text-2xl font-black text-ds-accent">{auditResult.opportunities.length}</div>
+                <div className="text-[11px] font-medium text-ds-accent">{t('builder.aiFixable', 'AI Opportunities')}</div>
               </CardContent>
             </Card>
           </div>
 
           {/* Action Tabs */}
           <Tabs value={selectedTab} onValueChange={(v: any) => setSelectedTab(v)} className="w-full">
-            <TabsList className="grid grid-cols-4 w-full bg-slate-100 dark:bg-slate-800 p-1">
+            <TabsList className="grid grid-cols-4 w-full bg-ds-surface-subtle p-1">
               <TabsTrigger value="overview" className="text-xs">
                 {t('builder.tabOverview', 'Audit Overview')}
               </TabsTrigger>
@@ -225,7 +225,7 @@ export function AITrainingAuditModal({
               <TabsTrigger value="warnings" className="text-xs">
                 {t('builder.tabWarnings', 'Quality')} ({auditResult.warnings.length})
               </TabsTrigger>
-              <TabsTrigger value="ai_plan" className="text-xs text-purple-700 font-bold">
+              <TabsTrigger value="ai_plan" className="text-xs text-ds-accent font-bold">
                 <Sparkles className="w-3.5 h-3.5 me-1" />
                 {t('builder.tabAIPlan', 'AI Auto-Complete')}
               </TabsTrigger>
@@ -234,10 +234,10 @@ export function AITrainingAuditModal({
             {/* Overview Tab */}
             <TabsContent value="overview" className="space-y-3 pt-3">
               {auditResult.errors.length === 0 && auditResult.warnings.length === 0 ? (
-                <div className="text-center py-8 text-slate-500">
-                  <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto mb-2" />
-                  <p className="font-semibold text-slate-700">{t('builder.noIssuesFound', 'All checks passed!')}</p>
-                  <p className="text-xs text-slate-500">{t('builder.readyToLaunch', 'Your course structure and rules meet 5-star standard operating requirements.')}</p>
+                <div className="text-center py-8 text-ds-muted">
+                  <CheckCircle2 className="w-12 h-12 text-ds-success mx-auto mb-2" />
+                  <p className="font-semibold text-ds-ink-secondary">{t('builder.noIssuesFound', 'All checks passed!')}</p>
+                  <p className="text-xs text-ds-muted">{t('builder.readyToLaunch', 'Your course structure and rules meet 5-star standard operating requirements.')}</p>
                 </div>
               ) : (
                 <div className="space-y-2.5">
@@ -245,17 +245,17 @@ export function AITrainingAuditModal({
                     <div
                       key={err.id}
                       className={cn(
-                        'flex items-start gap-3 p-3 rounded-lg border border-red-200 bg-red-50/40 text-xs',
+                        'flex items-start gap-3 p-3 rounded-lg border border-ds-danger/30 bg-ds-danger-soft/40 text-xs',
                         'text-start'
                       )}
                     >
-                      <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                      <AlertCircle className="w-4 h-4 text-ds-danger shrink-0 mt-0.5" />
                       <div className="flex-1">
-                        <div className="font-bold text-red-900">{err.title}</div>
-                        <div className="text-red-700 mt-0.5">{err.description}</div>
+                        <div className="font-bold text-ds-danger">{err.title}</div>
+                        <div className="text-ds-danger mt-0.5">{err.description}</div>
                       </div>
                       {err.canAutoFixWithAI && (
-                        <Badge variant="outline" className="bg-white text-purple-700 border-purple-200 text-[10px] shrink-0">
+                        <Badge variant="outline" className="bg-ds-surface text-ds-accent border-ds-accent/30 text-[11px] shrink-0">
                           <Sparkles className="w-3 h-3 me-1" /> AI Fixable
                         </Badge>
                       )}
@@ -266,14 +266,14 @@ export function AITrainingAuditModal({
                     <div
                       key={warn.id}
                       className={cn(
-                        'flex items-start gap-3 p-3 rounded-lg border border-amber-200 bg-amber-50/40 text-xs',
+                        'flex items-start gap-3 p-3 rounded-lg border border-ds-warning/30 bg-ds-warning-soft/40 text-xs',
                         'text-start'
                       )}
                     >
-                      <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                      <AlertTriangle className="w-4 h-4 text-ds-warning shrink-0 mt-0.5" />
                       <div className="flex-1">
-                        <div className="font-bold text-amber-900">{warn.title}</div>
-                        <div className="text-amber-700 mt-0.5">{warn.description}</div>
+                        <div className="font-bold text-ds-warning">{warn.title}</div>
+                        <div className="text-ds-warning mt-0.5">{warn.description}</div>
                       </div>
                     </div>
                   ))}
@@ -284,19 +284,19 @@ export function AITrainingAuditModal({
             {/* Blockers Tab */}
             <TabsContent value="errors" className="space-y-2.5 pt-3">
               {auditResult.errors.length === 0 ? (
-                <div className="text-center py-6 text-emerald-600 font-medium text-xs">
+                <div className="text-center py-6 text-ds-success font-medium text-xs">
                   ✓ {t('builder.zeroBlockers', 'Zero critical blockers found.')}
                 </div>
               ) : (
                 auditResult.errors.map((err) => (
-                  <div key={err.id} className="p-3.5 rounded-lg border border-red-200 bg-red-50/50 space-y-1.5 text-xs">
-                    <div className="font-bold text-red-900 flex items-center gap-2">
-                      <ShieldAlert className="w-4 h-4 text-red-600" />
+                  <div key={err.id} className="p-3.5 rounded-lg border border-ds-danger/30 bg-ds-danger-soft/50 space-y-1.5 text-xs">
+                    <div className="font-bold text-ds-danger flex items-center gap-2">
+                      <ShieldAlert className="w-4 h-4 text-ds-danger" />
                       <span>{err.title}</span>
                     </div>
-                    <p className="text-red-700">{err.description}</p>
+                    <p className="text-ds-danger">{err.description}</p>
                     {err.suggestedAction && (
-                      <div className="pt-1 text-[11px] text-slate-600 font-medium">
+                      <div className="pt-1 text-[11px] text-ds-ink-secondary font-medium">
                         👉 <strong>Suggested Action:</strong> {err.suggestedAction}
                       </div>
                     )}
@@ -308,14 +308,14 @@ export function AITrainingAuditModal({
             {/* Warnings Tab */}
             <TabsContent value="warnings" className="space-y-2.5 pt-3">
               {auditResult.warnings.length === 0 ? (
-                <div className="text-center py-6 text-slate-500 font-medium text-xs">
+                <div className="text-center py-6 text-ds-muted font-medium text-xs">
                   {t('builder.noWarnings', 'No pedagogical warnings.')}
                 </div>
               ) : (
                 auditResult.warnings.map((warn) => (
-                  <div key={warn.id} className="p-3.5 rounded-lg border border-amber-200 bg-amber-50/50 space-y-1 text-xs">
-                    <div className="font-bold text-amber-900">{warn.title}</div>
-                    <p className="text-amber-700">{warn.description}</p>
+                  <div key={warn.id} className="p-3.5 rounded-lg border border-ds-warning/30 bg-ds-warning-soft/50 space-y-1 text-xs">
+                    <div className="font-bold text-ds-warning">{warn.title}</div>
+                    <p className="text-ds-warning">{warn.description}</p>
                   </div>
                 ))
               )}
@@ -324,19 +324,19 @@ export function AITrainingAuditModal({
             {/* AI Auto-Complete Plan Tab */}
             <TabsContent value="ai_plan" className="space-y-4 pt-3">
               {!improvementPlan && !isGeneratingPlan && (
-                <div className="text-center py-8 px-4 bg-purple-50/50 border border-dashed border-purple-200 rounded-xl space-y-3">
-                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto text-purple-700">
+                <div className="text-center py-8 px-4 bg-ds-accent-soft/50 border border-dashed border-ds-accent/30 rounded-[8px] space-y-3">
+                  <div className="w-12 h-12 bg-ds-accent-soft rounded-full flex items-center justify-center mx-auto text-ds-accent">
                     <Sparkles className="w-6 h-6" />
                   </div>
-                  <h4 className="text-sm font-bold text-purple-950">
+                  <h4 className="text-sm font-bold text-ds-accent">
                     {t('builder.generateAIOptimizationPlan', 'AI Structural Context Synthesis')}
                   </h4>
-                  <p className="text-xs text-purple-800/80 max-w-md mx-auto">
+                  <p className="text-xs text-ds-accent/80 max-w-md mx-auto">
                     {t('builder.aiSynthesizeDesc', 'The AI will analyze surrounding lessons and curriculum to draft missing titles, rich descriptions, and learning objectives without overwriting any manual text.')}
                   </p>
                   <Button
                     onClick={handleRunAIOptimizer}
-                    className="bg-purple-600 hover:bg-purple-700 text-white font-semibold text-xs h-9 px-4"
+                    className="bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink font-semibold text-xs h-9 px-4"
                   >
                     <Wand2 className="w-3.5 h-3.5 me-2" />
                     {t('builder.startAISynthesis', 'Scan & Generate Missing Content')}
@@ -346,8 +346,8 @@ export function AITrainingAuditModal({
 
               {isGeneratingPlan && (
                 <div className="text-center py-12 space-y-3">
-                  <Loader2 className="w-8 h-8 animate-spin text-purple-600 mx-auto" />
-                  <p className="text-xs font-semibold text-slate-700">
+                  <Loader2 className="w-8 h-8 animate-spin text-ds-accent mx-auto" />
+                  <p className="text-xs font-semibold text-ds-ink-secondary">
                     {t('builder.synthesizingAI', 'Analyzing curriculum hierarchy and synthesizing missing fields...')}
                   </p>
                 </div>
@@ -355,14 +355,14 @@ export function AITrainingAuditModal({
 
               {improvementPlan && !isGeneratingPlan && (
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 bg-purple-50 border border-purple-200 rounded-lg text-xs">
-                    <span className="font-semibold text-purple-900">
+                  <div className="flex items-center justify-between p-3 bg-ds-accent-soft border border-ds-accent/30 rounded-lg text-xs">
+                    <span className="font-semibold text-ds-accent">
                       ✨ {improvementPlan.totalSuggestions} {t('builder.suggestionsFound', 'AI enhancements generated')}
                     </span>
                     <Button
                       size="sm"
                       onClick={handleApplyAllImprovements}
-                      className="bg-purple-600 hover:bg-purple-700 text-white h-7 text-xs font-bold"
+                      className="bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink h-7 text-xs font-bold"
                     >
                       {t('builder.applyAllImprovements', 'Apply All Improvements')}
                     </Button>
@@ -374,13 +374,13 @@ export function AITrainingAuditModal({
                       const isApplied = appliedSuggestionIds.has(sugKey)
 
                       return (
-                        <div key={idx} className="p-3 border rounded-lg bg-white dark:bg-slate-950 space-y-2 text-xs shadow-sm">
+                        <div key={idx} className="p-3 border rounded-lg bg-ds-surface space-y-2 text-xs shadow-sm">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <span className="font-bold text-slate-800 dark:text-slate-200 capitalize">
+                              <span className="font-bold text-ds-ink capitalize">
                                 {sug.fieldType.replace('_', ' ')}
                               </span>
-                              <Badge variant="outline" className="text-[10px] bg-purple-50 dark:bg-purple-950 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800">
+                              <Badge variant="outline" className="text-[11px] bg-ds-accent-soft text-ds-accent border-ds-accent/30">
                                 {sug.confidence} Confidence
                               </Badge>
                             </div>
@@ -392,13 +392,13 @@ export function AITrainingAuditModal({
                               className={cn(
                                 "h-6 text-[11px] px-2.5 font-semibold transition-colors",
                                 isApplied
-                                  ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-300"
-                                  : "border-purple-200 text-purple-700 hover:bg-purple-50 dark:border-purple-800 dark:text-purple-300 dark:hover:bg-purple-950"
+                                  ? "bg-ds-success-soft text-ds-success border-ds-success/30"
+                                  : "border-ds-accent/30 text-ds-accent hover:bg-ds-accent-soft"
                               )}
                             >
                               {isApplied ? (
                                 <>
-                                  <Check className="w-3 h-3 me-1 text-emerald-600" />
+                                  <Check className="w-3 h-3 me-1 text-ds-success" />
                                   Applied
                                 </>
                               ) : (
@@ -409,10 +409,10 @@ export function AITrainingAuditModal({
                               )}
                             </Button>
                           </div>
-                          <div className="p-2.5 bg-slate-50 dark:bg-slate-900 rounded border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-200 font-medium">
+                          <div className="p-2.5 bg-ds-surface-subtle rounded border border-ds-border text-ds-ink-secondary font-medium">
                             {sug.suggestedValue}
                           </div>
-                          <div className="text-[10px] text-slate-400">{sug.rationale}</div>
+                          <div className="text-[11px] text-ds-muted">{sug.rationale}</div>
                         </div>
                       )
                     })}
@@ -424,7 +424,7 @@ export function AITrainingAuditModal({
         </div>
 
         {/* Footer */}
-        <DialogFooter className="p-4 border-t bg-slate-50 dark:bg-slate-900/50 flex items-center justify-between">
+        <DialogFooter className="p-4 border-t bg-ds-surface-subtle flex items-center justify-between">
           <Button variant="ghost" size="sm" onClick={() => onOpenChange(false)} className="text-xs">
             {t('common.close', 'Close')}
           </Button>
@@ -435,7 +435,7 @@ export function AITrainingAuditModal({
                 size="sm"
                 onClick={handleRunAIOptimizer}
                 disabled={isGeneratingPlan}
-                className="border-purple-200 text-purple-700 hover:bg-purple-50 text-xs"
+                className="border-ds-accent/30 text-ds-accent hover:bg-ds-accent-soft text-xs"
               >
                 <Sparkles className="w-3.5 h-3.5 me-1.5" />
                 {t('builder.autoFixWithAI', 'Auto-Complete with AI')}
@@ -445,7 +445,7 @@ export function AITrainingAuditModal({
               <Button
                 size="sm"
                 onClick={handleApplyAllImprovements}
-                className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold"
+                className="bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink text-xs font-bold"
               >
                 {t('builder.applyAndClose', 'Apply & Continue')}
               </Button>

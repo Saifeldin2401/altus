@@ -199,10 +199,10 @@ export function PdfViewer({ url, className, onRetry }: PdfViewerProps) {
 
     if (error) {
         return (
-            <div className={`flex flex-col items-center justify-center p-6 text-center text-gray-500 bg-slate-50 border rounded-lg h-[400px] ${className}`}>
+            <div className={`flex flex-col items-center justify-center p-6 text-center text-ds-muted bg-ds-surface-subtle border rounded-lg h-[400px] ${className}`}>
                 <FileText className="w-12 h-12 mb-2 opacity-50" />
-                <p className="font-medium text-red-500 mb-1">Preview not available</p>
-                <p className="text-xs text-red-400 mb-4 px-4 bg-red-50 py-2 rounded border border-red-100 max-w-md">
+                <p className="font-medium text-ds-danger mb-1">Preview not available</p>
+                <p className="text-xs text-ds-danger mb-4 px-4 bg-ds-danger-soft py-2 rounded border border-ds-danger/30 max-w-md">
                     {error.message}
                 </p>
                 <div className="flex items-center gap-4">
@@ -216,7 +216,7 @@ export function PdfViewer({ url, className, onRetry }: PdfViewerProps) {
                         href={url}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-hotel-navy hover:text-hotel-gold transition-colors hover:underline text-sm"
+                        className="text-ds-ink hover:text-ds-accent transition-colors hover:underline text-sm"
                     >
                         Download PDF
                     </a>
@@ -226,14 +226,14 @@ export function PdfViewer({ url, className, onRetry }: PdfViewerProps) {
     }
 
     return (
-        <div className={`w-full bg-slate-100 rounded-lg overflow-hidden border shadow-sm relative flex flex-col ${className}`}>
+        <div className={`w-full bg-ds-surface-subtle rounded-lg overflow-hidden border shadow-sm relative flex flex-col ${className}`}>
             {/* Toolbar */}
-            <div className="bg-slate-800 text-white p-2 flex items-center justify-between sticky top-0 z-10 shrink-0">
+            <div className="bg-ds-ink text-ds-on-ink p-2 flex items-center justify-between sticky top-0 z-10 shrink-0">
                 <div className="flex items-center gap-2">
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-white hover:bg-slate-700 h-8 w-8 p-0"
+                        className="text-ds-on-ink hover:bg-ds-on-ink/10 h-8 w-8 p-0"
                         onClick={() => changePage(-1)}
                         disabled={pageNumber <= 1}
                     >
@@ -245,7 +245,7 @@ export function PdfViewer({ url, className, onRetry }: PdfViewerProps) {
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-white hover:bg-slate-700 h-8 w-8 p-0"
+                        className="text-ds-on-ink hover:bg-ds-on-ink/10 h-8 w-8 p-0"
                         onClick={() => changePage(1)}
                         disabled={pageNumber >= numPages}
                     >
@@ -257,17 +257,17 @@ export function PdfViewer({ url, className, onRetry }: PdfViewerProps) {
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-white hover:bg-slate-700 h-8 w-8 p-0"
+                        className="text-ds-on-ink hover:bg-ds-on-ink/10 h-8 w-8 p-0"
                         onClick={() => setRotation(r => (r + 90) % 360)}
                         title="Rotate"
                     >
                         <RotateCw className="h-4 w-4" />
                     </Button>
-                    <div className="h-4 w-px bg-slate-600 mx-1" />
+                    <div className="h-4 w-px bg-ds-muted mx-1" />
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-white hover:bg-slate-700 h-8 w-8 p-0"
+                        className="text-ds-on-ink hover:bg-ds-on-ink/10 h-8 w-8 p-0"
                         onClick={() => setScale(s => Math.max(0.5, s - 0.2))}
                     >
                         <ZoomOut className="h-4 w-4" />
@@ -276,7 +276,7 @@ export function PdfViewer({ url, className, onRetry }: PdfViewerProps) {
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="text-white hover:bg-slate-700 h-8 w-8 p-0"
+                        className="text-ds-on-ink hover:bg-ds-on-ink/10 h-8 w-8 p-0"
                         onClick={() => setScale(s => Math.min(3, s + 0.2))}
                     >
                         <ZoomIn className="h-4 w-4" />
@@ -287,17 +287,17 @@ export function PdfViewer({ url, className, onRetry }: PdfViewerProps) {
                     href={url}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-xs text-hotel-gold hover:text-hotel-gold-light transition-colors px-2"
+                    className="text-xs text-ds-accent hover:text-ds-accent transition-colors px-2"
                 >
                     Download
                 </a>
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-auto flex justify-center bg-slate-200 p-4 relative min-h-[400px]">
+            <div className="flex-1 overflow-auto flex justify-center bg-ds-border p-4 relative min-h-[400px]">
                 {loading && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-slate-100 z-0">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-400"></div>
+                    <div className="absolute inset-0 flex items-center justify-center bg-ds-surface-subtle z-0">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-ds-border-strong"></div>
                     </div>
                 )}
                 <canvas key={canvasKey} ref={canvasRef} className="shadow-lg max-w-full" />

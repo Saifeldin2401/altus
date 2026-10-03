@@ -47,27 +47,27 @@ export function KeyboardShortcutsModal() {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="sm:max-w-md bg-white border-slate-200">
+            <DialogContent className="sm:max-w-md bg-ds-surface border-ds-border">
                 <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2 text-xl font-bold text-slate-800">
-                        <Command className="w-5 h-5 text-hotel-navy" />
+                    <DialogTitle className="flex items-center gap-2 text-xl font-bold text-ds-ink">
+                        <Command className="w-5 h-5 text-ds-ink" />
                         {t('shortcuts.title', 'Keyboard Shortcuts')}
                     </DialogTitle>
-                    <DialogDescription className="text-slate-500 font-medium">
+                    <DialogDescription className="text-ds-muted font-medium">
                         {t('shortcuts.desc', 'Boost your productivity with these quick keystrokes.')}
                     </DialogDescription>
                 </DialogHeader>
 
                 <div className="grid gap-3 mt-4">
                     {shortcuts.map((shortcut, i) => (
-                        <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-slate-100/80 border border-slate-100 transition-colors group">
+                        <div key={i} className="flex items-center justify-between p-3 rounded-[8px] bg-ds-surface-subtle hover:bg-ds-surface-subtle/80 border border-ds-border transition-colors group">
                             <div>
-                                <div className="font-semibold text-slate-700 text-sm group-hover:text-slate-900 transition-colors">{shortcut.action}</div>
-                                <div className="text-xs text-slate-500">{shortcut.desc}</div>
+                                <div className="font-semibold text-ds-ink-secondary text-sm group-hover:text-ds-ink transition-colors">{shortcut.action}</div>
+                                <div className="text-xs text-ds-muted">{shortcut.desc}</div>
                             </div>
                             <div className="flex items-center gap-1.5 shrink-0">
                                 {shortcut.keys.map((key, j) => (
-                                    <kbd key={j} className="h-7 min-w-7 px-2 inline-flex items-center justify-center font-sans font-bold text-[12px] text-slate-600 bg-white border border-slate-200 rounded-md shadow-sm shadow-slate-200/50">
+                                    <kbd key={j} className="h-7 min-w-7 px-2 inline-flex items-center justify-center font-sans font-bold text-[12px] text-ds-ink-secondary bg-ds-surface border border-ds-border rounded-md shadow-sm">
                                         {key}
                                     </kbd>
                                 ))}

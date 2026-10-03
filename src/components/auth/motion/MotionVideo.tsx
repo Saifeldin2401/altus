@@ -57,7 +57,7 @@ function MotionVideoComponent({
   }
 
   return (
-    <div className={cn('relative w-full h-full overflow-hidden bg-ds-ink', className)}>
+    <div className={cn('relative w-full h-full overflow-hidden bg-black', className)}>
       {/* Immediate Poster Layer for Instant LCP & Progressive Enhancement */}
       <picture className="absolute inset-0 w-full h-full">
         <source srcSet={posterSrc} type="image/webp" />

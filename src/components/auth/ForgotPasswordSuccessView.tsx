@@ -69,7 +69,7 @@ function ForgotPasswordSuccessViewComponent({
 
           <Button
             type="button"
-            className="w-full h-11 bg-ds-brass hover:bg-ds-accent-hover text-white text-xs font-medium rounded-lg shadow-xs"
+            className="w-full h-11 bg-ds-brass hover:bg-ds-accent-hover text-white dark:text-ds-on-ink text-xs font-medium rounded-lg shadow-xs"
             onClick={onBackToLogin}
           >
             <ArrowRight

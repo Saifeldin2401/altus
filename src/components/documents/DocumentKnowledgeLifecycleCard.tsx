@@ -224,12 +224,12 @@ export function DocumentKnowledgeLifecycleCard({
   };
 
   return (
-    <Card className="border-2 border-primary/20 bg-card shadow-sm rounded-2xl overflow-hidden">
+    <Card className="border-2 border-primary/20 bg-card shadow-sm rounded-[8px] overflow-hidden">
       <CardHeader className="bg-muted/30 pb-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="space-y-1">
             <CardTitle className="text-base font-bold flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+              <Sparkles className="w-5 h-5 text-ds-accent" />
               {t('lifecycle.title', 'AI Knowledge Base & Publication Control')}
             </CardTitle>
             <CardDescription className="text-xs">
@@ -243,12 +243,12 @@ export function DocumentKnowledgeLifecycleCard({
           {/* Current AI Knowledge Base State Badge */}
           <div>
             {isIndexed ? (
-              <Badge className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold gap-1 px-3 py-1 text-xs shadow-sm">
+              <Badge className="bg-ds-success hover:bg-ds-success text-white dark:text-ds-on-ink font-bold gap-1 px-3 py-1 text-xs shadow-sm">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 {t('lifecycle.badge_indexed', 'Indexed in AI Knowledge Base')}
               </Badge>
             ) : isSuperseded ? (
-              <Badge variant="secondary" className="bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300 gap-1 px-3 py-1 text-xs">
+              <Badge variant="secondary" className="bg-ds-border text-ds-ink-secondary gap-1 px-3 py-1 text-xs">
                 <History className="w-3.5 h-3.5" />
                 {t('lifecycle.badge_superseded', 'Superseded KB Version')}
               </Badge>
@@ -258,7 +258,7 @@ export function DocumentKnowledgeLifecycleCard({
                 {t('lifecycle.badge_removed', 'Removed from Knowledge Base')}
               </Badge>
             ) : (
-              <Badge variant="outline" className="border-amber-500/50 text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 gap-1 px-3 py-1 text-xs font-semibold">
+              <Badge variant="outline" className="border-ds-warning/50 text-ds-warning bg-ds-warning-soft gap-1 px-3 py-1 text-xs font-semibold">
                 <Lock className="w-3.5 h-3.5" />
                 {t('lifecycle.badge_internal', 'Internal Document (Excluded from AI)')}
               </Badge>
@@ -269,7 +269,7 @@ export function DocumentKnowledgeLifecycleCard({
 
       <CardContent className="p-5 space-y-5">
         {/* Governance Metrics Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-xl bg-muted/20 border text-xs">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 rounded-[8px] bg-muted/20 border text-xs">
           <div>
             <span className="text-muted-foreground block mb-1 font-medium">{t('lifecycle.doc_status', 'Document Status')}</span>
             <Badge variant="outline" className="font-semibold text-xs">
@@ -279,7 +279,7 @@ export function DocumentKnowledgeLifecycleCard({
 
           <div>
             <span className="text-muted-foreground block mb-1 font-medium">{t('lifecycle.ai_eligibility', 'AI Retrieval Status')}</span>
-            <span className={isIndexed ? 'text-emerald-600 font-bold' : 'text-muted-foreground'}>
+            <span className={isIndexed ? 'text-ds-success font-bold' : 'text-muted-foreground'}>
               {isIndexed ? t('lifecycle.rag_active', 'Active RAG Target') : t('lifecycle.rag_excluded', 'Excluded from AI')}
             </span>
           </div>
@@ -300,7 +300,7 @@ export function DocumentKnowledgeLifecycleCard({
         </div>
 
         {/* Informational Guidance Notice */}
-        <div className="text-xs p-3.5 rounded-xl border bg-accent/20 flex items-start gap-3">
+        <div className="text-xs p-3.5 rounded-[8px] border bg-accent/20 flex items-start gap-3">
           <ShieldCheck className="w-4 h-4 text-primary shrink-0 mt-0.5" />
           <div className="space-y-1">
             <p className="font-semibold text-foreground">
@@ -329,7 +329,7 @@ export function DocumentKnowledgeLifecycleCard({
               <>
                 <Button
                   onClick={() => setPublishDialogOpen(true)}
-                  className="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs gap-2 shadow-sm"
+                  className="bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink font-bold text-xs gap-2 shadow-sm"
                 >
                   <Sparkles className="w-4 h-4" />
                   {t('lifecycle.action_publish', 'Publish to AI Knowledge Base')}
@@ -364,7 +364,7 @@ export function DocumentKnowledgeLifecycleCard({
       <Dialog open={publishDialogOpen} onOpenChange={setPublishDialogOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-purple-600 dark:text-purple-400">
+            <DialogTitle className="flex items-center gap-2 text-ds-accent">
               <Sparkles className="w-5 h-5" />
               {t('lifecycle.modal_publish_title', 'Approve & Publish to AI Knowledge Base')}
             </DialogTitle>
@@ -376,7 +376,7 @@ export function DocumentKnowledgeLifecycleCard({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="p-3 bg-muted/40 rounded-xl border text-xs space-y-1 my-2">
+          <div className="p-3 bg-muted/40 rounded-[8px] border text-xs space-y-1 my-2">
             <p className="font-semibold text-foreground">{document.title}</p>
             <p className="text-muted-foreground">Version: v{document.current_version || 1} • Size: {document.file_size || 0} bytes</p>
           </div>
@@ -388,7 +388,7 @@ export function DocumentKnowledgeLifecycleCard({
             <Button
               onClick={handleConfirmPublish}
               disabled={loading}
-              className="bg-purple-600 hover:bg-purple-700 text-white font-bold"
+              className="bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink font-bold"
             >
               {loading && <RefreshCw className="w-3.5 h-3.5 me-2 animate-spin" />}
               {t('lifecycle.modal_publish_confirm', 'Confirm & Publish')}
@@ -448,7 +448,7 @@ export function DocumentKnowledgeLifecycleCard({
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Lock className="w-5 h-5 text-amber-500" />
+              <Lock className="w-5 h-5 text-ds-warning" />
               {t('lifecycle.modal_internal_title', 'Mark as Internal Only')}
             </DialogTitle>
             <DialogDescription className="text-xs pt-2 leading-relaxed">

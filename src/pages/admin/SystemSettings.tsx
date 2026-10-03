@@ -93,14 +93,14 @@ function SettingRow({
                     </span>
                     {setting.is_override ? (
                         <div className="flex items-center gap-1.5">
-                            <Badge variant="outline" className="text-[10px] text-ds-warning bg-ds-warning-soft border-ds-warning/30">
+                            <Badge variant="outline" className="text-[11px] text-ds-warning bg-ds-warning-soft border-ds-warning/30">
                                 {t('settingsPage.changed', 'Changed from the default')}
                             </Badge>
                             {onReset && (
                                 <Button
                                     size="sm"
                                     variant="ghost"
-                                    className="h-5 text-[10px] text-muted-foreground hover:text-foreground gap-1 px-1.5"
+                                    className="h-5 text-[11px] text-muted-foreground hover:text-foreground gap-1 px-1.5"
                                     onClick={() => onReset(setting.key)}
                                     title={t('settingsPage.use_default_hint', 'Go back to the default value')}
                                 >

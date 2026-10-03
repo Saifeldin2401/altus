@@ -373,7 +373,7 @@ export function AssignmentCreateDialog({
                     )}
                   </div>
                   <span className="text-xs font-bold mt-1">Entire Organization</span>
-                  <span className="text-[10px] text-muted-foreground">Everyone in the organization</span>
+                  <span className="text-[11px] text-muted-foreground">Everyone in the organization</span>
                 </button>
 
                 {/* Brand-wide */}
@@ -394,7 +394,7 @@ export function AssignmentCreateDialog({
                     )}
                   </div>
                   <span className="text-xs font-bold mt-1">Brand Portfolio</span>
-                  <span className="text-[10px] text-muted-foreground">Everyone in one brand</span>
+                  <span className="text-[11px] text-muted-foreground">Everyone in one brand</span>
                 </button>
 
                 {/* Department */}
@@ -411,7 +411,7 @@ export function AssignmentCreateDialog({
                     <Briefcase className={`h-4 w-4 ${scopeType === 'department' ? 'text-ds-warning' : 'text-ds-muted'}`} />
                   </div>
                   <span className="text-xs font-bold mt-1">Department</span>
-                  <span className="text-[10px] text-muted-foreground">Front Office, F&B, etc.</span>
+                  <span className="text-[11px] text-muted-foreground">Front Office, F&B, etc.</span>
                 </button>
 
                 {/* Role / Job Title */}
@@ -428,7 +428,7 @@ export function AssignmentCreateDialog({
                     <Users className={`h-4 w-4 ${scopeType === 'role' ? 'text-ds-warning' : 'text-ds-muted'}`} />
                   </div>
                   <span className="text-xs font-bold mt-1">Target Role</span>
-                  <span className="text-[10px] text-muted-foreground">By job rank & role</span>
+                  <span className="text-[11px] text-muted-foreground">By job rank & role</span>
                 </button>
 
                 {/* Individual Learners */}
@@ -445,7 +445,7 @@ export function AssignmentCreateDialog({
                     <UserCheck className={`h-4 w-4 ${scopeType === 'individual' ? 'text-ds-warning' : 'text-ds-muted'}`} />
                   </div>
                   <span className="text-xs font-bold mt-1">Individual Learners</span>
-                  <span className="text-[10px] text-muted-foreground">Pick specific people</span>
+                  <span className="text-[11px] text-muted-foreground">Pick specific people</span>
                 </button>
               </div>
             </div>
@@ -456,7 +456,7 @@ export function AssignmentCreateDialog({
                 <span className="text-xs font-bold text-ds-ink">
                   Target Hierarchy & Filter Parameters
                 </span>
-                <span className="text-[10px] text-muted-foreground">
+                <span className="text-[11px] text-muted-foreground">
                   Hierarchically scoped to your permissions
                 </span>
               </div>
@@ -575,7 +575,7 @@ export function AssignmentCreateDialog({
                                 <Checkbox checked={isSelected} onCheckedChange={() => toggleLearnerSelection(learner.id)} />
                                 <div className="truncate">
                                   <div className="font-semibold truncate">{learner.full_name}</div>
-                                  <div className="text-[10px] text-muted-foreground truncate">
+                                  <div className="text-[11px] text-muted-foreground truncate">
                                     {learner.department_name || t('training:assignFlow.noDepartment', 'No department')}
                                   </div>
                                 </div>
@@ -602,7 +602,7 @@ export function AssignmentCreateDialog({
                       {isFetchingCount ? 'Calculating population...' : `${recipientCount} Eligible Learners`}
                     </span>
                     {recipientCount > 0 && (
-                      <Badge variant="outline" className="bg-ds-success-soft text-ds-success border-ds-success/30 text-[10px]">
+                      <Badge variant="outline" className="bg-ds-success-soft text-ds-success border-ds-success/30 text-[11px]">
                         <CheckCircle2 className="h-2.5 w-2.5 me-1" /> Ready
                       </Badge>
                     )}
@@ -614,7 +614,7 @@ export function AssignmentCreateDialog({
               </div>
 
               {isHighRiskBroadAssignment && (
-                <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[10px] self-start sm:self-center">
+                <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[11px] self-start sm:self-center">
                   <AlertTriangle className="h-3 w-3 me-1 text-ds-warning" />
                   Broad High-Volume Scope
                 </Badge>
@@ -689,7 +689,7 @@ export function AssignmentCreateDialog({
               <div className="flex items-center justify-between p-2 rounded-[8px] border">
                 <div>
                   <div className="font-semibold">Requires Learner Acknowledgment</div>
-                  <div className="text-[10px] text-muted-foreground">Learner must accept SOP terms</div>
+                  <div className="text-[11px] text-muted-foreground">Learner must accept SOP terms</div>
                 </div>
                 <Switch checked={requiresAcknowledgement} onCheckedChange={setRequiresAcknowledgement} />
               </div>
@@ -697,7 +697,7 @@ export function AssignmentCreateDialog({
               <div className="flex items-center justify-between p-2 rounded-[8px] border">
                 <div>
                   <div className="font-semibold">Automated Due Reminders</div>
-                  <div className="text-[10px] text-muted-foreground">Notify 7d, 3d, 1d before due date</div>
+                  <div className="text-[11px] text-muted-foreground">Notify 7d, 3d, 1d before due date</div>
                 </div>
                 <Switch checked={notifyOnDue} onCheckedChange={setNotifyOnDue} />
               </div>

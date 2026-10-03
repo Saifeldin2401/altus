@@ -597,7 +597,7 @@ export function TrainingTrackCommandCenter({
                             <div className="flex items-baseline gap-2">
                                 <span className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{metrics.complianceRate}%</span>
                                 <span className={cn(
-                                    "px-1.5 py-0.5 rounded text-[10px] font-semibold",
+                                    "px-1.5 py-0.5 rounded text-[11px] font-semibold",
                                     metrics.complianceRate >= 90 ? "bg-ds-success-soft text-ds-success" : "bg-ds-warning-soft text-ds-warning"
                                 )}>
                                     {metrics.complianceRate >= 90 ? (t('tracking.cc.targetMet', 'On target')) : (t('tracking.cc.belowTarget', 'Below 90%'))}
@@ -616,7 +616,7 @@ export function TrainingTrackCommandCenter({
                             </div>
                             <div className="flex items-baseline gap-2">
                                 <span className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{metrics.avgScore ?? '—'}%</span>
-                                <span className="px-1.5 py-0.5 rounded bg-ds-info-soft text-ds-info text-[10px] font-semibold">
+                                <span className="px-1.5 py-0.5 rounded bg-ds-info-soft text-ds-info text-[11px] font-semibold">
                                     {(metrics.avgScore ?? 0) >= 85 ? (t('tracking.cc.scoreStrong', 'Strong')) : (t('tracking.cc.scoreOk', 'Fair'))}
                                 </span>
                             </div>
@@ -669,11 +669,11 @@ export function TrainingTrackCommandCenter({
                                     {metrics.overdueCount}
                                 </span>
                                 {metrics.overdueCount > 0 ? (
-                                    <span className="px-1.5 py-0.5 rounded bg-ds-danger-soft text-ds-danger text-[10px] font-semibold">
+                                    <span className="px-1.5 py-0.5 rounded bg-ds-danger-soft text-ds-danger text-[11px] font-semibold">
                                         {t('tracking.cc.needsFollowUp', 'Follow up')}
                                     </span>
                                 ) : (
-                                    <span className="px-1.5 py-0.5 rounded bg-ds-success-soft text-ds-success text-[10px] font-semibold">
+                                    <span className="px-1.5 py-0.5 rounded bg-ds-success-soft text-ds-success text-[11px] font-semibold">
                                         {t('tracking.cc.noneOverdue', 'None overdue')}
                                     </span>
                                 )}
@@ -771,7 +771,7 @@ export function TrainingTrackCommandCenter({
                                                             </span>
                                                         )}
                                                         <span className={cn(
-                                                            "px-1.5 py-0.5 rounded text-[10px] font-semibold",
+                                                            "px-1.5 py-0.5 rounded text-[11px] font-semibold",
                                                             dept.compliance >= 90 ? "bg-ds-success-soft text-ds-success" :
                                                             dept.compliance >= 75 ? "bg-ds-warning-soft text-ds-warning" : "bg-ds-danger-soft text-ds-danger"
                                                         )}>
@@ -836,7 +836,7 @@ export function TrainingTrackCommandCenter({
                                             className="group cursor-pointer rounded-[6px] border border-ds-border bg-ds-surface-subtle p-3.5 hover:border-ds-border-strong hover:bg-ds-surface transition-all space-y-2"
                                         >
                                             <div className="flex items-center justify-between text-xs">
-                                                <span className="px-1.5 py-0.5 rounded text-[10px] font-medium border border-ds-border bg-ds-surface text-ds-muted">
+                                                <span className="px-1.5 py-0.5 rounded text-[11px] font-medium border border-ds-border bg-ds-surface text-ds-muted">
                                                     {gap.category}
                                                 </span>
                                                 <span className={cn(
@@ -849,7 +849,7 @@ export function TrainingTrackCommandCenter({
                                             <p className="text-xs font-semibold text-ds-ink line-clamp-2 leading-relaxed group-hover:text-ds-accent transition-colors">
                                                 "{gap.questionText}"
                                             </p>
-                                            <div className="text-[10px] text-ds-muted flex items-center justify-between pt-1 border-t border-ds-border/60">
+                                            <div className="text-[11px] text-ds-muted flex items-center justify-between pt-1 border-t border-ds-border/60">
                                                 <span>{gap.attempts} {t('tracking.cc.attempts', 'attempts')}</span>
                                                 <span className="text-ds-accent font-semibold flex items-center gap-0.5">
                                                     {t('tracking.cc.view', 'View')}
@@ -931,7 +931,7 @@ export function TrainingTrackCommandCenter({
                                                         </div>
                                                     </td>
                                                     <td className="py-3 px-4 text-center">
-                                                        <Badge variant={mod.status === 'published' ? 'default' : 'secondary'} className="text-[10px] capitalize">
+                                                        <Badge variant={mod.status === 'published' ? 'default' : 'secondary'} className="text-[11px] capitalize">
                                                             {mod.status || 'published'}
                                                         </Badge>
                                                     </td>
@@ -956,7 +956,7 @@ export function TrainingTrackCommandCenter({
                                                     <td className="py-3 px-4 text-center">
                                                         {mod.avgScore !== null ? (
                                                             <span className={cn(
-                                                                "px-1.5 py-0.5 rounded text-[10px] font-semibold",
+                                                                "px-1.5 py-0.5 rounded text-[11px] font-semibold",
                                                                 mod.avgScore >= mod.passingScore ? "bg-ds-success-soft text-ds-success" : "bg-ds-danger-soft text-ds-danger"
                                                             )}>
                                                                 {mod.avgScore}%
@@ -967,7 +967,7 @@ export function TrainingTrackCommandCenter({
                                                     </td>
                                                     <td className="py-3 px-4 text-center">
                                                         {mod.worstDropBlock ? (
-                                                            <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-ds-warning-soft text-ds-warning border border-ds-warning/30">
+                                                            <span className="px-1.5 py-0.5 rounded text-[11px] font-medium bg-ds-warning-soft text-ds-warning border border-ds-warning/30">
                                                                 {t('tracking.cc.dropStep', 'Step {{step}}', { step: mod.worstDropBlock.order })}
                                                             </span>
                                                         ) : (
@@ -1051,7 +1051,7 @@ export function TrainingTrackCommandCenter({
                                             <div key={block.id} className="rounded-[6px] border border-ds-border bg-ds-surface-subtle p-2.5 text-xs space-y-1.5">
                                                 <div className="flex items-center justify-between font-semibold">
                                                     <span className="text-ds-ink flex items-center gap-2">
-                                                        <Badge variant="outline" className="text-[10px] bg-ds-surface border-ds-border">#{block.order}</Badge>
+                                                        <Badge variant="outline" className="text-[11px] bg-ds-surface border-ds-border">#{block.order}</Badge>
                                                         {block.title}
                                                     </span>
                                                     <span className="text-ds-accent font-mono font-bold">{block.retentionRate}% {t('tracking.cc.finished', 'finished')}</span>
@@ -1087,11 +1087,11 @@ export function TrainingTrackCommandCenter({
                                                 <div key={lr.id} className="p-2.5 flex items-center justify-between hover:bg-ds-surface-subtle transition-colors">
                                                     <div>
                                                         <div className="font-semibold text-ds-ink">{prof?.full_name || 'Staff Member'}</div>
-                                                        <div className="text-[10px] text-ds-muted">{prof?.email}</div>
+                                                        <div className="text-[11px] text-ds-muted">{prof?.email}</div>
                                                     </div>
                                                     <div className="flex items-center gap-3">
                                                         <span className="font-mono text-xs font-semibold text-ds-muted">{lr.progress_percentage || 0}%</span>
-                                                        <Badge variant={lr.status === 'completed' ? 'default' : 'secondary'} className="text-[10px] capitalize">
+                                                        <Badge variant={lr.status === 'completed' ? 'default' : 'secondary'} className="text-[11px] capitalize">
                                                             {lr.status}
                                                         </Badge>
                                                     </div>
@@ -1128,7 +1128,7 @@ export function TrainingTrackCommandCenter({
             <Dialog open={!!selectedQuestionForDetail} onOpenChange={(open) => !open && setSelectedQuestionForDetail(null)}>
                 <DialogContent className="max-w-lg border border-ds-border bg-ds-surface text-ds-ink">
                     <DialogHeader>
-                        <span className="w-fit px-1.5 py-0.5 rounded bg-ds-danger-soft text-ds-danger text-[10px] font-semibold">
+                        <span className="w-fit px-1.5 py-0.5 rounded bg-ds-danger-soft text-ds-danger text-[11px] font-semibold">
                             {selectedQuestionForDetail?.accuracyRate}% {t('tracking.cc.accuracyRate', 'Answered correctly')}
                         </span>
                         <DialogTitle className="text-base font-semibold text-ds-ink pt-1">
@@ -1142,14 +1142,14 @@ export function TrainingTrackCommandCenter({
                     {selectedQuestionForDetail && (
                         <div className="space-y-4 pt-2 text-xs">
                             <div className="p-3 bg-ds-surface-subtle rounded-[6px] border border-ds-border">
-                                <span className="font-semibold text-ds-muted uppercase tracking-wider text-[10px]">{t('tracking.cc.question', 'Question')}</span>
+                                <span className="font-semibold text-ds-muted uppercase tracking-wider text-[11px]">{t('tracking.cc.question', 'Question')}</span>
                                 <p className="font-semibold text-ds-ink mt-1 text-sm leading-relaxed">
                                     "{selectedQuestionForDetail.questionText}"
                                 </p>
                             </div>
 
                             <div className="p-3 bg-ds-accent-soft/30 rounded-[6px] border border-ds-accent/30">
-                                <span className="font-semibold text-ds-accent uppercase tracking-wider text-[10px] flex items-center gap-1">
+                                <span className="font-semibold text-ds-accent uppercase tracking-wider text-[11px] flex items-center gap-1">
                                     <Sparkles className="h-3 w-3 text-ds-accent" />
                                     {t('tracking.cc.explanation', 'Explanation')}
                                 </span>

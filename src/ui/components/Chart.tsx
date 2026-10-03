@@ -142,7 +142,7 @@ export const SimpleDonutChart: React.FC<SimpleDonutChartProps> = ({
               <span className="text-xl font-bold font-mono text-ds-ink">{centerValue}</span>
             )}
             {centerLabel && (
-              <span className="text-[10px] uppercase font-semibold text-ds-muted">{centerLabel}</span>
+              <span className="text-[11px] uppercase font-semibold text-ds-muted">{centerLabel}</span>
             )}
           </div>
         )}

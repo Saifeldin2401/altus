@@ -118,7 +118,7 @@ function ProgressRing({ value, size = 44, stroke = 4 }: { value: number; size?: 
         fill="none"
         stroke="currentColor"
         strokeWidth={stroke}
-        className="text-slate-200"
+        className="text-ds-on-ink"
       />
       <circle
         cx={size / 2}
@@ -130,7 +130,7 @@ function ProgressRing({ value, size = 44, stroke = 4 }: { value: number; size?: 
         strokeDasharray={circumference}
         strokeDashoffset={offset}
         strokeLinecap="round"
-        className="text-hotel-gold transition-all duration-500"
+        className="text-ds-accent transition-all duration-500"
       />
     </svg>
   )
@@ -185,13 +185,13 @@ function ModuleListPanel({
   }, [moduleFilter, records, activeRecords, completedRecords])
 
   const filterTabs: { key: ModuleFilterTab; label: string; count: number; color: string }[] = [
-    { key: 'all', label: t('allModules', 'All modules'), count: records.length, color: 'text-slate-600 bg-slate-100' },
-    { key: 'active', label: t('active', 'Active'), count: activeRecords.length, color: 'text-sky-700 bg-sky-50' },
-    { key: 'completed', label: t('completed'), count: completedRecords.length, color: 'text-emerald-700 bg-emerald-50' }
+    { key: 'all', label: t('allModules', 'All modules'), count: records.length, color: 'text-ds-ink-secondary bg-ds-surface-subtle' },
+    { key: 'active', label: t('active', 'Active'), count: activeRecords.length, color: 'text-ds-info bg-ds-info-soft' },
+    { key: 'completed', label: t('completed'), count: completedRecords.length, color: 'text-ds-success bg-ds-success-soft' }
   ]
 
   return (
-    <div className="rounded-xl border p-4">
+    <div className="rounded-[8px] border p-4">
       {/* Filter tabs header */}
       <div className="mb-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-1">
@@ -206,13 +206,13 @@ function ModuleListPanel({
                   "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-all",
                   moduleFilter === tab.key
                     ? `${tab.color} ring-1 ring-inset ring-current/20`
-                    : "text-muted-foreground hover:bg-slate-50"
+                    : "text-muted-foreground hover:bg-ds-surface-subtle"
                 )}
               >
                 {tab.label}
                 <span className={cn(
-                  "inline-flex size-5 items-center justify-center rounded-full text-[10px] font-bold",
-                  moduleFilter === tab.key ? "bg-white/70" : "bg-slate-100"
+                  "inline-flex size-5 items-center justify-center rounded-full text-[11px] font-bold",
+                  moduleFilter === tab.key ? "bg-white/70" : "bg-ds-surface-subtle"
                 )}>
                   {tab.count}
                 </span>
@@ -224,7 +224,7 @@ function ModuleListPanel({
 
       {/* Module records */}
       {displayedRecords.length === 0 ? (
-        <div className="rounded-lg border border-dashed bg-slate-50/50 p-4 text-center text-sm text-muted-foreground">
+        <div className="rounded-lg border border-dashed bg-ds-surface-subtle/50 p-4 text-center text-sm text-muted-foreground">
           {moduleFilter === 'active' && t('noActiveModules', 'No active modules in the queue.')}
           {moduleFilter === 'completed' && t('noCompletedModules', 'No completed modules yet.')}
           {moduleFilter === 'all' && t('noModulesAssigned', 'No modules assigned.')}
@@ -239,13 +239,13 @@ function ModuleListPanel({
                 key={record.id}
                 className={cn(
                   "rounded-lg border p-3 transition-colors",
-                  isCompleted ? "bg-emerald-50/40" : "bg-slate-50/60"
+                  isCompleted ? "bg-ds-success-soft/40" : "bg-ds-surface-subtle/60"
                 )}
               >
                 {/* Row 1: Title + Status + Details button */}
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-slate-900">
+                    <p className="truncate text-sm font-semibold text-ds-ink">
                       {record.resolvedModuleTitle}
                     </p>
                     <p className="mt-0.5 text-xs text-muted-foreground">
@@ -267,7 +267,7 @@ function ModuleListPanel({
                             type="button"
                             variant="ghost"
                             size="icon"
-                            className="size-7 hover:bg-slate-200/60"
+                            className="size-7 hover:bg-ds-border/60"
                             title={t('actions', 'Actions')}
                             aria-label={t('accessibility.open_actions', 'Open actions')}
                           >
@@ -280,7 +280,7 @@ function ModuleListPanel({
                           {onResetProgress && (
                             <DropdownMenuItem
                               onClick={() => onResetProgress(userId, record.id)}
-                              className="text-amber-600"
+                              className="text-ds-warning"
                             >
                               <RotateCcw className="size-4 me-2" />
                               {t('resetProgress', 'Reset Progress')}
@@ -289,7 +289,7 @@ function ModuleListPanel({
                           {isCompleted && onRevokeCertificate && (
                             <DropdownMenuItem
                               onClick={() => onRevokeCertificate(userId, record.id)}
-                              className="text-rose-600"
+                              className="text-ds-danger"
                             >
                               <Shield className="size-4 me-2" />
                               {t('revokeCertificate', 'Revoke Certificate')}
@@ -298,7 +298,7 @@ function ModuleListPanel({
                           {onExemptUser && (
                             <DropdownMenuItem
                               onClick={() => onExemptUser(userId, record.id)}
-                              className="text-slate-600"
+                              className="text-ds-ink-secondary"
                             >
                               <UserX className="size-4 me-2" />
                               {t('exemptUser', 'Exempt User')}
@@ -311,7 +311,7 @@ function ModuleListPanel({
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="size-7 hover:bg-slate-200/60"
+                      className="size-7 hover:bg-ds-border/60"
                       title={t('viewDetails', 'View details')}
                       aria-label={t('accessibility.view_details', 'View details')}
                       onClick={() => onViewDetails(record.id)}
@@ -325,14 +325,14 @@ function ModuleListPanel({
                   <div className="flex-1">
                     <Progress value={record.resolvedProgress} className={cn('h-2', statusMeta.progressClass)} />
                   </div>
-                  <span className="shrink-0 text-xs font-medium text-slate-600">
+                  <span className="shrink-0 text-xs font-medium text-ds-ink-secondary">
                     {record.resolvedProgress}%
                   </span>
                   <span className={cn(
                     "shrink-0 text-xs font-semibold",
                     record.resolvedScore === null
                       ? "text-muted-foreground"
-                      : record.passed ? "text-emerald-600" : "text-rose-600"
+                      : record.passed ? "text-ds-success" : "text-ds-danger"
                   )}>
                     {record.resolvedScore !== null ? `${Math.round(record.resolvedScore)}%` : '—'}
                   </span>
@@ -373,11 +373,11 @@ export function EmployeeProgressTracker({
   const { t } = useTranslation('training')
 
   return (
-    <Card className="border-t-4 border-t-hotel-navy shadow-md">
-      <CardHeader className="gap-3 border-b bg-slate-50/60">
+    <Card className="border-t-4 border-t-ds-ink">
+      <CardHeader className="gap-3 border-b bg-ds-surface-subtle/60">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex flex-col gap-1">
-            <CardTitle className="text-xl font-heading text-hotel-navy">{t('employeeProgress')}</CardTitle>
+            <CardTitle className="text-xl font-heading text-ds-ink">{t('employeeProgress')}</CardTitle>
             <CardDescription>
               {t(
                 'employeeTrackerDescription',
@@ -388,20 +388,20 @@ export function EmployeeProgressTracker({
           {/* Header summary badges with colored dots */}
           <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
             <span className="flex items-center gap-1.5">
-              <span className="inline-block size-2 rounded-full bg-indigo-500" />
+              <span className="inline-block size-2 rounded-full bg-ds-info" />
               {summary.employeeCount} {t('staff', 'Staff')}
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="inline-block size-2 rounded-full bg-slate-400" />
+              <span className="inline-block size-2 rounded-full bg-ds-muted" />
               {metrics.uniqueModules} {t('modules', 'Modules')}
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="inline-block size-2 rounded-full bg-blue-400" />
+              <span className="inline-block size-2 rounded-full bg-ds-info" />
               {metrics.total} {t('totalEnrollments', 'Enrollments')}
             </span>
             {summary.averageScore !== null && (
               <span className="flex items-center gap-1.5">
-                <span className="inline-block size-2 rounded-full bg-hotel-gold" />
+                <span className="inline-block size-2 rounded-full bg-ds-accent" />
                 {t('analytics.avgScore', 'Avg Score')}: {summary.averageScore}%
               </span>
             )}
@@ -412,7 +412,7 @@ export function EmployeeProgressTracker({
       <CardContent className="pt-6">
         {isLoading ? (
           <div className="flex justify-center p-12">
-            <Loader2 className="size-10 animate-spin text-hotel-gold" />
+            <Loader2 className="size-10 animate-spin text-ds-accent" />
           </div>
         ) : groups.length === 0 ? (
           <EmptyState
@@ -425,28 +425,28 @@ export function EmployeeProgressTracker({
             {/* ══════════════════════ LEFT PANEL: Employee Accordion List ══════════════════════ */}
             <div className="flex flex-col gap-4">
               {/* Top summary strip */}
-              <div className="rounded-xl border bg-slate-50/70 px-4 py-3">
+              <div className="rounded-[8px] border bg-ds-surface-subtle/70 px-4 py-3">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="text-sm text-slate-700">
-                    <span className="font-semibold text-slate-900">{summary.employeeCount}</span>
+                  <p className="text-sm text-ds-ink-secondary">
+                    <span className="font-semibold text-ds-ink">{summary.employeeCount}</span>
                     {' '}{t('trackingSummaryEmployees', 'employees')} · {' '}
-                    <span className="font-semibold text-slate-900">{metrics.uniqueModules}</span>
+                    <span className="font-semibold text-ds-ink">{metrics.uniqueModules}</span>
                     {' '}{t('modules', 'modules')} · {' '}
-                    <span className="font-semibold text-slate-900">{metrics.total}</span>
+                    <span className="font-semibold text-ds-ink">{metrics.total}</span>
                     {' '}{t('totalEnrollments', 'enrollments')}
                   </p>
                   <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1.5">
-                      <span className="inline-block size-1.5 rounded-full bg-emerald-500" />
+                      <span className="inline-block size-1.5 rounded-full bg-ds-success" />
                       {metrics.completed} {t('completed')}
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <span className="inline-block size-1.5 rounded-full bg-sky-500" />
+                      <span className="inline-block size-1.5 rounded-full bg-ds-info" />
                       {metrics.in_progress} {t('inProgress')}
                     </span>
                     {metrics.overdue > 0 && (
                       <span className="flex items-center gap-1.5">
-                        <span className="inline-block size-1.5 rounded-full bg-rose-500" />
+                        <span className="inline-block size-1.5 rounded-full bg-ds-danger" />
                         {metrics.overdue} {t('overdue')}
                       </span>
                     )}
@@ -472,16 +472,16 @@ export function EmployeeProgressTracker({
                       key={group.userId}
                       value={group.userId}
                       className={cn(
-                        "overflow-hidden rounded-xl border bg-white shadow-sm transition-shadow hover:shadow-md",
-                        needsAttention && "border-rose-200/60"
+                        "overflow-hidden rounded-[8px] border bg-ds-surface shadow-sm transition-shadow",
+                        needsAttention && "border-ds-danger/60"
                       )}
                     >
-                      <AccordionTrigger className="px-4 py-3.5 hover:no-underline [&[data-state=open]]:bg-slate-50/50">
+                      <AccordionTrigger className="px-4 py-3.5 hover:no-underline [&[data-state=open]]:bg-ds-surface-subtle/50">
                         <div className="flex w-full items-center gap-4 text-start">
                           {/* ── Avatar ── */}
-                          <Avatar className="size-10 shrink-0 border border-slate-200 shadow-sm">
+                          <Avatar className="size-10 shrink-0 border border-ds-border shadow-sm">
                             <AvatarImage src={group.avatarUrl || ''} />
-                            <AvatarFallback className="bg-hotel-navy/10 text-sm font-semibold text-hotel-navy">
+                            <AvatarFallback className="bg-ds-ink/10 text-sm font-semibold text-ds-ink">
                               {group.userInitials}
                             </AvatarFallback>
                           </Avatar>
@@ -489,16 +489,16 @@ export function EmployeeProgressTracker({
                           {/* ── Identity + metadata ── */}
                           <div className="flex min-w-0 flex-1 flex-col gap-1">
                             <div className="flex flex-wrap items-center gap-2">
-                              <span className="truncate text-sm font-semibold text-slate-900">
+                              <span className="truncate text-sm font-semibold text-ds-ink">
                                 {group.userName}
                               </span>
                               {group.overdueModules > 0 && (
-                                <Badge variant="outline" className="border-rose-200 bg-rose-50 text-rose-700 text-[11px] px-1.5 py-0">
+                                <Badge variant="outline" className="border-ds-danger/30 bg-ds-danger-soft text-ds-danger text-[11px] px-1.5 py-0">
                                   {group.overdueModules} {t('overdue')}
                                 </Badge>
                               )}
                               {group.totalModules >= 4 && (
-                                <Badge variant="outline" className="border-amber-200 bg-amber-50 text-amber-700 text-[11px] px-1.5 py-0">
+                                <Badge variant="outline" className="border-ds-warning/30 bg-ds-warning-soft text-ds-warning text-[11px] px-1.5 py-0">
                                   {group.totalModules} {t('modules', 'Modules')}
                                 </Badge>
                               )}
@@ -509,17 +509,17 @@ export function EmployeeProgressTracker({
                             {/* Compact stat chips — only non-zero */}
                             <div className="mt-0.5 flex flex-wrap gap-1.5">
                               {group.completedModules > 0 && (
-                                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
+                                <span className="inline-flex items-center gap-1 rounded-full bg-ds-success-soft px-2 py-0.5 text-[11px] font-medium text-ds-success">
                                   <CheckCircle2 className="size-3" /> {group.completedModules}
                                 </span>
                               )}
                               {group.inProgressModules > 0 && (
-                                <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 text-[11px] font-medium text-sky-700">
+                                <span className="inline-flex items-center gap-1 rounded-full bg-ds-info-soft px-2 py-0.5 text-[11px] font-medium text-ds-info">
                                   <Clock className="size-3" /> {group.inProgressModules}
                                 </span>
                               )}
                               {group.assignedModules > 0 && (
-                                <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-700">
+                                <span className="inline-flex items-center gap-1 rounded-full bg-ds-warning-soft px-2 py-0.5 text-[11px] font-medium text-ds-warning">
                                   <BookOpen className="size-3" /> {group.assignedModules}
                                 </span>
                               )}
@@ -530,13 +530,13 @@ export function EmployeeProgressTracker({
                           <div className="hidden shrink-0 items-center gap-4 sm:flex">
                             <div className="relative flex items-center justify-center">
                               <ProgressRing value={group.averageProgress} />
-                              <span className="absolute text-xs font-bold text-slate-800">
+                              <span className="absolute text-xs font-bold text-ds-ink">
                                 {group.averageProgress}%
                               </span>
                             </div>
                             <div className="flex flex-col items-end gap-0.5 text-end">
                               <span className="text-xs text-muted-foreground">{t('analytics.avgScore', 'Avg Score')}</span>
-                              <span className="text-lg font-bold text-slate-800">
+                              <span className="text-lg font-bold text-ds-ink">
                                 {group.averageScore !== null ? `${group.averageScore}%` : '—'}
                               </span>
                             </div>
@@ -549,16 +549,16 @@ export function EmployeeProgressTracker({
 
                         {/* Mobile-only stats row */}
                         <div className="mb-4 grid grid-cols-2 gap-3 sm:hidden">
-                          <div className="flex items-center gap-3 rounded-lg border bg-slate-50 p-3">
+                          <div className="flex items-center gap-3 rounded-lg border bg-ds-surface-subtle p-3">
                             <ProgressRing value={group.averageProgress} size={36} stroke={3} />
                             <div>
                               <p className="text-xs text-muted-foreground">{t('progress')}</p>
-                              <p className="text-sm font-bold text-slate-900">{group.averageProgress}%</p>
+                              <p className="text-sm font-bold text-ds-ink">{group.averageProgress}%</p>
                             </div>
                           </div>
-                          <div className="rounded-lg border bg-slate-50 p-3">
+                          <div className="rounded-lg border bg-ds-surface-subtle p-3">
                             <p className="text-xs text-muted-foreground">{t('analytics.avgScore', 'Avg Score')}</p>
-                            <p className="text-sm font-bold text-slate-900">
+                            <p className="text-sm font-bold text-ds-ink">
                               {group.averageScore !== null ? `${group.averageScore}%` : '—'}
                             </p>
                           </div>
@@ -585,30 +585,30 @@ export function EmployeeProgressTracker({
                           {/* ── Sidebar column ── */}
                           <div className="flex flex-col gap-3">
                             {/* Load breakdown */}
-                            <div className="rounded-xl border p-4">
-                              <p className="mb-3 text-sm font-semibold text-slate-900">{t('loadBreakdown', 'Load breakdown')}</p>
+                            <div className="rounded-[8px] border p-4">
+                              <p className="mb-3 text-sm font-semibold text-ds-ink">{t('loadBreakdown', 'Load breakdown')}</p>
                               <div className="grid gap-1.5">
                                 {group.overdueModules > 0 && (
-                                  <div className="flex items-center justify-between rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">
+                                  <div className="flex items-center justify-between rounded-lg bg-ds-danger-soft px-3 py-2 text-sm text-ds-danger">
                                     <span className="flex items-center gap-2">
                                       <AlertTriangle className="size-3.5" /> {t('overdue')}
                                     </span>
                                     <span className="font-semibold">{group.overdueModules}</span>
                                   </div>
                                 )}
-                                <div className="flex items-center justify-between rounded-lg bg-sky-50 px-3 py-2 text-sm text-sky-700">
+                                <div className="flex items-center justify-between rounded-lg bg-ds-info-soft px-3 py-2 text-sm text-ds-info">
                                   <span className="flex items-center gap-2">
                                     <Clock className="size-3.5" /> {t('inProgress')}
                                   </span>
                                   <span className="font-semibold">{group.inProgressModules}</span>
                                 </div>
-                                <div className="flex items-center justify-between rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-700">
+                                <div className="flex items-center justify-between rounded-lg bg-ds-warning-soft px-3 py-2 text-sm text-ds-warning">
                                   <span className="flex items-center gap-2">
                                     <BookOpen className="size-3.5" /> {t('assigned')}
                                   </span>
                                   <span className="font-semibold">{group.assignedModules}</span>
                                 </div>
-                                <div className="flex items-center justify-between rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                                <div className="flex items-center justify-between rounded-lg bg-ds-success-soft px-3 py-2 text-sm text-ds-success">
                                   <span className="flex items-center gap-2">
                                     <CheckCircle2 className="size-3.5" /> {t('completed')}
                                   </span>
@@ -619,9 +619,9 @@ export function EmployeeProgressTracker({
 
                             {/* Focus module */}
                             {group.highlightModule && (
-                              <div className="rounded-xl border bg-blue-50/40 p-4">
-                                <p className="mb-1 text-xs font-medium uppercase tracking-wide text-blue-600">{t('focusModule', 'Focus module')}</p>
-                                <p className="text-sm font-medium text-slate-900">{group.highlightModule.resolvedModuleTitle}</p>
+                              <div className="rounded-[8px] border bg-ds-info-soft/40 p-4">
+                                <p className="mb-1 text-xs font-medium uppercase tracking-wide text-ds-info">{t('focusModule', 'Focus module')}</p>
+                                <p className="text-sm font-medium text-ds-ink">{group.highlightModule.resolvedModuleTitle}</p>
                                 <p className="mt-1.5 text-xs text-muted-foreground">{describeFollowUp(group)}</p>
                               </div>
                             )}
@@ -637,40 +637,40 @@ export function EmployeeProgressTracker({
             {/* ══════════════════════ RIGHT PANEL: Digest, Follow-up, Leaderboard ══════════════════════ */}
             <div className="flex flex-col gap-4">
               {/* Tracking Digest */}
-              <Card className="border-slate-200">
+              <Card className="border-ds-border">
                 <CardHeader className="gap-1 pb-3">
                   <CardTitle className="flex items-center gap-2 text-base">
-                    <TrendingUp className="size-4 text-hotel-navy" />
+                    <TrendingUp className="size-4 text-ds-ink" />
                     {t('trackingDigest', 'Tracking digest')}
                   </CardTitle>
                   <CardDescription>{t('trackingDigestDescription', 'Surface follow-up risk, average load, and completion health without scanning every module row.')}</CardDescription>
                 </CardHeader>
                 <CardContent className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-                  <div className="rounded-xl border bg-gradient-to-br from-rose-50 to-white p-4">
-                    <p className="text-xs font-medium text-rose-600">{t('requiredAction', 'Required Action')}</p>
-                    <p className="mt-1 text-2xl font-bold text-slate-900">{summary.employeesNeedingFollowUp}</p>
+                  <div className="rounded-[8px] border bg-gradient-to-br from-ds-danger-soft to-white p-4">
+                    <p className="text-xs font-medium text-ds-danger">{t('requiredAction', 'Required Action')}</p>
+                    <p className="mt-1 text-2xl font-bold text-ds-ink">{summary.employeesNeedingFollowUp}</p>
                     <p className="mt-0.5 text-xs text-muted-foreground">{t('staff', 'Staff')}</p>
                   </div>
-                  <div className="rounded-xl border bg-gradient-to-br from-hotel-gold/10 to-white p-4">
-                    <p className="text-xs font-medium text-hotel-navy">{t('portfolioProgress', 'Portfolio progress')}</p>
-                    <p className="mt-1 text-2xl font-bold text-slate-900">{summary.averageProgress}%</p>
+                  <div className="rounded-[8px] border bg-gradient-to-br from-ds-accent/10 to-white p-4">
+                    <p className="text-xs font-medium text-ds-ink">{t('portfolioProgress', 'Portfolio progress')}</p>
+                    <p className="mt-1 text-2xl font-bold text-ds-ink">{summary.averageProgress}%</p>
                     <p className="mt-0.5 text-xs text-muted-foreground">{t('completionRate', 'Completion rate')}: {summary.completionRate}%</p>
                   </div>
                 </CardContent>
               </Card>
 
               {/* Follow-up Queue */}
-              <Card className="border-slate-200">
+              <Card className="border-ds-border">
                 <CardHeader className="gap-1 pb-3">
                   <CardTitle className="flex items-center gap-2 text-base">
-                    <AlertTriangle className="size-4 text-rose-500" />
+                    <AlertTriangle className="size-4 text-ds-danger" />
                     {t('followUpQueue', 'Follow-up queue')}
                   </CardTitle>
                   <CardDescription>{t('followUpQueueDescription', 'Prioritize employees carrying overdue or stacked assignments.')}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-2">
                   {followUpQueue.length === 0 ? (
-                    <div className="rounded-lg border border-dashed bg-emerald-50/50 p-4 text-center text-sm text-emerald-700">
+                    <div className="rounded-lg border border-dashed bg-ds-success-soft/50 p-4 text-center text-sm text-ds-success">
                       {t('followUpQueueEmpty', 'No employees currently need immediate follow-up.')}
                     </div>
                   ) : (
@@ -678,16 +678,16 @@ export function EmployeeProgressTracker({
                       <div key={group.userId} className="rounded-lg border p-3">
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
-                            <p className="text-sm font-medium text-slate-900 line-clamp-1">{group.userName}</p>
+                            <p className="text-sm font-medium text-ds-ink line-clamp-1">{group.userName}</p>
                             <p className="text-[11px] text-muted-foreground">{group.locationLabel}</p>
                           </div>
-                          <Badge variant="outline" className="shrink-0 border-rose-200 bg-rose-50 text-rose-700 text-[11px]">
+                          <Badge variant="outline" className="shrink-0 border-ds-danger/30 bg-ds-danger-soft text-ds-danger text-[11px]">
                             {group.attentionCount}
                           </Badge>
                         </div>
                         <p className="mt-1.5 text-xs text-muted-foreground">{describeFollowUp(group)}</p>
                         {group.highlightModule && (
-                          <p className="mt-1 text-[11px] text-slate-500 line-clamp-1">
+                          <p className="mt-1 text-[11px] text-ds-muted line-clamp-1">
                             → {group.highlightModule.resolvedModuleTitle}
                           </p>
                         )}
@@ -698,10 +698,10 @@ export function EmployeeProgressTracker({
               </Card>
 
               {/* Module Load Leaders */}
-              <Card className="border-slate-200">
+              <Card className="border-ds-border">
                 <CardHeader className="gap-1 pb-3">
                   <CardTitle className="flex items-center gap-2 text-base">
-                    <BookOpen className="size-4 text-amber-600" />
+                    <BookOpen className="size-4 text-ds-warning" />
                     {t('moduleLoadLeaderboard', 'Heaviest module load')}
                   </CardTitle>
                   <CardDescription>{t('moduleLoadLeaderboardDescription', 'See who is carrying the largest training portfolio right now.')}</CardDescription>
@@ -711,7 +711,7 @@ export function EmployeeProgressTracker({
                     <div key={group.userId} className="rounded-lg border p-3">
                       <div className="flex items-center justify-between gap-2">
                         <div className="min-w-0">
-                          <p className="text-sm font-medium text-slate-900 line-clamp-1">{group.userName}</p>
+                          <p className="text-sm font-medium text-ds-ink line-clamp-1">{group.userName}</p>
                           <p className="text-[11px] text-muted-foreground">{group.locationLabel}</p>
                         </div>
                         <Badge variant="outline" className="shrink-0 text-[11px]">
@@ -722,7 +722,7 @@ export function EmployeeProgressTracker({
                         <span>{t('inProgress')}: {group.activeModules}</span>
                         <span>{t('completed')}: {group.completedModules}</span>
                       </div>
-                      <Progress value={group.averageProgress} className="mt-2 h-1.5 [&>div]:bg-hotel-gold" />
+                      <Progress value={group.averageProgress} className="mt-2 h-1.5 [&>div]:bg-ds-accent" />
                     </div>
                   ))}
                 </CardContent>

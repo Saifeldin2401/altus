@@ -57,23 +57,23 @@ interface DocumentPickerProps {
 }
 
 const FILE_TYPE_CONFIG: Record<string, { icon: React.ElementType; color: string; bg: string; label: string }> = {
-  pdf: { icon: FileText, color: 'text-red-500', bg: 'bg-red-50', label: 'PDF' },
-  doc: { icon: File, color: 'text-blue-500', bg: 'bg-blue-50', label: 'Word' },
-  docx: { icon: File, color: 'text-blue-500', bg: 'bg-blue-50', label: 'Word' },
-  xls: { icon: FileSpreadsheet, color: 'text-green-500', bg: 'bg-green-50', label: 'Excel' },
-  xlsx: { icon: FileSpreadsheet, color: 'text-green-500', bg: 'bg-green-50', label: 'Excel' },
-  ppt: { icon: Presentation, color: 'text-orange-500', bg: 'bg-orange-50', label: 'PowerPoint' },
-  pptx: { icon: Presentation, color: 'text-orange-500', bg: 'bg-orange-50', label: 'PowerPoint' },
-  jpg: { icon: Image, color: 'text-purple-500', bg: 'bg-purple-50', label: 'Image' },
-  jpeg: { icon: Image, color: 'text-purple-500', bg: 'bg-purple-50', label: 'Image' },
-  png: { icon: Image, color: 'text-purple-500', bg: 'bg-purple-50', label: 'Image' },
+  pdf: { icon: FileText, color: 'text-ds-danger', bg: 'bg-ds-danger-soft', label: 'PDF' },
+  doc: { icon: File, color: 'text-ds-info', bg: 'bg-ds-info-soft', label: 'Word' },
+  docx: { icon: File, color: 'text-ds-info', bg: 'bg-ds-info-soft', label: 'Word' },
+  xls: { icon: FileSpreadsheet, color: 'text-ds-success', bg: 'bg-ds-success-soft', label: 'Excel' },
+  xlsx: { icon: FileSpreadsheet, color: 'text-ds-success', bg: 'bg-ds-success-soft', label: 'Excel' },
+  ppt: { icon: Presentation, color: 'text-ds-warning', bg: 'bg-ds-warning-soft', label: 'PowerPoint' },
+  pptx: { icon: Presentation, color: 'text-ds-warning', bg: 'bg-ds-warning-soft', label: 'PowerPoint' },
+  jpg: { icon: Image, color: 'text-ds-accent', bg: 'bg-ds-accent-soft', label: 'Image' },
+  jpeg: { icon: Image, color: 'text-ds-accent', bg: 'bg-ds-accent-soft', label: 'Image' },
+  png: { icon: Image, color: 'text-ds-accent', bg: 'bg-ds-accent-soft', label: 'Image' },
 }
 
 function getFileConfig(extension?: string | null) {
   return FILE_TYPE_CONFIG[extension?.toLowerCase() || ''] || { 
     icon: FileText, 
-    color: 'text-gray-500', 
-    bg: 'bg-gray-50',
+    color: 'text-ds-muted', 
+    bg: 'bg-ds-surface-subtle',
     label: 'Document'
   }
 }
@@ -105,7 +105,7 @@ function DocumentPickerItem({
     >
       {/* Thumbnail / Icon Area */}
       <div className="relative aspect-[4/3] bg-muted flex items-center justify-center">
-        <div className={cn('w-16 h-16 rounded-xl flex items-center justify-center', config.bg)}>
+        <div className={cn('w-16 h-16 rounded-[8px] flex items-center justify-center', config.bg)}>
           <TypeIcon className={cn('w-8 h-8', config.color)} />
         </div>
 
@@ -114,7 +114,7 @@ function DocumentPickerItem({
           <div
             className={cn(
               'absolute top-2 end-2 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors',
-              isSelected ? 'bg-primary border-primary' : 'bg-white/90 border-gray-300'
+              isSelected ? 'bg-primary border-primary' : 'bg-white/90 border-ds-border'
             )}
           >
             {isSelected && <Check className="w-4 h-4 text-white" />}
@@ -122,13 +122,13 @@ function DocumentPickerItem({
         )}
 
         {/* Type Badge */}
-        <Badge variant="secondary" className="absolute top-2 start-2 text-[10px]">
+        <Badge variant="secondary" className="absolute top-2 start-2 text-[11px]">
           {config.label}
         </Badge>
 
         {/* Status Badge - Show if published to knowledge base */}
         {doc.status === 'PUBLISHED' && (
-          <Badge variant="default" className="absolute bottom-2 end-2 text-[10px] bg-green-600">
+          <Badge variant="default" className="absolute bottom-2 end-2 text-[11px] bg-ds-success">
             <BookOpen className="w-3 h-3 me-1" />
             Published
           </Badge>
@@ -150,12 +150,12 @@ function DocumentPickerItem({
         {doc.tags && doc.tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-2">
             {doc.tags.slice(0, 2).map((tag) => (
-              <Badge key={tag.id || tag.name} variant="outline" className="text-[9px] px-1 py-0">
+              <Badge key={tag.id || tag.name} variant="outline" className="text-[11px] px-1 py-0">
                 {tag.name}
               </Badge>
             ))}
             {doc.tags.length > 2 && (
-              <Badge variant="outline" className="text-[9px] px-1 py-0">
+              <Badge variant="outline" className="text-[11px] px-1 py-0">
                 +{doc.tags.length - 2}
               </Badge>
             )}
@@ -409,7 +409,7 @@ export function DocumentPicker({
               {/* File type filter chips */}
               <div className="flex items-center gap-1">
                 {(allowedTypes.length > 0 ? allowedTypes : ['pdf', 'doc', 'xls', 'ppt']).map((type) => {
-                  const config = FILE_TYPE_CONFIG[type] || { icon: FileText, color: 'text-gray-500', bg: 'bg-gray-50', label: type.toUpperCase() }
+                  const config = FILE_TYPE_CONFIG[type] || { icon: FileText, color: 'text-ds-muted', bg: 'bg-ds-surface-subtle', label: type.toUpperCase() }
                   const Icon = config.icon
                   return (
                     <Badge key={type} variant="outline" className="gap-1">

@@ -44,28 +44,28 @@ export function TemplatePreviewDialog({
         </DialogHeader>
         <div className="space-y-4">
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-lg border border-slate-200 bg-slate-50/60 p-3 text-xs text-slate-600">
-              <div className="text-[11px] uppercase tracking-wide text-slate-400">{t('builder.templateSections', { count: templateStats.sectionsCount })}</div>
-              <div className="mt-1 text-sm font-semibold text-slate-700">{templateStats.sectionsCount}</div>
+            <div className="rounded-lg border border-ds-border bg-ds-surface-subtle/60 p-3 text-xs text-ds-ink-secondary">
+              <div className="text-[11px] uppercase tracking-wide text-ds-muted">{t('builder.templateSections', { count: templateStats.sectionsCount })}</div>
+              <div className="mt-1 text-sm font-semibold text-ds-ink-secondary">{templateStats.sectionsCount}</div>
             </div>
-            <div className="rounded-lg border border-slate-200 bg-slate-50/60 p-3 text-xs text-slate-600">
-              <div className="text-[11px] uppercase tracking-wide text-slate-400">{t('builder.templateItems', { count: templateStats.itemsCount })}</div>
-              <div className="mt-1 text-sm font-semibold text-slate-700">{templateStats.itemsCount}</div>
+            <div className="rounded-lg border border-ds-border bg-ds-surface-subtle/60 p-3 text-xs text-ds-ink-secondary">
+              <div className="text-[11px] uppercase tracking-wide text-ds-muted">{t('builder.templateItems', { count: templateStats.itemsCount })}</div>
+              <div className="mt-1 text-sm font-semibold text-ds-ink-secondary">{templateStats.itemsCount}</div>
             </div>
           </div>
           <div className="space-y-2">
             {templateStats.sections.length === 0 ? (
-              <div className="rounded-lg border border-dashed border-slate-200 bg-slate-50/60 p-4 text-sm text-slate-500">
+              <div className="rounded-lg border border-dashed border-ds-border bg-ds-surface-subtle/60 p-4 text-sm text-ds-muted">
                 {t('builder.templateEmptyDesc')}
               </div>
             ) : (
               templateStats.sections.map((section) => (
                 <div
                   key={`${section.title}-${section.count}`}
-                  className={cn("flex items-center justify-between rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700")}
+                  className={cn("flex items-center justify-between rounded-lg border border-ds-border bg-ds-surface px-3 py-2 text-sm text-ds-ink-secondary")}
                 >
                   <span className="font-medium">{section.title}</span>
-                  <Badge variant="secondary" className="bg-slate-100 text-slate-600 font-normal">
+                  <Badge variant="secondary" className="bg-ds-surface-subtle text-ds-ink-secondary font-normal">
                     {section.count} {t('builder.items')}
                   </Badge>
                 </div>
@@ -80,7 +80,7 @@ export function TemplatePreviewDialog({
           <Button
             onClick={() => requestApplyTemplate(selectedTemplate)}
             disabled={!selectedTemplate || templatePreset === 'none'}
-            className="bg-ds-brass hover:bg-ds-accent-hover text-white"
+            className="bg-ds-brass hover:bg-ds-accent-hover text-white dark:text-ds-on-ink"
           >
             {t('builder.applyTemplate', 'Apply template')}
           </Button>
@@ -109,7 +109,7 @@ export function TemplateApplyConfirmDialog({
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className={cn("flex items-center gap-2")}>
-            <AlertTriangle className="w-5 h-5 text-amber-500" />
+            <AlertTriangle className="w-5 h-5 text-ds-warning" />
             {t('builder.templateReplaceTitle', 'Replace current structure?')}
           </DialogTitle>
           <DialogDescription className={''}>
@@ -120,7 +120,7 @@ export function TemplateApplyConfirmDialog({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             {t('builder.keepExisting', 'Keep existing')}
           </Button>
-          <Button onClick={confirmApplyTemplate} className="bg-ds-brass hover:bg-ds-accent-hover text-white">
+          <Button onClick={confirmApplyTemplate} className="bg-ds-brass hover:bg-ds-accent-hover text-white dark:text-ds-on-ink">
             {t('builder.applyTemplate', 'Apply template')}
           </Button>
         </div>

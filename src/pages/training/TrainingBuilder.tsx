@@ -284,7 +284,7 @@ function TrainingBuilderInner() {
           <div className="flex-1">{renderStepContent()}</div>
 
           {/* Sticky Step Navigation Footer Bar */}
-          <footer className="sticky bottom-0 z-30 border-t border-ds-border bg-ds-surface/95 backdrop-blur supports-[backdrop-filter]:bg-ds-surface/80 py-3 px-4 md:px-8 shadow-xs">
+          <footer className="sticky bottom-0 z-30 border-t border-ds-border bg-ds-surface/95 supports-[backdrop-filter]:bg-ds-surface/80 py-3 px-4 md:px-8 shadow-xs">
             <div className={cn("max-w-4xl mx-auto flex items-center justify-between gap-4")}>
               <div>
                 <Button
@@ -323,7 +323,7 @@ function TrainingBuilderInner() {
                     size="sm"
                     onClick={ctx.publishTraining}
                     disabled={!ctx.publishReady || ctx.builderBusy}
-                    className="h-8 px-4 text-xs font-semibold bg-ds-accent text-white hover:bg-ds-accent-hover shadow-2xs disabled:opacity-50"
+                    className="h-8 px-4 text-xs font-semibold bg-ds-accent text-white dark:text-ds-on-ink hover:bg-ds-accent-hover shadow-2xs disabled:opacity-50"
                   >
                     <CheckCircle2 className={cn("h-3.5 w-3.5", "me-1.5")} />
                     <span>{t('builder.publish', 'Publish Course')}</span>

@@ -2169,5 +2169,96 @@
       "dropStep": "الخطوة {{step}}",
       "basedOnAttempts": "بناءً على {{count}} إجابة."
     }
+  },
+  "screens": {
+    "PlayerAudioNarrator": {
+      "aiVoiceNarrator": "قارئ صوتي ذكي",
+      "readyToNarrate": "جاهز للقراءة",
+      "restart": "إعادة من البداية",
+      "pause": "إيقاف مؤقت",
+      "listen": "استماع",
+      "playbackSpeed": "سرعة القراءة",
+      "unmute": "إلغاء الكتم",
+      "mute": "كتم"
+    },
+    "PlayerNotesDrawer": {
+      "personalStudyNotes": "مفكرتي الدراسية",
+      "notes": "ملاحظات",
+      "courseNotes": "ملاحظات التدريب",
+      "exportNotes": "تصدير الملاحظات",
+      "currentSection": "القسم الحالي",
+      "saved": "تم الحفظ",
+      "bookmark": "حفظ علامة",
+      "jotDownPersonalNotesOr": "اكتب ملاحظتك الشخصية لهذا الدرس للرجوع إليها لاحقاً...",
+      "saveNote": "حفظ الملاحظة",
+      "allModuleNotes": "جميع ملاحظات هذه الدورة",
+      "noNotesWrittenYet": "لم تقم بتدوين ملاحظات بعد.",
+      "takeNotesDuringYourLesson": "اكتب ملاحظاتك أثناء القراءة لتتذكر أهم المعايير.",
+      "delete": "حذف"
+    },
+    "PlayerCelebrationModal": {
+      "courseCompletedSuccessfully": "تهانينا! اكتملت الدورة بنجاح",
+      "outstandingAchievement": "إنجاز تدريبي متميز",
+      "awardedTo": "ممنوحة للموظف:",
+      "earnedPoints": "نقاط التميز",
+      "learningStreak": "سلسلة التعلم",
+      "min": "د",
+      "timeInvested": "الوقت المستغرق",
+      "backToTrainingHub": "العودة إلى مركز التدريب"
+    },
+    "PlayerTutorDrawer": {
+      "sorryIEncounteredAnIssue": "عذراً، حدث خطأ في معالجة الإجابة. يرجى المحاولة مرة أخرى.",
+      "altusAiCoach": "المرشد الذكي ألتوس",
+      "liveLearningAssistant": "مساعد التعلم المباشر",
+      "resetChat": "محادثة جديدة",
+      "summarizeThisSectionIn3": "لخص هذا الدرس في 3 نقاط محددة وسريعة.",
+      "3BulletSummary": "ملخص سريع",
+      "giveMeARealisticHotel": "أعطني مثالاً واقعياً لموقف مع نزيل يطبق هذا الإجراء.",
+      "guestScenario": "موقف وسيناريو",
+      "quizMeWith1Quick": "اختبرني بسؤال سريع من هذا الدرس للتأكد من فهمي.",
+      "practiceQuestion": "اختبر فهمي",
+      "copy": "نسخ الإجابة",
+      "thinking": "جاري إعداد الإجابة...",
+      "askAboutThisSection": "اسأل عن أي نقطة في هذا الدرس..."
+    },
+    "ScenarioBranchSimulator": {
+      "hotelScenarioDecisionSimulator": "محاكي القرارات والمواقف الفندقية",
+      "frontlineScenario": "موقف نزيل",
+      "chooseTheBest5Star": "اختر أفضل استجابة مهنية وفق معايير الضيافة الفاخرة",
+      "tryAgain": "إعادة المحاولة",
+      "situationBrief": "تفاصيل الموقف",
+      "whatIsYourImmediateCourse": "كيف تتصرف في هذا الموقف؟",
+      "excellentChoice5StarStandard": "إجابة ممتازة ومطابقة للمعايير! (+15 نقطة)",
+      "coachingFeedbackBestPractice": "ملاحظة تدريبية وتوجيه مهني:"
+    },
+    "FlashcardDeckWidget": {
+      "interactiveFlashcards": "بطاقات الذاكرة التفاعلية",
+      "clickTheCardToFlip": "انقر على البطاقة لقلبها واختبار معلوماتك",
+      "shuffle": "خلط البطاقات",
+      "standardQuestion": "سؤال / معيار",
+      "clickToFlip": "انقر للقلب",
+      "mastered": "تم الإتقان",
+      "markMastered": "أتقنتها",
+      "standardAnswerKeyRule": "الإجابة والمعيار المعتمد",
+      "flip": "قلب",
+      "previous": "السابق",
+      "next": "التالي"
+    },
+    "TrainingPaths": {
+      "organizationContextIsRequiredTo": "سياق المؤسسة مطلوب للتسجيل في المسارات التدريبية",
+      "enrolledInLearningPathSuccessfully": "تم التسجيل في المسار التدريبي بنجاح",
+      "failedToEnrollInPath": "تعذر التسجيل في المسار",
+      "organizationContextIsRequiredTo2": "سياق المؤسسة مطلوب لإنشاء المسار التدريبي"
+    },
+    "QuizComponentEnhanced": {
+      "true": "صحيح",
+      "false": "خطأ"
+    },
+    "RoleplaySimulationBlockRenderer": {
+      "simulationPassedSuccessfully": "🎉 تم اجتياز محاكاة خدمة النزيل بنجاح!",
+      "passingScoreNotMet": "⚠️ لم يتم اجتياز المحاكاة",
+      "simulationError": "خطأ في معالجة المحاكاة",
+      "aiEvaluatingResponseAgainstForbes": "الذكاء الاصطناعي يحلل استجابتك وفق معايير فوربس والضيافة السعودية..."
+    }
   }
 }

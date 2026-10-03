@@ -188,14 +188,14 @@ export const SearchableHelpDialog: React.FC = () => {
             filteredItems.map(item => (
               <div 
                 key={item.id} 
-                className="rounded-xl border border-border/80 bg-card p-4 space-y-2 hover:border-primary/40 transition-colors"
+                className="rounded-[8px] border border-border/80 bg-card p-4 space-y-2 hover:border-primary/40 transition-colors"
               >
                 <div className="flex items-center justify-between gap-2 flex-wrap">
                   <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
                     <BookOpen className="h-3.5 w-3.5 text-primary shrink-0" />
                     {tKey(item.titleKey)}
                   </h4>
-                  <Badge variant="secondary" className="text-[10px] px-2 py-0.5">
+                  <Badge variant="secondary" className="text-[11px] px-2 py-0.5">
                     {tKey(item.categoryKey)}
                   </Badge>
                 </div>

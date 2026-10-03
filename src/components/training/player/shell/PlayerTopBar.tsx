@@ -26,9 +26,9 @@ function SaveChip({ state }: { state: PlayerSaveState }) {
     if (state === 'idle') return null
     const map: Record<Exclude<PlayerSaveState, 'idle'>, { icon: ReactNode; label: string; className: string }> = {
         saving: { icon: <Loader2 className="h-3 w-3 animate-spin" />, label: t('player.saving', 'Saving'), className: 'text-muted-foreground' },
-        saved: { icon: <Check className="h-3 w-3" />, label: t('player.saved', 'Saved'), className: 'text-emerald-600 dark:text-emerald-400' },
+        saved: { icon: <Check className="h-3 w-3" />, label: t('player.saved', 'Saved'), className: 'text-ds-success' },
         error: { icon: <CloudOff className="h-3 w-3" />, label: t('player.saveFailed', 'Save failed'), className: 'text-destructive' },
-        offline: { icon: <CloudOff className="h-3 w-3" />, label: t('player.savedOnDevice', 'Saved on device'), className: 'text-amber-700 dark:text-amber-400' },
+        offline: { icon: <CloudOff className="h-3 w-3" />, label: t('player.savedOnDevice', 'Saved on device'), className: 'text-ds-warning' },
     }
     const entry = map[state]
     return (
@@ -58,7 +58,7 @@ export function PlayerTopBar({
     const rounded = Math.round(Math.min(100, Math.max(0, progress)))
 
     return (
-        <header className="z-30 shrink-0 border-b border-border/60 bg-card/95 backdrop-blur-xl">
+        <header className="z-30 shrink-0 border-b border-border/60 bg-card/95">
             <div className="flex h-14 items-center gap-2 px-3 sm:h-16 sm:gap-3 sm:px-5">
                 <Button
                     variant="ghost"
@@ -99,7 +99,7 @@ export function PlayerTopBar({
                         variant={tutor.active ? 'default' : 'outline'}
                         size="sm"
                         onClick={tutor.onToggle}
-                        className={cn('h-9 shrink-0 gap-1.5', tutor.active && 'bg-ds-ink text-white hover:bg-ds-ink-secondary')}
+                        className={cn('h-9 shrink-0 gap-1.5', tutor.active && 'bg-ds-ink text-ds-on-ink hover:bg-ds-ink-secondary')}
                     >
                         <Bot className="h-4 w-4 text-ds-brass" />
                         <span className="hidden lg:inline text-xs">{t('player.aiTutor', 'AI Tutor')}</span>

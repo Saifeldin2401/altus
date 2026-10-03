@@ -188,14 +188,14 @@ export function StudioStageAssessments({
         <div className="flex items-center justify-between">
           <div>
             <Label className="text-sm font-bold text-foreground flex items-center gap-2">
-              <FileQuestion className="w-4 h-4 text-purple-600" />
+              <FileQuestion className="w-4 h-4 text-ds-accent" />
               <span>{t('builder.assessmentPlacement', 'Assessment & Quiz Architecture')}</span>
             </Label>
             <p className="text-xs text-muted-foreground mt-0.5">
               {t('builder.assessmentPlacementDesc', 'Determine how learner comprehension and certification will be verified.')}
             </p>
           </div>
-          <Badge variant="outline" className="text-xs font-semibold bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 border-purple-200 capitalize">
+          <Badge variant="outline" className="text-xs font-semibold bg-ds-accent-soft text-ds-accent border-ds-accent/30 capitalize">
             {quizPlacement.replace('_', ' ')}
           </Badge>
         </div>
@@ -212,8 +212,8 @@ export function StudioStageAssessments({
                 className={cn(
                   'cursor-pointer transition-all duration-200 border text-start group hover:shadow-sm',
                   isSelected
-                    ? 'border-purple-600 bg-purple-50/60 dark:bg-purple-950/40 ring-1 ring-purple-500 shadow-sm'
-                    : 'bg-card hover:border-purple-300'
+                    ? 'border-ds-accent bg-ds-accent-soft/60 ring-1 ring-ds-accent shadow-sm'
+                    : 'bg-card hover:border-ds-accent/30'
                 )}
               >
                 <CardContent className="p-3.5 space-y-1.5">
@@ -221,13 +221,13 @@ export function StudioStageAssessments({
                     <div
                       className={cn(
                         'w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold',
-                        isSelected ? 'bg-purple-600 text-white' : 'bg-muted text-foreground'
+                        isSelected ? 'bg-ds-accent text-white dark:text-ds-on-ink' : 'bg-muted text-foreground'
                       )}
                     >
                       <Icon className="w-4 h-4" />
                     </div>
                     {opt.badge && (
-                      <Badge className="bg-purple-600 text-white text-[9px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
+                      <Badge className="bg-ds-accent text-white dark:text-ds-on-ink text-[11px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
                         {opt.badge}
                       </Badge>
                     )}
@@ -246,7 +246,7 @@ export function StudioStageAssessments({
       </div>
 
       {/* 2. Questions, Passing Score & Allowed Attempts */}
-      <div className="p-4 rounded-xl border bg-card/80 backdrop-blur-sm space-y-4 shadow-sm">
+      <div className="p-4 rounded-[8px] border bg-card/80 space-y-4 shadow-sm">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {/* Question Count */}
           <div className="space-y-1.5">
@@ -273,7 +273,7 @@ export function StudioStageAssessments({
           <div className="space-y-1.5">
             <div className="flex justify-between items-center text-xs font-semibold">
               <span>{t('builder.passingScore', 'Passing Threshold')}</span>
-              <span className="font-mono text-purple-600 font-bold">{quizPassingScore}%</span>
+              <span className="font-mono text-ds-accent font-bold">{quizPassingScore}%</span>
             </div>
             <Slider
               value={[quizPassingScore]}
@@ -282,9 +282,9 @@ export function StudioStageAssessments({
               max={100}
               step={5}
             />
-            <div className="flex justify-between text-[10px] text-muted-foreground">
+            <div className="flex justify-between text-[11px] text-muted-foreground">
               <span>60% (Basic)</span>
-              <span className="text-purple-600 font-bold">85% (five-star Luxury Standard)</span>
+              <span className="text-ds-accent font-bold">85% (five-star Luxury Standard)</span>
               <span>100% (Strict)</span>
             </div>
           </div>
@@ -312,7 +312,7 @@ export function StudioStageAssessments({
       </div>
 
       {/* 3. Question Types Selector */}
-      <div className="p-4 rounded-xl border bg-card/80 backdrop-blur-sm space-y-3 shadow-sm">
+      <div className="p-4 rounded-[8px] border bg-card/80 space-y-3 shadow-sm">
         <div className="flex items-center justify-between border-b pb-2">
           <div>
             <Label className="text-xs font-bold text-foreground">
@@ -338,14 +338,14 @@ export function StudioStageAssessments({
                 className={cn(
                   'flex items-start gap-2.5 p-3 rounded-lg border cursor-pointer transition-all duration-150',
                   isChecked
-                    ? 'border-purple-400 bg-purple-50/40 dark:bg-purple-950/20 shadow-xs'
-                    : 'border-border/70 hover:border-purple-200 bg-card'
+                    ? 'border-ds-accent bg-ds-accent-soft/40 shadow-xs'
+                    : 'border-border/70 hover:border-ds-accent/30 bg-card'
                 )}
               >
                 <Checkbox
                   checked={isChecked}
                   onCheckedChange={() => onToggleQuestionType(q.type)}
-                  className="mt-0.5 data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
+                  className="mt-0.5 data-[state=checked]:bg-ds-accent data-[state=checked]:border-ds-accent"
                 />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5 flex-wrap">
@@ -353,12 +353,12 @@ export function StudioStageAssessments({
                       {isRTL ? q.title_ar : q.title}
                     </span>
                     {q.badge && (
-                      <span className="text-[8px] px-1 py-0.2 bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300 rounded font-bold">
+                      <span className="text-[11px] px-1 py-0.2 bg-ds-accent-soft text-ds-accent rounded font-bold">
                         {q.badge}
                       </span>
                     )}
                   </div>
-                  <p className="text-[10px] text-muted-foreground mt-0.5 leading-tight">
+                  <p className="text-[11px] text-muted-foreground mt-0.5 leading-tight">
                     {q.desc}
                   </p>
                 </div>
@@ -369,16 +369,16 @@ export function StudioStageAssessments({
       </div>
 
       {/* 4. Progressive Disclosure: Advanced Bloom Distribution & Distractor Quality */}
-      <div className="border rounded-xl bg-muted/10 overflow-hidden">
+      <div className="border rounded-[8px] bg-muted/10 overflow-hidden">
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
           className="w-full px-4 py-3 flex items-center justify-between text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
         >
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-purple-600" />
+            <Sparkles className="w-4 h-4 text-ds-accent" />
             <span>{t('builder.advancedAssessments', 'Advanced Bloom Cognitive Distribution & Pedagogical Safeguards')}</span>
-            <Badge variant="outline" className="text-[9px]">Optional</Badge>
+            <Badge variant="outline" className="text-[11px]">Optional</Badge>
           </div>
           {showAdvanced ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
@@ -399,7 +399,7 @@ export function StudioStageAssessments({
                       onSelectBloomPreset(bp)
                       onChangeBloomDistribution(BLOOM_PRESETS[bp])
                     }}
-                    className={cn('text-xs capitalize font-bold', bloomPreset === bp && 'bg-purple-600 text-white')}
+                    className={cn('text-xs capitalize font-bold', bloomPreset === bp && 'bg-ds-accent text-white dark:text-ds-on-ink')}
                   >
                     {bp} Focus
                   </Button>
@@ -436,7 +436,7 @@ export function StudioStageAssessments({
               <div className="space-y-1">
                 <div className="flex justify-between text-[11px] font-semibold">
                   <span>Apply / Execute</span>
-                  <span className="font-mono text-purple-600 font-bold">{bloomDistribution.apply}%</span>
+                  <span className="font-mono text-ds-accent font-bold">{bloomDistribution.apply}%</span>
                 </div>
                 <Slider
                   value={[bloomDistribution.apply]}
@@ -451,7 +451,7 @@ export function StudioStageAssessments({
               <div className="flex items-center justify-between p-3 rounded-lg border bg-card">
                 <div>
                   <p className="text-xs font-bold text-foreground">Include Hints & Remediation</p>
-                  <p className="text-[10px] text-muted-foreground">Provides progressive guidance for incorrect responses.</p>
+                  <p className="text-[11px] text-muted-foreground">Provides progressive guidance for incorrect responses.</p>
                 </div>
                 <Switch checked={includeHints} onCheckedChange={onChangeIncludeHints} />
               </div>
@@ -459,7 +459,7 @@ export function StudioStageAssessments({
               <div className="flex items-center justify-between p-3 rounded-lg border bg-card">
                 <div>
                   <p className="text-xs font-bold text-foreground">Include Explanations</p>
-                  <p className="text-[10px] text-muted-foreground">Explains *why* the correct answer is standard policy.</p>
+                  <p className="text-[11px] text-muted-foreground">Explains *why* the correct answer is standard policy.</p>
                 </div>
                 <Switch checked={includeExplanations} onCheckedChange={onChangeIncludeExplanations} />
               </div>

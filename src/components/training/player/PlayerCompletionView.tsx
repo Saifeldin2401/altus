@@ -127,7 +127,7 @@ export function PlayerCompletionView({
           </div>
         )}
 
-        <div className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-ds-border bg-ds-surface shadow-xl">
+        <div className="relative w-full max-w-2xl overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface shadow-xl">
           <CourseCover course={{ id: moduleId, title: moduleTitle }} className="h-40 w-full rounded-none sm:h-48">
             <div className="absolute inset-0 bg-gradient-to-t from-ds-surface via-ds-surface/20 to-transparent" />
           </CourseCover>
@@ -139,7 +139,7 @@ export function PlayerCompletionView({
               transition={{ type: 'spring', stiffness: 260, damping: 16, delay: 0.1 }}
               className={cn(
                 'relative mx-auto mb-5 flex h-24 w-24 items-center justify-center rounded-full border-4 border-ds-surface shadow-lg',
-                finalPassed ? 'bg-ds-brass text-white' : 'bg-ds-warning-soft text-ds-warning',
+                finalPassed ? 'bg-ds-brass text-white dark:text-ds-on-ink' : 'bg-ds-warning-soft text-ds-warning',
               )}
             >
               {finalPassed ? <Trophy aria-hidden="true" className="h-11 w-11" /> : <RotateCcw aria-hidden="true" className="h-10 w-10" />}
@@ -164,20 +164,20 @@ export function PlayerCompletionView({
 
             {/* What you achieved */}
             <dl className="mt-7 grid grid-cols-2 gap-3 text-start sm:grid-cols-4">
-              <div className="rounded-xl border border-ds-border bg-ds-surface-subtle p-3">
+              <div className="rounded-[8px] border border-ds-border bg-ds-surface-subtle p-3">
                 <dt className="text-[11px] uppercase tracking-wider text-ds-muted">{t('finalScore', 'Final score')}</dt>
                 <dd className="mt-1 font-mono text-2xl font-bold tabular-nums text-ds-ink">
                   {finalScore !== null ? <><CountUp value={finalScore} locale={locale} />%</> : t('n_a', 'N/A')}
                 </dd>
               </div>
-              <div className="rounded-xl border border-ds-border bg-ds-surface-subtle p-3">
+              <div className="rounded-[8px] border border-ds-border bg-ds-surface-subtle p-3">
                 <dt className="text-[11px] uppercase tracking-wider text-ds-muted">{t('status', 'Status')}</dt>
                 <dd className={cn('mt-1 flex items-center gap-1.5 text-lg font-bold', finalPassed ? 'text-ds-success' : 'text-ds-danger')}>
                   {finalPassed ? <CheckCircle2 aria-hidden="true" className="h-5 w-5" /> : <XCircle aria-hidden="true" className="h-5 w-5" />}
                   {finalPassed ? t('passed', 'Passed') : t('quizNotPassed', 'Not passed')}
                 </dd>
               </div>
-              <div className="rounded-xl border border-ds-brass/30 bg-ds-brass/10 p-3">
+              <div className="rounded-[8px] border border-ds-brass/30 bg-ds-brass/10 p-3">
                 <dt className="flex items-center gap-1 text-[11px] uppercase tracking-wider text-ds-brass">
                   <Sparkles aria-hidden="true" className="h-3 w-3" />{t('finish.pointsEarned', 'Points earned')}
                 </dt>
@@ -185,7 +185,7 @@ export function PlayerCompletionView({
                   {pointsEarned === null ? '–' : <>+<CountUp value={pointsEarned} locale={locale} /></>}
                 </dd>
               </div>
-              <div className="flex items-center gap-2.5 rounded-xl border border-ds-border bg-ds-surface-subtle p-3">
+              <div className="flex items-center gap-2.5 rounded-[8px] border border-ds-border bg-ds-surface-subtle p-3">
                 {level ? (
                   <>
                     <ProgressRing
@@ -209,7 +209,7 @@ export function PlayerCompletionView({
             </dl>
 
             {quizBreakdown.length > 1 && (
-              <div className="mt-6 overflow-hidden rounded-xl border border-ds-border text-start">
+              <div className="mt-6 overflow-hidden rounded-[8px] border border-ds-border text-start">
                 <div className="bg-ds-surface-subtle px-4 py-2 text-[11px] font-semibold uppercase tracking-wider text-ds-muted">
                   {t('quizBreakdown', 'Quiz results')}
                 </div>
@@ -245,7 +245,7 @@ export function PlayerCompletionView({
             {upNext && (
               <Link
                 to={upNext.href}
-                className="group mt-6 flex items-center gap-4 rounded-xl border border-ds-border bg-ds-surface p-3 text-start transition-colors hover:border-ds-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent"
+                className="group mt-6 flex items-center gap-4 rounded-[8px] border border-ds-border bg-ds-surface p-3 text-start transition-colors hover:border-ds-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent"
               >
                 <CourseCover course={{ id: upNext.id, title: upNext.title }} className="h-16 w-24" />
                 <span className="min-w-0 flex-1">

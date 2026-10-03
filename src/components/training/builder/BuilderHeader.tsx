@@ -106,7 +106,7 @@ export const BuilderHeader = ({
             <div className={cn(
               "relative flex items-center w-full max-w-[240px] xl:max-w-[280px] rounded-md border transition-colors duration-150",
               !title.trim() || title === 'Untitled Module'
-                ? "border-amber-400 bg-amber-50/60 dark:bg-amber-950/30"
+                ? "border-ds-warning bg-ds-warning-soft/60"
                 : "border-ds-border bg-ds-surface-subtle hover:border-ds-brass/40 focus-within:border-ds-brass"
             )}>
               <div className="ps-2 pe-1 text-ds-muted flex items-center pointer-events-none">
@@ -140,13 +140,13 @@ export const BuilderHeader = ({
               />
             )}
             {isMasterTemplate && (
-              <Badge variant="outline" className="px-2 py-0.5 min-h-[20px] text-[10px] font-semibold bg-indigo-50 text-indigo-800 dark:bg-indigo-950/70 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800 shrink-0 whitespace-nowrap flex items-center gap-1 rounded-sm">
-                <Crown className="w-3 h-3 text-indigo-600 dark:text-indigo-400 shrink-0" />
+              <Badge variant="outline" className="px-2 py-0.5 min-h-[20px] text-[11px] font-semibold bg-ds-info-soft text-ds-info border-ds-info/30 shrink-0 whitespace-nowrap flex items-center gap-1 rounded-sm">
+                <Crown className="w-3 h-3 text-ds-info shrink-0" />
                 <span className="hidden sm:inline">{t('builder.globalMasterTemplate', 'Global Master')}</span>
               </Badge>
             )}
             {hasUnsavedChanges && (
-              <Badge variant="outline" className="px-2 py-0.5 min-h-[20px] text-[9px] uppercase font-mono bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800 shrink-0 whitespace-nowrap rounded-sm">
+              <Badge variant="outline" className="px-2 py-0.5 min-h-[20px] text-[11px] uppercase font-mono bg-ds-warning-soft text-ds-warning border-ds-warning/30 shrink-0 whitespace-nowrap rounded-sm">
                 {t('builder.unsaved', 'Unsaved')}
               </Badge>
             )}
@@ -179,11 +179,11 @@ export const BuilderHeader = ({
                 >
                   <span
                     className={cn(
-                      "flex h-4 w-4 items-center justify-center rounded-[3px] text-[10px] font-bold shrink-0 transition-colors",
+                      "flex h-4 w-4 items-center justify-center rounded-[3px] text-[11px] font-bold shrink-0 transition-colors",
                       isDone
-                        ? "bg-ds-success text-white"
+                        ? "bg-ds-success text-white dark:text-ds-on-ink"
                         : isActive
-                        ? "bg-ds-brass text-white"
+                        ? "bg-ds-brass text-white dark:text-ds-on-ink"
                         : "bg-ds-border text-ds-muted"
                     )}
                   >
@@ -229,7 +229,7 @@ export const BuilderHeader = ({
             <div className="hidden xl:flex items-center gap-1 text-[11px] text-muted-foreground px-1.5 select-none font-medium">
               {autosaveStatus === 'saving' && (
                 <>
-                  <Loader2 className="w-3 h-3 animate-spin text-amber-500" />
+                  <Loader2 className="w-3 h-3 animate-spin text-ds-warning" />
                   <span>{t('builder.autosaveSaving', 'Saving...')}</span>
                 </>
               )}
@@ -275,7 +275,7 @@ export const BuilderHeader = ({
             onClick={onSave}
             disabled={isSaving}
             className={cn(
-              "h-8 px-3 text-xs font-semibold bg-ds-brass hover:bg-ds-accent-hover text-white rounded-md shadow-none"
+              "h-8 px-3 text-xs font-semibold bg-ds-brass hover:bg-ds-accent-hover text-white dark:text-ds-on-ink rounded-md shadow-none"
             )}
             title="Save Draft (Ctrl+S)"
           >

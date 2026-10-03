@@ -85,13 +85,13 @@ export function StudioStageAISettings({
   return (
     <div className="space-y-6 max-w-5xl mx-auto py-2">
       {/* 1. Dynamic Model Routing Strategy */}
-      <div className="p-4 rounded-xl border bg-card/80 backdrop-blur-sm space-y-4 shadow-sm">
+      <div className="p-4 rounded-[8px] border bg-card/80 space-y-4 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3">
           <div>
             <Label className="text-sm font-bold text-foreground flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-purple-600" />
+              <Cpu className="w-4 h-4 text-ds-accent" />
               <span>{t('builder.aiModelOrchestration', 'Dynamic AI Model Intelligence Router')}</span>
-              <Badge className="bg-emerald-600 text-white text-[10px]">Free-First Cascade</Badge>
+              <Badge className="bg-ds-success text-white dark:text-ds-on-ink text-[11px]">Free-First Cascade</Badge>
             </Label>
             <p className="text-xs text-muted-foreground mt-0.5">
               Automatically routes each agent task to the optimal model: Free Gemini 2.5 Flash & Groq LPU first, escalating to Claude 3.7 & GPT-4o only when necessary.
@@ -115,9 +115,9 @@ export function StudioStageAISettings({
               type="button"
               onClick={() => setModelCategoryFilter('free')}
               className={cn(
-                'px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-emerald-700 dark:text-emerald-400',
+                'px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-ds-success',
                 modelCategoryFilter === 'free'
-                  ? 'bg-emerald-100 dark:bg-emerald-950/60 shadow-sm font-bold'
+                  ? 'bg-ds-success-soft shadow-sm font-bold'
                   : 'text-muted-foreground hover:text-foreground'
               )}
             >
@@ -127,9 +127,9 @@ export function StudioStageAISettings({
               type="button"
               onClick={() => setModelCategoryFilter('openrouter')}
               className={cn(
-                'px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-purple-700 dark:text-purple-400',
+                'px-2.5 py-1 text-xs font-semibold rounded-md transition-all text-ds-accent',
                 modelCategoryFilter === 'openrouter'
-                  ? 'bg-purple-100 dark:bg-purple-950/60 shadow-sm font-bold'
+                  ? 'bg-ds-accent-soft shadow-sm font-bold'
                   : 'text-muted-foreground hover:text-foreground'
               )}
             >
@@ -149,10 +149,10 @@ export function StudioStageAISettings({
                 key={m.id}
                 onClick={() => onChangePreferredModel(m.id)}
                 className={cn(
-                  'cursor-pointer transition-all duration-200 border text-start group hover:shadow-md relative overflow-hidden',
+                  'cursor-pointer transition-all duration-200 border text-start group relative overflow-hidden',
                   isSelected
-                    ? 'border-purple-600 bg-purple-50/70 dark:bg-purple-950/40 ring-2 ring-purple-500 shadow-sm'
-                    : 'bg-card hover:border-purple-300'
+                    ? 'border-ds-accent bg-ds-accent-soft/70 ring-2 ring-ds-accent shadow-sm'
+                    : 'bg-card hover:border-ds-accent/30'
                 )}
               >
                 <CardContent className="p-3.5 space-y-2">
@@ -161,7 +161,7 @@ export function StudioStageAISettings({
                       <div
                         className={cn(
                           'w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold',
-                          isSelected ? 'bg-purple-600 text-white' : 'bg-muted text-foreground'
+                          isSelected ? 'bg-ds-accent text-white dark:text-ds-on-ink' : 'bg-muted text-foreground'
                         )}
                       >
                         <BrainCircuit className="w-4 h-4" />
@@ -174,14 +174,14 @@ export function StudioStageAISettings({
                     {m.description}
                   </p>
 
-                  <div className="flex items-center justify-between pt-1 border-t border-border/50 text-[10px]">
+                  <div className="flex items-center justify-between pt-1 border-t border-border/50 text-[11px]">
                     <span className="text-muted-foreground font-mono truncate">{m.provider}</span>
                     {m.badge && (
                       <Badge
                         variant={isFree ? 'default' : 'secondary'}
                         className={cn(
-                          'text-[9px] px-1.5 py-0 h-4',
-                          isFree ? 'bg-emerald-600 text-white' : 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300'
+                          'text-[11px] px-1.5 py-0 h-4',
+                          isFree ? 'bg-ds-success text-white dark:text-ds-on-ink' : 'bg-ds-accent-soft text-ds-accent'
                         )}
                       >
                         {m.badge}
@@ -196,12 +196,12 @@ export function StudioStageAISettings({
       </div>
 
       {/* 2. Specialized Multi-Agent Engine Architecture */}
-      <div className="p-4 rounded-xl border bg-card/80 backdrop-blur-sm space-y-4 shadow-sm">
+      <div className="p-4 rounded-[8px] border bg-card/80 space-y-4 shadow-sm">
         <div className="space-y-1 border-b pb-2">
           <Label className="text-xs font-bold text-foreground flex items-center gap-1.5">
-            <Workflow className="w-4 h-4 text-purple-600" />
+            <Workflow className="w-4 h-4 text-ds-accent" />
             <span>Multi-Agent Engine Subsystems (Active Pipeline)</span>
-            <Badge variant="outline" className="text-[9px]">10 Specialized Agents</Badge>
+            <Badge variant="outline" className="text-[11px]">10 Specialized Agents</Badge>
           </Label>
           <p className="text-[11px] text-muted-foreground">
             Configure which autonomous specialist agents collaborate on curriculum generation, workplace scenarios, and QA.
@@ -213,10 +213,10 @@ export function StudioStageAISettings({
           <div className="flex items-center justify-between p-3 rounded-lg border bg-card text-xs">
             <div className="space-y-0.5 pe-2">
               <p className="font-bold text-foreground flex items-center gap-1.5">
-                <FileCheck className="w-3.5 h-3.5 text-blue-600" />
+                <FileCheck className="w-3.5 h-3.5 text-ds-info" />
                 Research & RAG Grounding Agent
               </p>
-              <p className="text-[10px] text-muted-foreground">
+              <p className="text-[11px] text-muted-foreground">
                 Searches hotel SOP repository in PostgreSQL + five-star hospitality benchmarks.
               </p>
             </div>
@@ -227,10 +227,10 @@ export function StudioStageAISettings({
           <div className="flex items-center justify-between p-3 rounded-lg border bg-card text-xs">
             <div className="space-y-0.5 pe-2">
               <p className="font-bold text-foreground flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-indigo-600" />
+                <Users className="w-3.5 h-3.5 text-ds-info" />
                 Interactive Activities Agent
               </p>
-              <p className="text-[10px] text-muted-foreground">
+              <p className="text-[11px] text-muted-foreground">
                 Synthesizes shift observation guides, workplace practice drills, and physical checklists.
               </p>
             </div>
@@ -244,10 +244,10 @@ export function StudioStageAISettings({
           <div className="flex items-center justify-between p-3 rounded-lg border bg-card text-xs">
             <div className="space-y-0.5 pe-2">
               <p className="font-bold text-foreground flex items-center gap-1.5">
-                <MessageSquare className="w-3.5 h-3.5 text-amber-600" />
+                <MessageSquare className="w-3.5 h-3.5 text-ds-warning" />
                 Scenario & Roleplay Agent
               </p>
-              <p className="text-[10px] text-muted-foreground">
+              <p className="text-[11px] text-muted-foreground">
                 Builds branching guest dilemmas using LAST protocol and Saudi hospitality etiquette.
               </p>
             </div>
@@ -258,10 +258,10 @@ export function StudioStageAISettings({
           <div className="flex items-center justify-between p-3 rounded-lg border bg-card text-xs">
             <div className="space-y-0.5 pe-2">
               <p className="font-bold text-foreground flex items-center gap-1.5">
-                <ListOrdered className="w-3.5 h-3.5 text-rose-600" />
+                <ListOrdered className="w-3.5 h-3.5 text-ds-danger" />
                 Psychometric Assessment Agent
               </p>
-              <p className="text-[10px] text-muted-foreground">
+              <p className="text-[11px] text-muted-foreground">
                 Generates 16+ Bloom's Taxonomy question types with plausible distractor analysis.
               </p>
             </div>
@@ -272,10 +272,10 @@ export function StudioStageAISettings({
           <div className="flex items-center justify-between p-3 rounded-lg border bg-card text-xs">
             <div className="space-y-0.5 pe-2">
               <p className="font-bold text-foreground flex items-center gap-1.5">
-                <ImageIcon className="w-3.5 h-3.5 text-orange-600" />
+                <ImageIcon className="w-3.5 h-3.5 text-ds-warning" />
                 Recraft & Cloudflare Visual Agent
               </p>
-              <p className="text-[10px] text-muted-foreground">
+              <p className="text-[11px] text-muted-foreground">
                 Generates SVG vector diagrams & educational illustrations ($0.00 / Free tier first).
               </p>
             </div>
@@ -286,10 +286,10 @@ export function StudioStageAISettings({
           <div className="flex items-center justify-between p-3 rounded-lg border bg-card text-xs">
             <div className="space-y-0.5 pe-2">
               <p className="font-bold text-foreground flex items-center gap-1.5">
-                <Mic className="w-3.5 h-3.5 text-teal-600" />
+                <Mic className="w-3.5 h-3.5 text-ds-info" />
                 Audio Shift Briefing Agent
               </p>
-              <p className="text-[10px] text-muted-foreground">
+              <p className="text-[11px] text-muted-foreground">
                 Synthesizes spoken audio briefings in Saudi Arabic (ar-SA) and English (en-US). (Disabled by default)
               </p>
             </div>
@@ -302,10 +302,10 @@ export function StudioStageAISettings({
       </div>
 
       {/* 3. Pedagogical QA Critic, Surgical Revision & KSA Compliance */}
-      <div className="p-4 rounded-xl border bg-card/80 backdrop-blur-sm space-y-4 shadow-sm">
+      <div className="p-4 rounded-[8px] border bg-card/80 space-y-4 shadow-sm">
         <div className="space-y-1 border-b pb-2">
           <Label className="text-xs font-bold text-foreground flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <ShieldCheck className="w-4 h-4 text-ds-success" />
             <span>Pedagogical QA Critic & KSA Regulatory Safeguards</span>
           </Label>
           <p className="text-[11px] text-muted-foreground">
@@ -317,7 +317,7 @@ export function StudioStageAISettings({
           <div className="p-3 rounded-lg border bg-card space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-foreground">QA Target Score</span>
-              <Badge className="bg-purple-600 text-white text-[10px]">
+              <Badge className="bg-ds-accent text-white dark:text-ds-on-ink text-[11px]">
                 {qaThresholdPreset === 'strict' ? '95+ Production' : qaThresholdPreset === 'standard' ? '85+ Polish' : '70+ Pass'}
               </Badge>
             </div>
@@ -336,10 +336,10 @@ export function StudioStageAISettings({
           <div className="flex items-center justify-between p-3 rounded-lg border bg-card">
             <div className="space-y-0.5 pe-2">
               <p className="text-xs font-bold text-foreground flex items-center gap-1">
-                <RotateCcw className="w-3.5 h-3.5 text-purple-600" />
+                <RotateCcw className="w-3.5 h-3.5 text-ds-accent" />
                 Surgical Auto-Revision
               </p>
-              <p className="text-[10px] text-muted-foreground">Auto-repairs QA gaps without rebuilding full modules.</p>
+              <p className="text-[11px] text-muted-foreground">Auto-repairs QA gaps without rebuilding full modules.</p>
             </div>
             <Switch
               checked={enableAutoRevision}
@@ -350,10 +350,10 @@ export function StudioStageAISettings({
           <div className="flex items-center justify-between p-3 rounded-lg border bg-card">
             <div className="space-y-0.5 pe-2">
               <p className="text-xs font-bold text-foreground flex items-center gap-1">
-                <ShieldAlert className="w-3.5 h-3.5 text-emerald-600" />
+                <ShieldAlert className="w-3.5 h-3.5 text-ds-success" />
                 KSA Regulatory Shield
               </p>
-              <p className="text-[10px] text-muted-foreground">Audits against Saudi Ministry of Tourism & Balady.</p>
+              <p className="text-[11px] text-muted-foreground">Audits against Saudi Ministry of Tourism & Balady.</p>
             </div>
             <Switch
               checked={enableComplianceAudit}
@@ -364,16 +364,16 @@ export function StudioStageAISettings({
       </div>
 
       {/* 4. Progressive Disclosure: Advanced Prompt Strictness & Creativity Tuning */}
-      <div className="border rounded-xl bg-muted/10 overflow-hidden">
+      <div className="border rounded-[8px] bg-muted/10 overflow-hidden">
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
           className="w-full px-4 py-3 flex items-center justify-between text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
         >
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-purple-600" />
+            <Sparkles className="w-4 h-4 text-ds-accent" />
             <span>{t('builder.advancedAI', 'Advanced Prompt Strictness & Creativity Tuning')}</span>
-            <Badge variant="outline" className="text-[9px]">Optional</Badge>
+            <Badge variant="outline" className="text-[11px]">Optional</Badge>
           </div>
           {showAdvanced ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
@@ -383,7 +383,7 @@ export function StudioStageAISettings({
             <div className="space-y-2 p-3 rounded-lg border bg-card">
               <div className="flex justify-between items-center text-xs font-semibold">
                 <span>{t('builder.creativityLevel', 'Pedagogical Strictness vs Creative Scenarios')}</span>
-                <span className="font-mono text-purple-600 font-bold">
+                <span className="font-mono text-ds-accent font-bold">
                   {creativityLevel === 1 ? 'Strict Procedural' : creativityLevel === 3 ? 'Balanced five-star Standard' : 'Highly Creative Scenarios'}
                 </span>
               </div>
@@ -394,9 +394,9 @@ export function StudioStageAISettings({
                 max={5}
                 step={1}
               />
-              <div className="flex justify-between text-[10px] text-muted-foreground">
+              <div className="flex justify-between text-[11px] text-muted-foreground">
                 <span>Strict Fact-Only</span>
-                <span className="text-purple-600 font-bold">Balanced five-star Quality</span>
+                <span className="text-ds-accent font-bold">Balanced five-star Quality</span>
                 <span>Rich Novel Dilemmas</span>
               </div>
             </div>

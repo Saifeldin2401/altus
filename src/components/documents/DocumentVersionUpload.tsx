@@ -89,15 +89,15 @@ function formatFileSize(bytes: number): string {
 
 function getFileIcon(fileType: string) {
   if (fileType.includes("pdf")) {
-    return <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center text-red-600 font-bold text-sm">PDF</div>;
+    return <div className="w-12 h-12 bg-ds-danger-soft rounded-lg flex items-center justify-center text-ds-danger font-bold text-sm">PDF</div>;
   }
   if (fileType.includes("word") || fileType.includes("doc")) {
-    return <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 font-bold text-sm">DOC</div>;
+    return <div className="w-12 h-12 bg-ds-info-soft rounded-lg flex items-center justify-center text-ds-info font-bold text-sm">DOC</div>;
   }
   if (fileType.includes("excel") || fileType.includes("sheet") || fileType.includes("xls")) {
-    return <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center text-green-600 font-bold text-sm">XLS</div>;
+    return <div className="w-12 h-12 bg-ds-success-soft rounded-lg flex items-center justify-center text-ds-success font-bold text-sm">XLS</div>;
   }
-  return <FileText className="w-12 h-12 text-gray-400" />;
+  return <FileText className="w-12 h-12 text-ds-muted" />;
 }
 
 export function DocumentVersionUpload({
@@ -247,7 +247,7 @@ export function DocumentVersionUpload({
             <div className="flex-1">
               <div className="flex items-center gap-2">
                 <span className="font-semibold">Current Version</span>
-                <Badge className="bg-ds-ink text-white">
+                <Badge className="bg-ds-ink text-ds-on-ink">
                   v{currentVersion.versionNumber}
                 </Badge>
               </div>
@@ -314,7 +314,7 @@ export function DocumentVersionUpload({
                       className={cn(
                         "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold",
                         isCurrent
-                          ? "bg-ds-ink text-white"
+                          ? "bg-ds-ink text-ds-on-ink"
                           : "bg-muted text-muted-foreground"
                       )}
                     >
@@ -324,7 +324,7 @@ export function DocumentVersionUpload({
                       <div className="flex items-center gap-2">
                         <span className="font-medium truncate">{version.fileName}</span>
                         {isCurrent && (
-                          <Badge variant="outline" className="text-xs bg-green-100 text-green-700 border-green-200">
+                          <Badge variant="outline" className="text-xs bg-ds-success-soft text-ds-success border-ds-success/30">
                             <Check className="w-3 h-3 me-1" />
                             Current
                           </Badge>
@@ -392,7 +392,7 @@ export function DocumentVersionUpload({
                         <div className="flex items-center gap-3">
                           <Avatar className="w-8 h-8">
                             <AvatarImage src={version.uploadedBy.avatar} />
-                            <AvatarFallback className="text-xs bg-ds-ink text-white">
+                            <AvatarFallback className="text-xs bg-ds-ink text-ds-on-ink">
                               {version.uploadedBy.name.split(" ").map((n) => n[0]).join("").toUpperCase()}
                             </AvatarFallback>
                           </Avatar>

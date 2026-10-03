@@ -126,7 +126,7 @@ export default function ReportBuilder() {
                                             <div>
                                                 <CardTitle className="text-base font-semibold text-ds-ink flex items-center gap-2">
                                                     {report.name}
-                                                    {!report.is_active && <Badge variant="secondary" className="text-[10px] bg-ds-surface-subtle text-ds-muted">PAUSED</Badge>}
+                                                    {!report.is_active && <Badge variant="secondary" className="text-[11px] bg-ds-surface-subtle text-ds-muted">PAUSED</Badge>}
                                                 </CardTitle>
                                                 <CardDescription className="text-xs line-clamp-1 mt-1">{report.description}</CardDescription>
                                             </div>
@@ -137,10 +137,10 @@ export default function ReportBuilder() {
                                     </CardHeader>
                                     <CardContent className="p-4 pt-2">
                                         <div className="flex gap-2 flex-wrap mb-2">
-                                            <Badge variant="outline" className="bg-ds-surface-subtle uppercase tracking-wider text-[10px]">
+                                            <Badge variant="outline" className="bg-ds-surface-subtle uppercase tracking-wider text-[11px]">
                                                 {report.scope_type}
                                             </Badge>
-                                            <Badge variant="outline" className="text-ds-accent border-ds-accent/30 bg-ds-accent-soft font-mono text-[10px]">
+                                            <Badge variant="outline" className="text-ds-accent border-ds-accent/30 bg-ds-accent-soft font-mono text-[11px]">
                                                 {report.report_type}
                                             </Badge>
                                         </div>
@@ -219,7 +219,7 @@ export default function ReportBuilder() {
                                                 onChange={e => setSelectedReport({...selectedReport, department_id: e.target.value})}
                                                 className="font-mono text-sm"
                                             />
-                                            <p className="text-[10px] text-muted-foreground mt-1 flex items-center gap-1"><AlertCircle className="h-3 w-3" /> If left blank, runs against ALL matching scopes.</p>
+                                            <p className="text-[11px] text-muted-foreground mt-1 flex items-center gap-1"><AlertCircle className="h-3 w-3" /> If left blank, runs against ALL matching scopes.</p>
                                         </div>
                                     )}
                                 </div>

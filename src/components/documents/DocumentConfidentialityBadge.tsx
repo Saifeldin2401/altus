@@ -34,10 +34,10 @@ const CONFIDENTIALITY_CONFIGS: Record<ConfidentialityLevel, ConfidentialityConfi
     detailedDescription: "General company-wide document published across all tenant hotels (brand standards, group policies, organization calendar).",
     icon: <Globe className="w-3.5 h-3.5" />,
     color: {
-      bg: "bg-gray-100",
-      text: "text-gray-700",
-      border: "border-gray-200",
-      hover: "hover:bg-gray-200",
+      bg: "bg-ds-surface-subtle",
+      text: "text-ds-ink-secondary",
+      border: "border-ds-border",
+      hover: "hover:bg-ds-border",
     },
     accessDescription: "Organization-Wide (All Hotels)",
     examples: [
@@ -54,10 +54,10 @@ const CONFIDENTIALITY_CONFIGS: Record<ConfidentialityLevel, ConfidentialityConfi
     detailedDescription: "Operational standard document accessible only to staff and team members in the assigned hotel property and department.",
     icon: <Building2 className="w-3.5 h-3.5" />,
     color: {
-      bg: "bg-blue-100",
-      text: "text-blue-700",
-      border: "border-blue-200",
-      hover: "hover:bg-blue-200",
+      bg: "bg-ds-info-soft",
+      text: "text-ds-info",
+      border: "border-ds-info/30",
+      hover: "hover:bg-ds-info-soft",
     },
     accessDescription: "Assigned Property Staff",
     examples: [
@@ -74,10 +74,10 @@ const CONFIDENTIALITY_CONFIGS: Record<ConfidentialityLevel, ConfidentialityConfi
     detailedDescription: "Management-level document containing sensitive operational, financial, or personnel information.",
     icon: <Lock className="w-3.5 h-3.5" />,
     color: {
-      bg: "bg-amber-100",
-      text: "text-amber-700",
-      border: "border-amber-200",
-      hover: "hover:bg-amber-200",
+      bg: "bg-ds-warning-soft",
+      text: "text-ds-warning",
+      border: "border-ds-warning/30",
+      hover: "hover:bg-ds-warning-soft",
     },
     accessDescription: "Department Heads & GMs",
     examples: [
@@ -94,10 +94,10 @@ const CONFIDENTIALITY_CONFIGS: Record<ConfidentialityLevel, ConfidentialityConfi
     detailedDescription: "Highly restricted document accessible only to Super Admins, Corporate Executives, and designated Legal/HR owners.",
     icon: <ShieldAlert className="w-3.5 h-3.5" />,
     color: {
-      bg: "bg-red-100",
-      text: "text-red-700",
-      border: "border-red-200",
-      hover: "hover:bg-red-200",
+      bg: "bg-ds-danger-soft",
+      text: "text-ds-danger",
+      border: "border-ds-danger/30",
+      hover: "hover:bg-ds-danger-soft",
     },
     accessDescription: "Executive Leadership Only",
     examples: [
@@ -121,8 +121,8 @@ interface DocumentConfidentialityBadgeProps {
 
 const sizeClasses = {
   sm: {
-    badge: "text-[10px] px-1.5 py-0.5 min-h-[20px] gap-1 shrink-0 whitespace-nowrap",
-    pill: "text-[10px] px-2 py-0.5 gap-1 shrink-0 whitespace-nowrap",
+    badge: "text-[11px] px-1.5 py-0.5 min-h-[20px] gap-1 shrink-0 whitespace-nowrap",
+    pill: "text-[11px] px-2 py-0.5 gap-1 shrink-0 whitespace-nowrap",
     card: "p-2 gap-2",
     dot: "w-2 h-2 shrink-0",
   },
@@ -155,10 +155,10 @@ function BadgeContent({
         className={cn(
           "rounded-full",
           sizeClasses[size].dot,
-          config.level === "public" && "bg-gray-400",
-          config.level === "internal" && "bg-blue-500",
-          config.level === "confidential" && "bg-amber-500",
-          config.level === "restricted" && "bg-red-500"
+          config.level === "public" && "bg-ds-muted",
+          config.level === "internal" && "bg-ds-info",
+          config.level === "confidential" && "bg-ds-warning",
+          config.level === "restricted" && "bg-ds-danger"
         )}
       />
     );
@@ -184,7 +184,7 @@ function BadgeContent({
             <Badge
               variant="outline"
               className={cn(
-                "text-[10px] border-0",
+                "text-[11px] border-0",
                 config.color.bg,
                 config.color.text
               )}

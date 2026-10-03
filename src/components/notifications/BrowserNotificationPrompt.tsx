@@ -146,14 +146,14 @@ export function BrowserNotificationPrompt() {
                 }
       `}
         >
-            <div className="relative overflow-hidden rounded-xl border border-border/50 bg-white dark:bg-hotel-navy shadow-2xl shadow-black/10 dark:shadow-black/30">
+            <div className="relative overflow-hidden rounded-[8px] border border-border/50 bg-ds-surface dark:bg-ds-ink shadow-2xl shadow-black/10 dark:shadow-black/30">
                 {/* Top accent gradient */}
-                <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-hotel-gold via-amber-400 to-hotel-gold" />
+                <div className="absolute top-0 inset-x-0 h-1 bg-ds-accent" />
 
                 {/* Close button */}
                 <button
                     onClick={handleDismiss}
-                    className="absolute top-3 end-3 p-1 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors"
+                    className="absolute top-3 end-3 p-1 rounded-full text-ds-muted hover:text-ds-ink-secondary hover:bg-ds-surface-subtle transition-colors"
                     aria-label={t('action.close')}
                 >
                     <X className="h-4 w-4" />
@@ -162,14 +162,14 @@ export function BrowserNotificationPrompt() {
                 <div className="p-5 pt-6">
                     {/* Icon + Title */}
                     <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-hotel-gold/20 to-amber-500/20 dark:from-hotel-gold/30 dark:to-amber-500/30 flex items-center justify-center ring-1 ring-hotel-gold/20">
-                            <Bell className="h-6 w-6 text-hotel-gold" />
+                        <div className="flex-shrink-0 w-12 h-12 rounded-[8px] bg-ds-accent/20 dark:bg-ds-accent/30 flex items-center justify-center ring-1 ring-ds-accent/20">
+                            <Bell className="h-6 w-6 text-ds-accent" />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <h3 className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">
+                            <h3 className="text-sm font-semibold text-ds-ink leading-tight">
                                 {t('notification_prompt.title')}
                             </h3>
-                            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+                            <p className="mt-1 text-xs text-ds-muted leading-relaxed">
                                 {t('notification_prompt.description')}
                             </p>
                         </div>
@@ -180,7 +180,7 @@ export function BrowserNotificationPrompt() {
                         <Button
                             onClick={handleEnable}
                             size="sm"
-                            className="flex-1 bg-hotel-gold hover:bg-hotel-gold/90 text-hotel-dark font-medium text-xs h-9"
+                            className="flex-1 bg-ds-accent hover:bg-ds-accent/90 text-ds-ink font-medium text-xs h-9"
                         >
                             <Bell className="h-3.5 w-3.5 me-1.5" />
                             {t('notification_prompt.enable_button')}
@@ -197,7 +197,7 @@ export function BrowserNotificationPrompt() {
                             onClick={handleDismiss}
                             size="sm"
                             variant="ghost"
-                            className="text-xs h-9 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                            className="text-xs h-9 text-ds-muted hover:text-ds-ink-secondary"
                         >
                             {t('notification_prompt.dismiss_button')}
                         </Button>

@@ -88,13 +88,13 @@ export function StudioSourcePicker({
                       onClick={() => onSelect(isSel ? null : o.id)}
                       className={cn(
                         'w-full text-start px-3 py-2 flex items-start gap-2.5 transition-colors',
-                        isSel ? 'bg-purple-50/70 dark:bg-purple-950/40' : 'hover:bg-muted/50'
+                        isSel ? 'bg-ds-accent-soft/70' : 'hover:bg-muted/50'
                       )}
                     >
                       <span
                         className={cn(
                           'mt-0.5 w-4 h-4 rounded flex items-center justify-center shrink-0',
-                          isSel ? 'bg-purple-600 text-white' : 'bg-muted text-muted-foreground'
+                          isSel ? 'bg-ds-accent text-white dark:text-ds-on-ink' : 'bg-muted text-muted-foreground'
                         )}
                       >
                         {isSel ? <Check className="w-3 h-3" /> : <FileText className="w-3 h-3" />}
@@ -102,7 +102,7 @@ export function StudioSourcePicker({
                       <span className="min-w-0 flex-1">
                         <span className="block text-xs font-medium text-foreground truncate">{o.title}</span>
                         {o.kind && (
-                          <span className="block text-[10px] text-muted-foreground uppercase tracking-wide mt-0.5">
+                          <span className="block text-[11px] text-muted-foreground uppercase tracking-wide mt-0.5">
                             {o.kind}
                           </span>
                         )}
@@ -126,7 +126,7 @@ export function StudioSourcePicker({
             <button
               type="button"
               onClick={() => onSelect(null)}
-              className="text-[11px] font-semibold text-muted-foreground hover:text-red-500"
+              className="text-[11px] font-semibold text-muted-foreground hover:text-ds-danger"
             >
               {t('common.clear', 'Clear')}
             </button>

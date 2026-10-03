@@ -72,7 +72,7 @@ export function CourseSourceDocuments({ trainingModuleId, variant = 'learner', c
   }
 
   return (
-    <div className={`rounded-xl border bg-card ${className}`}>
+    <div className={`rounded-[8px] border bg-card ${className}`}>
       <div className="flex items-center gap-2 px-4 py-3 border-b">
         <FileText className="w-4 h-4 text-muted-foreground" />
         <h3 className="text-sm font-semibold text-foreground">
@@ -80,7 +80,7 @@ export function CourseSourceDocuments({ trainingModuleId, variant = 'learner', c
             ? t('sourceDocs.adminTitle', 'Source Documents')
             : t('sourceDocs.learnerTitle', 'Course Resources')}
         </h3>
-        <Badge variant="outline" className="text-[10px] ms-auto">{visible.length}</Badge>
+        <Badge variant="outline" className="text-[11px] ms-auto">{visible.length}</Badge>
       </div>
 
       <ul className="divide-y">
@@ -95,15 +95,15 @@ export function CourseSourceDocuments({ trainingModuleId, variant = 'learner', c
                     {d.docTitle || d.originalFilename || t('sourceDocs.untitled', 'Document')}
                   </span>
                   {d.isPrimary && (
-                    <Badge variant="outline" className="text-[9px] gap-0.5 bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-300">
+                    <Badge variant="outline" className="text-[11px] gap-0.5 bg-ds-warning-soft text-ds-warning border-ds-warning/30">
                       <Star className="w-2.5 h-2.5" />{t('sourceDocs.primary', 'Primary')}
                     </Badge>
                   )}
                   {d.relationship === 'source' && variant === 'admin' && (
-                    <Badge variant="outline" className="text-[9px]">{t('sourceDocs.sourceTag', 'AI source')}</Badge>
+                    <Badge variant="outline" className="text-[11px]">{t('sourceDocs.sourceTag', 'AI source')}</Badge>
                   )}
                 </div>
-                <div className="text-[10px] text-muted-foreground flex items-center gap-2">
+                <div className="text-[11px] text-muted-foreground flex items-center gap-2">
                   {d.originalFilename && d.originalFilename !== d.docTitle && <span className="truncate">{d.originalFilename}</span>}
                   {d.fileType && <span className="uppercase">{d.fileType.split('/').pop()}</span>}
                   {humanSize(d.fileSize) && <span>{humanSize(d.fileSize)}</span>}
@@ -113,7 +113,7 @@ export function CourseSourceDocuments({ trainingModuleId, variant = 'learner', c
               </div>
 
               {restricted ? (
-                <Badge variant="outline" className="text-[10px] gap-1 text-muted-foreground">
+                <Badge variant="outline" className="text-[11px] gap-1 text-muted-foreground">
                   <Lock className="w-3 h-3" />{t('sourceDocs.restricted', 'Restricted')}
                 </Badge>
               ) : d.docFileUrl ? (
@@ -126,7 +126,7 @@ export function CourseSourceDocuments({ trainingModuleId, variant = 'learner', c
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-7 w-7 p-0 text-rose-500 hover:text-rose-600"
+                  className="h-7 w-7 p-0 text-ds-danger hover:text-ds-danger"
                   disabled={busyId === d.id}
                   title={t('sourceDocs.unlink', 'Remove from course (keeps the file)')}
                   onClick={() => remove(d)}
@@ -140,7 +140,7 @@ export function CourseSourceDocuments({ trainingModuleId, variant = 'learner', c
       </ul>
 
       {variant === 'admin' && (
-        <p className="px-4 py-2 text-[10px] text-muted-foreground border-t">
+        <p className="px-4 py-2 text-[11px] text-muted-foreground border-t">
           {t('sourceDocs.adminHint', 'Removing a document here only unlinks it from this course — the original file stays in the document repository.')}
         </p>
       )}

@@ -72,11 +72,11 @@ export function RichCourseCard({ course, href, badge, due, progress, actionLabel
   return (
     <Link
       to={href}
-      className="group flex h-full flex-col gap-4 rounded-xl border border-ds-border bg-ds-surface p-3 shadow-[0_12px_32px_rgb(21_33_46/0.04)] transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-ds-border-strong hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent motion-reduce:hover:translate-y-0 sm:flex-row"
+      className="group flex h-full flex-col gap-4 rounded-[8px] border border-ds-border bg-ds-surface p-3 shadow-[0_12px_32px_rgb(21_33_46/0.04)] transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-ds-border-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent motion-reduce:hover:translate-y-0 sm:flex-row"
     >
       <CourseCover course={{ id: course.id, title: course.title, category: course.category, description: course.description }} className="h-40 w-full rounded-lg sm:h-auto sm:min-h-[152px] sm:w-40">
         {badge && (
-          <span className={cn('absolute start-2 top-2 rounded-md px-2 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-white', BADGE_TONE[badge.tone])}>
+          <span className={cn('absolute start-2 top-2 rounded-md px-2 py-1 text-[11px] font-bold uppercase tracking-[0.08em] text-white', BADGE_TONE[badge.tone])}>
             {badge.label}
           </span>
         )}
@@ -116,11 +116,11 @@ export function CompactCourseCard({ course, href }: { course: CourseCardData; hr
   return (
     <Link
       to={href}
-      className="group flex h-full items-center gap-3 rounded-xl border border-ds-border bg-ds-surface p-2.5 transition-colors hover:border-ds-border-strong hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent"
+      className="group flex h-full items-center gap-3 rounded-[8px] border border-ds-border bg-ds-surface p-2.5 transition-colors hover:border-ds-border-strong hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent"
     >
       <CourseCover course={{ id: course.id, title: course.title, category: course.category, description: course.description }} className="h-16 w-20 rounded-lg" />
       <span className="min-w-0 flex-1 space-y-1">
-        <span className="block text-[10px] font-semibold uppercase tracking-[0.12em] text-ds-muted">{t('myDay.course', 'Course')}</span>
+        <span className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-ds-muted">{t('myDay.course', 'Course')}</span>
         <span className="line-clamp-2 block text-sm font-semibold leading-snug text-ds-ink group-hover:underline">{course.title}</span>
         <CourseMeta course={{ ...course, certificate: false }} />
       </span>
@@ -144,9 +144,9 @@ export function FeatureCourseCard({ course, href, progress, badgeLabel, actionLa
   const { t } = useTranslation('training')
   const pct = Math.min(100, Math.max(0, Math.round(progress)))
   return (
-    <div className="grid overflow-hidden rounded-2xl border border-ds-border bg-ds-surface shadow-[0_16px_40px_rgb(21_33_46/0.06)] md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+    <div className="grid overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface shadow-[0_16px_40px_rgb(21_33_46/0.06)] md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
       <CourseCover course={{ id: course.id, title: course.title, category: course.category, description: course.description }} className="h-52 w-full rounded-none md:h-full md:min-h-[236px]">
-        <span className="absolute start-3 top-3 rounded-md bg-ds-success px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.08em] text-white">{badgeLabel}</span>
+        <span className="absolute start-3 top-3 rounded-md bg-ds-success px-2.5 py-1 text-[11px] font-bold uppercase tracking-[0.08em] text-white dark:text-ds-on-ink">{badgeLabel}</span>
       </CourseCover>
       <div className="flex flex-col gap-3 p-5 sm:p-6">
         <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ds-muted">{t('myDay.course', 'Course')}</span>
@@ -183,10 +183,10 @@ export function VerticalCourseCard({
   return (
     <Link
       to={href}
-      className="group flex h-full flex-col overflow-hidden rounded-xl border border-ds-border bg-ds-surface shadow-[0_12px_32px_rgb(21_33_46/0.04)] transition-[border-color,box-shadow,transform] duration-200 ease-out hover:-translate-y-0.5 hover:border-ds-border-strong hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent motion-reduce:hover:translate-y-0"
+      className="group flex h-full flex-col overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface shadow-[0_12px_32px_rgb(21_33_46/0.04)] transition-[border-color,box-shadow,transform] duration-200 ease-out hover:-translate-y-0.5 hover:border-ds-border-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent motion-reduce:hover:translate-y-0"
     >
       <CourseCover course={{ id: course.id, title: course.title, category: course.category, description: course.description }} className="h-36 w-full rounded-none">
-        {badge && <span className={cn('absolute start-3 top-3 rounded-md px-2 py-1 text-[10px] font-bold uppercase tracking-[0.08em] text-white', BADGE_TONE[badge.tone])}>{badge.label}</span>}
+        {badge && <span className={cn('absolute start-3 top-3 rounded-md px-2 py-1 text-[11px] font-bold uppercase tracking-[0.08em] text-white', BADGE_TONE[badge.tone])}>{badge.label}</span>}
       </CourseCover>
       <span className="flex flex-1 flex-col gap-2 p-4">
         <span className="line-clamp-2 text-[17px] font-semibold leading-snug text-ds-ink group-hover:underline">{course.title}</span>

@@ -11,6 +11,7 @@ import {
     UserCheck
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import i18n from '@/i18n/i18n'
 
 interface ScenarioOption {
     id: string
@@ -57,24 +58,24 @@ export function ScenarioBranchSimulator({
     const displayText = isRTL && scenarioText_ar ? scenarioText_ar : scenarioText
 
     return (
-        <div className="my-6 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 border border-amber-500/30 p-6 shadow-2xl space-y-5">
+        <div className="my-6 rounded-[8px] bg-ds-ink border border-ds-warning/30 p-6 shadow-2xl space-y-5">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                    <div className="h-9 w-9 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-400">
+                    <div className="h-9 w-9 rounded-[8px] bg-ds-warning/20 border border-ds-warning/40 flex items-center justify-center text-ds-warning">
                         <UserCheck className="h-5 w-5" />
                     </div>
                     <div>
                         <div className="flex items-center gap-2">
-                            <h4 className="text-sm font-bold text-white">
-                                {title || (isRTL ? 'محاكي القرارات والمواقف الفندقية' : 'Hotel Scenario Decision Simulator')}
+                            <h4 className="text-sm font-bold text-ds-on-ink">
+                                {title || (i18n.t('training:screens.ScenarioBranchSimulator.hotelScenarioDecisionSimulator', 'Hotel Scenario Decision Simulator'))}
                             </h4>
-                            <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/40 text-[10px]">
-                                {guestRole || (isRTL ? 'موقف نزيل' : 'Frontline Scenario')}
+                            <Badge className="bg-ds-warning/20 text-ds-warning border-ds-warning/40 text-[11px]">
+                                {guestRole || (i18n.t('training:screens.ScenarioBranchSimulator.frontlineScenario', 'Frontline Scenario'))}
                             </Badge>
                         </div>
-                        <p className="text-[11px] text-slate-400">
-                            {isRTL ? 'اختر أفضل استجابة مهنية وفق معايير الضيافة الفاخرة' : 'Choose the best 5-star service standard response'}
+                        <p className="text-[11px] text-ds-muted">
+                            {i18n.t('training:screens.ScenarioBranchSimulator.chooseTheBest5Star', 'Choose the best 5-star service standard response')}
                         </p>
                     </div>
                 </div>
@@ -84,27 +85,27 @@ export function ScenarioBranchSimulator({
                         variant="ghost"
                         size="sm"
                         onClick={handleReset}
-                        className="h-8 px-2 text-xs text-slate-400 hover:text-white gap-1"
+                        className="h-8 px-2 text-xs text-ds-muted hover:text-ds-on-ink gap-1"
                     >
                         <RotateCcw className="h-3.5 w-3.5" />
-                        <span>{isRTL ? 'إعادة المحاولة' : 'Try Again'}</span>
+                        <span>{i18n.t('training:screens.ScenarioBranchSimulator.tryAgain', 'Try Again')}</span>
                     </Button>
                 )}
             </div>
 
             {/* Scenario Narrative Box */}
-            <div className="rounded-xl bg-slate-900/90 border border-slate-800 p-4 text-sm text-slate-200 leading-relaxed relative">
-                <div className="text-[10px] font-semibold tracking-wider uppercase text-amber-400/90 mb-1.5 flex items-center gap-1">
+            <div className="rounded-[8px] bg-ds-ink/90 border border-ds-ink-secondary p-4 text-sm text-ds-on-ink leading-relaxed relative">
+                <div className="text-[11px] font-semibold tracking-wider uppercase text-ds-warning/90 mb-1.5 flex items-center gap-1">
                     <Sparkles className="h-3 w-3" />
-                    <span>{isRTL ? 'تفاصيل الموقف' : 'Situation Brief'}</span>
+                    <span>{i18n.t('training:screens.ScenarioBranchSimulator.situationBrief', 'Situation Brief')}</span>
                 </div>
-                <p className="text-slate-100">{displayText}</p>
+                <p className="text-ds-on-ink">{displayText}</p>
             </div>
 
             {/* Decision Choices */}
             <div className="space-y-2.5">
-                <span className="text-xs font-semibold text-slate-300">
-                    {isRTL ? 'كيف تتصرف في هذا الموقف؟' : 'What is your immediate course of action?'}
+                <span className="text-xs font-semibold text-ds-muted">
+                    {i18n.t('training:screens.ScenarioBranchSimulator.whatIsYourImmediateCourse', 'What is your immediate course of action?')}
                 </span>
 
                 {options.map((opt, idx) => {
@@ -119,20 +120,20 @@ export function ScenarioBranchSimulator({
                             disabled={isSubmitted}
                             onClick={() => handleSelect(opt.id)}
                             className={cn(
-                                "w-full text-start p-4 rounded-xl border transition-all text-xs md:text-sm flex items-start gap-3 relative group",
-                                !isSubmitted && "bg-slate-900/60 border-slate-800 hover:border-amber-500/50 hover:bg-slate-900 text-slate-200 cursor-pointer active:scale-[0.99]",
-                                showCorrect && "bg-emerald-950/40 border-emerald-500 text-emerald-100 shadow-lg shadow-emerald-500/10",
-                                showWrong && "bg-red-950/40 border-red-500 text-red-100",
-                                isSubmitted && !isSelected && !opt.isBestChoice && "opacity-40 border-slate-800 bg-slate-950"
+                                "w-full text-start p-4 rounded-[8px] border transition-all text-xs md:text-sm flex items-start gap-3 relative group",
+                                !isSubmitted && "bg-ds-ink/60 border-ds-ink-secondary hover:border-ds-warning/50 hover:bg-ds-ink text-ds-on-ink cursor-pointer active:scale-[0.99]",
+                                showCorrect && "bg-ds-success/20 border-ds-success text-ds-success shadow-lg",
+                                showWrong && "bg-ds-danger/20 border-ds-danger text-ds-danger",
+                                isSubmitted && !isSelected && !opt.isBestChoice && "opacity-40 border-ds-ink-secondary bg-ds-ink"
                             )}
                         >
                             <span className={cn(
                                 "h-6 w-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5",
                                 showCorrect
-                                    ? "bg-emerald-500 text-slate-950"
+                                    ? "bg-ds-success text-ds-ink"
                                     : showWrong
-                                        ? "bg-red-500 text-white"
-                                        : "bg-slate-800 text-slate-300 group-hover:bg-amber-500 group-hover:text-slate-950"
+                                        ? "bg-ds-danger text-ds-on-ink"
+                                        : "bg-ds-ink text-ds-muted group-hover:bg-ds-on-ink/15"
                             )}>
                                 {showCorrect ? <CheckCircle2 className="h-4 w-4" /> : showWrong ? <XCircle className="h-4 w-4" /> : String.fromCharCode(65 + idx)}
                             </span>
@@ -149,22 +150,22 @@ export function ScenarioBranchSimulator({
             {isSubmitted && chosenOption && (
                 <div
                     className={cn(
-                        "rounded-xl p-4 border animate-in fade-in slide-in-from-top-2 duration-300 text-xs md:text-sm leading-relaxed",
+                        "rounded-[8px] p-4 border animate-in fade-in slide-in-from-top-2 duration-300 text-xs md:text-sm leading-relaxed",
                         chosenOption.isBestChoice
-                            ? "bg-emerald-950/60 border-emerald-500/60 text-emerald-200"
-                            : "bg-amber-950/60 border-amber-500/60 text-amber-200"
+                            ? "bg-ds-success/20 border-ds-success/60 text-ds-success"
+                            : "bg-ds-warning/20 border-ds-warning/60 text-ds-warning"
                     )}
                 >
                     <div className="flex items-center gap-2 font-bold mb-1.5">
                         {chosenOption.isBestChoice ? (
                             <>
-                                <Award className="h-4 w-4 text-emerald-400" />
-                                <span>{isRTL ? 'إجابة ممتازة ومطابقة للمعايير! (+15 نقطة)' : 'Excellent Choice! 5-Star Standard (+15 XP)'}</span>
+                                <Award className="h-4 w-4 text-ds-success" />
+                                <span>{i18n.t('training:screens.ScenarioBranchSimulator.excellentChoice5StarStandard', 'Excellent Choice! 5-Star Standard (+15 XP)')}</span>
                             </>
                         ) : (
                             <>
-                                <AlertCircle className="h-4 w-4 text-amber-400" />
-                                <span>{isRTL ? 'ملاحظة تدريبية وتوجيه مهني:' : 'Coaching Feedback & Best Practice:'}</span>
+                                <AlertCircle className="h-4 w-4 text-ds-warning" />
+                                <span>{i18n.t('training:screens.ScenarioBranchSimulator.coachingFeedbackBestPractice', 'Coaching Feedback & Best Practice:')}</span>
                             </>
                         )}
                     </div>

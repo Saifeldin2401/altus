@@ -214,7 +214,7 @@ export default function Settings() {
                                         <p className="text-xs text-ds-muted">{t_ext('choose_your_primary_interface_language', 'Choose your primary interface language')}</p>
                                     </div>
                                     <Select value={language} onValueChange={handleLanguageChange}>
-                                        <SelectTrigger id="language-select" className="w-[180px] bg-white">
+                                        <SelectTrigger id="language-select" className="w-[180px] bg-ds-surface">
                                             <SelectValue placeholder={t('language.select_placeholder')} />
                                         </SelectTrigger>
                                         <SelectContent>

@@ -70,7 +70,7 @@ export default function Login() {
 
   return (
     <div
-      className="h-screen max-h-screen w-full overflow-hidden grid grid-cols-1 lg:grid-cols-2 bg-white font-sans text-ds-ink selection:bg-ds-brass/20 selection:text-ds-ink antialiased"
+      className="h-screen max-h-screen w-full overflow-hidden grid grid-cols-1 lg:grid-cols-2 bg-ds-surface font-sans text-ds-ink selection:bg-ds-brass/20 selection:text-ds-ink antialiased"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* â”€â”€ LEFT PANEL: LIVING EDITORIAL HOSPITALITY VISUAL (50% DESKTOP SPLIT) â”€â”€ */}
@@ -98,7 +98,7 @@ export default function Login() {
       </div>
 
       {/* â”€â”€ RIGHT PANEL: REFINED ENTERPRISE AUTHENTICATION EXPERIENCE â”€â”€ */}
-      <div className="flex flex-col justify-between p-6 sm:p-8 lg:p-10 xl:p-12 h-full max-h-screen min-w-0 overflow-hidden bg-white">
+      <div className="flex flex-col justify-between p-6 sm:p-8 lg:p-10 xl:p-12 h-full max-h-screen min-w-0 overflow-hidden bg-ds-surface">
         {/* Top Bar: Brand Context (Tenant or Mobile only) + Language Switcher */}
         <header className="flex items-center justify-between w-full shrink-0">
           <div>
@@ -119,7 +119,7 @@ export default function Login() {
                   <span className="block text-sm font-semibold tracking-tight text-ds-ink">
                     {tenantName}
                   </span>
-                  <span className="block text-[10px] font-medium tracking-wider uppercase text-ds-muted">
+                  <span className="block text-[11px] font-medium tracking-wider uppercase text-ds-muted">
                     Altus Connect
                   </span>
                 </div>
@@ -136,7 +136,7 @@ export default function Login() {
                   <span className="block text-sm font-semibold tracking-tight text-ds-ink">
                     Altus Connect
                   </span>
-                  <span className="block text-[9px] font-medium tracking-widest uppercase text-ds-brass">
+                  <span className="block text-[11px] font-medium tracking-widest uppercase text-ds-brass">
                     Enterprise
                   </span>
                 </div>

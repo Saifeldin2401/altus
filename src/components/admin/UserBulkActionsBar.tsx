@@ -193,12 +193,12 @@ export function UserBulkActionsBar({ selectedIds, onClearSelection, userNames, r
                                 <p className="text-xs font-medium text-ds-muted mb-1">{t('bulk.affected', 'People affected')}</p>
                                 <div className="flex flex-wrap gap-1">
                                     {Array.from(selectedIds).slice(0, 10).map(id => (
-                                        <Badge key={id} variant="outline" className="text-[10px]">
+                                        <Badge key={id} variant="outline" className="text-[11px]">
                                             {userNames.get(id) || id.slice(0, 8)}
                                         </Badge>
                                     ))}
                                     {selectedIds.size > 10 && (
-                                        <Badge variant="outline" className="text-[10px]">
+                                        <Badge variant="outline" className="text-[11px]">
                                             {t('bulk.more', '+{{count}} more', { count: selectedIds.size - 10 })}
                                         </Badge>
                                     )}

@@ -61,15 +61,15 @@ function RasterAsset({ asset, alt }: { asset: PlayerVisualAsset; alt: string }) 
 
     if (resolving) {
         return (
-            <div className="flex h-52 items-center justify-center rounded-xl border border-slate-200 bg-slate-50">
-                <Loader2 className="h-6 w-6 animate-spin text-slate-300" />
+            <div className="flex h-52 items-center justify-center rounded-[8px] border border-ds-border bg-ds-surface-subtle">
+                <Loader2 className="h-6 w-6 animate-spin text-ds-muted" />
             </div>
         )
     }
 
     if (errored || !resolved) {
         return (
-            <div className="flex h-52 flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 text-slate-400">
+            <div className="flex h-52 flex-col items-center justify-center gap-2 rounded-[8px] border-2 border-dashed border-ds-border bg-ds-surface-subtle text-ds-muted">
                 <ImageOff className="h-8 w-8" />
                 <span className="text-xs">{t('imageLoadError', 'Unable to load this image.')}</span>
             </div>
@@ -82,7 +82,7 @@ function RasterAsset({ asset, alt }: { asset: PlayerVisualAsset; alt: string }) 
             alt={alt}
             loading="lazy"
             onError={() => setErrored(true)}
-            className="mx-auto max-h-[520px] w-auto rounded-xl border border-slate-200 shadow-lg"
+            className="mx-auto max-h-[520px] w-auto rounded-[8px] border border-ds-border shadow-lg"
         />
     )
 }
@@ -107,7 +107,7 @@ export function BlockVisualAssets({ assets, isRTL = false, className }: BlockVis
                 return (
                     <figure key={asset.id} className="m-0">
                         {source?.kind === 'svg' ? (
-                            <div className="overflow-hidden rounded-xl border border-slate-200 bg-white p-4 dark:bg-slate-900 [&_svg]:mx-auto [&_svg]:h-auto [&_svg]:max-w-full">
+                            <div className="overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface p-4 [&_svg]:mx-auto [&_svg]:h-auto [&_svg]:max-w-full">
                                 <InlineErrorBoundary>
                                     <div dangerouslySetInnerHTML={{ __html: sanitizeSvg(source.markup) }} />
                                 </InlineErrorBoundary>
@@ -118,9 +118,9 @@ export function BlockVisualAssets({ assets, isRTL = false, className }: BlockVis
 
                         {(captionEn || captionAr) && (
                             <figcaption className="mt-2 space-y-0.5 text-center">
-                                {captionEn && <span className="block text-xs text-slate-500">{captionEn}</span>}
+                                {captionEn && <span className="block text-xs text-ds-muted">{captionEn}</span>}
                                 {captionAr && captionAr !== captionEn && (
-                                    <span className="block text-xs text-slate-400" dir="rtl">
+                                    <span className="block text-xs text-ds-muted" dir="rtl">
                                         {captionAr}
                                     </span>
                                 )}

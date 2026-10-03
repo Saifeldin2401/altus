@@ -76,17 +76,17 @@ interface DocumentTrashBinProps {
 function getFileIcon(type: TrashedDocument["fileType"]) {
   switch (type) {
     case "pdf":
-      return <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center text-red-600 font-bold text-xs">PDF</div>;
+      return <div className="w-10 h-10 bg-ds-danger-soft rounded-lg flex items-center justify-center text-ds-danger font-bold text-xs">PDF</div>;
     case "doc":
     case "docx":
-      return <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 font-bold text-xs">DOC</div>;
+      return <div className="w-10 h-10 bg-ds-info-soft rounded-lg flex items-center justify-center text-ds-info font-bold text-xs">DOC</div>;
     case "xls":
     case "xlsx":
-      return <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-green-600 font-bold text-xs">XLS</div>;
+      return <div className="w-10 h-10 bg-ds-success-soft rounded-lg flex items-center justify-center text-ds-success font-bold text-xs">XLS</div>;
     case "image":
-      return <Image className="w-10 h-10 text-purple-500" />;
+      return <Image className="w-10 h-10 text-ds-accent" />;
     default:
-      return <File className="w-10 h-10 text-gray-400" />;
+      return <File className="w-10 h-10 text-ds-muted" />;
   }
 }
 
@@ -379,7 +379,7 @@ export function DocumentTrashBin({
                       })}
                     </span>
                     {doc.originalFolder && (
-                      <Badge variant="outline" className="text-[10px]">
+                      <Badge variant="outline" className="text-[11px]">
                         from {doc.originalFolder}
                       </Badge>
                     )}

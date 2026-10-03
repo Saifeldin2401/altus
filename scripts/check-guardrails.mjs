@@ -342,6 +342,63 @@ for (const name of readdirSync(enDir).filter((f) => f.endsWith('.json'))) {
 }
 
 // ---------------------------------------------------------------------------
+// GUARDRAIL 8: one visual language (design tokens)
+//
+// History (design sweep 2026-10-03): admins reported the admin area looked
+// like a different product. Screens had drifted onto raw Tailwind palettes
+// (slate/indigo/amber...), the retired hotel-/altus- brand tokens, text down
+// to 7px, and Arabic copy hard-coded beside English as isRTL ternaries that
+// bypassed the translation files. Ink surfaces with hard text-white turned
+// unreadable in dark mode, because ds-ink is light there. All of it was
+// swept to the ds-* tokens (docs/product/FRONTEND_TRANSFORMATION_STRATEGY.md);
+// these checks keep it that way.
+//
+// Files below render something that is not app UI and must keep its own
+// colours: the printed certificate, email client mock-ups, and colours a
+// user picks for their own tags. Anything else opts out per line with
+// "// guardrail-ok: <reason>".
+// ---------------------------------------------------------------------------
+
+const DESIGN_ALLOWLIST = new Set([
+  'src/pages/training/TrainingCertificates.tsx',
+  'src/components/admin/TenantEmailPreviewModal.tsx',
+  'src/components/admin/AITenantEmailBrandCopilotModal.tsx',
+  'src/components/documents/DocumentTagManager.tsx',
+  'src/pages/gallery/ComponentGallery.tsx',
+])
+const RAW_PALETTE_RE = /(?<![\w-])(?:[a-z0-9]+:)*(?:bg|text|border(?:-[trblxyse])?|ring|ring-offset|from|via|to|fill|stroke|divide|shadow|outline|decoration|placeholder|caret|accent)-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\d{2,3}(?:\/\d+)?(?![\w-])/
+const LEGACY_BRAND_RE = /(?<![\w-])(?:[a-z0-9]+:)*(?:bg|text|border|ring|from|via|to|fill|divide|shadow)-(?:hotel|altus)-[a-z]+/
+const TINY_TEXT_RE = /text-\[(?:[0-9]|10)(?:\.\d+)?px\]/
+const INLINE_BILINGUAL_RE = /(?:isRTL|isRtl|isArabic) \? ['`][^'`\n]*[\u0600-\u06FF]/
+const CLASS_STRING_RE = /(["'`])((?:(?!\1)[^\n])*)\1/g
+const INK_SURFACE_RE = /(?<![\w:/-])bg-(?:ds-ink|primary)(?![\w-])/
+const HARD_WHITE_RE = /(?<![\w:/-])text-white(?![\w-])/
+
+for (const file of sourceFiles) {
+  const rel = relative(ROOT, file).split(sep).join('/')
+  if (TEST_PATH_RE.test(rel) || !rel.endsWith('.tsx') || DESIGN_ALLOWLIST.has(rel)) continue
+
+  const lines = readFileSync(file, 'utf8').split('\n')
+  lines.forEach((text, i) => {
+    const line = i + 1
+    if (hasOptOut(lines, line)) return
+    const problems = []
+    if (RAW_PALETTE_RE.test(text)) problems.push('raw Tailwind palette colour (use the ds-* tokens)')
+    if (LEGACY_BRAND_RE.test(text)) problems.push('retired hotel-/altus- brand token (use ds-accent / ds-ink)')
+    if (TINY_TEXT_RE.test(text)) problems.push('text smaller than 11px')
+    if (INLINE_BILINGUAL_RE.test(text)) problems.push('Arabic copy inline beside English (put both in the locale files and use t())')
+    for (const m of text.matchAll(CLASS_STRING_RE)) {
+      const cls = m[2]
+      if (INK_SURFACE_RE.test(cls) && HARD_WHITE_RE.test(cls) && !cls.includes('dark:text-')) {
+        problems.push('text-white on an ink surface (ds-ink is light in dark mode; use text-ds-on-ink)')
+        break
+      }
+    }
+    for (const p of problems) failures.push(`${rel}:${line}  ${p}.`)
+  })
+}
+
+// ---------------------------------------------------------------------------
 
 if (failures.length > 0) {
   console.error(`\n✖ ${failures.length} guardrail violation(s):\n`)
@@ -353,4 +410,4 @@ if (failures.length > 0) {
   process.exit(1)
 }
 
-console.log('✔ Guardrails passed (no fake-data constants, no unknown storage buckets, types file intact, no direct certificate writes, no new UI database access, canonical URLs only, vocabulary ratchet).')
+console.log('✔ Guardrails passed (no fake-data constants, no unknown storage buckets, types file intact, no direct certificate writes, no new UI database access, canonical URLs only, vocabulary ratchet, design tokens).')

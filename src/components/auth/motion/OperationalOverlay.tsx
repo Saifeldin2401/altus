@@ -48,7 +48,7 @@ function OperationalOverlayComponent({ isRTL = false, className }: OperationalOv
             <div key={pillar.id} className="relative z-10 flex flex-col items-center group">
               <div
                 className={cn(
-                  'w-8 h-8 rounded-full border bg-white flex items-center justify-center transition-all duration-300 shadow-xs',
+                  'w-8 h-8 rounded-full border bg-ds-surface flex items-center justify-center transition-all duration-300 shadow-xs',
                   isFinal
                     ? 'border-ds-brass/70 text-ds-brass bg-ds-brass/10 ring-2 ring-ds-brass/15'
                     : 'border-ds-border text-ds-muted'

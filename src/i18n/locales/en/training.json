@@ -2186,5 +2186,96 @@
             "dropStep": "Step {{step}}",
             "basedOnAttempts": "Based on {{count}} answers."
         }
+    },
+    "screens": {
+        "PlayerAudioNarrator": {
+            "aiVoiceNarrator": "AI Voice Narrator",
+            "readyToNarrate": "Ready to narrate",
+            "restart": "Restart",
+            "pause": "Pause",
+            "listen": "Listen",
+            "playbackSpeed": "Playback Speed",
+            "unmute": "Unmute",
+            "mute": "Mute"
+        },
+        "PlayerNotesDrawer": {
+            "personalStudyNotes": "Personal Study Notes",
+            "notes": "Notes",
+            "courseNotes": "Course Notes",
+            "exportNotes": "Export Notes",
+            "currentSection": "Current Section",
+            "saved": "Saved",
+            "bookmark": "Bookmark",
+            "jotDownPersonalNotesOr": "Jot down personal notes or key takeaways for this section...",
+            "saveNote": "Save Note",
+            "allModuleNotes": "All notes in this course",
+            "noNotesWrittenYet": "No notes written yet.",
+            "takeNotesDuringYourLesson": "Take notes during your lesson to easily reference on shift.",
+            "delete": "Delete"
+        },
+        "PlayerCelebrationModal": {
+            "courseCompletedSuccessfully": "Course Completed Successfully",
+            "outstandingAchievement": "Outstanding Achievement!",
+            "awardedTo": "Awarded to:",
+            "earnedPoints": "Earned Points",
+            "learningStreak": "Learning Streak",
+            "min": "min",
+            "timeInvested": "Time Invested",
+            "backToTrainingHub": "Back to Training Hub"
+        },
+        "PlayerTutorDrawer": {
+            "sorryIEncounteredAnIssue": "Sorry, I encountered an issue generating a response. Please try again.",
+            "altusAiCoach": "Altus AI Coach",
+            "liveLearningAssistant": "Live Learning Assistant",
+            "resetChat": "Reset Chat",
+            "summarizeThisSectionIn3": "Summarize this section in 3 clear, actionable bullet points.",
+            "3BulletSummary": "3-Bullet Summary",
+            "giveMeARealisticHotel": "Give me a realistic hotel guest scenario applying this rule.",
+            "guestScenario": "Guest Scenario",
+            "quizMeWith1Quick": "Quiz me with 1 quick practice question from this section.",
+            "practiceQuestion": "Practice Question",
+            "copy": "Copy",
+            "thinking": "Thinking...",
+            "askAboutThisSection": "Ask about this section..."
+        },
+        "ScenarioBranchSimulator": {
+            "hotelScenarioDecisionSimulator": "Hotel Scenario Decision Simulator",
+            "frontlineScenario": "Frontline Scenario",
+            "chooseTheBest5Star": "Choose the best 5-star service standard response",
+            "tryAgain": "Try Again",
+            "situationBrief": "Situation Brief",
+            "whatIsYourImmediateCourse": "What is your immediate course of action?",
+            "excellentChoice5StarStandard": "Excellent Choice! 5-Star Standard (+15 XP)",
+            "coachingFeedbackBestPractice": "Coaching Feedback & Best Practice:"
+        },
+        "FlashcardDeckWidget": {
+            "interactiveFlashcards": "Interactive Flashcards",
+            "clickTheCardToFlip": "Click the card to flip and test your knowledge",
+            "shuffle": "Shuffle",
+            "standardQuestion": "Standard / Question",
+            "clickToFlip": "Click to flip",
+            "mastered": "Mastered",
+            "markMastered": "Mark Mastered",
+            "standardAnswerKeyRule": "Standard Answer / Key Rule",
+            "flip": "Flip",
+            "previous": "Previous",
+            "next": "Next"
+        },
+        "TrainingPaths": {
+            "organizationContextIsRequiredTo": "Organization context is required to enroll in learning paths",
+            "enrolledInLearningPathSuccessfully": "Enrolled in learning path successfully",
+            "failedToEnrollInPath": "Failed to enroll in path",
+            "organizationContextIsRequiredTo2": "Organization context is required to create a learning path"
+        },
+        "QuizComponentEnhanced": {
+            "true": "True",
+            "false": "False"
+        },
+        "RoleplaySimulationBlockRenderer": {
+            "simulationPassedSuccessfully": "🎉 Simulation Passed Successfully!",
+            "passingScoreNotMet": "⚠️ Passing Score Not Met",
+            "simulationError": "Simulation Error",
+            "aiEvaluatingResponseAgainstForbes": "AI evaluating response against Forbes 5-Star & Saudi Karam rubrics..."
+        }
     }
 }

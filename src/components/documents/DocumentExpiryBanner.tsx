@@ -114,31 +114,31 @@ function getStatusStyles(level: ExpiryWarningLevel) {
   switch (level) {
     case "expired":
       return {
-        container: "bg-red-50 border-red-200 text-red-900",
-        icon: "text-red-600",
-        badge: "bg-red-100 text-red-700 border-red-200",
-        button: "bg-red-600 hover:bg-red-700 text-white",
+        container: "bg-ds-danger-soft border-ds-danger/30 text-ds-danger",
+        icon: "text-ds-danger",
+        badge: "bg-ds-danger-soft text-ds-danger border-ds-danger/30",
+        button: "bg-ds-danger hover:bg-ds-danger text-white",
       };
     case "critical":
       return {
-        container: "bg-red-50/80 border-red-200 text-red-900",
-        icon: "text-red-500",
-        badge: "bg-red-100 text-red-700 border-red-200",
-        button: "bg-red-600 hover:bg-red-700 text-white",
+        container: "bg-ds-danger-soft/80 border-ds-danger/30 text-ds-danger",
+        icon: "text-ds-danger",
+        badge: "bg-ds-danger-soft text-ds-danger border-ds-danger/30",
+        button: "bg-ds-danger hover:bg-ds-danger text-white",
       };
     case "warning":
       return {
-        container: "bg-amber-50 border-amber-200 text-amber-900",
-        icon: "text-amber-500",
-        badge: "bg-amber-100 text-amber-700 border-amber-200",
-        button: "bg-amber-600 hover:bg-amber-700 text-white",
+        container: "bg-ds-warning-soft border-ds-warning/30 text-ds-warning",
+        icon: "text-ds-warning",
+        badge: "bg-ds-warning-soft text-ds-warning border-ds-warning/30",
+        button: "bg-ds-warning hover:bg-ds-warning text-white dark:text-ds-on-ink",
       };
     case "notice":
       return {
-        container: "bg-blue-50 border-blue-200 text-blue-900",
-        icon: "text-blue-500",
-        badge: "bg-blue-100 text-blue-700 border-blue-200",
-        button: "bg-blue-600 hover:bg-blue-700 text-white",
+        container: "bg-ds-info-soft border-ds-info/30 text-ds-info",
+        icon: "text-ds-info",
+        badge: "bg-ds-info-soft text-ds-info border-ds-info/30",
+        button: "bg-ds-info hover:bg-ds-info text-white dark:text-ds-on-ink",
       };
   }
 }
@@ -221,20 +221,20 @@ export function DocumentExpiryBanner({
           className={cn(
             "flex items-center gap-3 p-3 rounded-lg border",
             hasUrgent
-              ? "bg-red-50 border-red-200"
-              : "bg-amber-50 border-amber-200"
+              ? "bg-ds-danger-soft border-ds-danger/30"
+              : "bg-ds-warning-soft border-ds-warning/30"
           )}
         >
           <div
             className={cn(
               "flex items-center justify-center w-10 h-10 rounded-full shrink-0",
-              hasUrgent ? "bg-red-100" : "bg-amber-100"
+              hasUrgent ? "bg-ds-danger-soft" : "bg-ds-warning-soft"
             )}
           >
             <Clock
               className={cn(
                 "w-5 h-5",
-                hasUrgent ? "text-red-600" : "text-amber-600"
+                hasUrgent ? "text-ds-danger" : "text-ds-warning"
               )}
             />
           </div>
@@ -242,7 +242,7 @@ export function DocumentExpiryBanner({
             <p
               className={cn(
                 "font-medium",
-                hasUrgent ? "text-red-900" : "text-amber-900"
+                hasUrgent ? "text-ds-danger" : "text-ds-warning"
               )}
             >
               {activeDocuments.length} documents require attention
@@ -254,12 +254,12 @@ export function DocumentExpiryBanner({
                 </Badge>
               )}
               {criticalCount > 0 && (
-                <Badge className="text-xs bg-red-100 text-red-700 hover:bg-red-100">
+                <Badge className="text-xs bg-ds-danger-soft text-ds-danger hover:bg-ds-danger-soft">
                   {criticalCount} critical
                 </Badge>
               )}
               {warningCount > 0 && (
-                <Badge className="text-xs bg-amber-100 text-amber-700 hover:bg-amber-100">
+                <Badge className="text-xs bg-ds-warning-soft text-ds-warning hover:bg-ds-warning-soft">
                   {warningCount} warning
                 </Badge>
               )}
@@ -382,7 +382,7 @@ export function DocumentExpiryBanner({
             </Popover>
             {newExpiryDate && (
               <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
-                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                <CheckCircle2 className="w-4 h-4 text-ds-success" />
                 Document will expire in{" "}
                 {differenceInDays(newExpiryDate, new Date())} days
               </div>

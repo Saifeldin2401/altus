@@ -56,13 +56,13 @@ export function AuthorTopBar({
   const { t } = useTranslation(['knowledge', 'common'])
 
   const getScoreBadgeClass = (score: number) => {
-    if (score >= 85) return 'border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
-    if (score >= 60) return 'border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300'
-    return 'border-rose-500/40 bg-rose-500/10 text-rose-700 dark:text-rose-300'
+    if (score >= 85) return 'border-ds-success/40 bg-ds-success/10 text-ds-success'
+    if (score >= 60) return 'border-ds-warning/40 bg-ds-warning/10 text-ds-warning'
+    return 'border-ds-danger/40 bg-ds-danger/10 text-ds-danger'
   }
 
   return (
-    <header className="sticky top-0 z-30 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 shadow-xs">
+    <header className="sticky top-0 z-30 w-full border-b bg-background/95 supports-[backdrop-filter]:bg-background/80 shadow-xs">
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 px-4 py-2.5 max-w-7xl mx-auto">
         
         {/* Left: Navigation & Document Identity */}
@@ -85,8 +85,8 @@ export function AuthorTopBar({
 
           {/* Explicit Mode Indicator */}
           {isMasterTemplate ? (
-            <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-amber-500/20 via-amber-500/30 to-amber-600/20 border border-amber-500/40 text-amber-900 dark:text-amber-200 text-xs font-bold uppercase tracking-wider shrink-0 shadow-xs">
-              <Crown className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 fill-amber-500/30" />
+            <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-ds-warning/20 border border-ds-warning/40 text-ds-warning text-xs font-bold uppercase tracking-wider shrink-0 shadow-xs">
+              <Crown className="w-3.5 h-3.5 text-ds-warning fill-ds-warning/30" />
               <span>{t('editor.master_studio', 'Master Studio')}</span>
             </div>
           ) : (
@@ -108,7 +108,7 @@ export function AuthorTopBar({
 
             <Badge
               variant="outline"
-              className="text-[10px] capitalize px-1.5 py-0 shrink-0 hidden md:inline-flex bg-muted/30"
+              className="text-[11px] capitalize px-1.5 py-0 shrink-0 hidden md:inline-flex bg-muted/30"
             >
               {status.replace('_', ' ')}
             </Badge>
@@ -126,7 +126,7 @@ export function AuthorTopBar({
                 Auto-saving...
               </span>
             ) : lastSavedAt ? (
-              <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+              <span className="flex items-center gap-1 text-ds-success">
                 <CheckCircle2 className="w-3 h-3" />
                 Saved {lastSavedAt}
               </span>
@@ -172,7 +172,7 @@ export function AuthorTopBar({
             >
               <span>AR</span>
               {hasArContent && (
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" title="Arabic translation present" />
+                <span className="w-1.5 h-1.5 rounded-full bg-ds-success" title="Arabic translation present" />
               )}
             </button>
           </div>
@@ -185,9 +185,9 @@ export function AuthorTopBar({
             variant="outline"
             size="sm"
             onClick={onOpenAiStudio}
-            className="h-8 text-xs font-semibold gap-1.5 text-purple-700 dark:text-purple-300 border-purple-300 dark:border-purple-800 hover:bg-purple-50 dark:hover:bg-purple-950/40"
+            className="h-8 text-xs font-semibold gap-1.5 text-ds-accent border-ds-accent/30 hover:bg-ds-accent-soft"
           >
-            <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+            <Sparkles className="w-3.5 h-3.5 text-ds-accent" />
             <span className="hidden md:inline">AI Studio</span>
           </Button>
 
@@ -210,7 +210,7 @@ export function AuthorTopBar({
             size="sm"
             onClick={onSubmitPublish}
             disabled={isSaving || !canPublish}
-            className="h-8 text-xs font-semibold gap-1.5 bg-hotel-gold hover:bg-hotel-gold/90 text-hotel-navy"
+            className="h-8 text-xs font-semibold gap-1.5 bg-ds-accent hover:bg-ds-accent/90 text-ds-ink"
           >
             {isSaving ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin" />

@@ -45,14 +45,14 @@ export function SessionTimeoutWarning({ enabled = true }: SessionTimeoutWarningP
 
     return (
         <AlertDialog open={showWarning}>
-            <AlertDialogContent className="max-w-md border-amber-500/30 dark:border-amber-500/20 shadow-2xl p-6">
+            <AlertDialogContent className="max-w-md border-ds-warning/30 shadow-2xl p-6">
                 <AlertDialogHeader className="space-y-3">
                     <div className="flex items-center gap-3">
-                        <div className={`p-2.5 rounded-xl ${isUrgent ? 'bg-rose-100 text-rose-600 dark:bg-rose-950/50 dark:text-rose-400 animate-pulse' : 'bg-amber-100 text-amber-600 dark:bg-amber-950/50 dark:text-amber-400'}`}>
+                        <div className={`p-2.5 rounded-[8px] ${isUrgent ? 'bg-ds-danger-soft text-ds-danger animate-pulse' : 'bg-ds-warning-soft text-ds-warning'}`}>
                             <AlertTriangle className="h-6 w-6 shrink-0" />
                         </div>
                         <div>
-                            <AlertDialogTitle className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                            <AlertDialogTitle className="text-lg font-bold text-ds-ink">
                                 {t('session_timeout.title', { defaultValue: 'Session Timeout Warning' })}
                             </AlertDialogTitle>
                             <p className="text-xs text-muted-foreground mt-0.5">
@@ -63,27 +63,27 @@ export function SessionTimeoutWarning({ enabled = true }: SessionTimeoutWarningP
                     <AlertDialogDescription asChild>
                         <div className="space-y-4 pt-1">
                             {/* Live Timer Card */}
-                            <div className={`flex items-center justify-between p-3.5 rounded-xl border transition-colors ${isUrgent ? 'bg-rose-50/80 dark:bg-rose-950/30 border-rose-200 dark:border-rose-800/50' : 'bg-amber-50/70 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800/50'}`}>
-                                <div className="flex items-center gap-2 text-xs font-medium text-slate-700 dark:text-slate-300">
-                                    <Clock className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                            <div className={`flex items-center justify-between p-3.5 rounded-[8px] border transition-colors ${isUrgent ? 'bg-ds-danger-soft/80 border-ds-danger/30' : 'bg-ds-warning-soft/70 border-ds-warning/30'}`}>
+                                <div className="flex items-center gap-2 text-xs font-medium text-ds-ink-secondary">
+                                    <Clock className="h-4 w-4 text-ds-warning" />
                                     <span>{t('session_timeout.time_remaining', { defaultValue: 'Time remaining:' })}</span>
                                 </div>
-                                <span className={`font-mono font-extrabold text-base tracking-wider px-2.5 py-0.5 rounded-md ${isUrgent ? 'bg-rose-600 text-white' : 'bg-amber-600 text-white'}`}>
+                                <span className={`font-mono font-extrabold text-base tracking-wider px-2.5 py-0.5 rounded-md ${isUrgent ? 'bg-ds-danger text-white dark:text-ds-on-ink' : 'bg-ds-warning text-white'}`}>
                                     {formattedTime}
                                 </span>
                             </div>
 
-                            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                            <p className="text-xs text-ds-ink-secondary leading-relaxed">
                                 {t('session_timeout.guidance', { defaultValue: 'Click "Stay Signed In" to keep working, or you will be automatically logged out for security.' })}
                             </p>
                         </div>
                     </AlertDialogDescription>
                 </AlertDialogHeader>
-                <AlertDialogFooter className="gap-2 sm:gap-0 mt-5 pt-3 border-t border-slate-100 dark:border-slate-800">
+                <AlertDialogFooter className="gap-2 sm:gap-0 mt-5 pt-3 border-t border-ds-border">
                     <Button
                         variant="outline"
                         onClick={signOutNow}
-                        className="gap-2 text-xs font-semibold h-10 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200"
+                        className="gap-2 text-xs font-semibold h-10 border-ds-border hover:bg-ds-surface-subtle text-ds-ink-secondary"
                     >
                         <LogOut className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
                         {t('session_timeout.sign_out', { defaultValue: 'Sign Out Now' })}
@@ -91,7 +91,7 @@ export function SessionTimeoutWarning({ enabled = true }: SessionTimeoutWarningP
                     <Button
                         onClick={handleExtend}
                         disabled={isExtending}
-                        className="gap-2 text-xs font-bold h-10 bg-amber-600 hover:bg-amber-700 text-white shadow-md shadow-amber-600/20"
+                        className="gap-2 text-xs font-bold h-10 bg-ds-warning hover:bg-ds-warning text-white dark:text-ds-on-ink"
                     >
                         <RefreshCw className={`h-4 w-4 ${isExtending ? 'animate-spin' : ''}`} />
                         {t('session_timeout.stay_signed_in', { defaultValue: 'Stay Signed In' })}

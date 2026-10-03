@@ -50,8 +50,8 @@ export function SectionLinkButton({ sectionId, className }: SectionLinkButtonPro
             onClick={handleCopy}
             className={cn(
                 "inline-flex items-center justify-center ms-2 p-1 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-200",
-                "text-slate-400 hover:text-indigo-600 hover:bg-indigo-50",
-                copied && "text-green-600 bg-green-50",
+                "text-ds-muted hover:text-ds-info hover:bg-ds-info-soft",
+                copied && "text-ds-success bg-ds-success-soft",
                 className
             )}
             title={copied ? "Copied!" : "Copy link to this section"}

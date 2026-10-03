@@ -253,7 +253,7 @@ export default function WizardManager() {
             <Card key={key} className="border-border/80 hover:border-primary/40 transition-colors">
               <CardHeader className="p-4 pb-2">
                 <div className="flex items-center justify-between gap-2">
-                  <Badge variant="outline" className="text-[10px] uppercase font-bold tracking-wider">
+                  <Badge variant="outline" className="text-[11px] uppercase font-bold tracking-wider">
                     {bp.roleLevel}
                   </Badge>
                   <span className="text-[11px] text-muted-foreground">

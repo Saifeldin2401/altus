@@ -680,7 +680,7 @@ export function UserForm({ user, initialOrgId, onClose }: UserFormProps) {
                 <Label htmlFor="targetOrg" className="text-sm font-medium flex items-center gap-2">
                   <Building className="w-4 h-4 text-primary" />
                   {t('form.organization_label', 'Target Organization')}
-                  <Badge variant="outline" className="text-[10px] uppercase font-semibold text-primary border-primary/30">
+                  <Badge variant="outline" className="text-[11px] uppercase font-semibold text-primary border-primary/30">
                     {tCommon('organization', 'Organization')}
                   </Badge>
                 </Label>
@@ -1024,7 +1024,7 @@ export function UserForm({ user, initialOrgId, onClose }: UserFormProps) {
                                 )}
                               />
                               <span>{manager.full_name}</span>
-                              <span className="ms-2 text-[10px] bg-ds-surface-subtle px-1 rounded text-ds-muted font-mono">
+                              <span className="ms-2 text-[11px] bg-ds-surface-subtle px-1 rounded text-ds-muted font-mono">
                                 {manager.staff_id || 'no-id'}
                               </span>
                               <span className="ms-auto text-xs text-muted-foreground">
@@ -1079,7 +1079,7 @@ export function UserForm({ user, initialOrgId, onClose }: UserFormProps) {
                                     )}
                                   />
                                   <span>{manager.full_name}</span>
-                                  <span className="ms-2 text-[10px] bg-ds-surface-subtle px-1 rounded text-ds-muted font-mono">
+                                  <span className="ms-2 text-[11px] bg-ds-surface-subtle px-1 rounded text-ds-muted font-mono">
                                     {manager.staff_id || 'no-id'}
                                   </span>
                                   <span className="ms-auto text-xs text-muted-foreground">
@@ -1109,7 +1109,7 @@ export function UserForm({ user, initialOrgId, onClose }: UserFormProps) {
               </Button>
               <LoadingButton
                 type="submit"
-                className="bg-ds-accent text-white hover:bg-ds-accent/90 rounded-md transition-colors"
+                className="bg-ds-accent text-white dark:text-ds-on-ink hover:bg-ds-accent/90 rounded-md transition-colors"
                 loading={createUserMutation.isPending || updateUserMutation.isPending}
                 loadingText={user ? tCommon('common.updating') : tCommon('common.creating')}
               >

@@ -923,7 +923,7 @@ export default function TrainingHub() {
     { id: 'pending_review', label: t('pending_review', 'Pending Review'), count: statusCounts.pending_review, dotColor: 'bg-ds-warning' },
     { id: 'assigned', label: t('assigned', 'Assigned'), count: statusCounts.assigned, dotColor: 'bg-ds-accent' },
     { id: 'archived', label: t('archived', 'Archived'), count: statusCounts.archived, dotColor: 'bg-ds-danger' },
-    { id: 'trash', label: t('trash.filter_label', 'Trash'), count: trashModules?.length ?? 0, dotColor: 'bg-rose-600' }
+    { id: 'trash', label: t('trash.filter_label', 'Trash'), count: trashModules?.length ?? 0, dotColor: 'bg-ds-danger' }
   ]
 
   const isAllOnPageSelected = paginatedModules.length > 0 && paginatedModules.every((m) => selectedModuleIds.has(m.id))
@@ -1077,7 +1077,7 @@ export default function TrainingHub() {
                       <span className={cn("h-2 w-2 rounded-full", isSelected ? "bg-ds-on-ink" : pill.dotColor)} />
                       <span>{pill.label}</span>
                       <span className={cn(
-                        "px-1.5 py-0.2 rounded-full text-[10px] font-bold font-mono",
+                        "px-1.5 py-0.2 rounded-full text-[11px] font-bold font-mono",
                         isSelected ? "bg-white/20 text-ds-on-ink" : "bg-ds-surface-subtle text-ds-muted border border-ds-border"
                       )}>
                         {pill.count}
@@ -1304,7 +1304,7 @@ export default function TrainingHub() {
                     <Button
                       size="sm"
                       variant="secondary"
-                      className="h-8 text-xs font-semibold bg-white/10 hover:bg-white/20 text-white border-0"
+                      className="h-8 text-xs font-semibold bg-ds-on-ink/10 hover:bg-ds-on-ink/20 text-ds-on-ink border-0"
                       onClick={() => setAssignWizardOpen(true)}
                     >
                       <Users className="h-3.5 w-3.5 me-1.5" />
@@ -1313,7 +1313,7 @@ export default function TrainingHub() {
                     <Button
                       size="sm"
                       variant="secondary"
-                      className="h-8 text-xs font-semibold bg-ds-success hover:bg-ds-success/90 text-white border-0"
+                      className="h-8 text-xs font-semibold bg-ds-success hover:bg-ds-success/90 text-ds-on-ink dark:text-ds-on-ink border-0"
                       onClick={() => bulkPublishMutation.mutate(Array.from(selectedModuleIds))}
                       disabled={bulkPublishMutation.isPending}
                     >
@@ -1327,7 +1327,7 @@ export default function TrainingHub() {
                     <Button
                       size="sm"
                       variant="secondary"
-                      className="h-8 text-xs font-semibold bg-white/20 hover:bg-white/30 text-white border-0"
+                      className="h-8 text-xs font-semibold bg-ds-on-ink/20 hover:bg-ds-on-ink/30 text-ds-on-ink border-0"
                       onClick={() => bulkArchiveMutation.mutate(Array.from(selectedModuleIds))}
                       disabled={bulkArchiveMutation.isPending}
                     >
@@ -1341,7 +1341,7 @@ export default function TrainingHub() {
                     <Button
                       size="sm"
                       variant="destructive"
-                      className="h-8 text-xs font-semibold bg-ds-danger hover:bg-ds-danger/90 text-white border-0"
+                      className="h-8 text-xs font-semibold bg-ds-danger hover:bg-ds-danger/90 text-ds-on-ink border-0"
                       onClick={() => setBulkDeleteConfirmOpen(true)}
                     >
                       <Trash2 className="h-3.5 w-3.5 me-1.5" />
@@ -1350,7 +1350,7 @@ export default function TrainingHub() {
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="h-8 text-xs text-white/70 hover:text-white hover:bg-white/10"
+                      className="h-8 text-xs text-ds-on-ink/70 hover:text-ds-on-ink hover:bg-ds-on-ink/10"
                       onClick={handleDeselectAll}
                     >
                       <X className="h-3.5 w-3.5 me-1" />
@@ -1475,7 +1475,7 @@ export default function TrainingHub() {
                             />
                             <TrainingCategoryBadge category={module.category} size="sm" />
                             {isMaster && (
-                              <Badge className="border-ds-border bg-ds-surface-subtle text-ds-ink text-[10px] px-2 py-0.5 font-semibold whitespace-nowrap shrink-0 flex items-center gap-1">
+                              <Badge className="border-ds-border bg-ds-surface-subtle text-ds-ink text-[11px] px-2 py-0.5 font-semibold whitespace-nowrap shrink-0 flex items-center gap-1">
                                 <Crown className="h-2.5 w-2.5 text-ds-accent shrink-0" />
                                 <span>Platform Master</span>
                               </Badge>
@@ -1487,7 +1487,7 @@ export default function TrainingHub() {
                                   e.stopPropagation()
                                   setSyncModalState({ open: true, module })
                                 }}
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-ds-warning text-ds-ink-contrast text-[10px] font-bold shadow-2xs transition-transform hover:scale-105 animate-pulse cursor-pointer"
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-ds-warning text-ds-ink-contrast text-[11px] font-bold shadow-2xs transition-transform hover:scale-105 animate-pulse cursor-pointer"
                                 title="Click to view upstream master changes and synchronize"
                               >
                                 <span>🔔</span>
@@ -1499,7 +1499,7 @@ export default function TrainingHub() {
                           <div className="flex items-center gap-1.5 shrink-0">
                             {/* Inline status switcher or trash badge */}
                             {statusFilter === 'trash' ? (
-                              <span className="text-[10px] font-bold rounded-sm px-2 py-0.5 inline-flex items-center gap-1 bg-rose-500/10 text-rose-600 border border-rose-200">
+                              <span className="text-[11px] font-bold rounded-sm px-2 py-0.5 inline-flex items-center gap-1 bg-ds-danger/10 text-ds-danger border border-ds-danger/30">
                                 <span>{t('trash.filter_label', 'Trash')}</span>
                               </span>
                             ) : (
@@ -1508,7 +1508,7 @@ export default function TrainingHub() {
                                   <button
                                     type="button"
                                     className={cn(
-                                      "text-[10px] font-bold rounded-sm px-2 py-0.5 inline-flex items-center gap-1 cursor-pointer transition-opacity hover:opacity-80 border",
+                                      "text-[11px] font-bold rounded-sm px-2 py-0.5 inline-flex items-center gap-1 cursor-pointer transition-opacity hover:opacity-80 border",
                                       module.status === 'published'
                                         ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
                                         : module.status === 'archived'
@@ -1541,7 +1541,7 @@ export default function TrainingHub() {
                             )}
 
                             {isAssigned && (
-                              <Badge variant="outline" className="text-[10px] font-medium bg-ds-surface-subtle text-ds-muted border-ds-border px-1.5 py-0.5">
+                              <Badge variant="outline" className="text-[11px] font-medium bg-ds-surface-subtle text-ds-muted border-ds-border px-1.5 py-0.5">
                                 {t('assigned')}
                               </Badge>
                             )}
@@ -1684,7 +1684,7 @@ export default function TrainingHub() {
                                     {module.title || t('untitledModule', 'Untitled Module')}
                                   </span>
                                   {isMaster && (
-                                    <Badge className="border-ds-border bg-ds-surface-subtle text-ds-ink text-[10px] px-2 py-0.5 font-semibold whitespace-nowrap shrink-0 flex items-center gap-0.5">
+                                    <Badge className="border-ds-border bg-ds-surface-subtle text-ds-ink text-[11px] px-2 py-0.5 font-semibold whitespace-nowrap shrink-0 flex items-center gap-0.5">
                                       <Crown className="h-2.5 w-2.5 text-ds-accent shrink-0" />
                                       <span>Platform Master</span>
                                     </Badge>
@@ -1696,7 +1696,7 @@ export default function TrainingHub() {
                                         e.stopPropagation()
                                         setSyncModalState({ open: true, module })
                                       }}
-                                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-ds-warning text-ds-ink-contrast text-[9px] font-bold shadow-2xs animate-pulse cursor-pointer"
+                                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-ds-warning text-ds-ink-contrast text-[11px] font-bold shadow-2xs animate-pulse cursor-pointer"
                                       title="Click to view upstream master changes and synchronize"
                                     >
                                       <span>🔔</span>
@@ -1718,7 +1718,7 @@ export default function TrainingHub() {
 
                             <TableCell>
                               {statusFilter === 'trash' ? (
-                                <span className="text-[10px] font-bold px-2 py-0.5 rounded-sm whitespace-nowrap inline-flex items-center gap-1 bg-rose-500/10 text-rose-600 border border-rose-200">
+                                <span className="text-[11px] font-bold px-2 py-0.5 rounded-sm whitespace-nowrap inline-flex items-center gap-1 bg-ds-danger/10 text-ds-danger border border-ds-danger/30">
                                   <span>{t('trash.filter_label', 'Trash')}</span>
                                 </span>
                               ) : (
@@ -1727,7 +1727,7 @@ export default function TrainingHub() {
                                     <button
                                       type="button"
                                       className={cn(
-                                        "text-[10px] font-bold px-2 py-0.5 rounded-sm whitespace-nowrap inline-flex items-center gap-1 cursor-pointer transition-opacity hover:opacity-80 border",
+                                        "text-[11px] font-bold px-2 py-0.5 rounded-sm whitespace-nowrap inline-flex items-center gap-1 cursor-pointer transition-opacity hover:opacity-80 border",
                                         module.status === 'published'
                                           ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
                                           : module.status === 'archived'
@@ -1761,7 +1761,7 @@ export default function TrainingHub() {
 
                             <TableCell className="hidden sm:table-cell">
                               {isAssigned ? (
-                                <Badge variant="outline" className="text-[10px] font-medium bg-ds-surface-subtle text-ds-muted border-ds-border">
+                                <Badge variant="outline" className="text-[11px] font-medium bg-ds-surface-subtle text-ds-muted border-ds-border">
                                   <Check className="h-3 w-3 me-1" />
                                   {t('assigned')}
                                 </Badge>

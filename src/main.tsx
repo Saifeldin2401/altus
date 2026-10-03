@@ -175,9 +175,9 @@ function renderApp() {
     rootElement.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:system-ui,sans-serif;padding:2rem;">
         <div style="text-align:center;max-width:28rem;">
-          <h1 style="font-size:1.25rem;font-weight:600;color:#dc2626;">Something went wrong</h1>
-          <p style="margin-top:.5rem;color:#6b7280;">The application failed to load. Please try refreshing the page.</p>
-          <button onclick="location.reload()" style="margin-top:1rem;padding:.5rem 1.5rem;background:#2563eb;color:white;border:none;border-radius:.5rem;cursor:pointer;font-size:.875rem;">
+          <h1 style="font-size:1.25rem;font-weight:600;color:#15212E;">Something went wrong</h1>
+          <p style="margin-top:.5rem;color:#667080;">The application failed to load. Please try refreshing the page.</p>
+          <button onclick="location.reload()" style="margin-top:1rem;padding:.5rem 1.5rem;background:#15212E;color:white;border:none;border-radius:6px;cursor:pointer;font-size:.875rem;">
             Reload Page
           </button>
         </div>

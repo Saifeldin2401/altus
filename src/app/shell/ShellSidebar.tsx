@@ -47,7 +47,7 @@ export function ShellSidebar({ onNavigate }: ShellSidebarProps) {
         <img src="/altus-emblem-icon.png" alt="" className="h-7 w-auto" aria-hidden="true" />
         <span className="flex flex-col leading-none">
           <span className="font-editorial text-[19px] font-semibold tracking-[0.08em] text-white">ALTUS</span>
-          <span className="mt-0.5 text-[9px] font-semibold uppercase tracking-[0.32em] text-ds-chrome-accent">Connect</span>
+          <span className="mt-0.5 text-[11px] font-semibold uppercase tracking-[0.32em] text-ds-chrome-accent">Connect</span>
         </span>
       </Link>
 

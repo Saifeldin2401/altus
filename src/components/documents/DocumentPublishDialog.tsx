@@ -229,9 +229,9 @@ export function DocumentPublishDialog({
             </div>
 
             {/* Smart AI Auto-Fill Action Header */}
-            <div className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-purple-500/10 via-indigo-500/10 to-hotel-navy/5 border border-purple-200 dark:border-purple-900/40">
+            <div className="flex items-center justify-between p-3 rounded-[8px] bg-ds-accent/10 border border-ds-accent/30">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-purple-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+                <div className="w-7 h-7 rounded-lg bg-ds-accent text-white dark:text-ds-on-ink flex items-center justify-center shrink-0 shadow-sm">
                   <Sparkles className="w-3.5 h-3.5" />
                 </div>
                 <div>
@@ -247,7 +247,7 @@ export function DocumentPublishDialog({
                 size="sm"
                 onClick={handleSmartAutoFill}
                 disabled={isGenerating}
-                className="text-xs font-bold gap-1.5 h-7 border-purple-300 text-purple-700 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-950/50"
+                className="text-xs font-bold gap-1.5 h-7 border-ds-accent/30 text-ds-accent hover:bg-ds-accent-soft"
               >
                 <Wand2 className={cn("w-3 h-3", isGenerating && "animate-spin")} />
                 {isGenerating ? 'Refining...' : 'AI Refine'}
@@ -268,7 +268,7 @@ export function DocumentPublishDialog({
                       const smart = generateSmartMetadataHeuristic({ title })
                       setTitle(smart.title)
                     }}
-                    className="text-[11px] text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1 font-medium"
+                    className="text-[11px] text-ds-accent hover:underline flex items-center gap-1 font-medium"
                   >
                     <Wand2 className="w-3 h-3" />
                     Clean filename format

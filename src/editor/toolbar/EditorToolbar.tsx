@@ -179,7 +179,7 @@ function EditorToolbar({
   const disabledAll = disabled || !editor
   const primaryBtn = 'h-8 gap-1.5 px-2.5 text-xs shrink-0 whitespace-nowrap inline-flex items-center'
 
-  const activeCls = useMemo(() => 'border-hotel-gold/60 bg-hotel-gold/15 text-hotel-navy', [])
+  const activeCls = useMemo(() => 'border-ds-accent/60 bg-ds-accent/15 text-ds-ink', [])
 
   return (
     <>
@@ -292,7 +292,7 @@ function EditorToolbar({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-52">
-              <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">Blocks</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-[11px] uppercase tracking-wider text-muted-foreground">Blocks</DropdownMenuLabel>
               {config.features.tables && (
                 <DropdownMenuItem onSelect={insertTable}>
                   <Table2 className="me-2 h-4 w-4" /> Table (3×3)
@@ -314,12 +314,12 @@ function EditorToolbar({
               {s?.inTable && config.features.tables && (
                 <>
                   <DropdownMenuSeparator />
-                  <DropdownMenuLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">Table</DropdownMenuLabel>
+                  <DropdownMenuLabel className="text-[11px] uppercase tracking-wider text-muted-foreground">Table</DropdownMenuLabel>
                   <DropdownMenuItem onSelect={() => editor?.chain().focus().addRowAfter().run()}>Add row</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => editor?.chain().focus().addColumnAfter().run()}>Add column</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => editor?.chain().focus().deleteRow().run()}>Delete row</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => editor?.chain().focus().deleteColumn().run()}>Delete column</DropdownMenuItem>
-                  <DropdownMenuItem className="text-red-600" onSelect={() => editor?.chain().focus().deleteTable().run()}>Delete table</DropdownMenuItem>
+                  <DropdownMenuItem className="text-ds-danger" onSelect={() => editor?.chain().focus().deleteTable().run()}>Delete table</DropdownMenuItem>
                 </>
               )}
             </DropdownMenuContent>
@@ -329,7 +329,7 @@ function EditorToolbar({
             <Button
               variant="outline"
               size="sm"
-              className={`${primaryBtn} border-purple-300 bg-purple-50 text-purple-800 hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-950/40 dark:text-purple-200`}
+              className={`${primaryBtn} border-ds-accent/30 bg-ds-accent-soft text-ds-accent hover:bg-ds-accent-soft`}
               onClick={onOpenAiPanel}
               disabled={disabledAll}
             >
@@ -393,7 +393,7 @@ function EditorToolbar({
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-base">
-              <Video className="h-4 w-4 text-red-500" /> Add a video
+              <Video className="h-4 w-4 text-ds-danger" /> Add a video
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
@@ -403,7 +403,7 @@ function EditorToolbar({
                 onUploadVideo()
                 setVideoDialogOpen(false)
               }}
-              className="flex w-full flex-col items-center gap-1 rounded-lg border border-dashed border-slate-300 p-5 text-center transition-colors hover:border-hotel-gold hover:bg-hotel-gold/5 dark:border-slate-700"
+              className="flex w-full flex-col items-center gap-1 rounded-lg border border-dashed border-ds-border p-5 text-center transition-colors hover:border-ds-accent hover:bg-ds-accent/5"
             >
               <UploadCloud className="h-5 w-5 text-primary" />
               <span className="text-sm font-medium">Upload a video file</span>
@@ -427,7 +427,7 @@ function EditorToolbar({
 
             <div className="space-y-1.5">
               <Label className="flex items-center gap-1.5 text-xs font-semibold">
-                <Youtube className="h-3.5 w-3.5 text-red-500" /> Or embed a YouTube / Vimeo link
+                <Youtube className="h-3.5 w-3.5 text-ds-danger" /> Or embed a YouTube / Vimeo link
               </Label>
               <div className="flex gap-2">
                 <Input

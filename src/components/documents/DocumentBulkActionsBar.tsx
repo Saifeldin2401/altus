@@ -145,7 +145,7 @@ export function DocumentBulkActionsBar({
       <div
         className={cn(
           "sticky top-0 z-40 flex items-center gap-3 px-4 py-3",
-          "bg-ds-ink text-white shadow-lg rounded-lg mx-4 mt-4",
+          "bg-ds-ink text-ds-on-ink shadow-lg rounded-lg mx-4 mt-4",
           className
         )}
       >
@@ -154,12 +154,12 @@ export function DocumentBulkActionsBar({
           <Checkbox
             checked={isAllSelected}
             onCheckedChange={handleSelectToggle}
-            className="border-white/50 data-[state=checked]:bg-white data-[state=checked]:text-ds-ink"
+            className="border-ds-on-ink/50 data-[state=checked]:bg-ds-surface data-[state=checked]:text-ds-ink"
           />
           <div className="flex items-center gap-2">
             <Badge
               variant="secondary"
-              className="bg-white/20 text-white hover:bg-white/30 font-semibold"
+              className="bg-ds-on-ink/20 text-ds-on-ink hover:bg-ds-on-ink/30 font-semibold"
             >
               {selectedCount}
             </Badge>
@@ -169,7 +169,7 @@ export function DocumentBulkActionsBar({
           </div>
         </div>
 
-        <Separator orientation="vertical" className="h-6 bg-white/20" />
+        <Separator orientation="vertical" className="h-6 bg-ds-on-ink/20" />
 
         {/* Actions */}
         <div className="flex items-center gap-1 flex-1 overflow-x-auto scrollbar-hide">
@@ -177,7 +177,7 @@ export function DocumentBulkActionsBar({
           <Button
             variant="ghost"
             size="sm"
-            className="text-white hover:bg-white/20 gap-1.5 whitespace-nowrap"
+            className="text-ds-on-ink hover:bg-ds-on-ink/20 gap-1.5 whitespace-nowrap"
             onClick={() => setMoveDialogOpen(true)}
             disabled={isProcessing}
           >
@@ -193,7 +193,7 @@ export function DocumentBulkActionsBar({
           <Button
             variant="ghost"
             size="sm"
-            className="text-white hover:bg-white/20 gap-1.5 whitespace-nowrap"
+            className="text-ds-on-ink hover:bg-ds-on-ink/20 gap-1.5 whitespace-nowrap"
             onClick={() => setTagDialogOpen(true)}
             disabled={isProcessing}
           >
@@ -205,7 +205,7 @@ export function DocumentBulkActionsBar({
           <Button
             variant="ghost"
             size="sm"
-            className="text-white hover:bg-white/20 gap-1.5 whitespace-nowrap"
+            className="text-ds-on-ink hover:bg-ds-on-ink/20 gap-1.5 whitespace-nowrap"
             onClick={() => setArchiveDialogOpen(true)}
             disabled={isProcessing}
           >
@@ -217,7 +217,7 @@ export function DocumentBulkActionsBar({
           <Button
             variant="ghost"
             size="sm"
-            className="text-white hover:bg-white/20 gap-1.5 whitespace-nowrap"
+            className="text-ds-on-ink hover:bg-ds-on-ink/20 gap-1.5 whitespace-nowrap"
             onClick={() => onDuplicate?.(selectedIds)}
             disabled={isProcessing}
           >
@@ -229,7 +229,7 @@ export function DocumentBulkActionsBar({
           <Button
             variant="ghost"
             size="sm"
-            className="text-white hover:bg-white/20 gap-1.5 whitespace-nowrap"
+            className="text-ds-on-ink hover:bg-ds-on-ink/20 gap-1.5 whitespace-nowrap"
             onClick={() => onEmail?.(selectedIds)}
             disabled={isProcessing}
           >
@@ -237,13 +237,13 @@ export function DocumentBulkActionsBar({
             Email
           </Button>
 
-          <Separator orientation="vertical" className="h-6 bg-white/20 mx-1" />
+          <Separator orientation="vertical" className="h-6 bg-ds-on-ink/20 mx-1" />
 
           {/* Download */}
           <Button
             variant="ghost"
             size="sm"
-            className="text-white hover:bg-white/20 gap-1.5 whitespace-nowrap"
+            className="text-ds-on-ink hover:bg-ds-on-ink/20 gap-1.5 whitespace-nowrap"
             onClick={() => onDownload?.(selectedIds)}
             disabled={isProcessing}
           >
@@ -255,7 +255,7 @@ export function DocumentBulkActionsBar({
           <Button
             variant="ghost"
             size="sm"
-            className="text-white hover:bg-white/20 gap-1.5 whitespace-nowrap"
+            className="text-ds-on-ink hover:bg-ds-on-ink/20 gap-1.5 whitespace-nowrap"
             onClick={() => onShare?.(selectedIds)}
             disabled={isProcessing}
           >
@@ -267,7 +267,7 @@ export function DocumentBulkActionsBar({
           <Button
             variant="ghost"
             size="sm"
-            className="text-red-300 hover:bg-red-500/20 hover:text-red-200 gap-1.5 whitespace-nowrap"
+            className="text-ds-danger hover:bg-ds-danger/20 hover:text-ds-danger gap-1.5 whitespace-nowrap"
             onClick={() => setDeleteDialogOpen(true)}
             disabled={isProcessing}
           >
@@ -276,13 +276,13 @@ export function DocumentBulkActionsBar({
           </Button>
         </div>
 
-        <Separator orientation="vertical" className="h-6 bg-white/20" />
+        <Separator orientation="vertical" className="h-6 bg-ds-on-ink/20" />
 
         {/* Clear Selection */}
         <Button
           variant="ghost"
           size="icon"
-          className="text-white hover:bg-white/20 shrink-0"
+          className="text-ds-on-ink hover:bg-ds-on-ink/20 shrink-0"
           onClick={() => onSelectNone?.()}
           disabled={isProcessing}
           aria-label={t("accessibility.clear_selection", "Clear selection")}
@@ -328,7 +328,7 @@ export function DocumentBulkActionsBar({
                 className={cn(
                   "w-full flex items-center gap-3 p-3 rounded-md text-start transition-colors",
                   selectedFolderId === null
-                    ? "bg-ds-ink text-white"
+                    ? "bg-ds-ink text-ds-on-ink"
                     : "hover:bg-muted"
                 )}
               >
@@ -345,7 +345,7 @@ export function DocumentBulkActionsBar({
                   className={cn(
                     "w-full flex items-center gap-3 p-3 rounded-md text-start transition-colors",
                     selectedFolderId === folder.id
-                      ? "bg-ds-ink text-white"
+                      ? "bg-ds-ink text-ds-on-ink"
                       : "hover:bg-muted"
                   )}
                   style={{ paddingLeft: `${folder.level * 20 + 12}px` }}

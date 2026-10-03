@@ -39,7 +39,7 @@ export function OperationalProtocolsTab({
   return (
     <div className="space-y-6">
       {/* Intro Header */}
-      <div className="p-4 rounded-xl border bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="p-4 rounded-[8px] border bg-muted/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h3 className="font-bold text-sm text-foreground">
             {t('editor.operational_standards_title', 'Operational Protocols & Execution Standards')}
@@ -75,7 +75,7 @@ export function OperationalProtocolsTab({
             'Non-negotiable checkpoints where a failure has a serious operational, safety or compliance impact.'
           )}
           icon={<ShieldAlert className="h-4 w-4" />}
-          accentClassName="text-red-500"
+          accentClassName="text-ds-danger"
           placeholder={t(
             'editor.ccp_placeholder',
             'e.g. Verify guest identity before issuing a duplicate room key'
@@ -95,7 +95,7 @@ export function OperationalProtocolsTab({
             'Measurable luxury-service standards this procedure must meet.'
           )}
           icon={<Star className="h-4 w-4" />}
-          accentClassName="text-amber-500"
+          accentClassName="text-ds-warning"
           placeholder={t(
             'editor.luxury_placeholder',
             'e.g. Guest greeted by name within 15 seconds of approach'
@@ -115,7 +115,7 @@ export function OperationalProtocolsTab({
             'What to do when systems are offline or the standard path is blocked.'
           )}
           icon={<LifeBuoy className="h-4 w-4" />}
-          accentClassName="text-blue-500"
+          accentClassName="text-ds-info"
           placeholder={t(
             'editor.contingency_placeholder',
             'e.g. If PMS is offline, use manual registration cards and reconcile later'

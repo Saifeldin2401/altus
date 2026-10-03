@@ -30,7 +30,7 @@ export function LearningPageHero({
   return (
     <header
       className={cn(
-        'relative isolate overflow-hidden rounded-2xl border border-ds-border bg-ds-surface px-6 py-8 sm:px-10 sm:py-10 shadow-[0_4px_24px_rgb(21_33_46/0.03)]',
+        'relative isolate overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface px-6 py-8 sm:px-10 sm:py-10 shadow-[0_4px_24px_rgb(21_33_46/0.03)]',
         className,
       )}
     >

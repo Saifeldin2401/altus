@@ -1190,7 +1190,7 @@ export default function UserManagement() {
                       </div>
                       <div className="text-sm text-ds-ink">{note.note}</div>
                       {note.created_by && (
-                        <div className="text-[10px] text-ds-muted">
+                        <div className="text-[11px] text-ds-muted">
                           by {note.created_by.full_name || note.created_by.email}
                         </div>
                       )}

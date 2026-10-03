@@ -490,7 +490,7 @@ function LoginViewComponent({ isRTL = false, onForgotPassword, onUnlockAccount }
                   <button
                     type="button"
                     onClick={() => onUnlockAccount(email)}
-                    className="mt-2 w-full flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md bg-ds-warning text-white text-xs font-medium hover:bg-ds-warning/90 transition-colors shadow-xs"
+                    className="mt-2 w-full flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md bg-ds-warning text-white dark:text-ds-on-ink text-xs font-medium hover:bg-ds-warning/90 transition-colors shadow-xs"
                     aria-label={t('account_locked.unlock_button')}
                   >
                     <ShieldAlert className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
@@ -506,7 +506,7 @@ function LoginViewComponent({ isRTL = false, onForgotPassword, onUnlockAccount }
         <m.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.29 }} whileTap={{ scale: 0.98 }} whileHover={{ scale: 1.01 }} className="pt-2">
           <Button
             type="submit"
-            className="w-full h-12 bg-ds-brass hover:bg-ds-accent-hover text-white font-medium text-sm rounded-lg shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-brass focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed border-none cursor-pointer relative overflow-hidden group"
+            className="w-full h-12 bg-ds-brass hover:bg-ds-accent-hover text-white dark:text-ds-on-ink font-medium text-sm rounded-lg shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-brass focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed border-none cursor-pointer relative overflow-hidden group"
             disabled={loading || emailValid === false}
           >
             <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
@@ -525,7 +525,7 @@ function LoginViewComponent({ isRTL = false, onForgotPassword, onUnlockAccount }
                   )}
                   aria-hidden="true"
                 />
-                <kbd className="text-[10px] opacity-60 hidden sm:inline-flex items-center justify-center w-5 h-5 rounded border border-white/30 font-mono">↵</kbd>
+                <kbd className="text-[11px] opacity-60 hidden sm:inline-flex items-center justify-center w-5 h-5 rounded border border-white/30 font-mono">↵</kbd>
               </div>
             )}
           </Button>
@@ -541,7 +541,7 @@ function LoginViewComponent({ isRTL = false, onForgotPassword, onUnlockAccount }
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-ds-border" />
           </div>
-          <span className="relative px-3 bg-white text-[11px] font-medium text-ds-muted uppercase tracking-wider">
+          <span className="relative px-3 bg-ds-surface text-[11px] font-medium text-ds-muted uppercase tracking-wider">
             {t('or_continue_with', { defaultValue: 'Or continue with' })}
           </span>
         </m.div>
@@ -558,7 +558,7 @@ function LoginViewComponent({ isRTL = false, onForgotPassword, onUnlockAccount }
             type="button"
             onClick={handleGoogleSignIn}
             disabled={loading || googleLoading}
-            className="w-full h-11 bg-white hover:bg-slate-50/80 border border-ds-border hover:border-ds-border-strong text-ds-ink font-medium text-xs rounded-lg shadow-2xs transition-all flex items-center justify-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-brass cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full h-11 bg-ds-surface hover:bg-ds-surface-subtle/80 border border-ds-border hover:border-ds-border-strong text-ds-ink font-medium text-xs rounded-lg shadow-2xs transition-all flex items-center justify-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-brass cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {googleLoading ? (
               <Loader2 className="w-4 h-4 animate-spin text-ds-brass" />

@@ -23,23 +23,23 @@ export function RouteFallbackUI({
         <div className="flex items-center justify-center p-4 py-16">
             <Card className="w-full max-w-lg">
                 <CardHeader className="text-center">
-                    <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-                        <AlertTriangle className="h-8 w-8 text-red-600" />
+                    <div className="mx-auto w-16 h-16 bg-ds-danger-soft rounded-full flex items-center justify-center mb-4">
+                        <AlertTriangle className="h-8 w-8 text-ds-danger" />
                     </div>
-                    <CardTitle className="text-red-600">
+                    <CardTitle className="text-ds-danger">
                         {section ? `Error in ${section}` : 'Something went wrong'}
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                    <p className="text-center text-gray-600">
+                    <p className="text-center text-ds-ink-secondary">
                         An error occurred while loading this section. This has been logged and our team will investigate.
                     </p>
 
                     {import.meta.env.DEV && error && (
-                        <div className="bg-gray-50 p-4 rounded-lg text-start">
-                            <p className="font-mono text-sm text-red-600 mb-2">{error.toString()}</p>
+                        <div className="bg-ds-surface-subtle p-4 rounded-lg text-start">
+                            <p className="font-mono text-sm text-ds-danger mb-2">{error.toString()}</p>
                             {errorInfo && (
-                                <pre className="font-mono text-xs text-gray-600 overflow-auto max-h-40">
+                                <pre className="font-mono text-xs text-ds-ink-secondary overflow-auto max-h-40">
                                     {errorInfo.componentStack}
                                 </pre>
                             )}

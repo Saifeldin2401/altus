@@ -96,13 +96,13 @@ interface BuilderCanvasProps {
 }
 
 const CONTENT_TYPES_CONFIG: Array<{ type: ContentType; label: string; icon: any; color: string; desc: string }> = [
-  { type: 'text', label: 'Rich Text / SOP', icon: FileText, color: 'text-blue-600 bg-blue-50 border-blue-200', desc: 'Standard operating procedures, guidebooks, and written modules' },
-  { type: 'video', label: 'Video Lesson', icon: Video, color: 'text-rose-600 bg-rose-50 border-rose-200', desc: 'Embed video walk-throughs, hospitality demos, and streams' },
-  { type: 'quiz', label: 'Interactive Quiz', icon: FileQuestion, color: 'text-purple-600 bg-purple-50 border-purple-200', desc: 'Single & multiple-choice knowledge checkpoints with pass requirements' },
-  { type: 'roleplay', label: 'AI Guest Roleplay', icon: MessageSquare, color: 'text-amber-700 bg-amber-50 border-amber-300', desc: 'Interactive 5-star guest simulation with live Forbes & Saudi Karam rubric scoring' },
-  { type: 'assignment', label: 'Practical Assignment', icon: FileCheck, color: 'text-amber-600 bg-amber-50 border-amber-200', desc: 'Open-ended written task, case study, or file submission with trainer grading' },
-  { type: 'document_link', label: 'Document / Policy', icon: Link, color: 'text-amber-600 bg-amber-50 border-amber-200', desc: 'Attach PDF manuals, forms, and compliance documents' },
-  { type: 'sop_reference', label: 'Knowledge Base SOP', icon: BookOpen, color: 'text-emerald-600 bg-emerald-50 border-emerald-200', desc: 'Link live hotel standard operating procedures from the intranet' }
+  { type: 'text', label: 'Rich Text / SOP', icon: FileText, color: 'text-ds-info bg-ds-info-soft border-ds-info/30', desc: 'Standard operating procedures, guidebooks, and written modules' },
+  { type: 'video', label: 'Video Lesson', icon: Video, color: 'text-ds-danger bg-ds-danger-soft border-ds-danger/30', desc: 'Embed video walk-throughs, hospitality demos, and streams' },
+  { type: 'quiz', label: 'Interactive Quiz', icon: FileQuestion, color: 'text-ds-accent bg-ds-accent-soft border-ds-accent/30', desc: 'Single & multiple-choice knowledge checkpoints with pass requirements' },
+  { type: 'roleplay', label: 'AI Guest Roleplay', icon: MessageSquare, color: 'text-ds-warning bg-ds-warning-soft border-ds-warning/30', desc: 'Interactive 5-star guest simulation with live Forbes & Saudi Karam rubric scoring' },
+  { type: 'assignment', label: 'Practical Assignment', icon: FileCheck, color: 'text-ds-warning bg-ds-warning-soft border-ds-warning/30', desc: 'Open-ended written task, case study, or file submission with trainer grading' },
+  { type: 'document_link', label: 'Document / Policy', icon: Link, color: 'text-ds-warning bg-ds-warning-soft border-ds-warning/30', desc: 'Attach PDF manuals, forms, and compliance documents' },
+  { type: 'sop_reference', label: 'Knowledge Base SOP', icon: BookOpen, color: 'text-ds-success bg-ds-success-soft border-ds-success/30', desc: 'Link live hotel standard operating procedures from the intranet' }
 ]
 
 export const BuilderCanvas = ({
@@ -184,26 +184,26 @@ export const BuilderCanvas = ({
   const getContentIcon = (type: ContentType) => {
     switch (type) {
       case 'text':
-        return <FileText className="w-4 h-4 text-blue-600" />
+        return <FileText className="w-4 h-4 text-ds-info" />
       case 'video':
-        return <Video className="w-4 h-4 text-rose-600" />
+        return <Video className="w-4 h-4 text-ds-danger" />
       case 'audio':
-        return <Headphones className="w-4 h-4 text-cyan-600" />
+        return <Headphones className="w-4 h-4 text-ds-info" />
       case 'interactive':
-        return <Gamepad2 className="w-4 h-4 text-indigo-600" />
+        return <Gamepad2 className="w-4 h-4 text-ds-info" />
       case 'document_link':
-        return <Link className="w-4 h-4 text-amber-600" />
+        return <Link className="w-4 h-4 text-ds-warning" />
       case 'quiz':
-        return <FileQuestion className="w-4 h-4 text-purple-600" />
+        return <FileQuestion className="w-4 h-4 text-ds-accent" />
       case 'assignment':
       case 'practical':
-        return <FileCheck className="w-4 h-4 text-amber-600" />
+        return <FileCheck className="w-4 h-4 text-ds-warning" />
       case 'sop_reference':
-        return <BookOpen className="w-4 h-4 text-emerald-600" />
+        return <BookOpen className="w-4 h-4 text-ds-success" />
       case 'roleplay':
-        return <MessageSquare className="w-4 h-4 text-amber-600" />
+        return <MessageSquare className="w-4 h-4 text-ds-warning" />
       default:
-        return <FileText className="w-4 h-4 text-slate-600" />
+        return <FileText className="w-4 h-4 text-ds-ink-secondary" />
     }
   }
 
@@ -302,20 +302,20 @@ export const BuilderCanvas = ({
                     {title.trim() || t('builder.untitledModule', 'Untitled Course')}
                   </span>
                   {(!title.trim() || title === 'Untitled Module' || title === 'Untitled Course') && (
-                    <Badge variant="outline" className="text-[10px] bg-ds-accent-soft text-ds-accent border-ds-accent/40 font-semibold flex items-center gap-1">
+                    <Badge variant="outline" className="text-[11px] bg-ds-accent-soft text-ds-accent border-ds-accent/40 font-semibold flex items-center gap-1">
                       <Edit3 className="w-3 h-3 text-ds-accent" />
                       <span>{t('builder.nameCoursePrompt', 'Click to set course name')}</span>
                     </Badge>
                   )}
                 </div>
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <Badge variant="outline" className="text-[10px] font-semibold border-ds-border bg-ds-surface-subtle text-ds-muted">
+                  <Badge variant="outline" className="text-[11px] font-semibold border-ds-border bg-ds-surface-subtle text-ds-muted">
                     {categoryLabels[category] || category || 'Operations'}
                   </Badge>
-                  <Badge variant="outline" className="text-[10px] font-medium border-ds-border bg-ds-surface-subtle text-ds-muted">
+                  <Badge variant="outline" className="text-[11px] font-medium border-ds-border bg-ds-surface-subtle text-ds-muted">
                     {audienceLabels[audience] || audience || 'All Staff'}
                   </Badge>
-                  <Badge variant="outline" className="text-[10px] font-medium border-ds-border bg-ds-surface-subtle text-ds-muted capitalize">
+                  <Badge variant="outline" className="text-[11px] font-medium border-ds-border bg-ds-surface-subtle text-ds-muted capitalize">
                     {difficultyLevel}
                   </Badge>
                 </div>
@@ -324,7 +324,7 @@ export const BuilderCanvas = ({
 
             <div className="flex items-center gap-2 shrink-0">
               {(!title.trim() || !category) && (
-                <Badge variant="outline" className="text-[10px] border-ds-warning/40 bg-ds-warning-soft text-ds-warning-text font-medium">
+                <Badge variant="outline" className="text-[11px] border-ds-warning/40 bg-ds-warning-soft text-ds-warning-text font-medium">
                   <AlertCircle className="w-3 h-3 me-1 text-ds-warning" />
                   {t('builder.incompleteClassification', 'Setup needed')}
                 </Badge>
@@ -356,7 +356,7 @@ export const BuilderCanvas = ({
                     <span>{t('builder.courseTitleLabel', 'Training Course Name')}</span>
                     <span className="text-ds-danger font-bold">*</span>
                   </Label>
-                  <span className="text-[10px] font-semibold text-ds-accent bg-ds-accent-soft px-2 py-0.5 rounded-full border border-ds-accent/30">
+                  <span className="text-[11px] font-semibold text-ds-accent bg-ds-accent-soft px-2 py-0.5 rounded-full border border-ds-accent/30">
                     {t('builder.requiredField', 'Required')}
                   </span>
                 </div>
@@ -481,22 +481,22 @@ export const BuilderCanvas = ({
         {/* Top Action & Metrics Bar */}
         <div className={cn('flex flex-col md:flex-row md:items-center justify-between gap-4')}>
           <div className="space-y-1">
-            <h2 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
+            <h2 className="text-lg md:text-xl font-bold text-ds-ink tracking-tight flex items-center gap-2.5">
               <span>{t('builder.courseStructure', 'Course Curriculum & Lessons')}</span>
               {sections.length > 0 && (
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  <Badge variant="secondary" className="font-bold text-xs bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-300">
+                  <Badge variant="secondary" className="font-bold text-xs bg-ds-warning-soft text-ds-warning">
                     {sections.length} {sections.length === 1 ? 'Section' : 'Sections'}
                   </Badge>
-                  <Badge variant="outline" className="font-semibold text-xs bg-white dark:bg-slate-900">
+                  <Badge variant="outline" className="font-semibold text-xs bg-ds-surface">
                     {totalLessons} Lessons
                   </Badge>
                   {totalQuizzes > 0 && (
-                    <Badge variant="outline" className="font-semibold text-xs text-purple-700 bg-purple-50 dark:bg-purple-950 border-purple-200">
+                    <Badge variant="outline" className="font-semibold text-xs text-ds-accent bg-ds-accent-soft border-ds-accent/30">
                       {totalQuizzes} Quizzes
                     </Badge>
                   )}
-                  <Badge variant="secondary" className="font-semibold text-xs text-slate-600 bg-slate-200/60">
+                  <Badge variant="secondary" className="font-semibold text-xs text-ds-ink-secondary bg-ds-border/60">
                     ~{estimatedTotalMins} mins
                   </Badge>
                 </div>
@@ -811,8 +811,8 @@ export const BuilderCanvas = ({
                                 className={cn(
                                   'group rounded-[8px] border bg-ds-surface text-ds-ink transition-all overflow-hidden shadow-2xs',
                                   isBlockExpanded
-                                    ? 'border-amber-500/50 shadow-xs'
-                                    : 'border-ds-border hover:border-amber-500/40 hover:shadow-xs'
+                                    ? 'border-ds-warning/50 shadow-xs'
+                                    : 'border-ds-border hover:border-ds-warning/40 hover:shadow-xs'
                                 )}
                               >
                                 {/* Compact header row (always visible) */}
@@ -853,7 +853,7 @@ export const BuilderCanvas = ({
                                         className={cn(
                                           'h-7 px-2 text-xs font-medium transition-colors',
                                           isBlockExpanded
-                                            ? 'text-amber-800 bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/20 dark:text-amber-300'
+                                            ? 'text-ds-warning bg-ds-warning/15 hover:bg-ds-warning/25 border border-ds-warning/20'
                                             : 'text-ds-muted hover:text-ds-ink hover:bg-ds-surface-subtle'
                                         )}
                                         onClick={() => toggleBlockPreview(item.id)}
@@ -873,7 +873,7 @@ export const BuilderCanvas = ({
                                         size="sm"
                                         variant="ghost"
                                         disabled={expandingLessonId === item.id}
-                                        className="h-7 px-2 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 hover:bg-indigo-500/10"
+                                        className="h-7 px-2 text-xs font-medium text-ds-info hover:text-ds-info hover:bg-ds-info/10"
                                         onClick={async () => {
                                           setExpandingLessonId(item.id)
                                           try {
@@ -891,7 +891,7 @@ export const BuilderCanvas = ({
                                           </>
                                         ) : (
                                           <>
-                                            <Sparkles className="w-3.5 h-3.5 me-1 text-indigo-500" />
+                                            <Sparkles className="w-3.5 h-3.5 me-1 text-ds-info" />
                                             <span className="hidden sm:inline">Deep Expand</span>
                                           </>
                                         )}
@@ -902,7 +902,7 @@ export const BuilderCanvas = ({
                                     <Button
                                       size="sm"
                                       variant="outline"
-                                      className="h-7 px-2.5 text-xs font-medium border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle hover:border-amber-500/40"
+                                      className="h-7 px-2.5 text-xs font-medium border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle hover:border-ds-warning/40"
                                       onClick={() => onEditContent(section.id, item.id)}
                                     >
                                       <Edit3 className="w-3 h-3 me-1 text-ds-muted" />
@@ -913,7 +913,7 @@ export const BuilderCanvas = ({
                                     <Button
                                       size="icon"
                                       variant="ghost"
-                                      className="h-7 w-7 p-0 text-ds-muted hover:text-red-600 hover:bg-red-500/10 opacity-60 group-hover:opacity-100 transition-opacity"
+                                      className="h-7 w-7 p-0 text-ds-muted hover:text-ds-danger hover:bg-ds-danger/10 opacity-60 group-hover:opacity-100 transition-opacity"
                                       onClick={() => onDeleteContent(section.id, item.id)}
                                       title="Delete lesson"
                                     >
@@ -968,9 +968,9 @@ export const BuilderCanvas = ({
             {/* Bottom Add Section Card */}
             <div
               onClick={onAddSection}
-              className="p-4 rounded-[8px] border-2 border-dashed border-ds-border hover:border-amber-500/40 hover:bg-amber-500/5 transition-all text-center cursor-pointer flex items-center justify-center gap-2 text-xs font-semibold text-ds-muted hover:text-ds-ink"
+              className="p-4 rounded-[8px] border-2 border-dashed border-ds-border hover:border-ds-warning/40 hover:bg-ds-warning/5 transition-all text-center cursor-pointer flex items-center justify-center gap-2 text-xs font-semibold text-ds-muted hover:text-ds-ink"
             >
-              <Plus className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+              <Plus className="w-4 h-4 text-ds-warning" />
               <span>Add Another Section to Course</span>
             </div>
           </div>
@@ -982,7 +982,7 @@ export const BuilderCanvas = ({
         <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-6 bg-ds-surface border-ds-border text-ds-ink">
           <DialogHeader className="pb-3 border-b border-ds-border">
             <DialogTitle className="text-base font-bold flex items-center gap-2 text-ds-ink">
-              <FileText className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+              <FileText className="w-4 h-4 text-ds-warning" />
               <span>{previewingBlock?.title || 'Lesson SOP Preview'}</span>
             </DialogTitle>
           </DialogHeader>

@@ -613,7 +613,7 @@ export default function MasterContentLibrary() {
                             <div>
                               <div className="font-semibold text-foreground flex items-center gap-2">
                                 <span className="leading-snug">{sop.title}</span>
-                                <Badge className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[10px] px-2 py-0.5 shrink-0 whitespace-nowrap font-medium">
+                                <Badge className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[11px] px-2 py-0.5 shrink-0 whitespace-nowrap font-medium">
                                   Global Master
                                 </Badge>
                               </div>
@@ -623,11 +623,11 @@ export default function MasterContentLibrary() {
                               {/* Deployment Telemetry Badge */}
                               <div className="mt-1.5 flex items-center gap-2">
                                 {depList.length === 0 ? (
-                                  <Badge variant="outline" className="text-[10px] px-2 py-0.5 shrink-0 whitespace-nowrap text-muted-foreground border-dashed">
+                                  <Badge variant="outline" className="text-[11px] px-2 py-0.5 shrink-0 whitespace-nowrap text-muted-foreground border-dashed">
                                     Not yet deployed
                                   </Badge>
                                 ) : (
-                                  <Badge variant="outline" className="text-[10px] px-2 py-0.5 shrink-0 whitespace-nowrap border-ds-border bg-ds-surface-subtle">
+                                  <Badge variant="outline" className="text-[11px] px-2 py-0.5 shrink-0 whitespace-nowrap border-ds-border bg-ds-surface-subtle">
                                     Deployed to {depList.length} {depList.length === 1 ? 'hotel' : 'hotels'}
                                     {pendingCount > 0 ? (
                                       <span className="text-ds-warning font-bold ms-1">
@@ -745,7 +745,7 @@ export default function MasterContentLibrary() {
                             <div>
                               <div className="font-semibold text-foreground flex items-center gap-2">
                                 <span className="leading-snug">{course.title}</span>
-                                <Badge className="bg-ds-accent-soft text-ds-accent border-ds-accent/30 text-[10px] px-2 py-0.5 shrink-0 whitespace-nowrap font-medium">
+                                <Badge className="bg-ds-accent-soft text-ds-accent border-ds-accent/30 text-[11px] px-2 py-0.5 shrink-0 whitespace-nowrap font-medium">
                                   Global Master
                                 </Badge>
                               </div>
@@ -1134,7 +1134,7 @@ export default function MasterContentLibrary() {
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
-                              <Badge variant="outline" className="font-mono text-[10px]">
+                              <Badge variant="outline" className="font-mono text-[11px]">
                                 {org.slug}
                               </Badge>
                               {isChecked && <Check className="h-3.5 w-3.5 text-primary" />}
@@ -1608,14 +1608,14 @@ export default function MasterContentLibrary() {
 
               {previewItem.item.description && (
                 <div>
-                  <h4 className="font-bold text-muted-foreground uppercase text-[10px] mb-1">Description</h4>
+                  <h4 className="font-bold text-muted-foreground uppercase text-[11px] mb-1">Description</h4>
                   <p className="text-foreground leading-relaxed">{previewItem.item.description}</p>
                 </div>
               )}
 
               {previewItem.item.content && (
                 <div>
-                  <h4 className="font-bold text-muted-foreground uppercase text-[10px] mb-1">Standard Content</h4>
+                  <h4 className="font-bold text-muted-foreground uppercase text-[11px] mb-1">Standard Content</h4>
                   <div className="p-3 bg-muted/30 rounded-lg border leading-relaxed font-sans whitespace-pre-wrap">
                     {previewItem.item.content}
                   </div>

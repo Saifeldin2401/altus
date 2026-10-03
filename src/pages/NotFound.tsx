@@ -15,10 +15,10 @@ export default function NotFound() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-hotel-navy p-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-ds-chrome p-4 relative overflow-hidden">
       {/* Background orb */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-hotel-gold/5 rounded-full blur-[120px]" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-ds-accent/5 rounded-full blur-[120px]" />
       </div>
 
       <div className="text-center max-w-sm relative z-10">
@@ -41,7 +41,7 @@ export default function NotFound() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-8xl font-bold text-hotel-gold/20 font-sans leading-none mb-4 select-none"
+          className="text-8xl font-bold text-ds-accent/20 font-sans leading-none mb-4 select-none"
         >
           404
         </motion.h1>
@@ -74,7 +74,7 @@ export default function NotFound() {
         >
           <Button
             onClick={handleGoHome}
-            className="gap-2 bg-hotel-gold hover:bg-hotel-gold-dark text-hotel-navy font-semibold px-8 py-2.5 rounded-full shadow-lg shadow-hotel-gold/20 transition-all"
+            className="gap-2 bg-ds-accent hover:bg-ds-accent-hover text-ds-ink font-semibold px-8 py-2.5 rounded-full shadow-lg/20 transition-all"
           >
             <Home className="w-4 h-4" />
             {user
@@ -89,7 +89,7 @@ export default function NotFound() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.6 }}
-          className="mt-12 text-[10px] text-white/20 uppercase tracking-[0.3em]"
+          className="mt-12 text-[11px] text-white/20 uppercase tracking-[0.3em]"
         >
           ALTUS ADVISORY
         </motion.p>

@@ -156,7 +156,7 @@ export default function MediaLibraryPage() {
 
   const handleExecuteUpload = async () => {
     if (!selectedFile) {
-      toast.error(isRTL ? 'يرجى اختيار ملف للرفع' : 'Please select a file to upload')
+      toast.error(t('screens.MediaLibraryPage.pleaseSelectAFileTo', 'Please select a file to upload'))
       return
     }
 
@@ -194,7 +194,7 @@ export default function MediaLibraryPage() {
         fetchAssets()
       }
     } catch {
-      toast.error(isRTL ? 'فشل حذف الأصل' : 'Failed to delete asset')
+      toast.error(t('screens.MediaLibraryPage.failedToDeleteAsset', 'Failed to delete asset'))
     } finally {
       setIsDeleting(false)
     }
@@ -231,7 +231,7 @@ export default function MediaLibraryPage() {
                 placeholder={t('media:search.placeholder', 'Search media assets by title, prompt, or tags...')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="ps-9 bg-background/50 border-border/60 rounded-xl"
+                className="ps-9 bg-background/50 border-border/60 rounded-[8px]"
               />
               {searchQuery && (
                 <button
@@ -250,19 +250,19 @@ export default function MediaLibraryPage() {
                 value={activeMediaType}
                 onValueChange={(val) => setActiveMediaType(val)}
               >
-                <SelectTrigger className="w-[140px] rounded-xl bg-background/50 border-border/60">
+                <SelectTrigger className="w-[140px] rounded-[8px] bg-background/50 border-border/60">
                   <SelectValue placeholder="Media Type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{isRTL ? 'جميع الأنواع' : 'All Types'}</SelectItem>
-                  <SelectItem value="image">{isRTL ? 'صور فقط' : 'Images Only'}</SelectItem>
-                  <SelectItem value="video">{isRTL ? 'فيديوهات' : 'Videos'}</SelectItem>
-                  <SelectItem value="document">{isRTL ? 'مستندات' : 'Documents'}</SelectItem>
-                  <SelectItem value="audio">{isRTL ? 'صوتيات' : 'Audio'}</SelectItem>
+                  <SelectItem value="all">{t('screens.MediaLibraryPage.allTypes', 'All Types')}</SelectItem>
+                  <SelectItem value="image">{t('screens.MediaLibraryPage.imagesOnly', 'Images Only')}</SelectItem>
+                  <SelectItem value="video">{t('screens.MediaLibraryPage.videos', 'Videos')}</SelectItem>
+                  <SelectItem value="document">{t('screens.MediaLibraryPage.documents', 'Documents')}</SelectItem>
+                  <SelectItem value="audio">{t('screens.MediaLibraryPage.audio', 'Audio')}</SelectItem>
                 </SelectContent>
               </Select>
 
-              <div className="flex items-center rounded-xl border border-border/60 bg-background/50 p-1">
+              <div className="flex items-center rounded-[8px] border border-border/60 bg-background/50 p-1">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -290,7 +290,7 @@ export default function MediaLibraryPage() {
               <Button
                 variant="outline"
                 size="sm"
-                className="rounded-xl border-border/60 h-10 px-3"
+                className="rounded-[8px] border-border/60 h-10 px-3"
                 onClick={() => fetchAssets()}
                 disabled={loading}
               >
@@ -306,7 +306,7 @@ export default function MediaLibraryPage() {
               onValueChange={(val) => setActiveCategory(val)}
               className="w-full"
             >
-              <TabsList className="bg-muted/40 p-1 rounded-xl flex-wrap h-auto">
+              <TabsList className="bg-muted/40 p-1 rounded-[8px] flex-wrap h-auto">
                 <TabsTrigger value="all" className="rounded-lg text-xs font-semibold">
                   {t('media:tabs.all', 'All Assets')} ({metrics.total})
                 </TabsTrigger>
@@ -339,8 +339,8 @@ export default function MediaLibraryPage() {
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="space-y-3 rounded-2xl border border-border/50 p-3 bg-card/40">
-              <Skeleton className="h-44 w-full rounded-xl" />
+            <div key={i} className="space-y-3 rounded-[8px] border border-border/50 p-3 bg-card/40">
+              <Skeleton className="h-44 w-full rounded-[8px]" />
               <Skeleton className="h-4 w-3/4" />
               <Skeleton className="h-3 w-1/2" />
             </div>
@@ -356,7 +356,7 @@ export default function MediaLibraryPage() {
               return (
                 <div
                   key={asset.id}
-                  className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border/60 backdrop-blur-md shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-ds-warning/30"
+                  className="group relative flex flex-col justify-between overflow-hidden rounded-[8px] border border-border/60 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-ds-warning/30"
                 >
                   {/* Media Visual Area */}
                   <div
@@ -384,7 +384,7 @@ export default function MediaLibraryPage() {
                           </div>
                         )}
                         <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
-                          <div className="h-10 w-10 rounded-full bg-ds-warning text-ds-ink flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
+                          <div className="h-10 w-10 rounded-full bg-ds-accent-soft text-ds-accent flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
                             <Play className="h-5 w-5 fill-current ms-0.5" />
                           </div>
                         </div>
@@ -411,12 +411,12 @@ export default function MediaLibraryPage() {
                     {/* Top Badges */}
                     <div className="absolute top-2.5 start-2.5 flex flex-wrap gap-1.5">
                       {isAi && (
-                        <Badge className="bg-ds-warning-soft text-ds-ink font-bold text-[10px] px-2 py-0.5 gap-1 backdrop-blur-sm">
+                        <Badge className="bg-ds-warning-soft text-ds-ink font-bold text-[11px] px-2 py-0.5 gap-1">
                           <Sparkles className="h-3 w-3 fill-current" />
                           AI
                         </Badge>
                       )}
-                      <Badge variant="outline" className="bg-background/80 backdrop-blur-sm text-foreground text-[10px] px-2 py-0.5 border-border/60 uppercase">
+                      <Badge variant="outline" className="bg-background/80 text-foreground text-[11px] px-2 py-0.5 border-border/60 uppercase">
                         {asset.category}
                       </Badge>
                     </div>
@@ -498,17 +498,17 @@ export default function MediaLibraryPage() {
             })}
           </div>
         ) : (
-          <Card className="rounded-2xl border border-border/60 overflow-hidden">
+          <Card className="rounded-[8px] border border-border/60 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-start">
                 <thead className="bg-muted/40 border-b border-border/40 text-muted-foreground uppercase font-mono">
                   <tr>
-                    <th className="py-3 px-4 text-start">{isRTL ? 'الأصل' : 'Asset'}</th>
-                    <th className="py-3 px-4 text-start">{isRTL ? 'النوع' : 'Type'}</th>
-                    <th className="py-3 px-4 text-start">{isRTL ? 'الفئة' : 'Category'}</th>
-                    <th className="py-3 px-4 text-start">{isRTL ? 'الحجم' : 'Size'}</th>
-                    <th className="py-3 px-4 text-start">{isRTL ? 'التاريخ' : 'Date'}</th>
-                    <th className="py-3 px-4 text-end">{isRTL ? 'الإجراءات' : 'Actions'}</th>
+                    <th className="py-3 px-4 text-start">{t('screens.MediaLibraryPage.asset', 'Asset')}</th>
+                    <th className="py-3 px-4 text-start">{t('screens.MediaLibraryPage.type', 'Type')}</th>
+                    <th className="py-3 px-4 text-start">{t('screens.MediaLibraryPage.category', 'Category')}</th>
+                    <th className="py-3 px-4 text-start">{t('screens.MediaLibraryPage.size', 'Size')}</th>
+                    <th className="py-3 px-4 text-start">{t('screens.MediaLibraryPage.date', 'Date')}</th>
+                    <th className="py-3 px-4 text-end">{t('screens.MediaLibraryPage.actions', 'Actions')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/30">
@@ -541,7 +541,7 @@ export default function MediaLibraryPage() {
                           </div>
                         </td>
                         <td className="py-3 px-4 capitalize">
-                          <Badge variant="outline" className="text-[10px]">
+                          <Badge variant="outline" className="text-[11px]">
                             {asset.media_type}
                           </Badge>
                         </td>
@@ -589,8 +589,8 @@ export default function MediaLibraryPage() {
           </Card>
         )
       ) : (
-        <div className="rounded-3xl border border-border/60 bg-card/40 p-12 text-center backdrop-blur-md">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-ds-warning-soft text-ds-warning mb-4">
+        <div className="rounded-[8px] border border-border/60 bg-card/40 p-12 text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-[8px] bg-ds-warning-soft text-ds-warning mb-4">
             <FolderOpen className="h-8 w-8" />
           </div>
           <h3 className="font-display text-lg font-bold text-foreground">
@@ -603,7 +603,7 @@ export default function MediaLibraryPage() {
           </p>
           <div className="flex items-center justify-center gap-3 mt-6">
             <Button
-              className="rounded-xl bg-ds-warning hover:bg-ds-warning text-ds-ink font-bold gap-2"
+              className="rounded-[8px] bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink font-bold gap-2"
               onClick={() => setIsUploadDialogOpen(true)}
             >
               <Upload className="h-4 w-4" />
@@ -611,7 +611,7 @@ export default function MediaLibraryPage() {
             </Button>
             <Button
               variant="outline"
-              className="rounded-xl border-ds-warning/30 text-ds-warning font-bold gap-2"
+              className="rounded-[8px] border-ds-warning/30 text-ds-warning font-bold gap-2"
               onClick={() => setIsAiModalOpen(true)}
             >
               <Sparkles className="h-4 w-4" />
@@ -629,7 +629,7 @@ export default function MediaLibraryPage() {
             if (!open) setSelectedAssetForPreview(null)
           }}
         >
-          <DialogContent className="max-w-3xl rounded-2xl p-6 bg-card border-border/80 shadow-2xl">
+          <DialogContent className="max-w-3xl rounded-[8px] p-6 bg-card border-border/80 shadow-2xl">
             <DialogHeader>
               <div className="flex items-center justify-between">
                 <DialogTitle className="font-display text-xl font-bold">
@@ -643,7 +643,7 @@ export default function MediaLibraryPage() {
 
             <div className="space-y-4 py-2">
               {/* Media Container */}
-              <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-black/90 flex items-center justify-center border border-border/60">
+              <div className="relative aspect-video w-full rounded-[8px] overflow-hidden bg-black/90 flex items-center justify-center border border-border/60">
                 {selectedAssetForPreview.media_type === 'video' ? (
                   <video
                     src={selectedAssetForPreview.public_url || ''}
@@ -660,13 +660,13 @@ export default function MediaLibraryPage() {
               </div>
 
               {/* Metadata Breakdown */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs bg-muted/30 p-3 rounded-xl border border-border/40">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs bg-muted/30 p-3 rounded-[8px] border border-border/40">
                 <div>
-                  <span className="text-muted-foreground block font-sans">{isRTL ? 'نوع الملف' : 'MIME Type'}</span>
+                  <span className="text-muted-foreground block font-sans">{t('screens.MediaLibraryPage.mimeType', 'MIME Type')}</span>
                   <span className="font-mono font-semibold">{selectedAssetForPreview.mime_type || 'image/png'}</span>
                 </div>
                 <div>
-                  <span className="text-muted-foreground block font-sans">{isRTL ? 'حجم الملف' : 'Size'}</span>
+                  <span className="text-muted-foreground block font-sans">{t('screens.MediaLibraryPage.size', 'Size')}</span>
                   <span className="font-mono font-semibold">
                     {selectedAssetForPreview.file_size_bytes > 0
                       ? formatFileSize(selectedAssetForPreview.file_size_bytes)
@@ -674,14 +674,14 @@ export default function MediaLibraryPage() {
                   </span>
                 </div>
                 <div>
-                  <span className="text-muted-foreground block font-sans">{isRTL ? 'فحص الأمان' : 'Security Scan'}</span>
+                  <span className="text-muted-foreground block font-sans">{t('screens.MediaLibraryPage.securityScan', 'Security Scan')}</span>
                   <span className="font-mono font-semibold text-ds-success flex items-center gap-1">
                     <ShieldCheck className="h-3.5 w-3.5" />
                     Verified Clean
                   </span>
                 </div>
                 <div>
-                  <span className="text-muted-foreground block font-sans">{isRTL ? 'تاريخ الإضافة' : 'Added Date'}</span>
+                  <span className="text-muted-foreground block font-sans">{t('screens.MediaLibraryPage.addedDate', 'Added Date')}</span>
                   <span className="font-mono font-semibold">
                     {new Date(selectedAssetForPreview.created_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
                   </span>
@@ -690,7 +690,7 @@ export default function MediaLibraryPage() {
 
               {/* Prompt / Description */}
               {selectedAssetForPreview.description && (
-                <div className="p-3 rounded-xl bg-background/50 border border-border/40 text-xs">
+                <div className="p-3 rounded-[8px] bg-background/50 border border-border/40 text-xs">
                   <span className="font-bold text-muted-foreground block mb-1">
                     {(selectedAssetForPreview.metadata as any)?.is_ai_generated ? 'AI Generation Prompt' : 'Description'}
                   </span>
@@ -702,7 +702,7 @@ export default function MediaLibraryPage() {
             <DialogFooter className="gap-2 sm:gap-0">
               <Button
                 variant="outline"
-                className="rounded-xl gap-1.5"
+                className="rounded-[8px] gap-1.5"
                 onClick={() => handleCopyUrl(selectedAssetForPreview.public_url || '')}
               >
                 <Copy className="h-4 w-4" />
@@ -713,10 +713,10 @@ export default function MediaLibraryPage() {
                   href={selectedAssetForPreview.public_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-xl bg-ds-warning hover:bg-ds-warning text-ds-ink font-bold px-4 py-2 text-sm gap-1.5"
+                  className="inline-flex items-center justify-center rounded-[8px] bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink font-bold px-4 py-2 text-sm gap-1.5"
                 >
                   <Download className="h-4 w-4" />
-                  <span>{isRTL ? 'تحميل الأصل' : 'Download File'}</span>
+                  <span>{t('screens.MediaLibraryPage.downloadFile', 'Download File')}</span>
                 </a>
               )}
             </DialogFooter>
@@ -726,7 +726,7 @@ export default function MediaLibraryPage() {
 
       {/* Upload Dialog */}
       <Dialog open={isUploadDialogOpen} onOpenChange={setIsUploadDialogOpen}>
-        <DialogContent className="max-w-lg rounded-2xl p-6 bg-card border-border/80 shadow-2xl">
+        <DialogContent className="max-w-lg rounded-[8px] p-6 bg-card border-border/80 shadow-2xl">
           <DialogHeader>
             <DialogTitle className="font-display text-xl font-bold flex items-center gap-2">
               <Upload className="h-5 w-5 text-ds-warning" />
@@ -743,7 +743,7 @@ export default function MediaLibraryPage() {
             {/* File Dropzone */}
             <div
               className={cn(
-                "border-2 border-dashed border-border/80 rounded-2xl p-6 text-center cursor-pointer hover:border-ds-warning/30 hover:bg-ds-warning/[0.02] transition-colors",
+                "border-2 border-dashed border-border/80 rounded-[8px] p-6 text-center cursor-pointer hover:border-ds-warning/30 hover:bg-ds-warning/[0.02] transition-colors",
                 selectedFile && "border-ds-warning/30 bg-ds-warning/[0.04]"
               )}
               onClick={() => fileInputRef.current?.click()}
@@ -755,7 +755,7 @@ export default function MediaLibraryPage() {
                 accept="image/*,video/*,application/pdf"
                 onChange={handleFileSelect}
               />
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-ds-warning-soft text-ds-warning mb-3">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-[8px] bg-ds-warning-soft text-ds-warning mb-3">
                 <Upload className="h-6 w-6" />
               </div>
               {selectedFile ? (
@@ -763,16 +763,16 @@ export default function MediaLibraryPage() {
                   <p className="font-bold text-sm text-foreground">{selectedFile.name}</p>
                   <p className="text-xs text-muted-foreground mt-0.5">{formatFileSize(selectedFile.size)}</p>
                   <p className="text-xs text-ds-warning font-semibold mt-2">
-                    {isRTL ? 'انقر لتغيير الملف' : 'Click to change file'}
+                    {t('screens.MediaLibraryPage.clickToChangeFile', 'Click to change file')}
                   </p>
                 </div>
               ) : (
                 <div>
                   <p className="font-semibold text-sm text-foreground">
-                    {isRTL ? 'انقر لاختيار ملف من جهازك' : 'Click to browse files'}
+                    {t('screens.MediaLibraryPage.clickToBrowseFiles', 'Click to browse files')}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    PNG, JPG, MP4, WebM, PDF {isRTL ? '(حتى 100 ميجابايت)' : '(up to 100MB)'}
+                    PNG, JPG, MP4, WebM, PDF {t('screens.MediaLibraryPage.upTo100mb', '(up to 100MB)')}
                   </p>
                 </div>
               )}
@@ -787,7 +787,7 @@ export default function MediaLibraryPage() {
                 placeholder="e.g. Grand Suite Master Bedroom SOP"
                 value={uploadTitle}
                 onChange={(e) => setUploadTitle(e.target.value)}
-                className="rounded-xl"
+                className="rounded-[8px]"
               />
             </div>
 
@@ -800,7 +800,7 @@ export default function MediaLibraryPage() {
                   value={uploadCategory}
                   onValueChange={(val) => setUploadCategory(val as MediaCategory)}
                 >
-                  <SelectTrigger className="rounded-xl">
+                  <SelectTrigger className="rounded-[8px]">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -821,7 +821,7 @@ export default function MediaLibraryPage() {
                   placeholder="hospitality, housekeeping"
                   value={uploadTags}
                   onChange={(e) => setUploadTags(e.target.value)}
-                  className="rounded-xl"
+                  className="rounded-[8px]"
                 />
               </div>
             </div>
@@ -830,13 +830,13 @@ export default function MediaLibraryPage() {
           <DialogFooter className="gap-2 sm:gap-0">
             <Button
               variant="outline"
-              className="rounded-xl"
+              className="rounded-[8px]"
               onClick={() => setIsUploadDialogOpen(false)}
             >
               {t('media:actions.cancel', 'Cancel')}
             </Button>
             <Button
-              className="rounded-xl bg-ds-warning hover:bg-ds-warning text-ds-ink font-bold"
+              className="rounded-[8px] bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink font-bold"
               onClick={handleExecuteUpload}
               disabled={!selectedFile || uploading}
             >
@@ -855,7 +855,7 @@ export default function MediaLibraryPage() {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={!!assetToDelete} onOpenChange={(open) => !open && setAssetToDelete(null)}>
-        <DialogContent className="max-w-md rounded-2xl p-6 bg-card border-border/80">
+        <DialogContent className="max-w-md rounded-[8px] p-6 bg-card border-border/80">
           <DialogHeader>
             <DialogTitle className="font-display text-lg font-bold text-destructive flex items-center gap-2">
               <Trash2 className="h-5 w-5" />
@@ -869,12 +869,12 @@ export default function MediaLibraryPage() {
           </DialogHeader>
 
           <DialogFooter className="gap-2 sm:gap-0 mt-4">
-            <Button variant="outline" className="rounded-xl" onClick={() => setAssetToDelete(null)}>
+            <Button variant="outline" className="rounded-[8px]" onClick={() => setAssetToDelete(null)}>
               {t('media:actions.cancel', 'Cancel')}
             </Button>
             <Button
               variant="destructive"
-              className="rounded-xl font-bold"
+              className="rounded-[8px] font-bold"
               onClick={handleConfirmDelete}
               disabled={isDeleting}
             >

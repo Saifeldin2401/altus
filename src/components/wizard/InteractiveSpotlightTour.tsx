@@ -287,7 +287,7 @@ export const InteractiveSpotlightTour: React.FC = () => {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.2 }}
-          className="fixed pointer-events-none z-[9992] rounded-xl border-2 border-primary shadow-[0_0_25px_rgba(217,163,75,0.4)]"
+          className="fixed pointer-events-none z-[9992] rounded-[8px] border-2 border-primary shadow-[0_0_25px_rgba(217,163,75,0.4)]"
           style={{
             top: `${rect.top}px`,
             left: `${rect.left}px`,
@@ -313,11 +313,11 @@ export const InteractiveSpotlightTour: React.FC = () => {
           exit={{ opacity: 0, scale: 0.96 }}
           transition={{ duration: 0.22, ease: 'easeOut' }}
           style={popoverStyle}
-          className="pointer-events-auto bg-card border border-primary/30 rounded-2xl shadow-2xl overflow-hidden flex flex-col p-5 backdrop-blur-xl space-y-4"
+          className="pointer-events-auto bg-card border border-primary/30 rounded-[8px] shadow-2xl overflow-hidden flex flex-col p-5 space-y-4"
         >
           {/* Simulation Header Banner if testing */}
           {isSimulating && (
-            <div className="bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-300 text-[11px] font-semibold px-2.5 py-1 rounded-lg flex items-center justify-between">
+            <div className="bg-ds-warning/15 border border-ds-warning/30 text-ds-warning text-[11px] font-semibold px-2.5 py-1 rounded-lg flex items-center justify-between">
               <span>{t('simulation.banner', 'Preview Mode: Simulating role')} <strong>{simulatedRole}</strong></span>
             </div>
           )}
@@ -403,7 +403,7 @@ export const InteractiveSpotlightTour: React.FC = () => {
                 <Button
                   size="sm"
                   onClick={finishTour}
-                  className="h-8 text-xs bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5 shadow-sm"
+                  className="h-8 text-xs bg-ds-success hover:bg-ds-success text-white dark:text-ds-on-ink gap-1.5 shadow-sm"
                 >
                   <Check className="h-3.5 w-3.5" />
                   {t('actions.complete_onboarding', 'Finish Walkthrough')}
