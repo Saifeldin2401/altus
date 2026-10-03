@@ -24,7 +24,8 @@
     "security:check": "node scripts/validate-env.js && npm audit",
     "security:env": "node scripts/validate-env.js",
     "start": "vite preview --host 0.0.0.0",
-    "check:guardrails": "node scripts/check-guardrails.mjs"
+    "check:guardrails": "node scripts/check-guardrails.mjs",
+    "check:functions": "deno check --config supabase/functions/deno.jsonc supabase/functions/*/index.ts supabase/functions/_shared/*.ts"
   },
   "dependencies": {
     "@ffmpeg/ffmpeg": "^0.12.15",

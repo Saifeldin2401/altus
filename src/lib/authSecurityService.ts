@@ -28,13 +28,6 @@ interface SessionFingerprint {
   lastVerifiedAt: number;
 }
 
-interface AccountLockoutStatus {
-  isLocked: boolean;
-  lockedUntil: Date | null;
-  failedAttempts: number;
-  remainingAttempts: number;
-}
-
 // =============================================================================
 // SESSION BINDING & SECURITY
 // =============================================================================
@@ -147,266 +140,27 @@ export function clearSessionFingerprint(): void {
 }
 
 // =============================================================================
-// BRUTE FORCE PROTECTION
+// SIGN-IN THROTTLING
 // =============================================================================
-// SECURITY FIX: Client-side brute force protection via sessionStorage has been
-// removed because it can be bypassed by simply clearing sessionStorage.
-// 
-// The application relies SOLELY on server-side brute force protection:
-// - Supabase Auth built-in rate limiting
-// - Database-level account lockout (profiles.locked_until, profiles.failed_login_attempts)
-// - CAPTCHA requirements enforced server-side
-//
-// The following functions remain for backward compatibility but delegate
-// all protection decisions to the server:
-
-// Constants for server-side brute force protection (used in server-side functions)
-const MAX_ATTEMPTS_BEFORE_LOCKOUT = 5;
-const LOCKOUT_DURATION_MS = 30 * 60 * 1000; // 30 minutes
+// Brute-force protection is server-side only: Supabase Auth rate-limits
+// password sign-ins, and admin locks and suspensions are Auth bans set by the
+// admin-account-actions Edge Function. A client-reported failure counter cannot
+// protect anything (an attacker simply does not report), and the signed-out
+// browser cannot read profiles anyway, so the old client lockout never engaged.
 
 /**
- * Record a login attempt and check for brute force
- * SECURITY: All decisions are based on SERVER-SIDE state only
+ * After a successful sign-in, clear the account's failed-attempt state and stamp
+ * last_login_at. Runs as the signed-in user; the RPC only acts on the caller's
+ * own email.
  */
-export async function recordLoginAttempt(
-  email: string,
-  success: boolean
-): Promise<{ allowed: boolean; captchaRequired: boolean; lockoutMinutes?: number; message?: string }> {
-  const normalizedEmail = email.toLowerCase().trim();
-  const now = Date.now();
-  
-  // SECURITY: Check server-side lockout first (the only reliable protection)
-  const serverLockout = await checkServerSideLockout(normalizedEmail);
-  if (serverLockout.isLocked) {
-    const remainingMinutes = Math.ceil((serverLockout.lockedUntil!.getTime() - now) / 60000);
-    return {
-      allowed: false,
-      captchaRequired: true,
-      lockoutMinutes: remainingMinutes,
-      message: `Account temporarily locked. Please try again in ${remainingMinutes} minutes.`,
-    };
-  }
-  
-  if (success) {
-    // Clear server-side failed attempts on success
-    await clearServerSideFailedAttempts(normalizedEmail);
-    return { allowed: true, captchaRequired: false };
-  }
-  
-  // Record failed attempt server-side only
-  await updateServerSideFailedAttempts(normalizedEmail);
-  
-  // Re-check server-side state after recording the attempt
-  const updatedLockout = await checkServerSideLockout(normalizedEmail);
-  if (updatedLockout.isLocked) {
-    const remainingMinutes = Math.ceil((updatedLockout.lockedUntil!.getTime() - now) / 60000);
-    
-    // Log security event
-    await logSecurityEvent('account.lockout_triggered', {
-      email: normalizedEmail,
-      attempts: updatedLockout.failedAttempts,
-      lockedUntil: updatedLockout.lockedUntil!.toISOString(),
-    });
-    
-    return {
-      allowed: false,
-      captchaRequired: true,
-      lockoutMinutes: remainingMinutes,
-      message: `Too many failed attempts. Account locked for ${remainingMinutes} minutes.`,
-    };
-  }
-  
-  // Determine CAPTCHA requirement based on server-side failed attempts
-  const captchaRequired = updatedLockout.failedAttempts >= 3;
-  
-  return {
-    allowed: !captchaRequired,
-    captchaRequired,
-    message: captchaRequired ? 'Please complete the CAPTCHA to continue.' : undefined,
-  };
-}
-
-/**
- * Get the current server-side lockout state for an email address.
- */
-export async function getAccountLockoutStatus(email: string): Promise<AccountLockoutStatus> {
-  return checkServerSideLockout(email.toLowerCase().trim());
-}
-
-/**
- * Get remaining attempts before lockout
- * SECURITY: Checks server-side failed attempts only
- */
-export async function getRemainingAttempts(email: string): Promise<number> {
-  const lockoutStatus = await checkServerSideLockout(email.toLowerCase().trim());
-  return Math.max(0, MAX_ATTEMPTS_BEFORE_LOCKOUT - lockoutStatus.failedAttempts);
-}
-
-// =============================================================================
-// SERVER-SIDE BRUTE FORCE INTEGRATION
-// =============================================================================
-
-async function checkServerSideLockout(email: string): Promise<AccountLockoutStatus> {
-  try {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('id, failed_login_attempts, locked_until, account_status')
-      .eq('email', email)
-      .single();
-    
-    if (!profile) {
-      return { isLocked: false, lockedUntil: null, failedAttempts: 0, remainingAttempts: MAX_ATTEMPTS_BEFORE_LOCKOUT };
-    }
-    
-    const now = new Date();
-    const lockedUntilDate = profile.locked_until ? new Date(profile.locked_until) : null;
-    const isTimedLockExpired = lockedUntilDate !== null && lockedUntilDate <= now;
-
-    // Auto-clear expired lockouts so users are not permanently blocked
-    if (isTimedLockExpired || (profile.account_status === 'locked' && !lockedUntilDate)) {
-      // Only auto-clear time-based lockouts; permanent disables (no locked_until) stay locked
-      if (isTimedLockExpired) {
-        try {
-          await supabase
-            .from('profiles')
-            .update({
-              failed_login_attempts: 0,
-              locked_until: null,
-              account_status: 'active',
-            })
-            .eq('id', profile.id);
-        } catch {
-          // Best-effort clear; do not block the user if this fails
-        }
-        return { isLocked: false, lockedUntil: null, failedAttempts: 0, remainingAttempts: MAX_ATTEMPTS_BEFORE_LOCKOUT };
-      }
-    }
-
-    const isActiveLock = lockedUntilDate !== null && lockedUntilDate > now;
-    
-    return {
-      isLocked: isActiveLock || profile.account_status === 'locked',
-      lockedUntil: lockedUntilDate && lockedUntilDate > now ? lockedUntilDate : null,
-      failedAttempts: profile.failed_login_attempts || 0,
-      remainingAttempts: Math.max(0, MAX_ATTEMPTS_BEFORE_LOCKOUT - (profile.failed_login_attempts || 0)),
-    };
-  } catch {
-    return { isLocked: false, lockedUntil: null, failedAttempts: 0, remainingAttempts: MAX_ATTEMPTS_BEFORE_LOCKOUT };
+export async function recordSuccessfulLogin(email: string): Promise<void> {
+  const { error } = await supabase.rpc('clear_failed_login_attempts', {
+    p_email: email.toLowerCase().trim(),
+  });
+  if (error) {
+    console.warn('[AuthSecurity] clear_failed_login_attempts failed (non-critical):', error.message);
   }
 }
-
-async function updateServerSideFailedAttempts(email: string): Promise<void> {
-  try {
-    await supabase.rpc('record_failed_login_attempt', { p_email: email });
-  } catch {
-    // Fallback: try direct update
-    try {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('id, failed_login_attempts')
-        .eq('email', email)
-        .single();
-      
-      if (profile) {
-        const newAttempts = (profile.failed_login_attempts || 0) + 1;
-        const updates: Record<string, unknown> = {
-          failed_login_attempts: newAttempts,
-        };
-        
-        if (newAttempts >= MAX_ATTEMPTS_BEFORE_LOCKOUT) {
-          updates.locked_until = new Date(Date.now() + LOCKOUT_DURATION_MS).toISOString();
-          updates.account_status = 'locked';
-        }
-        
-        await supabase.from('profiles').update(updates).eq('id', profile.id);
-      }
-    } catch {
-      // Ignore errors
-    }
-  }
-}
-
-async function updateServerSideLockout(email: string, attempts: number): Promise<void> {
-  try {
-    await supabase.rpc('lock_account', {
-      p_email: email,
-      p_duration_minutes: 30,
-    });
-  } catch {
-    // Ignore errors
-  }
-}
-
-async function clearServerSideFailedAttempts(email: string): Promise<void> {
-  try {
-    await supabase.rpc('clear_failed_login_attempts', { p_email: email });
-  } catch {
-    // Fallback: try direct update
-    try {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('email', email)
-        .single();
-      
-      if (profile) {
-        await supabase
-          .from('profiles')
-          .update({
-            failed_login_attempts: 0,
-            locked_until: null,
-            account_status: 'active',
-          })
-          .eq('id', profile.id);
-      }
-    } catch {
-      // Ignore errors
-    }
-  }
-}
-
-/**
- * Self-service account unlock: triggered when a user resets their password.
- * Clears lockout state so they can sign in with their new password.
- * This is called automatically by the password reset flow.
- */
-export async function selfServiceUnlockAccount(email: string): Promise<{ success: boolean }> {
-  const normalizedEmail = email.toLowerCase().trim();
-  try {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('id, account_status, locked_until')
-      .eq('email', normalizedEmail)
-      .single();
-
-    if (!profile) return { success: false };
-
-    // Only auto-unlock time-based lockouts; do not clear admin-disabled accounts
-    // A permanently disabled account has no locked_until timestamp
-    const isTimedLockout = profile.locked_until !== null;
-    const isDisabledByAdmin = profile.account_status === 'disabled';
-    if (isDisabledByAdmin) return { success: false };
-
-    await supabase
-      .from('profiles')
-      .update({
-        failed_login_attempts: 0,
-        locked_until: null,
-        account_status: 'active',
-      })
-      .eq('id', profile.id);
-
-    await logSecurityEvent('account.self_service_unlock', {
-      email: normalizedEmail,
-      wasTimedLockout: isTimedLockout,
-    });
-
-    return { success: true };
-  } catch {
-    return { success: false };
-  }
-}
-
 
 
 // =============================================================================

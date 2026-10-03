@@ -1,7 +1,6 @@
 
-import { selfServiceUnlockAccount } from '@/lib/authSecurityService';
 import { LazyMotion, domAnimation, m } from 'framer-motion';
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LoginView } from './LoginView';
 import { ForgotPasswordView } from './ForgotPasswordView';
@@ -14,40 +13,30 @@ export function LoginForm() {
   const [authView, setAuthView] = useState<AuthView>('login');
   const [resetEmail, setResetEmail] = useState('');
   // Track whether the forgot-password flow was triggered by the unlock CTA
-  const isUnlockFlow = useRef(false);
 
   const isRTL = i18n.dir() === 'rtl';
 
   const openForgotPassword = useCallback((email?: string) => {
     setResetEmail(email?.trim() ?? '');
-    isUnlockFlow.current = false;
     setAuthView('forgot');
   }, []);
 
   /**
    * Triggered by the "Unlock Account via Password Reset" button on the lockout error.
-   * Pre-fills the user's email and marks the flow as an unlock so we clear the
-   * lockout state from the database as soon as the reset email is dispatched.
+   * Pre-fills the user's email. Resetting the password is the way back in; any
+   * throttling itself is enforced and lifted by Supabase Auth.
    */
   const openUnlockAccount = useCallback((email: string) => {
     setResetEmail(email.trim());
-    isUnlockFlow.current = true;
     setAuthView('forgot');
   }, []);
 
   const handleBackToLogin = useCallback(() => {
-    isUnlockFlow.current = false;
     setAuthView('login');
   }, []);
 
-  const handleForgotSuccess = useCallback(async (email: string) => {
+  const handleForgotSuccess = useCallback((email: string) => {
     setResetEmail(email);
-    // If the user triggered this from the unlock CTA, clear their lockout immediately
-    // so they can sign in as soon as they reset their password.
-    if (isUnlockFlow.current) {
-      await selfServiceUnlockAccount(email);
-      isUnlockFlow.current = false;
-    }
     setAuthView('forgot_success');
   }, []);
 
