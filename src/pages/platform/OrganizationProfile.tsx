@@ -526,7 +526,7 @@ export default function OrganizationProfile() {
 
             {(profile?.lifecycle_history || []).length > 0 && (
               <div className="pt-3 border-t space-y-2">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Lifecycle Audit Trail</div>
+                <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Lifecycle Audit Trail</div>
                 {profile.lifecycle_history.slice(0, 5).map((h: any, i: number) => (
                   <div key={i} className="text-[11px] text-muted-foreground flex items-center justify-between">
                     <span>{h.metadata?.from || 'created'} → <strong>{h.metadata?.to}</strong></span>
@@ -573,14 +573,14 @@ export default function OrganizationProfile() {
             </CardHeader>
             <CardContent className="p-5 pt-0 space-y-2.5">
               {(profile?.primary_contacts || []).length === 0 ? (
-                <div className="p-4 text-center border rounded-xl bg-muted/20 text-xs text-muted-foreground">
+                <div className="p-4 text-center border rounded-[8px] bg-muted/20 text-xs text-muted-foreground">
                   No tenant administrators designated yet. Use "Designate Administrator" to assign an organization owner or administrator.
                 </div>
               ) : (
                 profile.primary_contacts.map((c: any) => {
                   const isOwner = c.role === 'organization_owner'
                   return (
-                    <div key={c.user_id} className="text-xs flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-xl bg-muted/30 border gap-2">
+                    <div key={c.user_id} className="text-xs flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-[8px] bg-muted/30 border gap-2">
                       <div className="flex items-center gap-2.5">
                         <div className={`p-2 rounded-lg ${isOwner ? 'bg-ds-warning-soft text-ds-warning ' : 'bg-ds-accent-soft text-ds-accent '}`}>
                           {isOwner ? <Crown className="h-4 w-4" /> : <ShieldCheck className="h-4 w-4" />}
@@ -590,7 +590,7 @@ export default function OrganizationProfile() {
                             {c.name || 'Unnamed User'}
                             <Badge
                               variant="outline"
-                              className={`text-[10px] font-semibold capitalize ${
+                              className={`text-[11px] font-semibold capitalize ${
  isOwner
  ? 'border-ds-warning/30 text-ds-warning bg-ds-warning-soft'
  : 'border-ds-accent/30 text-ds-accent bg-ds-accent-soft'
@@ -689,7 +689,7 @@ export default function OrganizationProfile() {
               No feature flags catalogued in the platform.
             </div>
           ) : (
-            <div className="divide-y rounded-xl border overflow-hidden">
+            <div className="divide-y rounded-[8px] border overflow-hidden">
               {featureMatrix.flags.map((flag) => {
                 const orgFeature = orgFeatureData?.features?.[flag.key]
                 const isEffective = orgFeature?.effective ?? flag.default_enabled
@@ -702,12 +702,12 @@ export default function OrganizationProfile() {
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-semibold text-foreground">{flag.label}</span>
-                        <Badge variant="outline" className="text-[10px] uppercase font-mono tracking-wider py-0 px-1.5 bg-muted/30">
+                        <Badge variant="outline" className="text-[11px] uppercase font-mono tracking-wider py-0 px-1.5 bg-muted/30">
                           {flag.category}
                         </Badge>
                         {hasOverride ? (
                           <Badge
-                            className={`text-[10px] font-semibold py-0 px-1.5 ${
+                            className={`text-[11px] font-semibold py-0 px-1.5 ${
  overrideVal
  ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
  : 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
@@ -717,7 +717,7 @@ export default function OrganizationProfile() {
                             Override: {overrideVal ? 'Forced On' : 'Forced Off'}
                           </Badge>
                         ) : (
-                          <Badge variant="secondary" className="text-[10px] py-0 px-1.5 text-muted-foreground">
+                          <Badge variant="secondary" className="text-[11px] py-0 px-1.5 text-muted-foreground">
                             Plan Default: {flag.default_enabled ? 'Active' : 'Disabled'}
                           </Badge>
                         )}
@@ -725,7 +725,7 @@ export default function OrganizationProfile() {
                       <p className="text-[11px] text-muted-foreground">
                         {flag.description || `Key: ${flag.key}`}
                         {flag.min_plan_code && (
-                          <span className="ms-1.5 font-mono text-[10px]">· Requires plan: {flag.min_plan_code}</span>
+                          <span className="ms-1.5 font-mono text-[11px]">· Requires plan: {flag.min_plan_code}</span>
                         )}
                       </p>
                     </div>
@@ -1037,7 +1037,7 @@ export default function OrganizationProfile() {
               <Label className="text-xs font-semibold">Brand Theme Colors</Label>
               <div className="grid grid-cols-3 gap-3">
                 <div className="space-y-1">
-                  <Label className="text-[10px] text-muted-foreground">Primary Color</Label>
+                  <Label className="text-[11px] text-muted-foreground">Primary Color</Label>
                   <div className="flex items-center gap-2">
                     <input
                       type="color"
@@ -1054,7 +1054,7 @@ export default function OrganizationProfile() {
                 </div>
 
                 <div className="space-y-1">
-                  <Label className="text-[10px] text-muted-foreground">Secondary Color</Label>
+                  <Label className="text-[11px] text-muted-foreground">Secondary Color</Label>
                   <div className="flex items-center gap-2">
                     <input
                       type="color"
@@ -1071,7 +1071,7 @@ export default function OrganizationProfile() {
                 </div>
 
                 <div className="space-y-1">
-                  <Label className="text-[10px] text-muted-foreground">Accent Color</Label>
+                  <Label className="text-[11px] text-muted-foreground">Accent Color</Label>
                   <div className="flex items-center gap-2">
                     <input
                       type="color"
@@ -1097,13 +1097,13 @@ export default function OrganizationProfile() {
                   Uses the same ensureReadableOnWhiteText() guard as the real header, so a
                   too-light primary color previews exactly what tenants will actually see. */}
               <div className="rounded-lg border p-3 space-y-2" style={{ backgroundColor: `${primaryColor}0d` }}>
-                <div className="text-[10px] font-semibold text-muted-foreground">Preview</div>
+                <div className="text-[11px] font-semibold text-muted-foreground">Preview</div>
                 <div className="flex items-center justify-between rounded-md px-3 py-2" style={{ backgroundColor: readablePrimaryColor }}>
-                  <span className="text-xs font-bold text-white">{editName || 'Tenant'} Portal</span>
+                  <span className="text-xs font-bold text-white">{editName || 'Organization'} Portal</span>
                   <span className="h-2 w-2 rounded-full" style={{ backgroundColor: accentColor }} />
                 </div>
                 {readablePrimaryColor !== primaryColor && (
-                  <div className="text-[10px] text-ds-warning">
+                  <div className="text-[11px] text-ds-warning">
                     Header background darkened to {readablePrimaryColor} for legible white text — {primaryColor} is too light on its own.
                   </div>
                 )}
@@ -1126,7 +1126,7 @@ export default function OrganizationProfile() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <Label className="text-[10px] text-muted-foreground">Sender Display Name</Label>
+                  <Label className="text-[11px] text-muted-foreground">Sender Display Name</Label>
                   <Input
                     value={editSenderName}
                     onChange={(e) => setEditSenderName(e.target.value)}
@@ -1136,7 +1136,7 @@ export default function OrganizationProfile() {
                 </div>
 
                 <div className="space-y-1">
-                  <Label className="text-[10px] text-muted-foreground">Reply-To Email</Label>
+                  <Label className="text-[11px] text-muted-foreground">Reply-To Email</Label>
                   <Input
                     value={editReplyTo}
                     onChange={(e) => setEditReplyTo(e.target.value)}
@@ -1148,7 +1148,7 @@ export default function OrganizationProfile() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <Label className="text-[10px] text-muted-foreground">Support & Help Email</Label>
+                  <Label className="text-[11px] text-muted-foreground">Support & Help Email</Label>
                   <Input
                     value={editSupportEmail}
                     onChange={(e) => setEditSupportEmail(e.target.value)}
@@ -1158,7 +1158,7 @@ export default function OrganizationProfile() {
                 </div>
 
                 <div className="space-y-1">
-                  <Label className="text-[10px] text-muted-foreground">Website URL</Label>
+                  <Label className="text-[11px] text-muted-foreground">Website URL</Label>
                   <Input
                     value={editWebsiteUrl}
                     onChange={(e) => setEditWebsiteUrl(e.target.value)}
@@ -1170,7 +1170,7 @@ export default function OrganizationProfile() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <Label className="text-[10px] text-muted-foreground">Email Footer (English)</Label>
+                  <Label className="text-[11px] text-muted-foreground">Email Footer (English)</Label>
                   <Input
                     value={editFooterText}
                     onChange={(e) => setEditFooterText(e.target.value)}
@@ -1180,7 +1180,7 @@ export default function OrganizationProfile() {
                 </div>
 
                 <div className="space-y-1">
-                  <Label className="text-[10px] text-muted-foreground">Email Footer (Arabic)</Label>
+                  <Label className="text-[11px] text-muted-foreground">Email Footer (Arabic)</Label>
                   <Input
                     value={editFooterTextAr}
                     onChange={(e) => setEditFooterTextAr(e.target.value)}
@@ -1264,7 +1264,7 @@ export default function OrganizationProfile() {
 
             {!isSearchingCandidates && candidateUsers.length > 0 && (
               <div className="space-y-1 max-h-[180px] overflow-y-auto border rounded-lg p-1.5">
-                <div className="text-[10px] font-semibold text-muted-foreground px-2 py-0.5 uppercase tracking-wider">
+                <div className="text-[11px] font-semibold text-muted-foreground px-2 py-0.5 uppercase tracking-wider">
                   Select User
                 </div>
                 {candidateUsers.map((u) => {
@@ -1281,7 +1281,7 @@ export default function OrganizationProfile() {
                     >
                       <div>
                         <div>{u.full_name || 'Unnamed Profile'}</div>
-                        <div className={`text-[10px] ${isSelected ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
+                        <div className={`text-[11px] ${isSelected ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
                           {u.email}
                         </div>
                       </div>

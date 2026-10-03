@@ -142,9 +142,9 @@ export function PendingUserApprovals({ onCountChange }: PendingUserApprovalProps
   const getDomainBadgeColor = (domain: string) => {
     const trustedDomains = ['remal-connect.com', 'remal.com', 'remalhospitality.com'];
     if (trustedDomains.includes(domain.toLowerCase())) {
-      return 'bg-green-100 text-green-700';
+      return 'bg-ds-success-soft text-ds-success';
     }
-    return 'bg-yellow-100 text-yellow-700';
+    return 'bg-ds-warning-soft text-ds-warning';
   };
 
   if (isLoading) {
@@ -158,7 +158,7 @@ export function PendingUserApprovals({ onCountChange }: PendingUserApprovalProps
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-hotel-gold" />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-ds-accent" />
           </div>
         </CardContent>
       </Card>
@@ -167,18 +167,18 @@ export function PendingUserApprovals({ onCountChange }: PendingUserApprovalProps
 
   if (!pendingUsers || pendingUsers.length === 0) {
     return (
-      <Card className="border-green-200 bg-green-50/30">
+      <Card className="border-ds-success/30 bg-ds-success-soft/30">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-green-800">
+          <CardTitle className="flex items-center gap-2 text-ds-success">
             <ShieldCheck className="w-5 h-5" />
             {t('approvals.pending_title', 'Pending User Approvals')}
-            <span className="ms-2 bg-green-500 text-white px-2 py-0.5 rounded-full text-sm">
+            <span className="ms-2 rounded-full bg-ds-success px-2 py-0.5 text-xs font-semibold text-white dark:text-ds-on-ink">
               0
             </span>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-green-700">
+          <p className="text-sm text-ds-ink-secondary">
             {t(
               'approvals.no_pending',
               'No pending user approvals. All recent signups have been from trusted email domains.'
@@ -191,18 +191,18 @@ export function PendingUserApprovals({ onCountChange }: PendingUserApprovalProps
 
   return (
     <>
-      <Card className="border-yellow-300 bg-yellow-50/50">
+      <Card className="border-ds-warning/30 bg-ds-warning-soft/50">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-yellow-800">
+          <CardTitle className="flex items-center gap-2 text-ds-warning">
             <ShieldAlert className="w-5 h-5" />
             {t('approvals.pending_title', 'Pending User Approvals')}
-            <span className="ms-2 bg-yellow-500 text-white px-2 py-0.5 rounded-full text-sm">
+            <span className="ms-2 rounded-full bg-ds-warning px-2 py-0.5 text-xs font-semibold text-white dark:text-ds-on-ink">
               {pendingUsers.length}
             </span>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-yellow-700 mb-4">
+          <p className="text-sm text-ds-ink-secondary mb-4">
             {t(
               'approvals.pending_description',
               'The following users signed up with non-corporate email domains and require approval before accessing the system.'
@@ -213,15 +213,15 @@ export function PendingUserApprovals({ onCountChange }: PendingUserApprovalProps
             {pendingUsers.map((user) => (
               <div
                 key={user.id}
-                className="flex items-center justify-between p-4 bg-white rounded-lg border border-yellow-200"
+                className="flex items-center justify-between p-4 bg-ds-surface rounded-[6px] border border-ds-border"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                    <Mail className="w-5 h-5 text-gray-500" />
+                  <div className="w-10 h-10 rounded-full bg-ds-surface-subtle flex items-center justify-center">
+                    <Mail className="w-5 h-5 text-ds-muted" />
                   </div>
                   <div>
                     <p className="font-medium">{user.email}</p>
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                    <div className="flex items-center gap-2 text-sm text-ds-muted">
                       <span className={`px-2 py-0.5 rounded text-xs ${getDomainBadgeColor(user.domain)}`}>
                         {user.domain}
                       </span>
@@ -240,7 +240,7 @@ export function PendingUserApprovals({ onCountChange }: PendingUserApprovalProps
                     variant="outline"
                     size="sm"
                     onClick={() => handleAction(user, 'reject')}
-                    className="text-red-600 hover:bg-red-50"
+                    className="text-ds-danger hover:bg-ds-danger-soft"
                     disabled={approveMutation.isPending || rejectMutation.isPending}
                   >
                     <UserX className="w-4 h-4 me-1" />
@@ -249,7 +249,6 @@ export function PendingUserApprovals({ onCountChange }: PendingUserApprovalProps
                   <Button
                     size="sm"
                     onClick={() => handleAction(user, 'approve')}
-                    className="bg-hotel-gold hover:bg-hotel-gold-dark text-white"
                     disabled={approveMutation.isPending || rejectMutation.isPending}
                   >
                     <CheckCircle className="w-4 h-4 me-1" />
@@ -308,7 +307,6 @@ export function PendingUserApprovals({ onCountChange }: PendingUserApprovalProps
               variant={actionType === 'approve' ? 'default' : 'destructive'}
               onClick={confirmAction}
               disabled={approveMutation.isPending || rejectMutation.isPending}
-              className={actionType === 'approve' ? 'bg-hotel-gold hover:bg-hotel-gold-dark' : ''}
             >
               {actionType === 'approve' ? (
                 <>

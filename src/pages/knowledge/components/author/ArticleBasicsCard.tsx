@@ -123,7 +123,7 @@ export function ArticleBasicsCard({
 
         {/* Content Format Pills */}
         <div className="space-y-1.5 pt-2 border-t">
-          <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+          <Label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
             Document Format
           </Label>
           <div className="flex flex-wrap gap-1.5">
@@ -136,7 +136,7 @@ export function ArticleBasicsCard({
                   onClick={() => onUpdateField('content_type', cfg.type)}
                   className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-all duration-150 flex items-center gap-1.5 ${
                     isSelected
-                      ? 'bg-hotel-navy text-white shadow-xs border border-hotel-navy dark:bg-hotel-gold dark:text-hotel-navy'
+                      ? 'bg-ds-ink text-ds-on-ink shadow-xs border border-ds-ink dark:bg-ds-accent dark:text-ds-ink'
                       : 'bg-muted/50 text-muted-foreground hover:bg-muted border border-transparent'
                   }`}
                 >
@@ -150,18 +150,18 @@ export function ArticleBasicsCard({
 
         {/* Duplicate Detection Warning */}
         {showDuplicateWarning && duplicateCheckResult?.hasDuplicates && (
-          <div className="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+          <div className="p-3 bg-ds-warning-soft border border-ds-warning/30 rounded-lg">
             <div className="flex items-start gap-2">
-              <AlertTriangle className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
+              <AlertTriangle className="w-4 h-4 text-ds-warning mt-0.5 shrink-0" />
               <div className="flex-1 text-xs">
-                <p className="font-bold text-amber-800 dark:text-amber-300">
+                <p className="font-bold text-ds-warning">
                   {t('editor.duplicate_warning', 'Similar articles already exist')}
                 </p>
                 <ul className="mt-1 space-y-1">
                   {duplicateCheckResult.duplicates.slice(0, 2).map((dup) => (
-                    <li key={dup.id} className="text-amber-700 dark:text-amber-400 flex items-center justify-between">
+                    <li key={dup.id} className="text-ds-warning flex items-center justify-between">
                       <span className="truncate flex-1">• {dup.title}</span>
-                      <Badge variant="outline" className="ms-2 text-[10px]">
+                      <Badge variant="outline" className="ms-2 text-[11px]">
                         {dup.similarity}% match
                       </Badge>
                     </li>
@@ -170,7 +170,7 @@ export function ArticleBasicsCard({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="mt-1 h-5 text-[11px] text-amber-700 hover:text-amber-900 px-2"
+                  className="mt-1 h-5 text-[11px] text-ds-warning hover:text-ds-warning px-2"
                   onClick={onDismissDuplicateWarning}
                 >
                   {t('editor.dismiss_warning', 'Dismiss')}
@@ -190,8 +190,8 @@ export function ArticleBasicsCard({
               <Badge
                 key={`${suggestion.tag}-${suggestion.confidence}`}
                 variant="outline"
-                className={`text-[10px] cursor-pointer hover:bg-primary/10 ${
-                  suggestion.confidence === 'high' ? 'border-emerald-300 text-emerald-700' : 'border-slate-300 text-slate-600'
+                className={`text-[11px] cursor-pointer hover:bg-primary/10 ${
+                  suggestion.confidence === 'high' ? 'border-ds-success/30 text-ds-success' : 'border-ds-border text-ds-ink-secondary'
                 }`}
               >
                 #{suggestion.tag}

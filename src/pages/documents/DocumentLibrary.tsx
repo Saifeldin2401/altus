@@ -569,7 +569,7 @@ export default function DocumentLibrary() {
         tabIndex={0}
         aria-label={`Open document ${doc.title}`}
         className={cn(
-          "group relative bg-white rounded-xl border transition-all duration-200 cursor-pointer hover:shadow-lg",
+          "group relative bg-ds-surface rounded-[8px] border transition-all duration-200 cursor-pointer hover:shadow-lg",
           isSelected ? "border-ds-accent ring-2 ring-ds-accent/20" : "border-ds-border hover:border-ds-ink/30"
         )}
       >
@@ -580,7 +580,7 @@ export default function DocumentLibrary() {
             checked={isSelected}
             onChange={(e) => handleSelectDocument(doc.id, e.target.checked)}
             onClick={(e) => e.stopPropagation()}
-            className="w-4 h-4 rounded border-ds-border text-ds-ink focus:ring-hotel-navy"
+            className="w-4 h-4 rounded border-ds-border text-ds-ink focus:ring-ds-ink"
           />
         </div>
 
@@ -596,7 +596,7 @@ export default function DocumentLibrary() {
 
         <div className="p-5">
           {/* File icon */}
-          <div className="w-12 h-12 mx-auto mb-4 rounded-xl /5 flex items-center justify-center">
+          <div className="w-12 h-12 mx-auto mb-4 rounded-[8px] /5 flex items-center justify-center">
             <FileText className="w-6 h-6 text-ds-ink" />
           </div>
 
@@ -611,16 +611,16 @@ export default function DocumentLibrary() {
               <DocumentConfidentialityBadge level={doc.confidentiality_level} size="sm" />
               <StatusBadge status={doc.status} />
               {doc.knowledge_base_status === 'indexed' && doc.is_active_kb_version ? (
-                <Badge className="bg-ds-success hover:bg-ds-success text-white text-[10px] px-1.5 py-0.5 gap-1 font-bold">
+                <Badge className="bg-ds-success hover:bg-ds-success text-white dark:text-ds-on-ink text-[11px] px-1.5 py-0.5 gap-1 font-bold">
                   <Sparkles className="w-3 h-3" />
                   AI KB Active
                 </Badge>
               ) : doc.knowledge_base_status === 'superseded' ? (
-                <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5 text-ds-muted">
+                <Badge variant="secondary" className="text-[11px] px-1.5 py-0.5 text-ds-muted">
                   Superseded
                 </Badge>
               ) : (
-                <Badge variant="outline" className="text-[10px] px-1.5 py-0.5 text-muted-foreground border-border">
+                <Badge variant="outline" className="text-[11px] px-1.5 py-0.5 text-muted-foreground border-border">
                   Internal
                 </Badge>
               )}
@@ -740,7 +740,7 @@ export default function DocumentLibrary() {
           "flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-lg transition-all duration-200 border gap-3 group cursor-pointer",
           isSelected 
             ? "bg-ds-accent/5 border-ds-accent" 
-            : "bg-ds-surface-subtle hover:bg-white border-transparent hover:border-ds-ink/10 hover:shadow-md"
+            : "bg-ds-surface-subtle hover:bg-ds-surface border-transparent hover:border-ds-ink/10"
         )}
       >
         <div className="flex items-center gap-3 sm:gap-4 min-w-0">
@@ -749,7 +749,7 @@ export default function DocumentLibrary() {
             checked={isSelected}
             onChange={(e) => handleSelectDocument(doc.id, e.target.checked)}
             onClick={(e) => e.stopPropagation()}
-            className="w-4 h-4 rounded border-ds-border text-ds-ink focus:ring-hotel-navy"
+            className="w-4 h-4 rounded border-ds-border text-ds-ink focus:ring-ds-ink"
           />
 
           <div className="w-9 h-9 sm:w-10 sm:h-10 bg-ds-ink/5 rounded-lg flex items-center justify-center border border-ds-ink/10 flex-shrink-0">
@@ -798,16 +798,16 @@ export default function DocumentLibrary() {
         <div className="flex flex-wrap items-center gap-2">
           <StatusBadge status={doc.status} />
           {doc.knowledge_base_status === 'indexed' && doc.is_active_kb_version ? (
-            <Badge className="bg-ds-success hover:bg-ds-success text-white text-[10px] px-1.5 py-0.5 gap-1 font-bold">
+            <Badge className="bg-ds-success hover:bg-ds-success text-white dark:text-ds-on-ink text-[11px] px-1.5 py-0.5 gap-1 font-bold">
               <Sparkles className="w-3 h-3" />
               AI KB Active
             </Badge>
           ) : doc.knowledge_base_status === 'superseded' ? (
-            <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5 text-ds-muted">
+            <Badge variant="secondary" className="text-[11px] px-1.5 py-0.5 text-ds-muted">
               Superseded
             </Badge>
           ) : (
-            <Badge variant="outline" className="text-[10px] px-1.5 py-0.5 text-muted-foreground border-border">
+            <Badge variant="outline" className="text-[11px] px-1.5 py-0.5 text-muted-foreground border-border">
               Internal
             </Badge>
           )}
@@ -1166,7 +1166,7 @@ export default function DocumentLibrary() {
                         type="checkbox"
                         checked={selectedDocuments.size === documents.length && documents.length > 0}
                         onChange={(e) => handleSelectAll(e.target.checked)}
-                        className="w-4 h-4 rounded border-ds-border text-ds-ink focus:ring-hotel-navy"
+                        className="w-4 h-4 rounded border-ds-border text-ds-ink focus:ring-ds-ink"
                       />
                       <span className="text-sm text-ds-muted">
                         {selectedDocuments.size > 0 
@@ -1254,9 +1254,9 @@ export default function DocumentLibrary() {
                         type="button"
                         key={folder.id}
                         onClick={() => setFilters(prev => ({ ...prev, folderId: folder.id }))}
-                        className="p-4 rounded-xl border border-ds-border hover:border-ds-ink/30 hover:shadow-md transition-all cursor-pointer bg-white"
+                        className="p-4 rounded-[8px] border border-ds-border hover:border-ds-ink/30 transition-all cursor-pointer bg-ds-surface"
                       >
-                        <div className="w-12 h-12 rounded-xl bg-ds-ink/5 flex items-center justify-center mb-3">
+                        <div className="w-12 h-12 rounded-[8px] bg-ds-ink/5 flex items-center justify-center mb-3">
                           <FolderOpen className="w-6 h-6 text-ds-ink" />
                         </div>
                         <h3 className="font-medium text-ds-ink truncate">{folder.name}</h3>

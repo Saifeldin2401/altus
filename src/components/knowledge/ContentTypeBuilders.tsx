@@ -127,7 +127,7 @@ export function VideoContentBuilder({ value, onChange }: VideoContentBuilderProp
         <Card className="border-dashed">
             <CardHeader className="pb-3">
                 <div className="flex items-center gap-2">
-                    <Video className="h-5 w-5 text-red-500" />
+                    <Video className="h-5 w-5 text-ds-danger" />
                     <CardTitle className="text-base">Video Content</CardTitle>
                 </div>
             </CardHeader>
@@ -159,19 +159,19 @@ export function VideoContentBuilder({ value, onChange }: VideoContentBuilderProp
 
                 {/* Active Selected Video Status Banner */}
                 {value && (
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-lg border border-emerald-500/30 bg-emerald-50/70 dark:bg-emerald-950/25">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-lg border border-ds-success/30 bg-ds-success-soft/70">
                         <div className="flex items-center gap-3 overflow-hidden">
-                            <div className="w-9 h-9 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/25">
+                            <div className="w-9 h-9 rounded-lg bg-ds-success/15 text-ds-success flex items-center justify-center shrink-0 border border-ds-success/25">
                                 <CheckCircle2 className="w-5 h-5" />
                             </div>
                             <div className="truncate">
                                 <div className="flex items-center gap-2">
-                                    <span className="font-semibold text-xs text-emerald-950 dark:text-emerald-100">
+                                    <span className="font-semibold text-xs text-ds-success">
                                         Video Selected & Linked
                                     </span>
                                     <Badge
                                         variant="outline"
-                                        className="text-[10px] px-1.5 py-0 bg-white/90 dark:bg-slate-900 border-emerald-400/40 text-emerald-700 dark:text-emerald-300 font-medium"
+                                        className="text-[11px] px-1.5 py-0 bg-white/90 border-ds-success/40 text-ds-success font-medium"
                                     >
                                         {isYouTube ? 'YouTube' : isVimeo ? 'Vimeo' : isDirectVideo ? 'Direct MP4' : 'Media Library'}
                                     </Badge>
@@ -207,7 +207,7 @@ export function VideoContentBuilder({ value, onChange }: VideoContentBuilderProp
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                className="h-7 text-xs gap-1 text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/40"
+                                className="h-7 text-xs gap-1 text-ds-danger hover:text-ds-danger hover:bg-ds-danger-soft"
                                 onClick={() => {
                                     onChange('')
                                     toast.success('Video unlinked from article')
@@ -335,7 +335,7 @@ export function VideoContentBuilder({ value, onChange }: VideoContentBuilderProp
                                 />
                                 {/* Play button overlay */}
                                 <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
-                                    <div className="w-16 h-16 rounded-full bg-red-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                    <div className="w-16 h-16 rounded-full bg-ds-danger flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                                         <Play className="h-8 w-8 text-white fill-white ms-1" />
                                     </div>
                                 </div>
@@ -348,7 +348,7 @@ export function VideoContentBuilder({ value, onChange }: VideoContentBuilderProp
                         {/* Vimeo - show placeholder with link */}
                         {isVimeo && vimeoId && (
                             <div
-                                className="aspect-video rounded-lg overflow-hidden bg-gradient-to-br from-sky-400 to-sky-600 relative cursor-pointer group"
+                                className="aspect-video rounded-lg overflow-hidden bg-ds-info relative cursor-pointer group"
                                 onClick={() => window.open(value, '_blank')}
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter' || e.key === ' ') {
@@ -616,17 +616,17 @@ export function ChecklistBuilder({
     }
 
     return (
-        <Card className="border-orange-200/60 dark:border-orange-900/40 shadow-sm bg-gradient-to-b from-orange-50/20 to-transparent">
-            <CardHeader className="pb-3 border-b border-orange-100 dark:border-orange-950/40">
+        <Card className="border-ds-warning/60 shadow-sm bg-gradient-to-b from-ds-warning-soft/20 to-transparent">
+            <CardHeader className="pb-3 border-b border-ds-warning/30">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                        <div className="p-1.5 rounded-lg bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400">
+                        <div className="p-1.5 rounded-lg bg-ds-warning-soft text-ds-warning">
                             <CheckSquare className="h-4 w-4" />
                         </div>
                         <div>
                             <CardTitle className="text-sm font-bold flex items-center gap-2">
                                 {t('editor.checklist_title', 'Interactive Execution Checklist')}
-                                <Badge variant="secondary" className="text-xs bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300">
+                                <Badge variant="secondary" className="text-xs bg-ds-warning-soft text-ds-warning">
                                     {items.length} {t('editor.steps', 'steps')}
                                 </Badge>
                             </CardTitle>
@@ -644,9 +644,9 @@ export function ChecklistBuilder({
                                 size="sm"
                                 onClick={onAIGenerate}
                                 disabled={isGenerating}
-                                className="h-7 text-xs gap-1 border-hotel-gold/40 text-hotel-navy dark:text-hotel-gold hover:bg-hotel-gold/10"
+                                className="h-7 text-xs gap-1 border-ds-accent/40 text-ds-ink dark:text-ds-accent hover:bg-ds-accent/10"
                             >
-                                {isGenerating ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3 text-hotel-gold" />}
+                                {isGenerating ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3 text-ds-accent" />}
                                 <span>{t('editor.ai_generate_checklist', '✨ AI Extract Steps')}</span>
                             </Button>
                         )}
@@ -659,7 +659,7 @@ export function ChecklistBuilder({
                                 onClick={() => setShowBulkModal(true)}
                                 className="h-7 text-xs gap-1"
                             >
-                                <Copy className="h-3 w-3 text-slate-500" />
+                                <Copy className="h-3 w-3 text-ds-muted" />
                                 <span>Bulk Paste</span>
                             </Button>
 
@@ -668,7 +668,7 @@ export function ChecklistBuilder({
                                 variant="default"
                                 size="sm"
                                 onClick={addItem}
-                                className="h-7 text-xs gap-1 bg-orange-600 hover:bg-orange-700 text-white font-semibold"
+                                className="h-7 text-xs gap-1 bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink font-semibold"
                             >
                                 <Plus className="h-3.5 w-3.5" />
                                 <span>{t('editor.add_item', 'Add Step')}</span>
@@ -679,32 +679,32 @@ export function ChecklistBuilder({
 
                 {/* Hotel Quick Templates */}
                 <div className="flex flex-wrap items-center gap-1.5 pt-2">
-                    <span className="text-[11px] font-semibold text-slate-400">⚡ Hotel Templates:</span>
+                    <span className="text-[11px] font-semibold text-ds-muted">⚡ Hotel Templates:</span>
                     <button
                         type="button"
                         onClick={() => loadPreset('vip_luxury')}
-                        className="text-[10px] px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-800 hover:border-orange-400 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 transition-colors"
+                        className="text-[11px] px-2 py-0.5 rounded-full border border-ds-border hover:border-ds-warning bg-ds-surface text-ds-ink-secondary transition-colors"
                     >
                         👑 five-star VIP Arrival
                     </button>
                     <button
                         type="button"
                         onClick={() => loadPreset('housekeeping')}
-                        className="text-[10px] px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-800 hover:border-orange-400 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 transition-colors"
+                        className="text-[11px] px-2 py-0.5 rounded-full border border-ds-border hover:border-ds-warning bg-ds-surface text-ds-ink-secondary transition-colors"
                     >
                         🧹 Housekeeping 15-Point
                     </button>
                     <button
                         type="button"
                         onClick={() => loadPreset('shift_handover')}
-                        className="text-[10px] px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-800 hover:border-orange-400 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 transition-colors"
+                        className="text-[11px] px-2 py-0.5 rounded-full border border-ds-border hover:border-ds-warning bg-ds-surface text-ds-ink-secondary transition-colors"
                     >
                         🔄 Shift Handover
                     </button>
                     <button
                         type="button"
                         onClick={() => loadPreset('food_safety')}
-                        className="text-[10px] px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-800 hover:border-orange-400 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 transition-colors"
+                        className="text-[11px] px-2 py-0.5 rounded-full border border-ds-border hover:border-ds-warning bg-ds-surface text-ds-ink-secondary transition-colors"
                     >
                         🍽️ HACCP Food Safety
                     </button>
@@ -713,22 +713,22 @@ export function ChecklistBuilder({
 
             <CardContent className="pt-4 space-y-3">
                 {items.length === 0 ? (
-                    <div className="text-center py-8 px-4 border border-dashed rounded-xl bg-white/50 dark:bg-slate-950/50">
-                        <CheckSquare className="h-10 w-10 mx-auto mb-2 text-orange-300 dark:text-orange-800" />
-                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                    <div className="text-center py-8 px-4 border border-dashed rounded-[8px] bg-white/50">
+                        <CheckSquare className="h-10 w-10 mx-auto mb-2 text-ds-warning" />
+                        <p className="text-sm font-semibold text-ds-ink">
                             {t('editor.no_checklist_items', 'No interactive checklist steps added yet')}
                         </p>
                         <p className="text-xs text-muted-foreground mt-1 max-w-md mx-auto">
                             Add steps individually, click "✨ AI Extract Steps" to automatically convert the SOP text into verification checkpoints, or pick a hotel template above.
                         </p>
                         <div className="flex justify-center gap-2 mt-4">
-                            <Button type="button" size="sm" onClick={addItem} className="h-8 text-xs bg-orange-600 hover:bg-orange-700 text-white font-medium">
+                            <Button type="button" size="sm" onClick={addItem} className="h-8 text-xs bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink font-medium">
                                 <Plus className="h-3.5 w-3.5 me-1" />
                                 Add First Step
                             </Button>
                             {onAIGenerate && (
-                                <Button type="button" size="sm" variant="outline" onClick={onAIGenerate} disabled={isGenerating} className="h-8 text-xs border-hotel-gold/50 text-hotel-navy dark:text-hotel-gold">
-                                    <Sparkles className="h-3.5 w-3.5 me-1 text-hotel-gold" />
+                                <Button type="button" size="sm" variant="outline" onClick={onAIGenerate} disabled={isGenerating} className="h-8 text-xs border-ds-accent/50 text-ds-ink dark:text-ds-accent">
+                                    <Sparkles className="h-3.5 w-3.5 me-1 text-ds-accent" />
                                     AI Auto-Fill
                                 </Button>
                             )}
@@ -739,14 +739,14 @@ export function ChecklistBuilder({
                         {items.map((item, index) => (
                             <div
                                 key={item.id}
-                                className="flex items-start gap-2.5 p-3 border rounded-xl bg-white dark:bg-slate-900 shadow-2xs hover:border-slate-300 dark:hover:border-slate-700 transition-all"
+                                className="flex items-start gap-2.5 p-3 border rounded-[8px] bg-ds-surface shadow-2xs hover:border-ds-border transition-all"
                             >
                                 <div className="flex flex-col gap-0.5 pt-1">
                                     <Button
                                         type="button"
                                         variant="ghost"
                                         size="icon"
-                                        className="h-5 w-5 text-slate-400 hover:text-slate-700"
+                                        className="h-5 w-5 text-ds-muted hover:text-ds-ink-secondary"
                                         onClick={() => moveItem(item.id, 'up')}
                                         disabled={index === 0}
                                         aria-label={t('accessibility.move_up', 'Move up')}
@@ -757,7 +757,7 @@ export function ChecklistBuilder({
                                         type="button"
                                         variant="ghost"
                                         size="icon"
-                                        className="h-5 w-5 text-slate-400 hover:text-slate-700"
+                                        className="h-5 w-5 text-ds-muted hover:text-ds-ink-secondary"
                                         onClick={() => moveItem(item.id, 'down')}
                                         disabled={index === items.length - 1}
                                         aria-label={t('accessibility.move_down', 'Move down')}
@@ -768,7 +768,7 @@ export function ChecklistBuilder({
 
                                 <div className="flex-1 space-y-2">
                                     <div className="flex items-center gap-2">
-                                        <Badge variant="outline" className="text-[10px] font-bold px-1.5 py-0.5 min-h-[20px] shrink-0 whitespace-nowrap bg-slate-50 dark:bg-slate-800">
+                                        <Badge variant="outline" className="text-[11px] font-bold px-1.5 py-0.5 min-h-[20px] shrink-0 whitespace-nowrap bg-ds-surface-subtle">
                                             #{index + 1}
                                         </Badge>
                                         <Input
@@ -781,7 +781,7 @@ export function ChecklistBuilder({
 
                                     {/* Optional Arabic Translation Row */}
                                     <div className="flex items-center gap-2">
-                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider w-8 text-end shrink-0">AR</span>
+                                        <span className="text-[11px] font-bold text-ds-muted uppercase tracking-wider w-8 text-end shrink-0">AR</span>
                                         <Input
                                             dir="rtl"
                                             placeholder="النص باللغة العربية (خطوة التحقق والمطابقة)..."
@@ -801,7 +801,7 @@ export function ChecklistBuilder({
                                                 }
                                                 className="h-3.5 w-3.5"
                                             />
-                                            <span className={`text-[11px] font-semibold ${item.is_required ? 'text-orange-600 dark:text-orange-400' : 'text-slate-500'}`}>
+                                            <span className={`text-[11px] font-semibold ${item.is_required ? 'text-ds-warning' : 'text-ds-muted'}`}>
                                                 {item.is_required ? '⚠️ Mandatory Quality Benchmark' : 'Optional Checkpoint'}
                                             </span>
                                         </label>
@@ -810,7 +810,7 @@ export function ChecklistBuilder({
                                             type="button"
                                             variant="ghost"
                                             size="sm"
-                                            className="h-6 text-[11px] text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950/30 px-2"
+                                            className="h-6 text-[11px] text-ds-danger hover:text-ds-danger hover:bg-ds-danger-soft px-2"
                                             onClick={() => removeItem(item.id)}
                                         >
                                             <Trash2 className="h-3 w-3 me-1" />
@@ -826,16 +826,16 @@ export function ChecklistBuilder({
                 {/* Bulk Paste Modal */}
                 {showBulkModal && (
                     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-                        <div className="bg-white dark:bg-slate-900 border rounded-2xl max-w-lg w-full p-5 space-y-4 shadow-xl">
+                        <div className="bg-ds-surface border rounded-[8px] max-w-lg w-full p-5 space-y-4 shadow-xl">
                             <div className="flex items-center justify-between border-b pb-3">
                                 <h3 className="font-bold text-sm flex items-center gap-2">
-                                    <Copy className="h-4 w-4 text-orange-500" />
+                                    <Copy className="h-4 w-4 text-ds-warning" />
                                     Bulk Paste Checklist Steps
                                 </h3>
                                 <button
                                     type="button"
                                     onClick={() => setShowBulkModal(false)}
-                                    className="text-slate-400 hover:text-slate-600 text-lg leading-none"
+                                    className="text-ds-muted hover:text-ds-ink-secondary text-lg leading-none"
                                 >
                                     ×
                                 </button>
@@ -854,7 +854,7 @@ export function ChecklistBuilder({
                                 <Button type="button" variant="outline" size="sm" onClick={() => setShowBulkModal(false)}>
                                     Cancel
                                 </Button>
-                                <Button type="button" size="sm" onClick={handleBulkAdd} className="bg-orange-600 hover:bg-orange-700 text-white font-bold">
+                                <Button type="button" size="sm" onClick={handleBulkAdd} className="bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink font-bold">
                                     Add All Steps
                                 </Button>
                             </div>
@@ -981,17 +981,17 @@ export function FAQBuilder({
     }
 
     return (
-        <Card className="border-yellow-200/60 dark:border-yellow-900/40 shadow-sm bg-gradient-to-b from-yellow-50/20 to-transparent">
-            <CardHeader className="pb-3 border-b border-yellow-100 dark:border-yellow-950/40">
+        <Card className="border-ds-warning/60 shadow-sm bg-gradient-to-b from-ds-warning-soft/20 to-transparent">
+            <CardHeader className="pb-3 border-b border-ds-warning/30">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                        <div className="p-1.5 rounded-lg bg-yellow-100 dark:bg-yellow-950 text-yellow-600 dark:text-yellow-400">
+                        <div className="p-1.5 rounded-lg bg-ds-warning-soft text-ds-warning">
                             <HelpCircle className="h-4 w-4" />
                         </div>
                         <div>
                             <CardTitle className="text-sm font-bold flex items-center gap-2">
                                 {t('editor.faqs_title', 'Operational FAQs & Edge Cases')}
-                                <Badge variant="secondary" className="text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-300">
+                                <Badge variant="secondary" className="text-xs bg-ds-warning-soft text-ds-warning">
                                     {items.length} {t('editor.qas', 'Q&As')}
                                 </Badge>
                             </CardTitle>
@@ -1009,9 +1009,9 @@ export function FAQBuilder({
                                 size="sm"
                                 onClick={onAIGenerate}
                                 disabled={isGenerating}
-                                className="h-7 text-xs gap-1 border-hotel-gold/40 text-hotel-navy dark:text-hotel-gold hover:bg-hotel-gold/10"
+                                className="h-7 text-xs gap-1 border-ds-accent/40 text-ds-ink dark:text-ds-accent hover:bg-ds-accent/10"
                             >
-                                {isGenerating ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3 text-hotel-gold" />}
+                                {isGenerating ? <Loader2 className="h-3 w-3 animate-spin" /> : <Sparkles className="h-3 w-3 text-ds-accent" />}
                                 <span>{t('editor.ai_generate_faqs', '✨ AI Generate FAQs')}</span>
                             </Button>
                         )}
@@ -1021,7 +1021,7 @@ export function FAQBuilder({
                             variant="default"
                             size="sm"
                             onClick={addItem}
-                            className="h-7 text-xs gap-1 bg-yellow-600 hover:bg-yellow-700 text-white font-semibold"
+                            className="h-7 text-xs gap-1 bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink font-semibold"
                         >
                             <Plus className="h-3.5 w-3.5" />
                             <span>{t('editor.add_faq', 'Add Q&A')}</span>
@@ -1031,18 +1031,18 @@ export function FAQBuilder({
 
                 {/* Quick Presets */}
                 <div className="flex flex-wrap items-center gap-1.5 pt-2">
-                    <span className="text-[11px] font-semibold text-slate-400">⚡ Hotel Presets:</span>
+                    <span className="text-[11px] font-semibold text-ds-muted">⚡ Hotel Presets:</span>
                     <button
                         type="button"
                         onClick={() => loadPreset('vip_exceptions')}
-                        className="text-[10px] px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-800 hover:border-yellow-400 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 transition-colors"
+                        className="text-[11px] px-2 py-0.5 rounded-full border border-ds-border hover:border-ds-warning bg-ds-surface text-ds-ink-secondary transition-colors"
                     >
                         🌟 VIP & Front Desk Exceptions
                     </button>
                     <button
                         type="button"
                         onClick={() => loadPreset('safety_lost')}
-                        className="text-[10px] px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-800 hover:border-yellow-400 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 transition-colors"
+                        className="text-[11px] px-2 py-0.5 rounded-full border border-ds-border hover:border-ds-warning bg-ds-surface text-ds-ink-secondary transition-colors"
                     >
                         🛡️ Safety & Lost Items
                     </button>
@@ -1051,16 +1051,16 @@ export function FAQBuilder({
 
             <CardContent className="pt-4 space-y-3">
                 {items.length === 0 ? (
-                    <div className="text-center py-8 px-4 border border-dashed rounded-xl bg-white/50 dark:bg-slate-950/50">
-                        <HelpCircle className="h-10 w-10 mx-auto mb-2 text-yellow-300 dark:text-yellow-800" />
-                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                    <div className="text-center py-8 px-4 border border-dashed rounded-[8px] bg-white/50">
+                        <HelpCircle className="h-10 w-10 mx-auto mb-2 text-ds-warning" />
+                        <p className="text-sm font-semibold text-ds-ink">
                             {t('editor.no_faqs', 'No operational FAQs added yet')}
                         </p>
                         <p className="text-xs text-muted-foreground mt-1 max-w-md mx-auto">
                             Add common questions and answers, or click "✨ AI Generate FAQs" to automatically identify operational edge cases from the article text.
                         </p>
                         <div className="flex justify-center gap-2 mt-4">
-                            <Button type="button" size="sm" onClick={addItem} className="h-8 text-xs bg-yellow-600 hover:bg-yellow-700 text-white font-medium">
+                            <Button type="button" size="sm" onClick={addItem} className="h-8 text-xs bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink font-medium">
                                 <Plus className="h-3.5 w-3.5 me-1" />
                                 Add First Q&A
                             </Button>
@@ -1071,16 +1071,16 @@ export function FAQBuilder({
                         {items.map((item, index) => (
                             <div
                                 key={item.id}
-                                className="border rounded-xl bg-white dark:bg-slate-900 shadow-2xs overflow-hidden"
+                                className="border rounded-[8px] bg-ds-surface shadow-2xs overflow-hidden"
                             >
-                                <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 dark:bg-slate-800/60 border-b">
+                                <div className="flex items-center gap-2 px-3 py-2 bg-ds-surface-subtle border-b">
                                     <div className="flex items-center gap-1">
                                         <Button
                                             aria-label={t('common:a11y.moveUp', 'Move up')}
                                             type="button"
                                             variant="ghost"
                                             size="icon"
-                                            className="h-5 w-5 text-slate-400 hover:text-slate-700"
+                                            className="h-5 w-5 text-ds-muted hover:text-ds-ink-secondary"
                                             onClick={() => moveItem(item.id, 'up')}
                                             disabled={index === 0}
                                         >
@@ -1091,24 +1091,24 @@ export function FAQBuilder({
                                             type="button"
                                             variant="ghost"
                                             size="icon"
-                                            className="h-5 w-5 text-slate-400 hover:text-slate-700"
+                                            className="h-5 w-5 text-ds-muted hover:text-ds-ink-secondary"
                                             onClick={() => moveItem(item.id, 'down')}
                                             disabled={index === items.length - 1}
                                         >
                                             <ChevronDown className="h-3.5 w-3.5" />
                                         </Button>
                                     </div>
-                                    <Badge variant="outline" className="text-[10px] font-bold px-1.5 py-0.5 min-h-[20px] shrink-0 whitespace-nowrap bg-white dark:bg-slate-900">
+                                    <Badge variant="outline" className="text-[11px] font-bold px-1.5 py-0.5 min-h-[20px] shrink-0 whitespace-nowrap bg-ds-surface">
                                         Q{index + 1}
                                     </Badge>
-                                    <span className="flex-1 font-semibold text-xs truncate text-slate-700 dark:text-slate-300">
+                                    <span className="flex-1 font-semibold text-xs truncate text-ds-ink-secondary">
                                         {item.question || 'New Question'}
                                     </span>
                                     <Button
                                         type="button"
                                         variant="ghost"
                                         size="sm"
-                                        className="h-6 text-[11px] text-red-500 hover:text-red-700 hover:bg-red-50 px-2"
+                                        className="h-6 text-[11px] text-ds-danger hover:text-ds-danger hover:bg-ds-danger-soft px-2"
                                         onClick={() => removeItem(item.id)}
                                     >
                                         <Trash2 className="h-3 w-3 me-1" />
@@ -1119,7 +1119,7 @@ export function FAQBuilder({
                                 <div className="p-3 space-y-3">
                                     {/* English Question & Answer */}
                                     <div className="space-y-1.5">
-                                        <Label className="text-[11px] font-bold text-slate-600 dark:text-slate-400">
+                                        <Label className="text-[11px] font-bold text-ds-ink-secondary">
                                             Question (EN)
                                         </Label>
                                         <Input
@@ -1131,7 +1131,7 @@ export function FAQBuilder({
                                     </div>
 
                                     <div className="space-y-1.5">
-                                        <Label className="text-[11px] font-bold text-slate-600 dark:text-slate-400">
+                                        <Label className="text-[11px] font-bold text-ds-ink-secondary">
                                             Answer / Resolution Procedure (EN)
                                         </Label>
                                         <Textarea
@@ -1144,9 +1144,9 @@ export function FAQBuilder({
                                     </div>
 
                                     {/* Arabic Row */}
-                                    <div className="pt-1 border-t border-slate-100 dark:border-slate-800 space-y-2">
+                                    <div className="pt-1 border-t border-ds-border space-y-2">
                                         <div className="space-y-1">
-                                            <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                                            <Label className="text-[11px] font-bold text-ds-muted uppercase tracking-wider">
                                                 السؤال باللغة العربية (Question AR)
                                             </Label>
                                             <Input
@@ -1158,7 +1158,7 @@ export function FAQBuilder({
                                             />
                                         </div>
                                         <div className="space-y-1">
-                                            <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                                            <Label className="text-[11px] font-bold text-ds-muted uppercase tracking-wider">
                                                 الإجابة باللغة العربية (Answer AR)
                                             </Label>
                                             <Textarea
@@ -1271,7 +1271,7 @@ export function VisualContentBuilder({ images, onChange }: VisualContentBuilderP
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <CardTitle className="text-base flex items-center gap-2">
-                        <Eye className="h-5 w-5 text-purple-500" />
+                        <Eye className="h-5 w-5 text-ds-accent" />
                         Visual Content
                         <Badge variant="secondary" className="ms-2">{images.length} images</Badge>
                     </CardTitle>
@@ -1282,7 +1282,7 @@ export function VisualContentBuilder({ images, onChange }: VisualContentBuilderP
                 <div
                     className={cn(
                         "border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors",
-                        isUploading ? "border-purple-400 bg-purple-50" : "border-gray-300 hover:border-purple-400 hover:bg-purple-50/50"
+                        isUploading ? "border-ds-accent bg-ds-accent-soft" : "border-ds-border hover:border-ds-accent hover:bg-ds-accent-soft/50"
                     )}
                     onClick={() => document.getElementById('visual-upload')?.click()}
                     onKeyDown={(e) => {
@@ -1310,13 +1310,13 @@ export function VisualContentBuilder({ images, onChange }: VisualContentBuilderP
                         onChange={(e) => handleFileUpload(e.target.files)}
                     />
                     <div className="space-y-2">
-                        <div className="mx-auto w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
-                            <Plus className="h-6 w-6 text-purple-600" />
+                        <div className="mx-auto w-12 h-12 rounded-full bg-ds-accent-soft flex items-center justify-center">
+                            <Plus className="h-6 w-6 text-ds-accent" />
                         </div>
-                        <p className="text-sm font-medium text-gray-700">
+                        <p className="text-sm font-medium text-ds-ink-secondary">
                             {isUploading ? 'Uploading...' : 'Click or drag images to upload'}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-ds-muted">
                             PNG, JPG, GIF up to 5MB each
                         </p>
                     </div>
@@ -1327,7 +1327,7 @@ export function VisualContentBuilder({ images, onChange }: VisualContentBuilderP
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {images.map((image, index) => (
                             <div key={image.id} className="border rounded-lg overflow-hidden">
-                                <div className="aspect-video bg-gray-100 relative">
+                                <div className="aspect-video bg-ds-surface-subtle relative">
                                     <img
                                         src={image.url}
                                         alt={image.caption}
@@ -1411,7 +1411,7 @@ export function StringListBuilder({
     icon,
     placeholder = 'Add an entry...',
     addLabel = 'Add entry',
-    accentClassName = 'text-hotel-gold',
+    accentClassName = 'text-ds-accent',
 }: StringListBuilderProps) {
     const list = Array.isArray(items) ? items : []
 
@@ -1428,14 +1428,14 @@ export function StringListBuilder({
     }
 
     return (
-        <Card className="shadow-sm border-slate-200 dark:border-slate-800">
+        <Card className="shadow-sm border-ds-border">
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between gap-2">
                     <CardTitle className="text-sm font-bold flex items-center gap-2">
                         <span className={accentClassName}>{icon}</span>
                         <span>{title}</span>
                         {list.length > 0 && (
-                            <Badge variant="secondary" className="text-[10px] px-1.5">
+                            <Badge variant="secondary" className="text-[11px] px-1.5">
                                 {list.length}
                             </Badge>
                         )}
@@ -1453,7 +1453,7 @@ export function StringListBuilder({
                 <CardContent className="space-y-2">
                     {list.map((entry, index) => (
                         <div key={index} className="flex items-start gap-1.5">
-                            <div className="flex flex-col pt-2 text-slate-300 dark:text-slate-600">
+                            <div className="flex flex-col pt-2 text-ds-muted">
                                 <GripVertical className="h-3.5 w-3.5" />
                             </div>
                             <span className="pt-2 text-[11px] font-mono text-muted-foreground w-5 text-end shrink-0">
@@ -1464,7 +1464,7 @@ export function StringListBuilder({
                                 onChange={(e) => updateItem(index, e.target.value)}
                                 placeholder={placeholder}
                                 rows={2}
-                                className="text-xs bg-white dark:bg-slate-950 flex-1 min-h-[38px]"
+                                className="text-xs bg-ds-surface flex-1 min-h-[38px]"
                             />
                             <div className="flex flex-col gap-0.5">
                                 <Button
@@ -1493,7 +1493,7 @@ export function StringListBuilder({
                                     type="button"
                                     size="icon"
                                     variant="ghost"
-                                    className="h-6 w-6 text-red-500 hover:text-red-600"
+                                    className="h-6 w-6 text-ds-danger hover:text-ds-danger"
                                     onClick={() => removeItem(index)}
                                     aria-label="Remove entry"
                                 >

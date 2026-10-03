@@ -20,7 +20,7 @@ import {
 } from '@/services/certificateService'
 import { supabase } from '@/lib/supabase'
 import { showErrorToast, showSuccessToast } from '@/lib/toastHelpers'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 /**
  * Fetch all certificates for the current user
@@ -127,6 +127,30 @@ export function useDownloadCertificate() {
         onError: (error) => {
             showErrorToast(`Failed to download: ${error instanceof Error ? error.message : 'Unknown error'}`)
         }
+    })
+}
+
+/**
+ * Start recertification for one person and course. Server-side command: it
+ * archives the previous completion, supersedes the active certificate and
+ * issues a 14-day recertification assignment.
+ */
+export function useStartRecertification() {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: async ({ userId, courseId }: { userId: string; courseId: string }) => {
+            const { data, error } = await supabase.rpc('start_recertification', {
+                p_user_id: userId,
+                p_training_module_id: courseId,
+            })
+            if (error) throw error
+            return data
+        },
+        onSuccess: () => {
+            void queryClient.invalidateQueries({ queryKey: ['certificates'] })
+            void queryClient.invalidateQueries({ queryKey: ['learning-assignments'] })
+        },
     })
 }
 

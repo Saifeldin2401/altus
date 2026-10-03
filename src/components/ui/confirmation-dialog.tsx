@@ -28,27 +28,27 @@ interface ConfirmationDialogProps {
 const variantConfig = {
     danger: {
         icon: Trash2,
-        iconColor: 'text-red-600',
-        iconBg: 'bg-red-100',
-        buttonClass: 'bg-red-600 hover:bg-red-700 focus:ring-red-600',
+        iconColor: 'text-ds-danger',
+        iconBg: 'bg-ds-danger-soft',
+        buttonClass: 'bg-ds-danger hover:bg-ds-danger/90',
     },
     warning: {
         icon: AlertTriangle,
-        iconColor: 'text-orange-600',
-        iconBg: 'bg-orange-100',
-        buttonClass: 'bg-orange-600 hover:bg-orange-700 focus:ring-orange-600',
+        iconColor: 'text-ds-warning',
+        iconBg: 'bg-ds-warning-soft',
+        buttonClass: 'bg-ds-warning hover:bg-ds-warning/90',
     },
     info: {
         icon: Info,
-        iconColor: 'text-blue-600',
-        iconBg: 'bg-blue-100',
-        buttonClass: 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-600',
+        iconColor: 'text-ds-info',
+        iconBg: 'bg-ds-info-soft',
+        buttonClass: 'bg-ds-ink hover:bg-ds-ink/90',
     },
     success: {
         icon: CheckCircle,
-        iconColor: 'text-green-600',
-        iconBg: 'bg-green-100',
-        buttonClass: 'bg-green-600 hover:bg-green-700 focus:ring-green-600',
+        iconColor: 'text-ds-success',
+        iconBg: 'bg-ds-success-soft',
+        buttonClass: 'bg-ds-success hover:bg-ds-success/90',
     },
 }
 
@@ -84,8 +84,8 @@ export function ConfirmationDialog({
             <AlertDialogContent className="sm:max-w-[425px]">
                 <AlertDialogHeader>
                     <div className="flex items-start gap-4">
-                        <div className={cn('flex h-12 w-12 items-center justify-center rounded-full', config.iconBg)}>
-                            <Icon className={cn('h-6 w-6', config.iconColor)} />
+                        <div className={cn('flex h-10 w-10 shrink-0 items-center justify-center rounded-full', config.iconBg)}>
+                            <Icon aria-hidden="true" className={cn('h-5 w-5', config.iconColor)} />
                         </div>
                         <div className="flex-1">
                             <AlertDialogTitle className="text-start">{title}</AlertDialogTitle>

@@ -27,10 +27,10 @@ function getCategoryTheme(categoryName?: string | null): CategoryTheme {
   if (cat.includes('front') || cat.includes('reception') || cat.includes('hafawa') || cat.includes('concierge') || cat.includes('guest')) {
     return {
       label: categoryName || 'Front Desk & Hafawa',
-      bg: 'bg-amber-50 dark:bg-amber-950/40',
-      text: 'text-amber-800 dark:text-amber-300',
-      border: 'border-amber-200 dark:border-amber-800',
-      dot: 'bg-amber-500',
+      bg: 'bg-ds-warning-soft',
+      text: 'text-ds-warning',
+      border: 'border-ds-warning/30',
+      dot: 'bg-ds-warning',
       icon: HeartHandshake
     }
   }
@@ -38,10 +38,10 @@ function getCategoryTheme(categoryName?: string | null): CategoryTheme {
   if (cat.includes('food') || cat.includes('beverage') || cat.includes('f&b') || cat.includes('dining') || cat.includes('culinary') || cat.includes('kitchen') || cat.includes('restaurant')) {
     return {
       label: categoryName || 'Food & Beverage',
-      bg: 'bg-emerald-50 dark:bg-emerald-950/40',
-      text: 'text-emerald-800 dark:text-emerald-300',
-      border: 'border-emerald-200 dark:border-emerald-800',
-      dot: 'bg-emerald-500',
+      bg: 'bg-ds-success-soft',
+      text: 'text-ds-success',
+      border: 'border-ds-success/30',
+      dot: 'bg-ds-success',
       icon: Utensils
     }
   }
@@ -49,10 +49,10 @@ function getCategoryTheme(categoryName?: string | null): CategoryTheme {
   if (cat.includes('housekeep') || cat.includes('room') || cat.includes('laundry') || cat.includes('clean')) {
     return {
       label: categoryName || 'Housekeeping',
-      bg: 'bg-sky-50 dark:bg-sky-950/40',
-      text: 'text-sky-800 dark:text-sky-300',
-      border: 'border-sky-200 dark:border-sky-800',
-      dot: 'bg-sky-500',
+      bg: 'bg-ds-info-soft',
+      text: 'text-ds-info',
+      border: 'border-ds-info/30',
+      dot: 'bg-ds-info',
       icon: Sparkles
     }
   }
@@ -60,10 +60,10 @@ function getCategoryTheme(categoryName?: string | null): CategoryTheme {
   if (cat.includes('compliance') || cat.includes('safety') || cat.includes('security') || cat.includes('haccp') || cat.includes('fire') || cat.includes('audit')) {
     return {
       label: categoryName || 'Safety & Compliance',
-      bg: 'bg-rose-50 dark:bg-rose-950/40',
-      text: 'text-rose-800 dark:text-rose-300',
-      border: 'border-rose-200 dark:border-rose-800',
-      dot: 'bg-rose-500',
+      bg: 'bg-ds-danger-soft',
+      text: 'text-ds-danger',
+      border: 'border-ds-danger/30',
+      dot: 'bg-ds-danger',
       icon: ShieldCheck
     }
   }
@@ -71,10 +71,10 @@ function getCategoryTheme(categoryName?: string | null): CategoryTheme {
   if (cat.includes('leader') || cat.includes('manage') || cat.includes('executive') || cat.includes('supervisor')) {
     return {
       label: categoryName || 'Leadership',
-      bg: 'bg-purple-50 dark:bg-purple-950/40',
-      text: 'text-purple-800 dark:text-purple-300',
-      border: 'border-purple-200 dark:border-purple-800',
-      dot: 'bg-purple-500',
+      bg: 'bg-ds-accent-soft',
+      text: 'text-ds-accent',
+      border: 'border-ds-accent/30',
+      dot: 'bg-ds-accent',
       icon: Crown
     }
   }
@@ -82,10 +82,10 @@ function getCategoryTheme(categoryName?: string | null): CategoryTheme {
   if (cat.includes('onboard') || cat.includes('orient') || cat.includes('brand') || cat.includes('culture')) {
     return {
       label: categoryName || 'Brand & Onboarding',
-      bg: 'bg-indigo-50 dark:bg-indigo-950/40',
-      text: 'text-indigo-800 dark:text-indigo-300',
-      border: 'border-indigo-200 dark:border-indigo-800',
-      dot: 'bg-indigo-500',
+      bg: 'bg-ds-info-soft',
+      text: 'text-ds-info',
+      border: 'border-ds-info/30',
+      dot: 'bg-ds-info',
       icon: Award
     }
   }
@@ -93,20 +93,20 @@ function getCategoryTheme(categoryName?: string | null): CategoryTheme {
   if (cat.includes('engineer') || cat.includes('maint') || cat.includes('facility') || cat.includes('technic')) {
     return {
       label: categoryName || 'Engineering',
-      bg: 'bg-orange-50 dark:bg-orange-950/40',
-      text: 'text-orange-800 dark:text-orange-300',
-      border: 'border-orange-200 dark:border-orange-800',
-      dot: 'bg-orange-500',
+      bg: 'bg-ds-warning-soft',
+      text: 'text-ds-warning',
+      border: 'border-ds-warning/30',
+      dot: 'bg-ds-warning',
       icon: Wrench
     }
   }
 
   return {
     label: categoryName || 'General',
-    bg: 'bg-slate-50 dark:bg-slate-900',
-    text: 'text-slate-700 dark:text-slate-300',
-    border: 'border-slate-200 dark:border-slate-700',
-    dot: 'bg-slate-400',
+    bg: 'bg-ds-surface-subtle',
+    text: 'text-ds-ink-secondary',
+    border: 'border-ds-border',
+    dot: 'bg-ds-muted',
     icon: Tag
   }
 }
@@ -134,7 +134,7 @@ export function TrainingCategoryBadge({
       variant="outline"
       className={cn(
         "font-medium transition-colors border",
-        size === 'sm' ? "text-[10px] px-2 py-0.5 min-h-[20px] gap-1 shrink-0 whitespace-nowrap" : "text-xs px-2.5 py-0.5 min-h-[22px] gap-1.5 shrink-0 whitespace-nowrap",
+        size === 'sm' ? "text-[11px] px-2 py-0.5 min-h-[20px] gap-1 shrink-0 whitespace-nowrap" : "text-xs px-2.5 py-0.5 min-h-[22px] gap-1.5 shrink-0 whitespace-nowrap",
         theme.bg,
         theme.text,
         theme.border,

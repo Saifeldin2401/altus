@@ -170,7 +170,7 @@ export function StudioQuickStart({
   return (
     <div className="mx-auto w-full max-w-2xl space-y-7 py-2">
       <div className="text-center space-y-1.5">
-        <div className="mx-auto w-11 h-11 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-700 text-white flex items-center justify-center shadow-md">
+        <div className="mx-auto w-11 h-11 rounded-[8px] bg-ds-accent text-white dark:text-ds-on-ink flex items-center justify-center">
           <Rocket className="w-5 h-5" />
         </div>
         <h2 className="text-lg font-bold text-foreground">
@@ -206,8 +206,8 @@ export function StudioQuickStart({
               className={cn(
                 'px-2 py-2 rounded-lg border font-semibold transition-all flex flex-col items-center gap-1 text-center',
                 sourceKind === k
-                  ? 'border-purple-600 bg-purple-50/70 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 ring-1 ring-purple-500'
-                  : 'bg-card text-muted-foreground hover:border-purple-300 hover:text-foreground'
+                  ? 'border-ds-accent bg-ds-accent-soft/70 text-ds-accent ring-1 ring-ds-accent'
+                  : 'bg-card text-muted-foreground hover:border-ds-accent/30 hover:text-foreground'
               )}
             >
               <Icon className="w-4 h-4" />
@@ -262,10 +262,10 @@ export function StudioQuickStart({
             {uploadedFileName ? (
               <div className="flex items-center justify-between p-2.5 rounded-lg border bg-muted/30">
                 <span className="text-xs font-medium text-foreground flex items-center gap-2 min-w-0">
-                  <FileText className="w-3.5 h-3.5 shrink-0 text-purple-600" />
+                  <FileText className="w-3.5 h-3.5 shrink-0 text-ds-accent" />
                   <span className="truncate">{uploadedFileName}</span>
                 </span>
-                <Button type="button" variant="ghost" size="sm" onClick={onClearUpload} className="h-6 text-[11px] text-red-500 hover:text-red-600">
+                <Button type="button" variant="ghost" size="sm" onClick={onClearUpload} className="h-6 text-[11px] text-ds-danger hover:text-ds-danger">
                   {t('common.remove', 'Remove')}
                 </Button>
               </div>
@@ -276,7 +276,7 @@ export function StudioQuickStart({
                 onClick={() => fileInputRef.current?.click()}
                 className="w-full h-10 text-xs font-medium gap-1.5"
               >
-                <UploadCloud className="w-3.5 h-3.5 text-purple-600" />
+                <UploadCloud className="w-3.5 h-3.5 text-ds-accent" />
                 {t('builder.quick.upload', 'Choose a file (PDF, Word, text, CSV)')}
               </Button>
             )}
@@ -342,16 +342,16 @@ export function StudioQuickStart({
                 type="button"
                 onClick={() => onChangeThoroughness(card.id)}
                 className={cn(
-                  'w-full text-start p-3.5 rounded-xl border transition-all flex items-start gap-3',
+                  'w-full text-start p-3.5 rounded-[8px] border transition-all flex items-start gap-3',
                   selected
-                    ? 'border-purple-600 bg-purple-50/70 dark:bg-purple-950/40 ring-1 ring-purple-500 shadow-xs'
-                    : 'bg-card hover:border-purple-300 hover:bg-purple-50/30 dark:hover:bg-purple-950/20'
+                    ? 'border-ds-accent bg-ds-accent-soft/70 ring-1 ring-ds-accent shadow-xs'
+                    : 'bg-card hover:border-ds-accent/30 hover:bg-ds-accent-soft/30'
                 )}
               >
                 <div
                   className={cn(
                     'p-2 rounded-lg shrink-0',
-                    selected ? 'bg-purple-600 text-white' : 'bg-muted text-muted-foreground'
+                    selected ? 'bg-ds-accent text-white dark:text-ds-on-ink' : 'bg-muted text-muted-foreground'
                   )}
                 >
                   <Icon className="w-4 h-4" />
@@ -360,7 +360,7 @@ export function StudioQuickStart({
                   <div className="flex items-center gap-2">
                     <p className="text-sm font-bold text-foreground">{card.title}</p>
                     {card.recommended && (
-                      <span className="text-[9px] px-1.5 py-0.5 rounded font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
+                      <span className="text-[11px] px-1.5 py-0.5 rounded font-bold bg-ds-success-soft text-ds-success">
                         {t('builder.quick.recommended', 'RECOMMENDED')}
                       </span>
                     )}
@@ -379,9 +379,9 @@ export function StudioQuickStart({
         <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
           {t('builder.quick.step4', '4. Illustrations')}
         </Label>
-        <div className="flex items-center justify-between p-3.5 rounded-xl border bg-muted/20">
+        <div className="flex items-center justify-between p-3.5 rounded-[8px] border bg-muted/20">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300">
+            <div className="p-2 rounded-lg bg-ds-warning-soft text-ds-warning">
               <ImageIcon className="w-4 h-4" />
             </div>
             <div>
@@ -426,7 +426,7 @@ export function StudioQuickStart({
           size="lg"
           onClick={onGenerate}
           disabled={!canGenerate}
-          className="w-full h-11 text-sm font-bold gap-2 bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800"
+          className="w-full h-11 text-sm font-bold gap-2 bg-ds-accent hover:bg-ds-accent"
         >
           {isGenerating ? (
             <>
@@ -444,7 +444,7 @@ export function StudioQuickStart({
         <button
           type="button"
           onClick={onSwitchToAdvanced}
-          className="w-full flex items-center justify-center gap-1.5 text-[11px] font-semibold text-muted-foreground hover:text-purple-600 transition-colors"
+          className="w-full flex items-center justify-center gap-1.5 text-[11px] font-semibold text-muted-foreground hover:text-ds-accent transition-colors"
         >
           <Settings2 className="w-3.5 h-3.5" />
           {t('builder.quick.advanced', 'Need more control? Open advanced setup')}

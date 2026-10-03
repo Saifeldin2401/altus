@@ -87,21 +87,21 @@ export function AIDocumentSummary({
     // If in content mode and no summary yet, show generate button
     if (isContentMode && !summary && !loading) {
         return (
-            <Card className={cn("border-dashed border-violet-200 bg-violet-50/30", className)}>
+            <Card className={cn("border-dashed border-ds-accent/30 bg-ds-accent-soft/30", className)}>
                 <CardContent className="py-6">
                     <div className="text-center space-y-3">
-                        <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center mx-auto shadow-lg">
+                        <div className="h-12 w-12 rounded-[8px] bg-ds-accent flex items-center justify-center mx-auto shadow-lg">
                             <Sparkles className="h-6 w-6 text-white" />
                         </div>
                         <div>
-                            <h4 className="font-medium text-gray-900">AI Document Summary</h4>
-                            <p className="text-sm text-gray-500 mt-1">
+                            <h4 className="font-medium text-ds-ink">AI Document Summary</h4>
+                            <p className="text-sm text-ds-muted mt-1">
                                 Generate a summary, identify key changes, and estimate reading time
                             </p>
                         </div>
                         <Button
                             onClick={handleGenerate}
-                            className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700"
+                            className="bg-ds-accent hover:bg-ds-accent"
                         >
                             <Sparkles className="h-4 w-4 me-2" />
                             Analyze Document
@@ -117,7 +117,7 @@ export function AIDocumentSummary({
             <Card className={cn("", className)}>
                 <CardHeader className="pb-3">
                     <div className="flex items-center gap-2">
-                        <Sparkles className="h-4 w-4 text-violet-600 animate-pulse" />
+                        <Sparkles className="h-4 w-4 text-ds-accent animate-pulse" />
                         <span className="text-sm text-muted-foreground">Generating AI summary...</span>
                     </div>
                 </CardHeader>
@@ -132,10 +132,10 @@ export function AIDocumentSummary({
 
     if (error) {
         return (
-            <Card className={cn("border-red-100", className)}>
+            <Card className={cn("border-ds-danger/30", className)}>
                 <CardContent className="py-4">
                     <div className="flex items-center justify-between">
-                        <p className="text-sm text-red-600">{error}</p>
+                        <p className="text-sm text-ds-danger">{error}</p>
                         <Button variant="ghost" size="sm" onClick={handleRegenerate}>
                             <RefreshCw className="h-4 w-4 me-1" />
                             Retry
@@ -154,17 +154,17 @@ export function AIDocumentSummary({
                 initial={{ opacity: 0, y: -5 }}
                 animate={{ opacity: 1, y: 0 }}
                 className={cn(
-                    "p-3 rounded-lg bg-gradient-to-r from-violet-50 to-blue-50 border border-violet-100",
+                    "p-3 rounded-lg bg-ds-accent-soft border border-ds-accent/30",
                     className
                 )}
             >
                 <div className="flex items-start gap-3">
-                    <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center flex-shrink-0">
+                    <div className="h-8 w-8 rounded-lg bg-ds-accent flex items-center justify-center flex-shrink-0">
                         <Sparkles className="h-4 w-4 text-white" />
                     </div>
                     <div className="flex-1 min-w-0">
-                        <p className="text-sm text-gray-700 leading-relaxed">{summary.summary}</p>
-                        <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                        <p className="text-sm text-ds-ink-secondary leading-relaxed">{summary.summary}</p>
+                        <div className="flex items-center gap-3 mt-2 text-xs text-ds-muted">
                             {summary.readingTime && (
                                 <span className="flex items-center gap-1">
                                     <Clock className="h-3 w-3" />
@@ -191,10 +191,10 @@ export function AIDocumentSummary({
         >
             <Card className={cn("overflow-hidden", className)}>
                 {/* Header */}
-                <CardHeader className="pb-3 bg-gradient-to-r from-violet-50 to-blue-50 border-b border-violet-100">
+                <CardHeader className="pb-3 bg-ds-accent-soft border-b border-ds-accent/30">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-violet-500 to-blue-600 flex items-center justify-center">
+                            <div className="h-8 w-8 rounded-lg bg-ds-accent flex items-center justify-center">
                                 <Sparkles className="h-4 w-4 text-white" />
                             </div>
                             <CardTitle className="text-base font-semibold">AI Summary</CardTitle>
@@ -209,20 +209,20 @@ export function AIDocumentSummary({
                 <CardContent className="pt-4 space-y-4">
                     {/* Summary */}
                     <div>
-                        <p className="text-sm text-gray-700 leading-relaxed">{summary.summary}</p>
+                        <p className="text-sm text-ds-ink-secondary leading-relaxed">{summary.summary}</p>
                     </div>
 
                     {/* Key Changes */}
                     {summary.keyChanges && summary.keyChanges.length > 0 && (
                         <div className="space-y-2">
-                            <div className="flex items-center gap-1.5 text-sm font-medium text-gray-700">
-                                <ListChecks className="h-4 w-4 text-green-600" />
+                            <div className="flex items-center gap-1.5 text-sm font-medium text-ds-ink-secondary">
+                                <ListChecks className="h-4 w-4 text-ds-success" />
                                 Key Changes
                             </div>
                             <ul className="space-y-1.5">
                                 {summary.keyChanges.map((change, index) => (
-                                    <li key={index} className="flex items-start gap-2 text-sm text-gray-600">
-                                        <ChevronRight className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                                    <li key={index} className="flex items-start gap-2 text-sm text-ds-ink-secondary">
+                                        <ChevronRight className="h-4 w-4 text-ds-success mt-0.5 flex-shrink-0" />
                                         <span>{change}</span>
                                     </li>
                                 ))}
@@ -231,15 +231,15 @@ export function AIDocumentSummary({
                     )}
 
                     {/* Meta Info */}
-                    <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-gray-100">
+                    <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-ds-border">
                         {summary.readingTime && (
-                            <Badge variant="outline" className="gap-1 bg-white">
+                            <Badge variant="outline" className="gap-1 bg-ds-surface">
                                 <Clock className="h-3 w-3" />
                                 {summary.readingTime} min read
                             </Badge>
                         )}
                         {summary.targetAudience && (
-                            <Badge variant="outline" className="gap-1 bg-white">
+                            <Badge variant="outline" className="gap-1 bg-ds-surface">
                                 <Users className="h-3 w-3" />
                                 {summary.targetAudience}
                             </Badge>

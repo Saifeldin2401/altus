@@ -183,7 +183,7 @@ export function TenantOnboardingGuide() {
   }
 
   return (
-    <Card className="relative overflow-hidden border-ds-accent/40 /5 shadow-md">
+    <Card className="relative overflow-hidden border-ds-accent/40 /5">
       <div className="pointer-events-none absolute -top-16 -end-16 h-48 w-48 rounded-full bg-ds-accent/10 blur-2xl" />
 
       <CardHeader className="p-4 sm:p-5 pb-3">
@@ -193,7 +193,7 @@ export function TenantOnboardingGuide() {
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-ds-accent/20 text-ds-accent">
                 <Sparkles className="h-3.5 w-3.5" />
               </span>
-              <CardTitle className="text-base sm:text-lg font-serif font-bold text-foreground">
+              <CardTitle className="text-base sm:text-lg font-bold text-foreground">
                 {t('onboarding.title', 'Organization Workspace Setup')}
               </CardTitle>
               {isAllComplete ? (
@@ -261,7 +261,7 @@ export function TenantOnboardingGuide() {
                 <div
                   key={step.id}
                   className={cn(
-                    'relative flex flex-col justify-between rounded-xl border p-3.5 transition-all duration-200',
+                    'relative flex flex-col justify-between rounded-[8px] border p-3.5 transition-all duration-200',
                     step.isCompleted
                       ? 'border-ds-success/30 bg-ds-success-soft hover:border-ds-success/30'
                       : 'border-border/70 bg-card hover:border-ds-accent/50 hover:shadow-xs'

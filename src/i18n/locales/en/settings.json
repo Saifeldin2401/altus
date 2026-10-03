@@ -107,5 +107,9 @@
     },
     "page": {
         "eyebrow": "Account"
+    },
+    "orgLink": {
+        "title": "Organization settings",
+        "body": "{{org}}'s profile, branding, policies and plan"
     }
 }

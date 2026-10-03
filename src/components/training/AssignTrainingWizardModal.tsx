@@ -1,40 +1,32 @@
-import { useState, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
-  DialogFooter
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
-  Users,
-  Building2,
   Briefcase,
-  UserPlus,
-  GraduationCap,
-  Sparkles,
-  Rocket,
-  ShieldCheck,
-  Calendar,
-  CheckCircle2,
-  ChevronRight,
-  ChevronLeft,
-  Search,
+  Building2,
   Check,
+  ChevronLeft,
+  ChevronRight,
   Clock,
-  Layers,
-  AlertCircle,
-  FileText
+  Search,
+  UserPlus,
+  Users,
+  type LucideIcon
 } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { persistLearningAssignments } from '@/lib/learningAssignmentMutations'
 import { supabase } from '@/lib/supabase'
+import { cn } from '@/lib/utils'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
@@ -46,33 +38,28 @@ interface AssignTrainingWizardModalProps {
 }
 
 type AudienceType = 'user' | 'department' | 'role' | 'new_hire'
-type ContentCategory = 'onboarding' | 'paths' | 'compliance' | 'modules'
 
 interface ContentPackageItem {
   id: string
   title: string
-  category: ContentCategory
-  duration: string
-  moduleCount?: number
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced'
-  isMandatory?: boolean
+  durationMinutes: number | null
 }
 
-const ROLES_LIST = [
-  'administrator',
+/**
+ * Role-targeted assignments are matched on the server against
+ * organization_memberships.role, so only membership roles can be offered.
+ */
+const MEMBERSHIP_ROLES = [
+  'learner',
+  'department_manager',
+  'instructor',
+  'author',
   'training_manager',
   'knowledge_manager',
-  'author',
-  'learner',
-  'super_admin',
-  'corporate_admin',
-  'regional_admin',
-  'regional_hr',
-  'property_manager',
-  'property_hr',
-  'department_head',
-  'staff'
-]
+  'organization_admin',
+] as const
+
+const DUE_OPTIONS = [7, 14, 30, 60] as const
 
 export function AssignTrainingWizardModal({
   open,
@@ -80,7 +67,7 @@ export function AssignTrainingWizardModal({
   onSuccess,
   defaultTargetType = 'user'
 }: AssignTrainingWizardModalProps) {
-  const { t } = useTranslation('dashboard')
+  const { t } = useTranslation(['dashboard', 'nav'])
   const { user, profile } = useAuth()
   const queryClient = useQueryClient()
 
@@ -92,17 +79,13 @@ export function AssignTrainingWizardModal({
   const [selectedTargetId, setSelectedTargetId] = useState<string>('')
   const [searchQuery, setSearchQuery] = useState('')
 
-  // Step 2: Content Package Selection
-  // Defaults to 'modules' since that is the only category currently backed by real,
-  // assignable content (courses). The other tabs show an honest empty state
-  // until real onboarding/path/compliance content sources are wired up.
-  const [contentCategory, setContentCategory] = useState<ContentCategory>('modules')
+  // Step 2: Course
   const [selectedPackage, setSelectedPackage] = useState<ContentPackageItem | null>(null)
+  const [courseQuery, setCourseQuery] = useState('')
 
   // Step 3: Due Date & Schedule
   const [dueDays, setDueDays] = useState<number>(14)
   const [priority, setPriority] = useState<'normal' | 'high' | 'compliance'>('normal')
-  const [autoAssignFuture, setAutoAssignFuture] = useState<boolean>(true)
 
   // Loading state for submitting
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -114,35 +97,52 @@ export function AssignTrainingWizardModal({
     return d.toISOString().split('T')[0]
   }, [dueDays])
 
-  // Fetch real training modules from Supabase
+  // Published courses only: learners cannot open a draft, so assigning one
+  // creates work nobody can do (matches the Assignments page).
   const { data: dbModules } = useQuery({
     queryKey: ['real-training-modules-wizard'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('courses')
-        .select('id, title, category, estimated_duration_minutes, difficulty_level')
-        .eq('is_deleted', false)
-        .limit(30)
+        .select('id, title, estimated_duration_minutes')
+        .eq('status', 'published')
+        .not('is_deleted', 'is', true)
+        .order('title')
+        .limit(200)
       if (error) return []
       return data || []
     },
     enabled: open
   })
 
-  // Fetch real profiles for employee selection
-  const { data: realProfiles } = useQuery({
-    queryKey: ['real-profiles-wizard'],
+  // Search people on the server: the first 30 profiles alone left everyone
+  // else in a larger organization unreachable.
+  const [debouncedSearch, setDebouncedSearch] = useState('')
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedSearch(searchQuery.trim()), 250)
+    return () => clearTimeout(id)
+  }, [searchQuery])
+
+  const { data: realProfiles, isFetching: isSearchingPeople } = useQuery({
+    queryKey: ['real-profiles-wizard', debouncedSearch],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from('profiles')
         .select('id, full_name, email, job_title, avatar_url')
         .order('full_name', { ascending: true })
         .limit(30)
+      if (debouncedSearch.length >= 2) {
+        const term = debouncedSearch.replace(/[%_,()]/g, ' ')
+        query = query.or(`full_name.ilike.%${term}%,email.ilike.%${term}%,job_title.ilike.%${term}%`)
+      }
+      const { data, error } = await query
       if (error) return []
       return data || []
     },
     enabled: open && audienceType === 'user'
   })
+
+  const [selectedPersonName, setSelectedPersonName] = useState('')
 
   // Fetch real departments from Supabase
   const { data: dbDepartments } = useQuery({
@@ -159,30 +159,53 @@ export function AssignTrainingWizardModal({
     enabled: open
   })
 
-  // Only the "modules" tab is backed by a real content source (courses).
-  // Onboarding/Paths/Compliance packages were previously hardcoded placeholder data
-  // that didn't exist in the database - selecting one and submitting created a
-  // broken assignment pointing at a content_id nothing else in the app could resolve.
-  // Until those categories have a real backing query, they show an honest empty state.
   const filteredContentPackages = useMemo((): ContentPackageItem[] => {
-    if (contentCategory !== 'modules') return []
-    if (!dbModules || dbModules.length === 0) return []
-    return dbModules.map(mod => ({
-      id: mod.id,
-      title: mod.title,
-      category: 'modules',
-      duration: mod.estimated_duration_minutes ? `${mod.estimated_duration_minutes} Mins` : '30 Mins',
-      difficulty: (mod.difficulty_level as any) || 'Intermediate'
-    }))
-  }, [contentCategory, dbModules])
+    const q = courseQuery.trim().toLowerCase()
+    return (dbModules ?? [])
+      .filter((mod) => !q || (mod.title || '').toLowerCase().includes(q))
+      .map((mod) => ({ id: mod.id, title: mod.title, durationMinutes: mod.estimated_duration_minutes ?? null }))
+  }, [dbModules, courseQuery])
+
+  const formattedDue = useMemo(
+    () => new Date(calculatedDueDate).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }),
+    [calculatedDueDate]
+  )
+
+  const roleLabel = (r: string) => t(`nav:shell.roles.${r}`, { defaultValue: r.replace(/_/g, ' ') })
+
+  const audienceLabel =
+    audienceType === 'department'
+      ? dbDepartments?.find((d) => d.id === selectedTargetId)?.name ?? ''
+      : audienceType === 'user'
+        ? selectedPersonName
+        : audienceType === 'role'
+          ? t('assignWizard.everyoneWithRole', 'Everyone with the role {{role}}', { role: roleLabel(selectedTargetId) })
+          : t('assignWizard.newHires', 'New starters (joined in the last 30 days)')
+
+  const resetWizard = () => {
+    setStep(1)
+    setAudienceType(defaultTargetType)
+    setSelectedTargetId('')
+    setSelectedPersonName('')
+    setSearchQuery('')
+    setSelectedPackage(null)
+    setCourseQuery('')
+    setDueDays(14)
+    setPriority('normal')
+  }
+
+  const handleOpenChange = (next: boolean) => {
+    if (!next && !isSubmitting) resetWizard()
+    onOpenChange(next)
+  }
 
   const handleNextStep = () => {
     if (step === 1 && !selectedTargetId && audienceType !== 'new_hire') {
-      toast.error(t('wizard.select_target_error', 'Please select a target recipient, department, or role to proceed.'))
+      toast.error(t('assignWizard.pickWho', 'Choose who this is for.'))
       return
     }
     if (step === 2 && !selectedPackage) {
-      toast.error(t('wizard.select_content_error', 'Please select a training package or onboarding journey.'))
+      toast.error(t('assignWizard.pickCourse', 'Choose a course.'))
       return
     }
     setStep((prev) => Math.min(4, prev + 1) as 1 | 2 | 3 | 4)
@@ -215,542 +238,333 @@ export function AssignTrainingWizardModal({
       queryClient.invalidateQueries({ queryKey: ['onboarding-tasks'] })
       queryClient.invalidateQueries({ queryKey: ['training-progress'] })
 
-      toast.success(t('wizard.success_toast', 'Training & Onboarding assignment created successfully!'), {
-        description: `Assigned "${selectedPackage.title}" to ${audienceType.replace('_', ' ')}.`
+      toast.success(t('assignWizard.done', 'Training assigned'), {
+        description: t('assignWizard.doneBody', '{{course}} for {{who}}, due {{date}}.', { course: selectedPackage.title, who: audienceLabel, date: formattedDue })
       })
 
       onSuccess?.()
       onOpenChange(false)
-      // Reset wizard
-      setStep(1)
+      resetWizard()
     } catch (err) {
       console.error('[AssignTrainingWizard] Submission error:', err)
-      toast.error(t('wizard.error_toast', 'Failed to save assignment. Please try again.'))
+      toast.error(t('assignWizard.failed', 'The assignment was not saved. Please try again.'))
     } finally {
       setIsSubmitting(false)
     }
   }
 
+  const steps = [
+    t('assignWizard.stepWho', 'Who'),
+    t('assignWizard.stepCourse', 'Course'),
+    t('assignWizard.stepWhen', 'Due date'),
+    t('assignWizard.stepReview', 'Review'),
+  ]
+
+  const audiences: { id: AudienceType; icon: LucideIcon; title: string; hint: string }[] = [
+    { id: 'user', icon: Users, title: t('assignWizard.person', 'One person'), hint: t('assignWizard.personHint', 'Search by name or email') },
+    { id: 'department', icon: Building2, title: t('assignWizard.department', 'A department'), hint: t('assignWizard.departmentHint', 'Everyone in it, including people who join later') },
+    { id: 'role', icon: Briefcase, title: t('assignWizard.role', 'A role'), hint: t('assignWizard.roleHint', 'Everyone with that role') },
+    { id: 'new_hire', icon: UserPlus, title: t('assignWizard.newHire', 'New starters'), hint: t('assignWizard.newHireHint', 'People who joined in the last 30 days') },
+  ]
+
+  const optionClass = (selected: boolean) =>
+    cn(
+      'rounded-[6px] border text-start transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent',
+      selected
+        ? 'border-ds-ink bg-ds-surface-subtle ring-1 ring-ds-ink'
+        : 'border-ds-border bg-ds-surface hover:border-ds-border-strong'
+    )
+
+  const priorityOptions: { id: 'normal' | 'high' | 'compliance'; label: string }[] = [
+    { id: 'normal', label: t('assignWizard.priorityNormal', 'Normal') },
+    { id: 'high', label: t('assignWizard.priorityHigh', 'High') },
+    { id: 'compliance', label: t('assignWizard.priorityCompliance', 'Required for compliance') },
+  ]
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[700px] border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 rounded-[28px] p-0 overflow-hidden shadow-2xl">
-        
-        <DialogHeader className="sr-only">
-          <DialogTitle>Assign Training & Onboarding</DialogTitle>
-          <DialogDescription>Assign training modules, onboarding paths, and compliance packages to staff members, departments, or roles.</DialogDescription>
-        </DialogHeader>
-
-        {/* Wizard Header Bar */}
-        <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 text-white p-6 sm:p-7 relative overflow-hidden">
-          <div className="absolute top-0 end-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-          
-          <div className="relative z-10 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-400 shrink-0">
-                <Sparkles className="w-6 h-6 animate-pulse" />
-              </div>
-              <div>
-                <span className="text-[10px] font-extrabold uppercase tracking-widest text-amber-400 block mb-0.5">
-                  ALTUS CONNECT • ASSIGNMENT STUDIO
-                </span>
-                <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                  Assign Training & Onboarding
-                </h3>
-              </div>
-            </div>
-
-            <Badge variant="outline" className="bg-white/10 text-white border-white/20 px-3 py-1 font-bold text-xs">
-              Step {step} of 4
-            </Badge>
-          </div>
-
-          {/* Stepper Progress Bar */}
-          <div className="grid grid-cols-4 gap-2 mt-6 relative z-10">
-            {[1, 2, 3, 4].map((stepNum) => (
-              <div
-                key={stepNum}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  step >= stepNum ? 'bg-gradient-to-r from-amber-400 to-yellow-300' : 'bg-white/20'
-                }`}
-              />
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent className="sm:max-w-[640px]" bodyClassName="p-0">
+        <div className="border-b border-ds-border px-5 pb-4 pt-5 pe-14 sm:px-6">
+          <DialogHeader>
+            <DialogTitle>{t('assignWizard.title', 'Assign training')}</DialogTitle>
+            <DialogDescription>
+              {t('assignWizard.stepOf', 'Step {{step}} of 4: {{name}}', { step, name: steps[step - 1] })}
+            </DialogDescription>
+          </DialogHeader>
+          <ol className="mt-4 grid grid-cols-4 gap-1.5" aria-hidden="true">
+            {steps.map((name, i) => (
+              <li key={name} className={cn('h-1 rounded-full', i < step ? 'bg-ds-ink' : 'bg-ds-border')} />
             ))}
-          </div>
+          </ol>
         </div>
 
-        {/* Step Body Content */}
-        <div className="p-6 sm:p-8 space-y-6 max-h-[60vh] overflow-y-auto font-sans">
-          
-          {/* STEP 1: TARGET RECIPIENT */}
+        <div className="max-h-[60vh] space-y-5 overflow-y-auto px-5 py-5 sm:px-6">
           {step === 1 && (
-            <div className="space-y-6">
-              <div>
-                <h4 className="text-base font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                  <Users className="w-5 h-5 text-indigo-500" />
-                  Step 1: Choose Target Audience (Who)
-                </h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  Select whether you are assigning to a specific employee, a whole department, a job role, or onboarding new hires.
-                </p>
-              </div>
-
-              {/* Audience Type Cards */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <button
-                  type="button"
-                  onClick={() => { setAudienceType('user'); setSelectedTargetId('') }}
-                  className={`p-4 rounded-2xl border text-start transition-all flex flex-col justify-between gap-3 ${
-                    audienceType === 'user'
-                      ? 'bg-indigo-50/80 dark:bg-indigo-950/50 border-indigo-500 shadow-md ring-2 ring-indigo-500/20'
-                      : 'bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 hover:border-slate-300'
-                  }`}
-                >
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${audienceType === 'user' ? 'bg-indigo-600 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-600'}`}>
-                    <Users className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-slate-900 dark:text-slate-100">Specific Employee</p>
-                    <p className="text-[10px] text-slate-500 mt-0.5">Assign to single staff member</p>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => { setAudienceType('department'); setSelectedTargetId(dbDepartments?.[0]?.id || '') }}
-                  className={`p-4 rounded-2xl border text-start transition-all flex flex-col justify-between gap-3 ${
-                    audienceType === 'department'
-                      ? 'bg-indigo-50/80 dark:bg-indigo-950/50 border-indigo-500 shadow-md ring-2 ring-indigo-500/20'
-                      : 'bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 hover:border-slate-300'
-                  }`}
-                >
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${audienceType === 'department' ? 'bg-indigo-600 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-600'}`}>
-                    <Building2 className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-slate-900 dark:text-slate-100">Entire Department</p>
-                    <p className="text-[10px] text-slate-500 mt-0.5">Front Office, F&B, Housekeeping...</p>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => { setAudienceType('role'); setSelectedTargetId(ROLES_LIST[0]) }}
-                  className={`p-4 rounded-2xl border text-start transition-all flex flex-col justify-between gap-3 ${
-                    audienceType === 'role'
-                      ? 'bg-indigo-50/80 dark:bg-indigo-950/50 border-indigo-500 shadow-md ring-2 ring-indigo-500/20'
-                      : 'bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 hover:border-slate-300'
-                  }`}
-                >
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${audienceType === 'role' ? 'bg-indigo-600 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-600'}`}>
-                    <Briefcase className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-slate-900 dark:text-slate-100">Job Role Level</p>
-                    <p className="text-[10px] text-slate-500 mt-0.5">Staff, Supervisors, Managers...</p>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => { setAudienceType('new_hire'); setSelectedTargetId('new_hires') }}
-                  className={`p-4 rounded-2xl border text-start transition-all flex flex-col justify-between gap-3 ${
-                    audienceType === 'new_hire'
-                      ? 'bg-emerald-50/80 dark:bg-emerald-950/50 border-emerald-500 shadow-md ring-2 ring-emerald-500/20'
-                      : 'bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 hover:border-slate-300'
-                  }`}
-                >
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${audienceType === 'new_hire' ? 'bg-emerald-600 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-600'}`}>
-                    <UserPlus className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-slate-900 dark:text-slate-100">New Hires (Onboarding)</p>
-                    <p className="text-[10px] text-slate-500 mt-0.5">Joined in last 30 days</p>
-                  </div>
-                </button>
-
-              </div>
-
-              {/* Sub-Selection Dropdown / Search Input based on Audience Type */}
-              {audienceType === 'department' && (
-                <div className="space-y-2 pt-2">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Select Department:</label>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    {dbDepartments && dbDepartments.length > 0 ? (
-                      dbDepartments.map((dept) => (
-                        <button
-                          key={dept.id}
-                          type="button"
-                          onClick={() => setSelectedTargetId(dept.id)}
-                          className={`p-2.5 rounded-xl border text-xs font-semibold text-center transition-all ${
-                            selectedTargetId === dept.id
-                              ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
-                              : 'bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:bg-slate-200'
-                          }`}
-                        >
-                          {dept.name}
-                        </button>
-                      ))
-                    ) : (
-                      <div className="col-span-full text-center py-4 text-xs text-slate-500 italic">
-                        No departments found.
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {audienceType === 'user' && (
-                <div className="space-y-3 pt-2">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Search & Select Staff Member:</label>
-                  <div className="relative">
-                    <Input
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search by name, email, or department..."
-                      className="ps-10 h-11 rounded-xl"
-                    />
-                    <Search className="w-4 h-4 absolute start-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-                  </div>
-
-                  <div className="max-h-48 overflow-y-auto space-y-1.5 pe-1 pt-1">
-                    {realProfiles && realProfiles.length > 0 ? (
-                      realProfiles
-                        .filter(p => !searchQuery || (p.full_name || '').toLowerCase().includes(searchQuery.toLowerCase()) || (p.email || '').toLowerCase().includes(searchQuery.toLowerCase()))
-                        .map(p => (
-                          <button
-                            key={p.id}
-                            type="button"
-                            onClick={() => setSelectedTargetId(p.id)}
-                            className={`w-full p-2.5 rounded-xl border text-start flex items-center justify-between transition-all ${
-                              selectedTargetId === p.id
-                                ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
-                                : 'bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:bg-slate-100'
-                            }`}
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs uppercase ${
-                                selectedTargetId === p.id ? 'bg-white/20 text-white' : 'bg-indigo-100 text-indigo-700'
-                              }`}>
-                                {(p.full_name || p.email || 'U').charAt(0)}
-                              </div>
-                              <div>
-                                <p className={`text-xs font-bold ${selectedTargetId === p.id ? 'text-white' : 'text-slate-900 dark:text-slate-100'}`}>
-                                  {p.full_name || 'Staff Member'}
-                                </p>
-                                <p className={`text-[10px] ${selectedTargetId === p.id ? 'text-white/80' : 'text-slate-500'}`}>
-                                  {p.job_title || 'Employee'} • {p.email}
-                                </p>
-                              </div>
-                            </div>
-                            {selectedTargetId === p.id && <Check className="w-4 h-4 text-white shrink-0" />}
-                          </button>
-                        ))
-                    ) : (
-                      <div className="text-center py-4 text-xs text-slate-500 italic">
-                        No employee profiles found. Type a valid employee ID directly.
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* STEP 2: CONTENT SELECTION */}
-          {step === 2 && (
-            <div className="space-y-6">
-              <div>
-                <h4 className="text-base font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                  <GraduationCap className="w-5 h-5 text-indigo-500" />
-                  Step 2: Choose Content Package (What)
-                </h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  Select an Onboarding Package, a multi-module Learning Path, a Compliance SOP, or a single training module.
-                </p>
-              </div>
-
-              {/* Category Filter Tabs */}
-              <Tabs value={contentCategory} onValueChange={(val) => setContentCategory(val as ContentCategory)}>
-                <TabsList className="grid grid-cols-4 bg-slate-100 dark:bg-slate-900 rounded-xl p-1">
-                  <TabsTrigger value="onboarding" className="text-xs font-bold gap-1 rounded-lg">
-                    <Rocket className="w-3.5 h-3.5 me-1 text-emerald-500" />
-                    Onboarding
-                  </TabsTrigger>
-                  <TabsTrigger value="paths" className="text-xs font-bold gap-1 rounded-lg">
-                    <Layers className="w-3.5 h-3.5 me-1 text-blue-500" />
-                    Learning Paths
-                  </TabsTrigger>
-                  <TabsTrigger value="compliance" className="text-xs font-bold gap-1 rounded-lg">
-                    <ShieldCheck className="w-3.5 h-3.5 me-1 text-rose-500" />
-                    Compliance
-                  </TabsTrigger>
-                  <TabsTrigger value="modules" className="text-xs font-bold gap-1 rounded-lg">
-                    <FileText className="w-3.5 h-3.5 me-1 text-amber-500" />
-                    Modules
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
-
-              {/* Content Package List */}
-              {filteredContentPackages.length === 0 ? (
-                <div className="flex flex-col items-center justify-center text-center py-10 px-6 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30">
-                  <AlertCircle className="w-8 h-8 text-slate-400 mb-3" />
-                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
-                    No content packages found in this category
-                  </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-sm">
-                    {contentCategory === 'modules'
-                      ? 'No published training modules were found. Create one in Training Hub first.'
-                      : 'This category is not yet backed by real, assignable content. Use the Modules tab to assign an existing training module.'}
-                  </p>
-                </div>
-              ) : (
-              <div className="space-y-3">
-                {filteredContentPackages.map((pkg) => (
-                  <button
-                    key={pkg.id}
-                    type="button"
-                    onClick={() => setSelectedPackage(pkg)}
-                    className={`w-full p-4 rounded-2xl border text-start transition-all flex items-center justify-between gap-4 ${
-                      selectedPackage?.id === pkg.id
-                        ? 'bg-indigo-50/80 dark:bg-indigo-950/60 border-indigo-500 shadow-md ring-2 ring-indigo-500/20'
-                        : 'bg-slate-50/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 hover:border-slate-300'
-                    }`}
-                  >
-                    <div className="flex items-start gap-3.5">
-                      <div className={`p-3 rounded-xl shrink-0 ${
-                        pkg.category === 'onboarding' ? 'bg-emerald-100 text-emerald-600' :
-                        pkg.category === 'compliance' ? 'bg-rose-100 text-rose-600' :
-                        pkg.category === 'paths' ? 'bg-blue-100 text-blue-600' : 'bg-amber-100 text-amber-600'
-                      }`}>
-                        {pkg.category === 'onboarding' ? <Rocket className="w-5 h-5" /> :
-                         pkg.category === 'compliance' ? <ShieldCheck className="w-5 h-5" /> :
-                         pkg.category === 'paths' ? <Layers className="w-5 h-5" /> : <FileText className="w-5 h-5" />}
-                      </div>
-
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <p className="text-sm font-extrabold text-slate-900 dark:text-slate-100">{pkg.title}</p>
-                          {pkg.isMandatory && (
-                            <Badge className="bg-rose-100 text-rose-700 border-rose-200 text-[9px] font-bold">MANDATORY</Badge>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-3 text-xs text-slate-500">
-                          <span className="flex items-center gap-1 font-semibold">
-                            <Clock className="w-3.5 h-3.5 text-slate-400" />
-                            {pkg.duration}
-                          </span>
-                          {pkg.moduleCount && (
-                            <span className="font-semibold text-indigo-600">
-                              • {pkg.moduleCount} Modules Included
-                            </span>
-                          )}
-                          <Badge variant="outline" className="text-[10px] uppercase font-bold">
-                            {pkg.difficulty}
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className={`w-7 h-7 rounded-full flex items-center justify-center border shrink-0 ${
-                      selectedPackage?.id === pkg.id ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-transparent border-slate-300'
-                    }`}>
-                      <Check className="w-4 h-4" />
-                    </div>
-                  </button>
-                ))}
-              </div>
-              )}
-            </div>
-          )}
-
-          {/* STEP 3: SCHEDULE & AUTO-ASSIGNMENT */}
-          {step === 3 && (
-            <div className="space-y-6">
-              <div>
-                <h4 className="text-base font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-indigo-500" />
-                  Step 3: Schedule & Auto-Assignment Rules (When)
-                </h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  Set target completion deadlines and enable automatic trigger rules for future new hires.
-                </p>
-              </div>
-
-              {/* Due Date Options */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Completion Deadline:</label>
-                <div className="grid grid-cols-4 gap-2">
-                  {[7, 14, 30, 60].map((days) => (
+            <>
+              <fieldset className="space-y-2">
+                <legend className="mb-2 text-sm font-semibold text-ds-ink">{t('assignWizard.whoTitle', 'Who is this for?')}</legend>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {audiences.map(({ id, icon: Icon, title, hint }) => (
                     <button
-                      key={days}
+                      key={id}
                       type="button"
-                      onClick={() => setDueDays(days)}
-                      className={`p-3 rounded-xl border text-xs font-bold text-center transition-all ${
-                        dueDays === days
-                          ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
-                          : 'bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800'
-                      }`}
+                      aria-pressed={audienceType === id}
+                      onClick={() => {
+                        setAudienceType(id)
+                        setSelectedPersonName('')
+                        setSelectedTargetId(
+                          id === 'department' ? dbDepartments?.[0]?.id || '' : id === 'role' ? 'learner' : id === 'new_hire' ? 'new_hires' : ''
+                        )
+                      }}
+                      className={cn(optionClass(audienceType === id), 'flex items-start gap-3 p-3')}
                     >
-                      {days} Days
+                      <Icon aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-ds-muted" />
+                      <span>
+                        <span className="block text-sm font-semibold text-ds-ink">{title}</span>
+                        <span className="block text-xs text-ds-muted">{hint}</span>
+                      </span>
                     </button>
                   ))}
                 </div>
-                <p className="text-xs text-indigo-600 font-semibold pt-1">
-                  Calculated Target Date: <span className="font-bold underline">{calculatedDueDate}</span>
-                </p>
-              </div>
+              </fieldset>
 
-              {/* Priority Selector */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Assignment Priority:</label>
-                <div className="grid grid-cols-3 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setPriority('normal')}
-                    className={`p-3 rounded-xl border text-xs font-bold transition-all ${
-                      priority === 'normal'
-                        ? 'bg-slate-900 text-white border-slate-900'
-                        : 'bg-slate-100 dark:bg-slate-900 text-slate-600 border-slate-200'
-                    }`}
-                  >
-                    Normal Priority
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPriority('high')}
-                    className={`p-3 rounded-xl border text-xs font-bold transition-all ${
-                      priority === 'high'
-                        ? 'bg-amber-500 text-slate-950 border-amber-400'
-                        : 'bg-slate-100 dark:bg-slate-900 text-slate-600 border-slate-200'
-                    }`}
-                  >
-                    High Priority
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPriority('compliance')}
-                    className={`p-3 rounded-xl border text-xs font-bold transition-all ${
-                      priority === 'compliance'
-                        ? 'bg-rose-600 text-white border-rose-600'
-                        : 'bg-slate-100 dark:bg-slate-900 text-slate-600 border-slate-200'
-                    }`}
-                  >
-                    Mandatory Compliance
-                  </button>
-                </div>
-              </div>
+              {audienceType === 'department' && (
+                <fieldset className="space-y-2">
+                  <legend className="mb-2 text-sm font-medium text-ds-ink">{t('assignWizard.whichDepartment', 'Which department?')}</legend>
+                  {dbDepartments && dbDepartments.length > 0 ? (
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                      {dbDepartments.map((dept) => (
+                        <button
+                          key={dept.id}
+                          type="button"
+                          aria-pressed={selectedTargetId === dept.id}
+                          onClick={() => setSelectedTargetId(dept.id)}
+                          className={cn(optionClass(selectedTargetId === dept.id), 'min-h-[44px] px-3 py-2 text-sm text-ds-ink')}
+                        >
+                          {dept.name}
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-ds-muted">
+                      {t('assignWizard.noDepartments', 'There are no departments yet.')}{' '}
+                      <Link to="/admin/structure?tab=departments" className="font-medium text-ds-accent hover:underline">
+                        {t('assignWizard.addDepartments', 'Add departments')}
+                      </Link>
+                    </p>
+                  )}
+                </fieldset>
+              )}
 
-              {/* Auto-Assignment Toggle Box */}
-              <div className="p-4 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800/50 flex items-start gap-3">
-                <input
-                  type="checkbox"
-                  id="auto-assign"
-                  checked={autoAssignFuture}
-                  onChange={(e) => setAutoAssignFuture(e.target.checked)}
-                  className="w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 mt-0.5 cursor-pointer"
-                />
-                <div>
-                  <label htmlFor="auto-assign" className="text-xs font-bold text-slate-900 dark:text-slate-100 cursor-pointer block">
-                    Automatically Assign to Future New Hires
+              {audienceType === 'role' && (
+                <fieldset className="space-y-2">
+                  <legend className="mb-2 text-sm font-medium text-ds-ink">{t('assignWizard.whichRole', 'Which role?')}</legend>
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                    {MEMBERSHIP_ROLES.map((r) => (
+                      <button
+                        key={r}
+                        type="button"
+                        aria-pressed={selectedTargetId === r}
+                        onClick={() => setSelectedTargetId(r)}
+                        className={cn(optionClass(selectedTargetId === r), 'min-h-[44px] px-3 py-2 text-sm text-ds-ink')}
+                      >
+                        {roleLabel(r)}
+                      </button>
+                    ))}
+                  </div>
+                </fieldset>
+              )}
+
+              {audienceType === 'user' && (
+                <div className="space-y-2">
+                  <label htmlFor="assign-person-search" className="block text-sm font-medium text-ds-ink">
+                    {t('assignWizard.whichPerson', 'Which person?')}
                   </label>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed">
-                    When enabled, any employee joining this department or role in the future will automatically receive this training package upon onboarding.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 4: REVIEW & CONFIRM */}
-          {step === 4 && (
-            <div className="space-y-6">
-              <div>
-                <h4 className="text-base font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                  Step 4: Review & Confirm Assignment
-                </h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  Please confirm the details below before issuing this assignment to the organization.
-                </p>
-              </div>
-
-              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4">
-                <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3">
-                  <span className="text-xs font-bold text-slate-500 uppercase">Target Audience:</span>
-                  <Badge className="bg-indigo-100 text-indigo-800 border-indigo-200 text-xs font-bold capitalize">
-                    {audienceType.replace('_', ' ')}: {
-                      audienceType === 'department'
-                        ? dbDepartments?.find(d => d.id === selectedTargetId)?.name || selectedTargetId
-                        : audienceType === 'user'
-                        ? realProfiles?.find(p => p.id === selectedTargetId)?.full_name || selectedTargetId
-                        : selectedTargetId || 'All New Hires'
-                    }
-                  </Badge>
-                </div>
-
-                <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3">
-                  <span className="text-xs font-bold text-slate-500 uppercase">Content Package:</span>
-                  <span className="text-sm font-extrabold text-slate-900 dark:text-slate-100">{selectedPackage?.title}</span>
-                </div>
-
-                <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3">
-                  <span className="text-xs font-bold text-slate-500 uppercase">Completion Deadline:</span>
-                  <span className="text-xs font-mono font-bold text-emerald-600">{calculatedDueDate} ({dueDays} Days)</span>
-                </div>
-
-                <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-slate-500 uppercase">Auto-Assignment Rule:</span>
-                  <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                    {autoAssignFuture ? '✓ Active for Future Joinees' : 'Disabled'}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-
-        </div>
-
-        {/* Wizard Footer Navigation Buttons */}
-        <DialogFooter className="p-6 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between sm:justify-between">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={handlePrevStep}
-            disabled={step === 1 || isSubmitting}
-            className="rounded-xl px-5"
-          >
-            <ChevronLeft className="w-4 h-4 me-1" />
-            Back
-          </Button>
-
-          {step < 4 ? (
-            <Button
-              type="button"
-              onClick={handleNextStep}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl px-6 font-bold"
-            >
-              Continue Next
-              <ChevronRight className="w-4 h-4 ms-1" />
-            </Button>
-          ) : (
-            <Button
-              type="button"
-              onClick={handleSubmitAssignment}
-              disabled={isSubmitting}
-              className="bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-slate-950 rounded-xl px-8 font-black shadow-lg shadow-amber-500/20"
-            >
-              {isSubmitting ? (
-                <span>Publishing Assignment...</span>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-slate-950" />
-                  <span>Confirm & Issue Assignment</span>
+                  <div className="relative">
+                    <Search aria-hidden="true" className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ds-muted" />
+                    <Input
+                      id="assign-person-search"
+                      type="search"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder={t('assignWizard.searchPeople', 'Name, email or job title')}
+                      className="ps-9"
+                    />
+                  </div>
+                  <ul className="max-h-56 space-y-1.5 overflow-y-auto pe-1" aria-busy={isSearchingPeople}>
+                    {(realProfiles ?? []).map((p) => {
+                      const selected = selectedTargetId === p.id
+                      return (
+                        <li key={p.id}>
+                          <button
+                            type="button"
+                            aria-pressed={selected}
+                            onClick={() => { setSelectedTargetId(p.id); setSelectedPersonName(p.full_name || p.email || '') }}
+                            className={cn(optionClass(selected), 'flex w-full items-center justify-between gap-3 px-3 py-2')}
+                          >
+                            <span className="flex min-w-0 items-center gap-3">
+                              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ds-surface-subtle text-xs font-semibold uppercase text-ds-ink">
+                                {(p.full_name || p.email || '?').charAt(0)}
+                              </span>
+                              <span className="min-w-0">
+                                <span className="block truncate text-sm font-medium text-ds-ink">{p.full_name || p.email}</span>
+                                <span className="block truncate text-xs text-ds-muted">{[p.job_title, p.email].filter(Boolean).join(' · ')}</span>
+                              </span>
+                            </span>
+                            {selected && <Check aria-hidden="true" className="h-4 w-4 shrink-0 text-ds-ink" />}
+                          </button>
+                        </li>
+                      )
+                    })}
+                    {realProfiles && realProfiles.length === 0 && (
+                      <li className="py-4 text-center text-sm text-ds-muted">{t('assignWizard.noPeople', 'Nobody matches that search.')}</li>
+                    )}
+                  </ul>
                 </div>
               )}
+
+              {audienceType === 'new_hire' && (
+                <p className="rounded-[6px] border border-ds-border bg-ds-surface-subtle px-3 py-2 text-sm text-ds-ink-secondary">
+                  {t('assignWizard.newHireNote', 'Goes to everyone who joined in the last 30 days. To assign a course to every future starter, use')}{' '}
+                  <Link to="/manage/assignments/rules" className="font-medium text-ds-accent hover:underline">
+                    {t('assignWizard.automaticRules', 'automatic rules')}
+                  </Link>.
+                </p>
+              )}
+            </>
+          )}
+
+          {step === 2 && (
+            <div className="space-y-3">
+              <label htmlFor="assign-course-search" className="block text-sm font-semibold text-ds-ink">
+                {t('assignWizard.courseTitle', 'Which course?')}
+              </label>
+              <div className="relative">
+                <Search aria-hidden="true" className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ds-muted" />
+                <Input
+                  id="assign-course-search"
+                  type="search"
+                  value={courseQuery}
+                  onChange={(e) => setCourseQuery(e.target.value)}
+                  placeholder={t('assignWizard.searchCourses', 'Search published courses')}
+                  className="ps-9"
+                />
+              </div>
+              {filteredContentPackages.length === 0 ? (
+                <p className="rounded-[6px] border border-dashed border-ds-border px-4 py-8 text-center text-sm text-ds-muted">
+                  {(dbModules ?? []).length === 0
+                    ? t('assignWizard.noCourses', 'There are no published courses yet. Publish one in Studio first.')
+                    : t('assignWizard.noCourseMatch', 'No courses match that search.')}
+                </p>
+              ) : (
+                <ul className="space-y-1.5">
+                  {filteredContentPackages.map((pkg) => {
+                    const selected = selectedPackage?.id === pkg.id
+                    return (
+                      <li key={pkg.id}>
+                        <button
+                          type="button"
+                          aria-pressed={selected}
+                          onClick={() => setSelectedPackage(pkg)}
+                          className={cn(optionClass(selected), 'flex w-full items-center justify-between gap-3 px-3 py-2.5')}
+                        >
+                          <span className="min-w-0">
+                            <span className="block text-sm font-medium text-ds-ink">{pkg.title}</span>
+                            {pkg.durationMinutes ? (
+                              <span className="mt-0.5 flex items-center gap-1 text-xs text-ds-muted">
+                                <Clock aria-hidden="true" className="h-3.5 w-3.5" />
+                                {t('assignWizard.minutes', '{{count}} min', { count: pkg.durationMinutes })}
+                              </span>
+                            ) : null}
+                          </span>
+                          {selected && <Check aria-hidden="true" className="h-4 w-4 shrink-0 text-ds-ink" />}
+                        </button>
+                      </li>
+                    )
+                  })}
+                </ul>
+              )}
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className="space-y-5">
+              <fieldset className="space-y-2">
+                <legend className="mb-2 text-sm font-semibold text-ds-ink">{t('assignWizard.dueTitle', 'When is it due?')}</legend>
+                <div className="grid grid-cols-4 gap-2">
+                  {DUE_OPTIONS.map((days) => (
+                    <button
+                      key={days}
+                      type="button"
+                      aria-pressed={dueDays === days}
+                      onClick={() => setDueDays(days)}
+                      className={cn(optionClass(dueDays === days), 'min-h-[44px] px-2 text-center text-sm text-ds-ink')}
+                    >
+                      {t('assignWizard.days', '{{count}} days', { count: days })}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-sm text-ds-muted">{t('assignWizard.dueOn', 'Due on {{date}}', { date: formattedDue })}</p>
+              </fieldset>
+
+              <fieldset className="space-y-2">
+                <legend className="mb-2 text-sm font-semibold text-ds-ink">{t('assignWizard.priorityTitle', 'Priority')}</legend>
+                <div className="grid gap-2 sm:grid-cols-3">
+                  {priorityOptions.map((o) => (
+                    <button
+                      key={o.id}
+                      type="button"
+                      aria-pressed={priority === o.id}
+                      onClick={() => setPriority(o.id)}
+                      className={cn(optionClass(priority === o.id), 'min-h-[44px] px-3 text-center text-sm text-ds-ink')}
+                    >
+                      {o.label}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+            </div>
+          )}
+
+          {step === 4 && (
+            <div className="space-y-3">
+              <p className="text-sm font-semibold text-ds-ink">{t('assignWizard.reviewTitle', 'Check and assign')}</p>
+              <dl className="divide-y divide-ds-border rounded-[6px] border border-ds-border bg-ds-surface text-sm">
+                {[
+                  { label: t('assignWizard.reviewWho', 'For'), value: audienceLabel },
+                  { label: t('assignWizard.reviewCourse', 'Course'), value: selectedPackage?.title ?? '' },
+                  { label: t('assignWizard.reviewDue', 'Due'), value: formattedDue },
+                  { label: t('assignWizard.reviewPriority', 'Priority'), value: priorityOptions.find((o) => o.id === priority)?.label ?? '' },
+                ].map((row) => (
+                  <div key={row.label} className="flex items-start justify-between gap-4 px-4 py-2.5">
+                    <dt className="text-ds-muted">{row.label}</dt>
+                    <dd className="text-end font-medium text-ds-ink">{row.value}</dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="text-xs text-ds-muted">
+                {t('assignWizard.reviewNote', 'They are notified and the course appears in their learning straight away.')}
+              </p>
+            </div>
+          )}
+        </div>
+
+        <DialogFooter className="mx-0 justify-between px-5 pb-5 sm:justify-between sm:px-6">
+          <Button type="button" variant="outline" onClick={handlePrevStep} disabled={step === 1 || isSubmitting}>
+            <ChevronLeft aria-hidden="true" className="rtl:rotate-180" />
+            {t('assignWizard.back', 'Back')}
+          </Button>
+          {step < 4 ? (
+            <Button type="button" onClick={handleNextStep}>
+              {t('assignWizard.next', 'Next')}
+              <ChevronRight aria-hidden="true" className="rtl:rotate-180" />
+            </Button>
+          ) : (
+            <Button type="button" onClick={handleSubmitAssignment} disabled={isSubmitting}>
+              {isSubmitting ? t('assignWizard.assigning', 'Assigning...') : t('assignWizard.assign', 'Assign training')}
             </Button>
           )}
         </DialogFooter>
-
       </DialogContent>
     </Dialog>
   )

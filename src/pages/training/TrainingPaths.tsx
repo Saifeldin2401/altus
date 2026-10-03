@@ -79,7 +79,7 @@ export default function TrainingPaths() {
   const enrollInPathMutation = useMutation({
     mutationFn: async (pathId: string) => {
       if (!orgId) {
-        throw new Error(isRTL ? 'سياق المؤسسة مطلوب للتسجيل في المسارات التدريبية' : 'Organization context is required to enroll in learning paths')
+        throw new Error(t('screens.TrainingPaths.organizationContextIsRequiredTo', 'Organization context is required to enroll in learning paths'))
       }
       const { data, error } = await supabase
         .from('user_path_enrollments')
@@ -97,11 +97,11 @@ export default function TrainingPaths() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['my-path-enrollments', profile?.id, orgId] })
-      toast.success(isRTL ? 'تم التسجيل في المسار التدريبي بنجاح' : 'Enrolled in learning path successfully')
+      toast.success(t('screens.TrainingPaths.enrolledInLearningPathSuccessfully', 'Enrolled in learning path successfully'))
       setActiveTab('my')
     },
     onError: (err: any) => {
-      toast.error(err?.message || (isRTL ? 'تعذر التسجيل في المسار' : 'Failed to enroll in path'))
+      toast.error(err?.message || (t('screens.TrainingPaths.failedToEnrollInPath', 'Failed to enroll in path')))
     }
   })
 
@@ -293,7 +293,7 @@ export default function TrainingPaths() {
         }
       } else {
         if (!orgId) {
-          throw new Error(isRTL ? 'سياق المؤسسة مطلوب لإنشاء المسار التدريبي' : 'Organization context is required to create a learning path')
+          throw new Error(t('screens.TrainingPaths.organizationContextIsRequiredTo2', 'Organization context is required to create a learning path'))
         }
         // Create new path
         const { data: newPath, error } = await supabase
@@ -696,7 +696,7 @@ export default function TrainingPaths() {
                         />
                         <span className="text-sm font-medium">{module.title}</span>
                       </div>
-                      <Badge variant="outline" className="text-[10px]">
+                      <Badge variant="outline" className="text-[11px]">
                         {module.estimated_duration_minutes} {t('min')}
                       </Badge>
                     </div>
@@ -774,7 +774,7 @@ export default function TrainingPaths() {
           </Tabs>
 
           <div className="flex justify-end gap-2 pt-6 border-t mt-4">
-            <Button className="bg-white border border-ds-border text-ds-ink hover:bg-ds-surface-subtle rounded-md transition-colors" onClick={() => setShowPathDialog(false)}>
+            <Button className="bg-ds-surface border border-ds-border text-ds-ink hover:bg-ds-surface-subtle rounded-md transition-colors" onClick={() => setShowPathDialog(false)}>
               {t('cancel')}
             </Button>
             <Button className="bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90 rounded-md transition-colors px-6" onClick={handleSubmit} disabled={pathMutation.isPending}>

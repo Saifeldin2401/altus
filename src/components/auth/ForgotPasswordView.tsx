@@ -151,7 +151,7 @@ function ForgotPasswordViewComponent({
         <div className="pt-2 space-y-2">
           <Button
             type="submit"
-            className="w-full h-12 bg-ds-brass hover:bg-ds-accent-hover text-white font-medium text-sm rounded-lg shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-brass focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed border-none cursor-pointer"
+            className="w-full h-12 bg-ds-brass hover:bg-ds-accent-hover text-white dark:text-ds-on-ink font-medium text-sm rounded-lg shadow-sm hover:shadow transition-all flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-brass focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed border-none cursor-pointer"
             disabled={loading || !emailValid}
           >
             {loading ? (

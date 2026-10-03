@@ -36,9 +36,9 @@ export function LearningStatusCard({
   return (
     <Link
       to={href}
-      className="group flex min-h-[92px] items-center gap-4 rounded-xl border border-ds-border bg-ds-surface p-4 shadow-[0_2px_8px_rgb(21_33_46/0.03)] transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-ds-border-strong hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent motion-reduce:hover:translate-y-0"
+      className="group flex min-h-[92px] items-center gap-4 rounded-[8px] border border-ds-border bg-ds-surface p-4 shadow-[0_2px_8px_rgb(21_33_46/0.03)] transition-[transform,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:border-ds-border-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent motion-reduce:hover:translate-y-0"
     >
-      <span className={cn('inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-colors', t.iconBg, t.iconText)}>
+      <span className={cn('inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-[8px] transition-colors', t.iconBg, t.iconText)}>
         <Icon aria-hidden="true" className="h-5 w-5" />
       </span>
       <span className="min-w-0 flex-1">

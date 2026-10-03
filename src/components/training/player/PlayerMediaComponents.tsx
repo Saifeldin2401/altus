@@ -80,8 +80,8 @@ export function RichTextBlockContent({
   if (showBilingual) {
     return (
       <div className="space-y-6">
-        <div className="rounded-xl border border-ds-border bg-ds-surface-subtle/60 p-4">
-          <div className="text-[10px] uppercase tracking-[0.2em] text-ds-muted mb-2">
+        <div className="rounded-[8px] border border-ds-border bg-ds-surface-subtle/60 p-4">
+          <div className="text-[11px] uppercase tracking-[0.2em] text-ds-muted mb-2">
             {originalLabel}
           </div>
           <div className="prose md:prose-lg max-w-none dark:prose-invert leading-relaxed text-ds-ink">
@@ -90,8 +90,8 @@ export function RichTextBlockContent({
             </InlineErrorBoundary>
           </div>
         </div>
-        <div className="rounded-xl border border-ds-success/30 bg-ds-success-soft/60 p-4" dir={translationDir}>
-          <div className="text-[10px] uppercase tracking-[0.2em] text-ds-success mb-2">
+        <div className="rounded-[8px] border border-ds-success/30 bg-ds-success-soft/60 p-4" dir={translationDir}>
+          <div className="text-[11px] uppercase tracking-[0.2em] text-ds-success mb-2">
             {translatedLabel}
           </div>
           <div className="prose md:prose-lg max-w-none dark:prose-invert leading-relaxed whitespace-pre-wrap text-ds-ink">
@@ -236,7 +236,7 @@ export function VideoPlayer({
 
   if (resolving) {
     return (
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-white/70 z-10 bg-ds-ink">
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-white/70 z-10 bg-black">
         <Loader2 className="animate-spin h-10 w-10 text-white mb-3" />
         <span className="text-sm">{t('loadingVideo', 'Loading video...')}</span>
       </div>
@@ -245,7 +245,7 @@ export function VideoPlayer({
 
   if (!resolvedSrc || videoError) {
     return (
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-white/70 z-10 p-6 text-center bg-ds-ink">
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-white/70 z-10 p-6 text-center bg-black">
         <VideoIcon className="h-12 w-12 mb-3 opacity-50" />
         <span className="text-sm mb-2">
           {videoError || t('videoLoadError', 'Unable to load video. The file may be missing or unsupported.')}
@@ -356,7 +356,7 @@ export function ImageBlock({ src, alt, t }: ImageBlockProps) {
 
   if (resolving) {
     return (
-      <div className="rounded-2xl border border-ds-border bg-ds-surface-subtle flex items-center justify-center h-64">
+      <div className="rounded-[8px] border border-ds-border bg-ds-surface-subtle flex items-center justify-center h-64">
         <Loader2 className="h-8 w-8 animate-spin text-ds-muted" />
       </div>
     )
@@ -364,7 +364,7 @@ export function ImageBlock({ src, alt, t }: ImageBlockProps) {
 
   if (imageError || !resolvedSrc) {
     return (
-      <div className="rounded-2xl border-2 border-dashed border-ds-border bg-ds-surface-subtle flex flex-col items-center justify-center h-64 text-ds-muted gap-2">
+      <div className="rounded-[8px] border-2 border-dashed border-ds-border bg-ds-surface-subtle flex flex-col items-center justify-center h-64 text-ds-muted gap-2">
         <ImageIcon className="h-10 w-10" />
         <span className="text-sm">{t('imageLoadError', 'Unable to load this image.')}</span>
       </div>
@@ -377,9 +377,9 @@ export function ImageBlock({ src, alt, t }: ImageBlockProps) {
         src={resolvedSrc}
         alt={alt}
         onError={() => setImageError(true)}
-        className="rounded-2xl shadow-xl max-h-[600px] w-auto mx-auto border border-ds-border transition-transform duration-500 group-hover:scale-[1.01]"
+        className="rounded-[8px] shadow-xl max-h-[600px] w-auto mx-auto border border-ds-border transition-transform duration-500 group-hover:scale-[1.01]"
       />
-      <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-black/10 pointer-events-none" />
+      <div className="absolute inset-0 rounded-[8px] ring-1 ring-inset ring-black/10 pointer-events-none" />
     </div>
   )
 }

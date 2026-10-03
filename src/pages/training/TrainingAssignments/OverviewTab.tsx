@@ -1,21 +1,10 @@
 import { GroupedDepartmentSelector } from '@/components/shared/GroupedDepartmentSelector'
 import { EmployeeProgressTracker } from '@/components/training/EmployeeProgressTracker'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
-import {
-    AlertTriangle,
-    BookOpen,
-    CheckCircle2,
-    Clock,
-    Download,
-    Search,
-    TrendingUp,
-    Users,
-    X
-} from 'lucide-react'
+import { Download, Search, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useTrainingAssignmentsContext } from '../contexts/TrainingAssignmentsContext'
 
@@ -33,19 +22,15 @@ export function OverviewTab() {
     employeeTrackingSummary,
     employeeProgressGroups,
     followUpQueue,
-    moduleLoadLeaders,
     isLoadingProgress,
     setSelectedProgressId,
     handleExport,
     submitResetProgress,
     submitExemptUser,
-    submitRestoreUser,
     formatDate,
     formatDuration,
     getProgressStatusMeta,
     describeFollowUp,
-    toast,
-    t: tCtx,
   } = useTrainingAssignmentsContext()
 
   const { t } = useTranslation('training')
@@ -107,87 +92,32 @@ export function OverviewTab() {
         </div>
       </div>
 
-      <div className="grid gap-3 grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
-        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 shadow-none hover:border-ds-border-strong transition-colors">
-          <div className="flex items-center gap-3">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-[6px] bg-ds-accent-soft text-ds-accent">
-              <BookOpen className="size-4" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{progressMetrics.uniqueModules}</p>
-              <p className="truncate text-xs text-ds-muted">{t('modules', 'Modules')}</p>
-            </div>
+      <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-[8px] border border-ds-border bg-ds-border sm:grid-cols-5">
+        {[
+          { label: t('people.statPeople', 'People'), value: employeeTrackingSummary.employeeCount },
+          { label: t('people.statAssigned', 'Courses assigned'), value: progressMetrics.total },
+          { label: t('people.statInProgress', 'In progress'), value: progressMetrics.in_progress },
+          {
+            label: t('people.statOverdue', 'Overdue'),
+            value: progressMetrics.overdue,
+            hint: employeeTrackingSummary.employeesNeedingFollowUp > 0
+              ? t('people.statOverdueHint', '{{count}} people to follow up', { count: employeeTrackingSummary.employeesNeedingFollowUp })
+              : undefined,
+            tone: progressMetrics.overdue > 0 ? 'danger' : undefined,
+          },
+          {
+            label: t('people.statCompleted', 'Finished'),
+            value: progressMetrics.completed,
+            hint: t('people.statCompletedHint', '{{rate}}% of assigned', { rate: employeeTrackingSummary.completionRate }),
+          },
+        ].map((s) => (
+          <div key={s.label} className="bg-ds-surface px-4 py-3">
+            <dt className="text-xs text-ds-muted">{s.label}</dt>
+            <dd className={cn('mt-0.5 font-mono text-2xl font-semibold tabular-nums', s.tone === 'danger' ? 'text-ds-danger' : 'text-ds-ink')}>{s.value}</dd>
+            {s.hint && <dd className="text-xs text-ds-muted">{s.hint}</dd>}
           </div>
-        </div>
-
-        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 shadow-none hover:border-ds-border-strong transition-colors">
-          <div className="flex items-center gap-3">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-[6px] bg-ds-accent-soft text-ds-accent">
-              <Users className="size-4" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{employeeTrackingSummary.employeeCount}</p>
-              <p className="truncate text-xs text-ds-muted">{t('staff', 'Staff')}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 shadow-none hover:border-ds-border-strong transition-colors">
-          <div className="flex items-center gap-3">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-[6px] bg-ds-accent-soft text-ds-accent">
-              <TrendingUp className="size-4" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{progressMetrics.total}</p>
-              <p className="truncate text-xs text-ds-muted">{t('totalEnrollments', 'Total Enrollments')}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 shadow-none hover:border-ds-border-strong transition-colors">
-          <div className="flex items-center gap-3">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-[6px] bg-ds-accent-soft text-ds-accent">
-              <Clock className="size-4" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{progressMetrics.in_progress}</p>
-              <p className="truncate text-xs text-ds-muted">{t('inProgress')} · {employeeTrackingSummary.averageProgress}%</p>
-            </div>
-          </div>
-        </div>
-
-        <div className={cn(
-          "rounded-[8px] border p-4 shadow-none transition-colors",
-          progressMetrics.overdue > 0 ? "border-ds-danger/40 bg-ds-danger-soft/20 hover:border-ds-danger" : "border-ds-border bg-ds-surface hover:border-ds-border-strong"
-        )}>
-          <div className="flex items-center gap-3">
-            <div className={cn(
-              "flex size-9 shrink-0 items-center justify-center rounded-[6px]",
-              progressMetrics.overdue > 0 ? "bg-ds-danger-soft text-ds-danger" : "bg-ds-surface-subtle text-ds-muted"
-            )}>
-              <AlertTriangle className="size-4" />
-            </div>
-            <div className="min-w-0">
-              <p className={cn("text-2xl font-bold font-mono tracking-tight", progressMetrics.overdue > 0 ? "text-ds-danger" : "text-ds-ink")}>
-                {progressMetrics.overdue}
-              </p>
-              <p className="truncate text-xs text-ds-muted">{t('overdue')} · {employeeTrackingSummary.employeesNeedingFollowUp} {t('followUpFlag', 'follow-up')}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 shadow-none hover:border-ds-border-strong transition-colors">
-          <div className="flex items-center gap-3">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-[6px] bg-ds-success-soft text-ds-success">
-              <CheckCircle2 className="size-4" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{progressMetrics.completed}</p>
-              <p className="truncate text-xs text-ds-muted">{t('completed')} · {employeeTrackingSummary.completionRate}%</p>
-            </div>
-          </div>
-        </div>
-      </div>
+        ))}
+      </dl>
 
       <EmployeeProgressTracker
         describeFollowUp={describeFollowUp}
@@ -199,19 +129,11 @@ export function OverviewTab() {
         isLoading={isLoadingProgress}
         isRTL={isRTL}
         metrics={progressMetrics}
-        moduleLoadLeaders={moduleLoadLeaders}
         onViewDetails={setSelectedProgressId}
         summary={employeeTrackingSummary}
         isAdmin={true}
         onResetProgress={(userId, moduleId) => submitResetProgress(moduleId, userId)}
-        onRevokeCertificate={(userId, moduleId) => {
-          toast({
-            title: tCtx('certificateRevoked', 'Certificate Revoked'),
-            description: tCtx('certificateRevokedDesc', 'The certificate has been revoked successfully.')
-          })
-        }}
         onExemptUser={(userId, moduleId) => submitExemptUser(moduleId, userId)}
-        onRestoreUser={(userId, moduleId) => submitRestoreUser(moduleId, userId)}
       />
     </div>
   )

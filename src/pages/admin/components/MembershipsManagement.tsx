@@ -367,7 +367,7 @@ export function MembershipsManagement() {
   }
 
   return (
-    <Card className="border shadow-sm">
+    <Card>
       <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
@@ -438,7 +438,7 @@ export function MembershipsManagement() {
               <TableHeader>
                 <TableRow>
                   <TableHead>{t('admin:member', 'Member')}</TableHead>
-                  <TableHead>{t('admin:role', 'Tenant Role')}</TableHead>
+                  <TableHead>{t('admin:role', 'Role')}</TableHead>
                   <TableHead>{t('admin:dept_scope', 'Department')}</TableHead>
                   <TableHead>{t('admin:status', 'Status')}</TableHead>
                   {isOrgAdmin && <TableHead className="text-end">{t('admin:actions', 'Actions')}</TableHead>}
@@ -461,7 +461,7 @@ export function MembershipsManagement() {
                             <span className="font-semibold text-sm">{m.profile?.full_name || 'User'}</span>
                             <span className="text-xs text-muted-foreground">{m.profile?.email || '—'}</span>
                             {m.profile?.job_title && (
-                              <span className="text-[10px] text-muted-foreground/80">{m.profile.job_title}</span>
+                              <span className="text-[11px] text-muted-foreground/80">{m.profile.job_title}</span>
                             )}
                           </div>
                         </div>
@@ -562,7 +562,7 @@ export function MembershipsManagement() {
 
               {/* Tenant Role Selection */}
               <div className="space-y-2">
-                <Label htmlFor="role-select">{t('admin:tenant_role', 'Tenant Role')}</Label>
+                <Label htmlFor="role-select">{t('admin:tenant_role', 'Organization Role')}</Label>
                 <Select value={selectedRole} onValueChange={(val) => setSelectedRole(val as TenantRole)}>
                   <SelectTrigger id="role-select">
                     <SelectValue placeholder="Select role" />
@@ -633,7 +633,7 @@ export function MembershipsManagement() {
             <AlertDialogHeader>
               <AlertDialogTitle>{t('admin:confirm_remove_member', 'Remove Member from Organization?')}</AlertDialogTitle>
               <AlertDialogDescription>
-                {t('admin:confirm_remove_member_desc', 'This will remove the user from this organization and revoke their tenant role. Their global user profile remains active.')}
+                {t('admin:confirm_remove_member_desc', 'This will remove the user from this organization and revoke their organization role. Their global user profile remains active.')}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

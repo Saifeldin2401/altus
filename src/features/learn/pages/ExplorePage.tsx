@@ -146,7 +146,7 @@ export default function ExplorePage() {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder={t('explore.searchPlaceholder', 'Search courses, skills or topics…')}
-            className="h-14 w-full rounded-xl border border-ds-border bg-ds-surface ps-12 pe-12 text-base text-ds-ink shadow-sm placeholder:text-ds-muted focus:border-ds-accent focus:outline-none focus:ring-2 focus:ring-ds-accent/30"
+            className="h-14 w-full rounded-[8px] border border-ds-border bg-ds-surface ps-12 pe-12 text-base text-ds-ink shadow-sm placeholder:text-ds-muted focus:border-ds-accent focus:outline-none focus:ring-2 focus:ring-ds-accent/30"
           />
           {text && (
             <button type="button" onClick={() => setText('')} aria-label={t('explore.clear', 'Clear search')} className="absolute end-2 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-md text-ds-muted hover:bg-ds-surface-subtle">
@@ -261,7 +261,7 @@ export default function ExplorePage() {
                     <h2 id="explore-all-title" className="font-editorial text-[23px] font-semibold leading-tight text-ds-ink">{featuredCount ? t('explore.allCourses', 'All courses') : t('explore.results', 'Course results')}</h2>
                     <p className="mt-0.5 text-sm text-ds-muted">{t('explore.available', '{{count}} courses available', { count: courses.length })}</p>
                   </div>
-                  <ul className="divide-y divide-ds-border overflow-hidden rounded-xl border border-ds-border bg-ds-surface">
+                  <ul className="divide-y divide-ds-border overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface">
                     {courses.slice(featuredCount).map((c) => {
                       const s = stateOf(c)
                       const p = progressById.get(c.id)
@@ -302,21 +302,21 @@ export default function ExplorePage() {
         </div>
 
         <aside className="space-y-6 lg:col-span-4">
-          <section aria-labelledby="explore-yours" className="rounded-2xl border border-ds-border bg-ds-surface p-5 shadow-[0_12px_32px_rgb(21_33_46/0.04)]">
+          <section aria-labelledby="explore-yours" className="rounded-[8px] border border-ds-border bg-ds-surface p-5 shadow-[0_12px_32px_rgb(21_33_46/0.04)]">
             <div className="flex items-center justify-between">
               <h2 id="explore-yours" className="font-editorial text-[21px] font-semibold text-ds-ink">{t('explore.yourLearning', 'Your learning')}</h2>
               <Link to="/learn/my" className="inline-flex items-center gap-1 text-xs font-semibold text-ds-brass hover:underline">{t('myDay.viewAll', 'View all')}<ChevronRight aria-hidden="true" className="h-3.5 w-3.5 rtl:rotate-180" /></Link>
             </div>
             <ul className="mt-4 space-y-2">
               <li>
-                <button type="button" onClick={() => setState('in_progress')} aria-pressed={state === 'in_progress'} className="flex min-h-[60px] w-full items-center gap-3 rounded-xl border border-ds-border px-3 text-start hover:border-ds-border-strong hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent">
+                <button type="button" onClick={() => setState('in_progress')} aria-pressed={state === 'in_progress'} className="flex min-h-[60px] w-full items-center gap-3 rounded-[8px] border border-ds-border px-3 text-start hover:border-ds-border-strong hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent">
                   <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-ds-info font-mono text-sm font-semibold text-ds-info">{counts.in_progress}</span>
                   <span className="min-w-0 flex-1"><span className="block text-sm font-semibold text-ds-ink">{t('explore.filter.in_progress', 'In progress')}</span><span className="block text-xs text-ds-muted">{t('explore.continueHint', 'Continue your learning')}</span></span>
                   <ChevronRight aria-hidden="true" className="h-4 w-4 text-ds-muted rtl:rotate-180" />
                 </button>
               </li>
               <li>
-                <Link to="/learn/my" className="flex min-h-[60px] items-center gap-3 rounded-xl border border-ds-border px-3 hover:border-ds-border-strong hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent">
+                <Link to="/learn/my" className="flex min-h-[60px] items-center gap-3 rounded-[8px] border border-ds-border px-3 hover:border-ds-border-strong hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent">
                   <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ds-warning-soft text-ds-warning"><BookOpen aria-hidden="true" className="h-4 w-4" /></span>
                   <span className="min-w-0 flex-1">
                     <span className="block text-sm font-semibold text-ds-ink">{t('explore.requiredForYou', 'Required for you')}</span>
@@ -331,7 +331,7 @@ export default function ExplorePage() {
                 </Link>
               </li>
               <li>
-                <Link to="/learn/certificates" className="flex min-h-[60px] items-center gap-3 rounded-xl border border-ds-border px-3 hover:border-ds-border-strong hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent">
+                <Link to="/learn/certificates" className="flex min-h-[60px] items-center gap-3 rounded-[8px] border border-ds-border px-3 hover:border-ds-border-strong hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent">
                   <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ds-success-soft text-ds-success"><CheckCircle2 aria-hidden="true" className="h-4 w-4" /></span>
                   <span className="min-w-0 flex-1"><span className="block text-sm font-semibold text-ds-ink">{t('explore.filter.completed', 'Completed')}</span><span className="block text-xs text-ds-muted">{t('explore.viewCertificates', 'View your certificates')}</span></span>
                   <ChevronRight aria-hidden="true" className="h-4 w-4 text-ds-muted rtl:rotate-180" />
@@ -351,7 +351,7 @@ export default function ExplorePage() {
                       onClick={() => { setCategory(name === category ? '' : name); setState('all') }}
                       aria-pressed={category === name}
                       className={cn(
-                        'flex h-full min-h-[68px] w-full items-center gap-2.5 rounded-xl border px-3 py-2 text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent',
+                        'flex h-full min-h-[68px] w-full items-center gap-2.5 rounded-[8px] border px-3 py-2 text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent',
                         category === name ? 'border-ds-brass bg-ds-brass/10' : 'border-ds-border bg-ds-surface hover:border-ds-border-strong',
                       )}
                     >

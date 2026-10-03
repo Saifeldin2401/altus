@@ -112,19 +112,18 @@ function AdminAIAssistant({ isOpen, onClose }: { isOpen: boolean, onClose: () =>
 
     return (
         <AnimatePresence>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-hotel-navy/40 backdrop-blur-md z-[100] flex items-center justify-center p-4" onClick={onClose}>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-ds-ink/40 z-[100] flex items-center justify-center p-4" onClick={onClose}>
                 <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} transition={{ type: 'spring', damping: 25, stiffness: 300 }} className="w-full max-w-xl h-[85vh] max-h-[700px] relative" onClick={e => e.stopPropagation()}>
-                    <Card className="h-full flex flex-col border-none shadow-[0_32px_64px_-12px_rgba(0,0,0,0.5)] bg-slate-50 overflow-hidden relative">
-                        <CardHeader className="bg-gradient-to-r from-hotel-navy to-ds-ink text-white py-5 px-6 flex-shrink-0 relative">
+                    <Card className="relative flex h-full flex-col overflow-hidden rounded-[10px] shadow-xl shadow-black/15 dark:shadow-black/50">
+                        <CardHeader className="relative flex-shrink-0 border-b border-ds-border px-5 py-4">
                             <div className="flex items-center justify-between relative z-10">
                                 <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center shadow-lg transform rotate-3 ring-1 ring-white/20">
-                                        <Settings className="text-hotel-gold h-7 w-7" />
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-[6px] bg-ds-accent-soft">
+                                        <Settings aria-hidden="true" className="h-5 w-5 text-ds-accent" />
                                     </div>
                                     <div>
                                         <div className="flex items-center gap-2">
-                                            <CardTitle className="text-xl font-bold tracking-tight text-white">Sys-Config AI</CardTitle>
-                                            <Badge className="bg-hotel-gold text-hotel-navy font-bold border-none px-2 py-0 text-[10px]">CONFIG</Badge>
+                                            <CardTitle className="text-base">{t("ai_assistant.title", "Settings assistant")}</CardTitle>
                                         </div>
                                     </div>
                                 </div>
@@ -132,8 +131,8 @@ function AdminAIAssistant({ isOpen, onClose }: { isOpen: boolean, onClose: () =>
                                     <Button 
                                         variant="ghost" 
                                         size="icon" 
-                                        onClick={() => setMessages([{ id: 'w', role: 'assistant', content: 'Resetting node. How can I help?', timestamp: new Date() }])} 
-                                        className="text-white/60 hover:text-white hover:bg-white/10 h-10 w-10"
+                                        onClick={() => setMessages([{ id: 'w', role: 'assistant', content: t('ai_assistant.reset', 'Started a new conversation. How can I help?'), timestamp: new Date() }])} 
+                                        className="h-10 w-10 text-ds-muted hover:text-ds-ink"
                                         aria-label={t("accessibility.reset_chat", "Reset chat")}
                                     >
                                         <RefreshCcw className="h-5 w-5" />
@@ -142,7 +141,7 @@ function AdminAIAssistant({ isOpen, onClose }: { isOpen: boolean, onClose: () =>
                                         variant="ghost" 
                                         size="icon" 
                                         onClick={onClose} 
-                                        className="text-white/60 hover:text-white hover:bg-white/10 h-10 w-10"
+                                        className="h-10 w-10 text-ds-muted hover:text-ds-ink"
                                         aria-label={t("accessibility.close", "Close")}
                                     >
                                         <X className="h-6 w-6" />
@@ -151,16 +150,16 @@ function AdminAIAssistant({ isOpen, onClose }: { isOpen: boolean, onClose: () =>
                             </div>
                         </CardHeader>
 
-                        <CardContent className="flex-1 p-0 overflow-hidden bg-gray-50/50">
+                        <CardContent className="flex-1 p-0 overflow-hidden bg-ds-surface-subtle/50">
                             <ScrollArea className="h-full px-4 py-6">
                                 <div className="space-y-6 max-w-full mx-auto">
                                     {messages.map((message) => (
                                         <motion.div key={message.id} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} className={cn("flex gap-3", message.role === 'user' ? "flex-row-reverse" : "flex-row")}>
-                                            <div className={cn("w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg", message.role === 'user' ? "bg-hotel-navy text-white" : message.role === 'assistant' ? "bg-white text-hotel-gold" : "bg-red-500 text-white")}>
+                                            <div className={cn("w-10 h-10 rounded-[8px] flex items-center justify-center flex-shrink-0 border border-ds-border", message.role === 'user' ? "bg-ds-ink text-ds-on-ink" : message.role === 'assistant' ? "bg-ds-surface text-ds-accent" : "bg-ds-danger text-ds-on-ink")}>
                                                 {message.role === 'user' ? <User className="h-5 w-5" /> : <Sparkles className="h-5 w-5" />}
                                             </div>
                                             <div className={cn("max-w-[85%] flex flex-col", message.role === 'user' ? "items-end" : "items-start")}>
-                                                <div className={cn("px-5 py-3 rounded-2xl text-sm leading-relaxed", message.role === 'user' && "bg-hotel-navy text-white rounded-se-none", message.role === 'assistant' && "bg-white text-gray-800 rounded-ss-none border shadow-sm", message.role === 'error' && "bg-red-50 text-red-700 rounded-ss-none border")}>
+                                                <div className={cn("px-5 py-3 rounded-[8px] text-sm leading-relaxed", message.role === 'user' && "bg-ds-ink text-ds-on-ink rounded-se-none", message.role === 'assistant' && "bg-ds-surface text-ds-ink rounded-ss-none border shadow-sm", message.role === 'error' && "bg-ds-danger-soft text-ds-danger rounded-ss-none border")}>
                                                     <p className="whitespace-pre-wrap">{message.content}</p>
                                                 </div>
                                             </div>
@@ -168,11 +167,11 @@ function AdminAIAssistant({ isOpen, onClose }: { isOpen: boolean, onClose: () =>
                                     ))}
                                     {isLoading && (
                                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="flex gap-4">
-                                            <div className="w-10 h-10 rounded-2xl bg-white shadow-lg flex items-center justify-center">
-                                                <Loader2 className="h-5 w-5 text-hotel-gold animate-spin" />
+                                            <div className="w-10 h-10 rounded-[8px] bg-ds-surface border border-ds-border flex items-center justify-center">
+                                                <Loader2 className="h-5 w-5 text-ds-accent animate-spin" />
                                             </div>
-                                            <div className="bg-white border rounded-2xl rounded-ss-none px-6 py-4 shadow-sm w-48 flex items-center gap-2">
-                                                <BrainCircuit className="h-4 w-4 text-hotel-gold animate-pulse" />
+                                            <div className="bg-ds-surface border rounded-[8px] rounded-ss-none px-6 py-4 shadow-sm w-48 flex items-center gap-2">
+                                                <BrainCircuit className="h-4 w-4 text-ds-accent animate-pulse" />
                                                 <span className="text-xs text-muted-foreground animate-pulse">Analyzing...</span>
                                             </div>
                                         </motion.div>
@@ -182,14 +181,14 @@ function AdminAIAssistant({ isOpen, onClose }: { isOpen: boolean, onClose: () =>
                             </ScrollArea>
                         </CardContent>
 
-                        <div className="border-t bg-white p-4 flex-shrink-0">
+                        <div className="border-t bg-ds-surface p-4 flex-shrink-0">
                             <form onSubmit={handleSubmit}>
-                                <div className="relative bg-gray-50 rounded-xl flex items-center p-1.5 focus-within:bg-white focus-within:ring-2 focus-within:ring-hotel-navy/5 shadow-inner">
+                                <div className="relative bg-ds-surface-subtle rounded-[8px] flex items-center p-1.5 focus-within:bg-ds-surface focus-within:ring-2 focus-within:ring-ds-ink/5">
                                     <Input ref={inputRef} value={input} onChange={e => setInput(e.target.value)} placeholder="Ask how to configure retention policies..." disabled={isLoading} className="flex-1 bg-transparent border-none focus-visible:ring-0 text-sm px-4 py-4 h-auto" />
                                     <Button 
                                         type="submit" 
                                         disabled={!input.trim() || isLoading} 
-                                        className={cn("rounded-lg h-10 w-10 transition-all", input.trim() ? "bg-hotel-navy hover:bg-ds-ink/90 text-white" : "bg-gray-200 text-gray-400")}
+                                        className={cn("rounded-lg h-10 w-10 transition-all", input.trim() ? "bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink" : "bg-ds-border text-ds-muted")}
                                         aria-label={isLoading ? t("accessibility.sending", "Sending...") : t("accessibility.send_message", "Send message")}
                                     >
                                         {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Zap className="h-5 w-5" />}
@@ -210,7 +209,7 @@ export function FloatingAdminAI() {
         <>
             <Button
                 onClick={() => setIsOpen(true)}
-                className="fixed bottom-6 end-6 h-14 w-14 rounded-full shadow-2xl bg-hotel-navy hover:bg-ds-ink/90 text-white z-50 group transition-all"
+                className="fixed bottom-6 end-6 h-14 w-14 rounded-full shadow-2xl bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink z-50 group transition-all"
                 title="System Configuration Assistant"
             >
                 <Settings className="h-6 w-6 group-hover:rotate-90 transition-transform duration-500" />

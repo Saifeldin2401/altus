@@ -40,7 +40,7 @@ const DocumentBlockDescription = ({
 
     if (!hasTranslation) {
         return (
-            <div className="text-sm text-gray-500 prose max-w-none dark:prose-invert">
+            <div className="text-sm text-ds-muted prose max-w-none dark:prose-invert">
                 <InlineErrorBoundary>
                     {/* SECURITY: Content sanitized via sanitizeHtml() in parent */}
                     <div dangerouslySetInnerHTML={{ __html: originalMarkup }} />
@@ -52,8 +52,8 @@ const DocumentBlockDescription = ({
     if (showBilingual) {
         return (
             <div className="space-y-4">
-                <div className="text-sm text-gray-500 prose max-w-none dark:prose-invert">
-                    <div className="text-[10px] uppercase tracking-[0.2em] text-slate-400 mb-2">
+                <div className="text-sm text-ds-muted prose max-w-none dark:prose-invert">
+                    <div className="text-[11px] uppercase tracking-[0.2em] text-ds-muted mb-2">
                         {t('original', 'Original')}
                     </div>
                     <InlineErrorBoundary>
@@ -61,8 +61,8 @@ const DocumentBlockDescription = ({
                         <div dangerouslySetInnerHTML={{ __html: originalMarkup }} />
                     </InlineErrorBoundary>
                 </div>
-                <div className="text-sm text-gray-600 prose max-w-none dark:prose-invert" dir={translationDir}>
-                    <div className="text-[10px] uppercase tracking-[0.2em] text-emerald-700 mb-2">
+                <div className="text-sm text-ds-ink-secondary prose max-w-none dark:prose-invert" dir={translationDir}>
+                    <div className="text-[11px] uppercase tracking-[0.2em] text-ds-success mb-2">
                         {t('translatedTo', { language: translationLabel || t('translated', 'Translated') })}
                     </div>
                     <InlineErrorBoundary>
@@ -75,7 +75,7 @@ const DocumentBlockDescription = ({
     }
 
     return (
-        <div className="text-sm text-gray-600 prose max-w-none dark:prose-invert" dir={translationDir}>
+        <div className="text-sm text-ds-ink-secondary prose max-w-none dark:prose-invert" dir={translationDir}>
             <InlineErrorBoundary>
                 {/* SECURITY: Content sanitized via sanitizeHtml() in parent */}
                 <div dangerouslySetInnerHTML={{ __html: translatedMarkup }} />
@@ -177,12 +177,12 @@ export const DocumentBlockRenderer = ({
     if (!isPdf) {
         return (
             <div className="space-y-4">
-                <div className="p-6 border rounded-lg bg-slate-50 flex items-center gap-4">
-                    <LinkIcon className="h-8 w-8 text-blue-500" />
+                <div className="p-6 border rounded-lg bg-ds-surface-subtle flex items-center gap-4">
+                    <LinkIcon className="h-8 w-8 text-ds-info" />
                     <div>
                         <h4 className="font-medium">{t('attachedDocument')}</h4>
                         {resolving ? (
-                            <span className="inline-flex items-center gap-1.5 text-slate-400 text-sm">
+                            <span className="inline-flex items-center gap-1.5 text-ds-muted text-sm">
                                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
                                 {t('resolvingLink', 'Resolving link...')}
                             </span>
@@ -191,12 +191,12 @@ export const DocumentBlockRenderer = ({
                                 href={resolvedUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-600 hover:underline break-all"
+                                className="text-ds-info hover:underline break-all"
                             >
                                 {safeContentUrl}
                             </a>
                         ) : (
-                            <span className="text-slate-500 break-all">
+                            <span className="text-ds-muted break-all">
                                 {t('noLinkProvided')}
                             </span>
                         )}
@@ -218,8 +218,8 @@ export const DocumentBlockRenderer = ({
 
     if (resolving) {
         return (
-            <div className="flex flex-col items-center justify-center py-16 border rounded-lg bg-slate-50 text-slate-400 gap-2">
-                <Loader2 className="h-6 w-6 animate-spin text-hotel-gold" />
+            <div className="flex flex-col items-center justify-center py-16 border rounded-lg bg-ds-surface-subtle text-ds-muted gap-2">
+                <Loader2 className="h-6 w-6 animate-spin text-ds-accent" />
                 <span className="text-xs">{t('loadingPdf', 'Loading document...')}</span>
             </div>
         )
@@ -227,12 +227,12 @@ export const DocumentBlockRenderer = ({
 
     if (!resolvedUrl) {
         return (
-            <div className="flex flex-col items-center justify-center py-12 border rounded-lg bg-slate-50 text-slate-500 gap-3">
+            <div className="flex flex-col items-center justify-center py-12 border rounded-lg bg-ds-surface-subtle text-ds-muted gap-3">
                 <p className="text-sm font-medium">{t('unableToLoadDocument', 'Unable to access attached PDF document.')}</p>
                 <button
                     type="button"
                     onClick={handleRetry}
-                    className="text-xs font-medium text-hotel-navy hover:text-hotel-gold transition-colors underline"
+                    className="text-xs font-medium text-ds-ink hover:text-ds-accent transition-colors underline"
                 >
                     {t('common:retry', 'Retry')}
                 </button>

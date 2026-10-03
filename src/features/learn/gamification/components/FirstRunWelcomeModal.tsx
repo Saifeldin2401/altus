@@ -60,7 +60,7 @@ export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalPr
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={() => void handleFinish(false)}
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+        className="fixed inset-0 bg-black/60"
       />
 
       {/* Modal Surface */}
@@ -69,10 +69,10 @@ export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalPr
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96 }}
         transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 w-full max-w-lg overflow-hidden rounded-2xl border border-ds-border bg-ds-surface shadow-2xl text-ds-ink"
+        className="relative z-10 w-full max-w-lg overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface shadow-2xl text-ds-ink"
       >
         {/* Header accent strip */}
-        <div className="h-1.5 w-full bg-gradient-to-r from-ds-accent via-ds-brass to-ds-chrome-accent" />
+        <div className="h-1.5 w-full bg-ds-accent" />
 
         {/* Close Button */}
         <button
@@ -108,7 +108,7 @@ export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalPr
                 transition={{ duration: 0.2 }}
                 className="space-y-4"
               >
-                <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-ds-accent-soft text-ds-accent">
+                <div className="inline-flex h-12 w-12 items-center justify-center rounded-[8px] bg-ds-accent-soft text-ds-accent">
                   <Sparkles className="h-6 w-6" />
                 </div>
                 <div>
@@ -134,7 +134,7 @@ export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalPr
                   </div>
 
                   <div className="flex items-start gap-3 rounded-lg border border-ds-border/60 bg-ds-surface-subtle/50 p-3">
-                    <Flame className="h-5 w-5 shrink-0 text-amber-500 mt-0.5" />
+                    <Flame className="h-5 w-5 shrink-0 text-ds-warning mt-0.5" />
                     <div>
                       <p className="text-sm font-semibold text-ds-ink">
                         {t('training:welcomeTour.streakTitle', 'Build Your Learning Streak')}
@@ -181,7 +181,7 @@ export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalPr
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-ds-border bg-ds-surface-subtle/60 p-4 text-start">
+                <div className="rounded-[8px] border border-ds-border bg-ds-surface-subtle/60 p-4 text-start">
                   <div className="flex items-center gap-3">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-ds-brass/20 text-ds-brass font-bold text-sm">
                       L1
@@ -232,7 +232,7 @@ export function FirstRunWelcomeModal({ isOpen, onClose }: FirstRunWelcomeModalPr
                 <button
                   type="button"
                   onClick={() => void handleFinish(true)}
-                  className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg bg-ds-accent px-5 text-sm font-semibold text-white hover:bg-ds-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent"
+                  className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg bg-ds-accent px-5 text-sm font-semibold text-white dark:text-ds-on-ink hover:bg-ds-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent"
                 >
                   <span>{t('training:welcomeTour.exploreCourses', 'Explore Courses')}</span>
                   <ArrowRight className="h-4 w-4 rtl:rotate-180" />

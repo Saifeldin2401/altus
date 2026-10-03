@@ -21,7 +21,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/components/ui/use-toast'
 import { useAccountActions } from '@/hooks/useAccountActions'
@@ -30,9 +29,10 @@ import {
     Sheet,
     SheetContent
 } from '@/components/ui/sheet'
-import { AlertTriangle, CheckSquare, Edit, KeyRound, Loader2, MailPlus, MoreVertical, Plus, Search, ShieldAlert, ShieldCheck, ShieldOff, Square, Trash2, Unlock, Upload, UserX, Users, XCircle, Mail, Building, Briefcase, Shield } from 'lucide-react'
+import { AlertTriangle, CheckSquare, Edit, KeyRound, Loader2, MailPlus, MoreVertical, Plus, Search, ShieldCheck, ShieldOff, Square, Trash2, Unlock, Upload, UserX, Users, XCircle, Building, Shield } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { WorkspaceHeader, headerActionClass } from '@/ui'
+import { InvitePersonDialog } from '@/components/admin/InvitePersonDialog'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
@@ -43,7 +43,7 @@ import { useTenant } from '@/contexts/TenantContext'
 import { useAccountContext } from '@/contexts/auth/AccountContext'
 import { platformService } from '@/services/platformService'
 import type { Profile, AppRole } from '@/lib/types'
-import { ROLE_HIERARCHY, ROLES } from '@/lib/constants'
+import { ROLES } from '@/lib/constants'
 
 type AccountStatusFilter = 'all' | 'active' | 'suspended' | 'locked' | 'inactive' | 'pending_approval'
 type RoleCategoryFilter = 'all' | 'learners' | 'instructors' | 'admins'
@@ -90,9 +90,6 @@ export default function UserManagement() {
   const [statusFilter, setStatusFilter] = useState<AccountStatusFilter>('all')
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false)
 
-  const [inviteEmail, setInviteEmail] = useState('')
-  const [inviteRole, setInviteRole] = useState<AppRole | ''>('staff')
-  const [inviteDepartmentId, setInviteDepartmentId] = useState('')
 
   // Account action dialog state
   const [actionDialogOpen, setActionDialogOpen] = useState(false)
@@ -176,24 +173,6 @@ export default function UserManagement() {
     },
   })
 
-  const { data: departments } = useQuery({
-    queryKey: ['departments', 'invite', currentOrganization?.id],
-    queryFn: async () => {
-      if (!currentOrganization?.id) return []
-      const query = supabase
-        .from('departments')
-        .select('id, name, name_ar, organization_id')
-        .eq('is_active', true)
-        .eq('organization_id', currentOrganization.id)
-        .order('name', { ascending: true })
-
-      const { data, error } = await query
-      if (error) throw error
-      return (data || []) as Array<{ id: string; name: string; name_ar?: string | null }>
-    },
-    enabled: !!currentOrganization?.id,
-  })
-
   useEffect(() => {
     let invalidateTimer: ReturnType<typeof setTimeout> | null = null
 
@@ -248,7 +227,7 @@ export default function UserManagement() {
   const deleteUserMutation = useMutation({
     mutationFn: async (id: string) => {
       if (!currentOrganization?.id) {
-        throw new Error(t('form.error.select_org', 'Tenant context required.'))
+        throw new Error(t('form.error.select_org', 'Organization context required.'))
       }
       const { data, error } = await supabase.rpc('remove_tenant_member', {
         p_org_id: currentOrganization.id,
@@ -277,7 +256,7 @@ export default function UserManagement() {
   const activateUserMutation = useMutation({
     mutationFn: async (id: string) => {
       if (!currentOrganization?.id) {
-        throw new Error(t('form.error.select_org', 'Tenant context required.'))
+        throw new Error(t('form.error.select_org', 'Organization context required.'))
       }
       const { data, error } = await supabase.rpc('activate_tenant_member', {
         p_org_id: currentOrganization.id,
@@ -362,97 +341,6 @@ export default function UserManagement() {
       })
     },
   })
-
-  const inviteUserMutation = useMutation({
-    mutationFn: async (params: { email: string; role: AppRole | '' }) => {
-      if (isSeatLimitReached) {
-        throw new Error('User seat limit reached for this subscription plan. Contact your platform administrator to upgrade.')
-      }
-
-      const { email, role } = params
-      const trimmedEmail = email.trim().toLowerCase()
-      if (!trimmedEmail || !trimmedEmail.includes('@')) {
-        throw new Error('Please enter a valid email address.')
-      }
-      if (!role) {
-        throw new Error('Please select a role for the invited user.')
-      }
-
-      if (!currentOrganization?.id) {
-        throw new Error(t('form.error.select_org', 'Tenant context required.'))
-      }
-
-      const appUrl = (import.meta.env.VITE_APP_URL || window.location.origin).replace(/\/$/, '')
-      const { data, error: fnError } = await supabase.functions.invoke('create-user', {
-        body: {
-          email: trimmedEmail,
-          role,
-          provisioningMethod: 'invite',
-          appUrl,
-          organizationId: currentOrganization.id,
-          departmentIds: inviteDepartmentId ? [inviteDepartmentId] : [],
-        },
-      })
-
-      if (fnError) {
-        const maybeContext = fnError as unknown as { context?: Response | { response?: Response } }
-        const response = maybeContext?.context instanceof Response
-          ? maybeContext.context
-          : maybeContext?.context?.response
-        if (response) {
-          const text = await response.text().catch(() => '')
-          let parsedError: string | undefined
-          if (text) {
-            try {
-              const parsed = JSON.parse(text) as { error?: string }
-              parsedError = parsed?.error
-            } catch {
-              parsedError = text
-            }
-          }
-          throw new Error(parsedError || fnError.message || 'Failed to send invitation')
-        }
-        throw new Error(fnError.message || 'Failed to send invitation')
-      }
-
-      if (data?.error) {
-        throw new Error(data.error)
-      }
-
-      return data as { userId?: string; invitationSent?: boolean }
-    },
-    onSuccess: () => {
-      toast({
-        title: t('form.success.invite_sent_title', 'Invitation Sent'),
-        description: t(
-          'form.success.invite_sent_message',
-          'An invite email was sent. The user should open the link, set a password, and complete their profile.'
-        ),
-      })
-      setInviteDialogOpen(false)
-      setInviteEmail('')
-      setInviteRole('staff')
-      setInviteDepartmentId('')
-      refetch()
-      refetchEntitlements()
-    },
-    onError: (error: Error) => {
-      toast({
-        title: t('form.error.create_failed'),
-        description: error.message,
-        variant: 'destructive',
-      })
-    },
-  })
-
-  const handleInviteDialogOpenChange = (open: boolean) => {
-    setInviteDialogOpen(open)
-    if (!open) {
-      setInviteEmail('')
-      setInviteRole('staff')
-      setInviteDepartmentId('')
-    }
-  }
 
   // Filter users by search + role category + status
   const filteredUsers = useMemo(() => {
@@ -651,7 +539,7 @@ export default function UserManagement() {
       case 'super_admin':
       case 'corporate_admin':
         return (
-          <Badge className="text-[11px] font-bold border-ds-warning/30 bg-ds-warning-soft text-ds-warning">
+          <Badge variant="gold" size="sm">
             {roleKey ? ROLES[roleKey as AppRole]?.label || roleKey : 'Corporate Admin'}
           </Badge>
         )
@@ -659,19 +547,19 @@ export default function UserManagement() {
       case 'regional_hr':
       case 'property_hr':
         return (
-          <Badge className="text-[11px] font-bold border-ds-accent/30 bg-ds-accent-soft text-ds-accent">
+          <Badge variant="outline" size="sm">
             {roleKey ? ROLES[roleKey as AppRole]?.label || roleKey : 'L&D Director'}
           </Badge>
         )
       case 'knowledge_manager':
         return (
-          <Badge className="text-[11px] font-bold border-ds-success/30 bg-ds-success-soft text-ds-success">
+          <Badge variant="outline" size="sm">
             {roleKey ? ROLES[roleKey as AppRole]?.label || roleKey : 'Knowledge Manager'}
           </Badge>
         )
       default:
         return (
-          <Badge variant="outline" className="text-[11px] font-medium border-border/60 text-muted-foreground">
+          <Badge variant="outline" size="sm">
             {roleKey && ROLES[roleKey as AppRole] ? ROLES[roleKey as AppRole].label : (roleKey || 'Staff Member')}
           </Badge>
         )
@@ -707,35 +595,30 @@ export default function UserManagement() {
 
   if (!currentOrganization?.id) {
     return (
-      <div className="max-w-xl mx-auto py-16 px-4 text-center animate-in fade-in duration-300">
-        <div className="mx-auto w-14 h-14 rounded-2xl bg-ds-warning-soft border border-ds-warning/30 flex items-center justify-center mb-4">
-          <Building className="h-7 w-7 text-ds-warning" />
-        </div>
-        <h2 className="text-xl font-bold font-serif text-foreground">
-          {t('no_tenant_selected_title', 'Tenant Organization Context Required')}
-        </h2>
-        <p className="text-xs text-muted-foreground mt-2 leading-relaxed max-w-md mx-auto">
-          {t(
-            'no_tenant_selected_desc',
-            'Organization User Management manages team members, learners, and role assignments for an active tenant organization.'
-          )}
-        </p>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-          {isPlatformUser && (
-            <Link to="/platform/users">
-              <Button className="bg-ds-warning hover:bg-ds-warning text-ds-ink font-bold text-xs gap-1.5">
-                <Users className="h-3.5 w-3.5" />
-                <span>{t('go_to_global_directory', 'Go to Platform User Directory')}</span>
+      <div className="py-16">
+        <EmptyState
+          icon={<Building className="h-6 w-6" />}
+          title={t('no_tenant_selected_title', 'Choose an organization first')}
+          description={t('no_tenant_selected_desc', 'People are managed inside an organization. Open one to see and manage its members.')}
+          action={
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <Button asChild>
+                <Link to="/platform/organizations">
+                  <Building aria-hidden="true" />
+                  {t('select_organization', 'Choose an organization')}
+                </Link>
               </Button>
-            </Link>
-          )}
-          <Link to="/platform/organizations">
-            <Button variant="outline" className="text-xs gap-1.5">
-              <Building className="h-3.5 w-3.5" />
-              <span>{t('select_organization', 'Select Customer Organization')}</span>
-            </Button>
-          </Link>
-        </div>
+              {isPlatformUser && (
+                <Button asChild variant="outline">
+                  <Link to="/platform/users">
+                    <Users aria-hidden="true" />
+                    {t('go_to_global_directory', 'Platform user directory')}
+                  </Link>
+                </Button>
+              )}
+            </div>
+          }
+        />
       </div>
     )
   }
@@ -1018,34 +901,29 @@ export default function UserManagement() {
         />
       )}
 
-      {/* Slide-over User Profile Detail Drawer */}
+      {/* Person detail drawer */}
       <Sheet open={!!detailUser} onOpenChange={(open) => !open && setDetailUser(null)}>
-        <SheetContent side="right" className="w-full sm:max-w-md p-0 overflow-y-auto bg-card/95 backdrop-blur-2xl border-s border-ds-warning/30 shadow-2xl">
+        <SheetContent
+          side="right"
+          a11yTitle={detailUser?.full_name || detailUser?.email || t('drawer.title', 'Person details')}
+          className="flex w-full flex-col gap-0 overflow-y-auto p-0 sm:max-w-md"
+        >
           {detailUser && (
-            <div className="flex flex-col h-full">
-              {/* Drawer Header Banner */}
-              <div className="relative p-6 border-b border-border/40">
+            <>
+              <div className="border-b border-ds-border p-5 pe-14">
                 <div className="flex items-start gap-4">
-                  <Avatar className="h-16 w-16 rounded-2xl border-2 border-ds-warning/30 shadow-md">
+                  <Avatar className="h-14 w-14 rounded-full border border-ds-border">
                     <AvatarImage src={detailUser.avatar_url || ''} className="object-cover" />
-                    <AvatarFallback className="bg-ds-warning-soft text-ds-warning font-bold text-xl">
+                    <AvatarFallback className="bg-ds-surface-subtle text-lg font-semibold text-ds-ink">
                       {(detailUser.full_name || detailUser.email || '?').charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-base font-bold text-foreground capitalize font-serif">
-                        {detailUser.full_name || t('no_name', 'Unnamed Employee')}
-                      </h3>
-                      {detailUser.staff_id && (
-                        <span className="rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-mono font-bold text-muted-foreground">
-                          {detailUser.staff_id}
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs text-muted-foreground">{detailUser.job_title || 'Staff Member'}</p>
-                    <div className="pt-1 flex flex-wrap items-center gap-1.5">
+                  <div className="min-w-0 space-y-1">
+                    <h2 className="truncate text-base font-semibold text-ds-ink">
+                      {detailUser.full_name || t('no_name', 'No name yet')}
+                    </h2>
+                    {detailUser.job_title && <p className="text-sm text-ds-muted">{detailUser.job_title}</p>}
+                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
                       {getRoleBadge(detailUser.role)}
                       {getStatusBadge(detailUser)}
                     </div>
@@ -1053,117 +931,86 @@ export default function UserManagement() {
                 </div>
               </div>
 
-              {/* Drawer Body Telemetry & Info */}
-              <div className="p-6 space-y-6 flex-1">
-                {/* Contact & Credentials */}
-                <div className="space-y-3">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                    <Mail className="h-3.5 w-3.5 text-ds-warning" />
-                    <span>Contact &amp; Account Identity</span>
-                  </h4>
-                  <div className="rounded-2xl border border-border/50 bg-background/50 p-4 space-y-2.5 text-xs">
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Email Address</span>
-                      <span className="font-mono font-semibold text-foreground">{detailUser.email}</span>
-                    </div>
-                    {detailUser.phone && (
-                      <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground">Phone Number</span>
-                        <span className="font-mono text-foreground">{detailUser.phone}</span>
-                      </div>
-                    )}
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Staff / Employee ID</span>
-                      <span className="font-mono font-semibold text-foreground">{detailUser.staff_id || '—'}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Member Since</span>
-                      <span className="text-foreground">{new Date(detailUser.created_at).toLocaleDateString()}</span>
-                    </div>
-                    {detailUser.last_login_at && (
-                      <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground">Last Portal Login</span>
-                        <span className="text-foreground">{new Date(detailUser.last_login_at).toLocaleString()}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Department */}
-                <div className="space-y-3">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                    <Building className="h-3.5 w-3.5 text-ds-accent" />
-                    <span>Organizational Scope</span>
-                  </h4>
-                  <div className="rounded-2xl border border-border/50 bg-background/50 p-4 space-y-3 text-xs">
-                    <div>
-                      <span className="text-muted-foreground block mb-1">{t('users:organization', 'Organization')}:</span>
-                      <Badge variant="secondary" className="text-xs font-semibold gap-1.5 py-1">
-                        <Building className="h-3.5 w-3.5 text-ds-warning" />
-                        {isRTL && (detailUser.organizations as any)?.name_ar 
-                          ? (detailUser.organizations as any).name_ar 
-                          : (detailUser.organizations?.name || organizations.find(o => o.id === detailUser.organization_id)?.name || t('users:organization', 'Organization'))}
-                      </Badge>
-                    </div>
-
-                    <div>
-                      <span className="text-muted-foreground block mb-1">{t('people.departments', 'Departments')}:</span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {detailUser.departments && detailUser.departments.length > 0 ? (
-                          detailUser.departments.map(d => (
-                            <Badge key={d.id} variant="outline" className="text-[11px] border-ds-accent/30 bg-ds-accent-soft text-foreground">
-                              <Briefcase className="h-3 w-3 me-1 text-ds-accent" />
-                              {d.name}
-                            </Badge>
-                          ))
-                        ) : (
-                          <span className="text-muted-foreground italic">General / Unassigned</span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Security Audit State if Suspended or Reset Required */}
+              <div className="flex-1 space-y-6 p-5">
                 {(detailUser.account_status === 'suspended' || detailUser.force_password_reset) && (
-                  <div className="space-y-3">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-ds-danger flex items-center gap-1.5">
-                      <ShieldAlert className="h-3.5 w-3.5" />
-                      <span>Security Flag Telemetry</span>
-                    </h4>
-                    <div className="rounded-2xl border border-ds-danger/30 bg-ds-danger/[0.06] p-4 space-y-2 text-xs">
-                      {detailUser.account_status === 'suspended' && (
-                        <div>
-                          <span className="font-bold text-ds-danger block">Account Suspended</span>
-                          {detailUser.suspend_reason && (
-                            <p className="text-muted-foreground mt-0.5">{detailUser.suspend_reason}</p>
-                          )}
-                        </div>
-                      )}
-                      {detailUser.force_password_reset && (
-                        <div className="text-ds-warning font-semibold">
-                          Password reset is mandatory on next login session.
-                        </div>
-                      )}
-                    </div>
+                  <div role="status" className="space-y-1 rounded-[6px] border-s-[3px] border-ds-warning bg-ds-warning-soft px-4 py-3 text-sm">
+                    {detailUser.account_status === 'suspended' && (
+                      <p className="font-semibold text-ds-ink">
+                        {t('drawer.suspended', 'This account is suspended. They cannot sign in.')}
+                      </p>
+                    )}
+                    {detailUser.account_status === 'suspended' && detailUser.suspend_reason && (
+                      <p className="text-ds-ink-secondary">{t('drawer.reason', 'Reason')}: {detailUser.suspend_reason}</p>
+                    )}
+                    {detailUser.force_password_reset && (
+                      <p className="text-ds-ink-secondary">{t('drawer.reset_required', 'They must choose a new password the next time they sign in.')}</p>
+                    )}
                   </div>
                 )}
+
+                <section aria-labelledby="drawer-contact" className="space-y-2">
+                  <h3 id="drawer-contact" className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ds-muted">
+                    {t('drawer.contact', 'Contact and account')}
+                  </h3>
+                  <dl className="divide-y divide-ds-border rounded-[6px] border border-ds-border bg-ds-surface text-sm">
+                    {([
+                      { label: t('drawer.email', 'Email'), value: detailUser.email, mono: true },
+                      detailUser.phone ? { label: t('drawer.phone', 'Phone'), value: detailUser.phone, mono: true } : null,
+                      { label: t('drawer.staff_id', 'Staff ID'), value: detailUser.staff_id || '—', mono: true },
+                      { label: t('drawer.joined', 'Added on'), value: new Date(detailUser.created_at).toLocaleDateString(i18n.language) },
+                      detailUser.last_login_at
+                        ? { label: t('drawer.last_sign_in', 'Last signed in'), value: new Date(detailUser.last_login_at).toLocaleString(i18n.language) }
+                        : { label: t('drawer.last_sign_in', 'Last signed in'), value: t('drawer.never', 'Never') },
+                    ] as ({ label: string; value: string; mono?: boolean } | null)[]).filter((row): row is { label: string; value: string; mono?: boolean } => !!row).map((row) => (
+                      <div key={row.label} className="flex items-center justify-between gap-4 px-4 py-2.5">
+                        <dt className="text-ds-muted">{row.label}</dt>
+                        <dd className={`min-w-0 truncate text-end text-ds-ink ${row.mono ? 'font-mono text-xs' : ''}`}>{row.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </section>
+
+                <section aria-labelledby="drawer-placement" className="space-y-2">
+                  <h3 id="drawer-placement" className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ds-muted">
+                    {t('drawer.placement', 'Where they work')}
+                  </h3>
+                  <dl className="divide-y divide-ds-border rounded-[6px] border border-ds-border bg-ds-surface text-sm">
+                    <div className="flex items-center justify-between gap-4 px-4 py-2.5">
+                      <dt className="text-ds-muted">{t('users:organization', 'Organization')}</dt>
+                      <dd className="min-w-0 truncate text-end text-ds-ink">
+                        {isRTL && (detailUser.organizations as any)?.name_ar
+                          ? (detailUser.organizations as any).name_ar
+                          : (detailUser.organizations?.name || organizations.find(o => o.id === detailUser.organization_id)?.name || currentOrganization?.name)}
+                      </dd>
+                    </div>
+                    <div className="flex items-start justify-between gap-4 px-4 py-2.5">
+                      <dt className="text-ds-muted">{t('people.departments', 'Departments')}</dt>
+                      <dd className="flex min-w-0 flex-wrap justify-end gap-1.5">
+                        {detailUser.departments && detailUser.departments.length > 0 ? (
+                          detailUser.departments.map(d => (
+                            <Badge key={d.id} variant="outline">{d.name}</Badge>
+                          ))
+                        ) : (
+                          <span className="text-ds-warning">{t('drawer.no_department', 'Not placed in a department')}</span>
+                        )}
+                      </dd>
+                    </div>
+                  </dl>
+                </section>
               </div>
 
-              {/* Drawer Action Footer */}
-              <div className="p-6 border-t border-border/40 bg-card/60 space-y-2">
+              <div className="space-y-2 border-t border-ds-border p-5">
                 <Button
                   onClick={() => {
                     const u = detailUser
                     setDetailUser(null)
                     handleEdit(u)
                   }}
-                  className="w-full h-10 rounded-xl text-ds-on-ink font-bold text-xs shadow-md shadow-amber-500/20 bg-ds-ink"
+                  className="w-full"
                 >
-                  <Edit className="h-4 w-4 me-1.5" />
-                  <span>Edit Profile &amp; Permissions</span>
+                  <Edit aria-hidden="true" />
+                  {t('drawer.edit', 'Edit details and role')}
                 </Button>
-
                 <div className="grid grid-cols-2 gap-2">
                   <Button
                     variant="outline"
@@ -1172,15 +1019,13 @@ export default function UserManagement() {
                       setDetailUser(null)
                       openActionDialog(u, u.account_status === 'suspended' ? 'reactivate' : 'suspend')
                     }}
-                    className="h-9 rounded-xl text-xs font-semibold"
                   >
                     {detailUser.account_status === 'suspended' ? (
-                      <><ShieldCheck className="h-3.5 w-3.5 me-1 text-ds-success" />Reactivate</>
+                      <><ShieldCheck aria-hidden="true" />{t('drawer.reactivate', 'Reactivate')}</>
                     ) : (
-                      <><ShieldOff className="h-3.5 w-3.5 me-1 text-ds-danger" />Suspend</>
+                      <><ShieldOff aria-hidden="true" />{t('drawer.suspend', 'Suspend')}</>
                     )}
                   </Button>
-
                   <Button
                     variant="outline"
                     onClick={() => {
@@ -1188,131 +1033,27 @@ export default function UserManagement() {
                       setDetailUser(null)
                       openActionDialog(u, 'force_password_reset')
                     }}
-                    className="h-9 rounded-xl text-xs font-semibold"
                   >
-                    <KeyRound className="h-3.5 w-3.5 me-1 text-ds-warning" />
-                    <span>Reset Pass</span>
+                    <KeyRound aria-hidden="true" />
+                    {t('drawer.reset_password', 'Reset password')}
                   </Button>
                 </div>
               </div>
-            </div>
+            </>
           )}
         </SheetContent>
       </Sheet>
 
 
       {/* Email Invite Dialog */}
-      <Dialog open={inviteDialogOpen} onOpenChange={handleInviteDialogOpenChange}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <MailPlus className="w-5 h-5 text-ds-brass" />
-              {t('form.invite_user', 'Invite User')}
-            </DialogTitle>
-            <DialogDescription>
-              {t(
-                'form.invite_description',
-                'Send an invitation email. The user will set a password and complete their profile from the link.'
-              )}
-            </DialogDescription>
-          </DialogHeader>
-
-          {/* Target Organization Badge */}
-          {currentOrganization && (
-            <div className="flex items-center justify-between p-2.5 rounded-xl bg-muted/40 border text-xs my-1">
-              <span className="text-muted-foreground flex items-center gap-1.5">
-                <Building className="h-3.5 w-3.5 text-ds-warning" />
-                {t('users:organization', 'Organization')}:
-              </span>
-              <Badge variant="secondary" className="font-semibold text-xs">
-                {isRTL && (currentOrganization as any).name_ar ? (currentOrganization as any).name_ar : currentOrganization.name}
-              </Badge>
-            </div>
-          )}
-
-          <div className="space-y-2 py-2">
-            <Label htmlFor="invite-email">{t('form.email')}</Label>
-            <Input
-              id="invite-email"
-              type="email"
-              placeholder="name@example.com"
-              value={inviteEmail}
-              onChange={(e) => setInviteEmail(e.target.value)}
-              disabled={inviteUserMutation.isPending}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault()
-                  if (inviteEmail.trim()) {
-                    inviteUserMutation.mutate({ email: inviteEmail, role: inviteRole })
-                  }
-                }
-              }}
-            />
-          </div>
-
-          <div className="space-y-2 py-2">
-            <Label htmlFor="invite-role">{t('form.permission_level', 'Permission Level')}</Label>
-            <select
-              id="invite-role"
-              value={inviteRole}
-              onChange={(e) => setInviteRole(e.target.value as AppRole)}
-              disabled={inviteUserMutation.isPending}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              required
-            >
-              <option value="">{t('form.select_role', 'Select role')}</option>
-              {ROLE_HIERARCHY.map((roleKey) => (
-                <option key={roleKey} value={roleKey}>
-                  {ROLES[roleKey].label}
-                </option>
-              ))}
-            </select>
-            <p className="text-xs text-muted-foreground">
-              {t(
-                'form.invite_role_description',
-                'This role is enforced before the account is created.'
-              )}
-            </p>
-          </div>
-
-          <div className="space-y-2 py-2">
-            <Label htmlFor="invite-department">{t('form.departments', 'Department')}</Label>
-            <select
-              id="invite-department"
-              value={inviteDepartmentId}
-              onChange={(e) => setInviteDepartmentId(e.target.value)}
-              disabled={inviteUserMutation.isPending}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-            >
-              <option value="">
-                {t('form.select_department', 'Select department (optional)')}
-              </option>
-              {(departments || []).map((department) => (
-                <option key={department.id} value={department.id}>
-                  {isRTL && (department as any).name_ar ? (department as any).name_ar : department.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => handleInviteDialogOpenChange(false)}
-              disabled={inviteUserMutation.isPending}
-            >
-              {t('form.cancel', 'Cancel')}
-            </Button>
-            <Button
-              onClick={() => inviteUserMutation.mutate({ email: inviteEmail, role: inviteRole })}
-              disabled={inviteUserMutation.isPending || !inviteEmail.trim() || !inviteRole}
-            >
-              {inviteUserMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin me-2" /> : null}
-              {t('form.send_invite', 'Send Invite')}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <InvitePersonDialog
+        open={inviteDialogOpen}
+        onOpenChange={setInviteDialogOpen}
+        onInvited={() => {
+          refetch()
+          refetchEntitlements()
+        }}
+      />
 
       {/* Delete/Deactivate Confirmation */}
       <DeleteConfirmation
@@ -1449,7 +1190,7 @@ export default function UserManagement() {
                       </div>
                       <div className="text-sm text-ds-ink">{note.note}</div>
                       {note.created_by && (
-                        <div className="text-[10px] text-ds-muted">
+                        <div className="text-[11px] text-ds-muted">
                           by {note.created_by.full_name || note.created_by.email}
                         </div>
                       )}

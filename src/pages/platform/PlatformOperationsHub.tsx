@@ -117,9 +117,9 @@ export default function PlatformOperationsHub() {
                   <TableRow key={j.id} className="hover:bg-muted/30">
                     <TableCell className="min-w-[220px]">
                       <div className="font-semibold text-xs capitalize">{j.mode || 'AI Course Generation'}</div>
-                      <div className="text-[10px] text-muted-foreground font-mono">{j.id}</div>
+                      <div className="text-[11px] text-muted-foreground font-mono">{j.id}</div>
                       {j.error_message && (
-                        <div className="text-[10px] text-ds-danger mt-1 max-w-sm truncate font-mono">
+                        <div className="text-[11px] text-ds-danger mt-1 max-w-sm truncate font-mono">
                           {j.error_message}
                         </div>
                       )}
@@ -129,12 +129,12 @@ export default function PlatformOperationsHub() {
                       <div className="flex flex-wrap gap-1">
                         {j.models_used && j.models_used.length > 0 ? (
                           j.models_used.map((m, idx) => (
-                            <Badge key={idx} variant="outline" className="text-[9px] font-mono whitespace-nowrap shrink-0">
+                            <Badge key={idx} variant="outline" className="text-[11px] font-mono whitespace-nowrap shrink-0">
                               {m}
                             </Badge>
                           ))
                         ) : (
-                          <span className="text-[10px] text-muted-foreground whitespace-nowrap">Automated Cascade</span>
+                          <span className="text-[11px] text-muted-foreground whitespace-nowrap">Automated Cascade</span>
                         )}
                       </div>
                     </TableCell>
@@ -142,7 +142,7 @@ export default function PlatformOperationsHub() {
                     <TableCell className="whitespace-nowrap">
                       <Badge
                         variant="outline"
-                        className={`text-[10px] capitalize whitespace-nowrap shrink-0 ${
+                        className={`text-[11px] capitalize whitespace-nowrap shrink-0 ${
                           j.status === 'completed' || j.status === 'success'
                             ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
                             : j.status === 'failed' || j.status === 'error'
@@ -201,19 +201,19 @@ export default function PlatformOperationsHub() {
               {cronJobs.map((c) => {
                 const lastRun = cronRuns.find((r) => r.jobid === c.jobid)
                 return (
-                  <div key={c.jobid} className="p-3.5 rounded-xl border bg-card/60 space-y-2">
+                  <div key={c.jobid} className="p-3.5 rounded-[8px] border bg-card/60 space-y-2">
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <div className="text-xs font-bold text-foreground">{c.jobname || `Job #${c.jobid}`}</div>
-                        <div className="text-[10px] font-mono text-muted-foreground">Schedule: {c.schedule}</div>
+                        <div className="text-[11px] font-mono text-muted-foreground">Schedule: {c.schedule}</div>
                       </div>
-                      <Badge variant={c.active ? 'default' : 'secondary'} className="text-[9px]">
+                      <Badge variant={c.active ? 'default' : 'secondary'} className="text-[11px]">
                         {c.active ? 'Active' : 'Inactive'}
                       </Badge>
                     </div>
 
                     {lastRun && (
-                      <div className="text-[10px] pt-1 border-t flex items-center justify-between text-muted-foreground">
+                      <div className="text-[11px] pt-1 border-t flex items-center justify-between text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <span className={`inline-block w-1.5 h-1.5 rounded-full ${lastRun.status === 'succeeded' ? 'bg-ds-success' : 'bg-ds-danger'}`} />
                           {lastRun.status}

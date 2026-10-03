@@ -136,10 +136,10 @@ export function ProgressDetailDialog() {
                   </div>
                 ) : (
                   selectedQuizResults.map((quizResult) => (
-                    <div key={quizResult.quizId || quizResult.quiz_id} className="space-y-4 rounded-xl border p-4">
+                    <div key={quizResult.quizId || quizResult.quiz_id} className="space-y-4 rounded-[8px] border p-4">
                       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                         <div>
-                          <h4 className="font-semibold text-slate-900">{quizResult.quizTitle || quizResult.quiz_title || t('knowledgeCheck')}</h4>
+                          <h4 className="font-semibold text-ds-ink">{quizResult.quizTitle || quizResult.quiz_title || t('knowledgeCheck')}</h4>
                           <p className="text-xs text-muted-foreground">
                             {formatDate(quizResult.completedAt || quizResult.completed_at || selectedProgress.completed_at || selectedProgress.updated_at || selectedProgress.created_at)}
                           </p>
@@ -171,15 +171,15 @@ export function ProgressDetailDialog() {
 
                       <div className="space-y-3">
                         {(quizResult.reviewItems || quizResult.review_items || []).map((reviewItem: any, index: number) => (
-                          <div key={`${quizResult.quizId || quizResult.quiz_id}-${reviewItem.questionId || reviewItem.question_id || index}`} className="rounded-lg border bg-slate-50 p-4">
+                          <div key={`${quizResult.quizId || quizResult.quiz_id}-${reviewItem.questionId || reviewItem.question_id || index}`} className="rounded-lg border bg-ds-surface-subtle p-4">
                             <div className="flex items-start justify-between gap-3">
                               <div>
-                                <p className="font-medium text-slate-900">{reviewItem.questionText || reviewItem.question_text || t('question', 'Question')}</p>
-                                <p className="mt-2 text-sm text-slate-600">
-                                  <span className="font-medium text-slate-800">{t('yourAnswer', 'Your answer')}:</span> {reviewItem.selectedAnswer || reviewItem.selected_answer || '-'}
+                                <p className="font-medium text-ds-ink">{reviewItem.questionText || reviewItem.question_text || t('question', 'Question')}</p>
+                                <p className="mt-2 text-sm text-ds-ink-secondary">
+                                  <span className="font-medium text-ds-ink">{t('yourAnswer', 'Your answer')}:</span> {reviewItem.selectedAnswer || reviewItem.selected_answer || '-'}
                                 </p>
-                                <p className="mt-1 text-sm text-slate-600">
-                                  <span className="font-medium text-slate-800">{t('correctAnswer', 'Correct answer')}:</span> {reviewItem.correctAnswer || reviewItem.correct_answer || '-'}
+                                <p className="mt-1 text-sm text-ds-ink-secondary">
+                                  <span className="font-medium text-ds-ink">{t('correctAnswer', 'Correct answer')}:</span> {reviewItem.correctAnswer || reviewItem.correct_answer || '-'}
                                 </p>
                                 {(reviewItem.explanation || reviewItem.feedback) && (
                                   <p className="mt-2 text-sm text-muted-foreground">{reviewItem.explanation || reviewItem.feedback}</p>

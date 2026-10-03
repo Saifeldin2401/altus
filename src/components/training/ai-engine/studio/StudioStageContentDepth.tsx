@@ -224,14 +224,14 @@ export function StudioStageContentDepth({
         <div className="flex items-center justify-between">
           <div>
             <Label className="text-sm font-bold text-foreground flex items-center gap-2">
-              <Layers className="w-4 h-4 text-purple-600" />
+              <Layers className="w-4 h-4 text-ds-accent" />
               <span>{t('builder.contentDepthLevel', 'Overall Content Depth')}</span>
             </Label>
             <p className="text-xs text-muted-foreground mt-0.5">
               {t('builder.contentDepthDesc', 'Controls the richness, detail level, and elaboration of lesson text.')}
             </p>
           </div>
-          <Badge variant="outline" className="text-xs font-semibold bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 border-purple-200 capitalize">
+          <Badge variant="outline" className="text-xs font-semibold bg-ds-accent-soft text-ds-accent border-ds-accent/30 capitalize">
             {overallDepth}
           </Badge>
         </div>
@@ -247,8 +247,8 @@ export function StudioStageContentDepth({
                 className={cn(
                   'cursor-pointer transition-all duration-200 border text-start group hover:shadow-sm',
                   isSelected
-                    ? 'border-purple-600 bg-purple-50/60 dark:bg-purple-950/40 ring-1 ring-purple-500 shadow-sm'
-                    : 'bg-card hover:border-purple-300'
+                    ? 'border-ds-accent bg-ds-accent-soft/60 ring-1 ring-ds-accent shadow-sm'
+                    : 'bg-card hover:border-ds-accent/30'
                 )}
               >
                 <CardContent className="p-3.5 space-y-1.5">
@@ -256,7 +256,7 @@ export function StudioStageContentDepth({
                     <p className="text-xs font-bold text-foreground">
                       {isRTL ? preset.title_ar : preset.title}
                     </p>
-                    <Badge className={cn('text-[9px] px-1.5 py-0.5 shrink-0 whitespace-nowrap', isSelected ? 'bg-purple-600 text-white' : 'bg-muted text-muted-foreground')}>
+                    <Badge className={cn('text-[11px] px-1.5 py-0.5 shrink-0 whitespace-nowrap', isSelected ? 'bg-ds-accent text-white dark:text-ds-on-ink' : 'bg-muted text-muted-foreground')}>
                       {preset.badge}
                     </Badge>
                   </div>
@@ -271,11 +271,11 @@ export function StudioStageContentDepth({
       </div>
 
       {/* 2. Interactive Lesson Component & Activity Mix */}
-      <div className="p-4 rounded-xl border bg-card/80 backdrop-blur-sm space-y-4 shadow-sm">
+      <div className="p-4 rounded-[8px] border bg-card/80 space-y-4 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-3">
           <div>
             <Label className="text-xs font-bold text-foreground flex items-center gap-1.5">
-              <FileText className="w-4 h-4 text-purple-600" />
+              <FileText className="w-4 h-4 text-ds-accent" />
               <span>{t('builder.lessonComponents', 'Interactive Lesson Components & Activities')}</span>
             </Label>
             <p className="text-[11px] text-muted-foreground">
@@ -298,7 +298,7 @@ export function StudioStageContentDepth({
               variant="outline"
               size="sm"
               onClick={onSelectAllComponents}
-              className="h-7 text-xs font-semibold text-purple-600 border-purple-300"
+              className="h-7 text-xs font-semibold text-ds-accent border-ds-accent/30"
             >
               {t('builder.selectAllComponents', 'Select All (12)')}
             </Button>
@@ -320,28 +320,28 @@ export function StudioStageContentDepth({
                 className={cn(
                   'flex items-start gap-2.5 p-3 rounded-lg border cursor-pointer transition-all duration-150 group',
                   isChecked
-                    ? 'border-purple-400 bg-purple-50/40 dark:bg-purple-950/20 shadow-xs'
-                    : 'border-border/70 hover:border-purple-200 bg-card'
+                    ? 'border-ds-accent bg-ds-accent-soft/40 shadow-xs'
+                    : 'border-border/70 hover:border-ds-accent/30 bg-card'
                 )}
               >
                 <Checkbox
                   checked={isChecked}
                   onCheckedChange={() => onToggleComponent(comp.key)}
-                  className="mt-0.5 data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
+                  className="mt-0.5 data-[state=checked]:bg-ds-accent data-[state=checked]:border-ds-accent"
                 />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <Icon className={cn('w-3.5 h-3.5', isChecked ? 'text-purple-600' : 'text-muted-foreground')} />
+                    <Icon className={cn('w-3.5 h-3.5', isChecked ? 'text-ds-accent' : 'text-muted-foreground')} />
                     <span className="text-xs font-bold text-foreground">
                       {isRTL ? comp.title_ar : comp.title}
                     </span>
                     {comp.badge && (
-                      <span className="text-[8px] px-1 py-0.2 bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300 rounded font-bold">
+                      <span className="text-[11px] px-1 py-0.2 bg-ds-accent-soft text-ds-accent rounded font-bold">
                         {comp.badge}
                       </span>
                     )}
                   </div>
-                  <p className="text-[10px] text-muted-foreground mt-0.5 leading-tight">
+                  <p className="text-[11px] text-muted-foreground mt-0.5 leading-tight">
                     {isRTL ? comp.desc_ar : comp.desc}
                   </p>
                 </div>
@@ -352,16 +352,16 @@ export function StudioStageContentDepth({
       </div>
 
       {/* 3. Progressive Disclosure: Advanced Depth Sliders */}
-      <div className="border rounded-xl bg-muted/10 overflow-hidden">
+      <div className="border rounded-[8px] bg-muted/10 overflow-hidden">
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
           className="w-full px-4 py-3 flex items-center justify-between text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
         >
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-purple-600" />
+            <Sparkles className="w-4 h-4 text-ds-accent" />
             <span>{t('builder.advancedDepth', 'Advanced Granular Dimension Weights')}</span>
-            <Badge variant="outline" className="text-[9px]">Optional</Badge>
+            <Badge variant="outline" className="text-[11px]">Optional</Badge>
           </div>
           {showAdvanced ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
@@ -373,7 +373,7 @@ export function StudioStageContentDepth({
               <div className="space-y-1.5 p-3 rounded-lg border bg-card">
                 <div className="flex justify-between text-xs font-semibold">
                   <span>{t('builder.theoryDepth', 'Conceptual & Theory Depth')}</span>
-                  <span className="font-mono text-purple-600 font-bold">{theoryDepth} / 5</span>
+                  <span className="font-mono text-ds-accent font-bold">{theoryDepth} / 5</span>
                 </div>
                 <Slider
                   value={[theoryDepth]}
@@ -388,7 +388,7 @@ export function StudioStageContentDepth({
               <div className="space-y-1.5 p-3 rounded-lg border bg-card">
                 <div className="flex justify-between text-xs font-semibold">
                   <span>{t('builder.examplesDepth', 'Hospitality Scenario Examples')}</span>
-                  <span className="font-mono text-purple-600 font-bold">{examplesDepth} / 5</span>
+                  <span className="font-mono text-ds-accent font-bold">{examplesDepth} / 5</span>
                 </div>
                 <Slider
                   value={[examplesDepth]}
@@ -403,7 +403,7 @@ export function StudioStageContentDepth({
               <div className="space-y-1.5 p-3 rounded-lg border bg-card">
                 <div className="flex justify-between text-xs font-semibold">
                   <span>{t('builder.practicalDepth', 'Practical Step Procedures & Checklists')}</span>
-                  <span className="font-mono text-purple-600 font-bold">{practicalDepth} / 5</span>
+                  <span className="font-mono text-ds-accent font-bold">{practicalDepth} / 5</span>
                 </div>
                 <Slider
                   value={[practicalDepth]}
@@ -418,7 +418,7 @@ export function StudioStageContentDepth({
               <div className="space-y-1.5 p-3 rounded-lg border bg-card">
                 <div className="flex justify-between text-xs font-semibold">
                   <span>{t('builder.caseStudiesDepth', 'Guest Interaction Dilemmas & Case Studies')}</span>
-                  <span className="font-mono text-purple-600 font-bold">{caseStudiesDepth} / 5</span>
+                  <span className="font-mono text-ds-accent font-bold">{caseStudiesDepth} / 5</span>
                 </div>
                 <Slider
                   value={[caseStudiesDepth]}

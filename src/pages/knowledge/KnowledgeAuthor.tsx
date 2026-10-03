@@ -1144,7 +1144,7 @@ export default function KnowledgeAuthor() {
         }
 
         if (asset.media_type === 'image') {
-            const imgHtml = `<p><img src="${asset.public_url}" alt="${asset.title || asset.filename}" class="rounded-xl shadow-md my-4 max-w-full" /></p>`
+            const imgHtml = `<p><img src="${asset.public_url}" alt="${asset.title || asset.filename}" class="rounded-[8px] my-4 max-w-full" /></p>`
             updateField('content', (formData.content || '') + '\n' + imgHtml)
             toast.success(t('editor.media_inserted', 'Image inserted from media library'))
         } else if (asset.media_type === 'video') {
@@ -1945,17 +1945,17 @@ ${aiLanguage === 'Arabic' ? 'مثال: "إجراءات التعامل مع شك�
 
             {/* Master article */}
             {isMasterMode && (
-                <div className="flex flex-col gap-4 rounded-xl border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent px-5 py-4 sm:flex-row sm:items-center sm:justify-between shadow-xs">
+                <div className="flex flex-col gap-4 rounded-[8px] border border-ds-warning/30 bg-gradient-to-r from-ds-warning/10 via-ds-warning/5 to-transparent px-5 py-4 sm:flex-row sm:items-center sm:justify-between shadow-xs">
                     <div className="min-w-0 flex items-start gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-amber-500/20 text-amber-700 dark:text-amber-300 flex items-center justify-center shrink-0 mt-0.5">
+                        <div className="w-9 h-9 rounded-lg bg-ds-warning/20 text-ds-warning flex items-center justify-center shrink-0 mt-0.5">
                             <Crown className="w-5 h-5" />
                         </div>
                         <div>
-                            <p className="text-sm font-bold text-amber-950 dark:text-amber-100 flex items-center gap-2">
+                            <p className="text-sm font-bold text-ds-warning flex items-center gap-2">
                                 {t('editor.master_brand_sop_title', 'Platform Master Standard Operating Procedure')}
-                                {isEditing && <span className="font-mono text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-200">v{(formData as any).current_version || 1}</span>}
+                                {isEditing && <span className="font-mono text-xs px-2 py-0.5 rounded-full bg-ds-warning/20 text-ds-warning">v{(formData as any).current_version || 1}</span>}
                             </p>
-                            <p className="text-xs text-amber-800/90 dark:text-amber-300/90 mt-0.5">
+                            <p className="text-xs text-ds-warning/90 mt-0.5">
                                 {isEditing && masterDeploymentCount !== null
                                     ? t('editor.master_deployed_notice', { count: masterDeploymentCount, defaultValue: `Active brand standard deployed across ${masterDeploymentCount} property library(ies). Updating releases a new brand standard revision.` })
                                     : t('editor.master_new_notice', 'Authoring a chain-wide corporate master template. Upon publishing, this standard will be cataloged in the Platform Master Library.')}
@@ -1964,13 +1964,13 @@ ${aiLanguage === 'Arabic' ? 'مثال: "إجراءات التعامل مع شك�
                     </div>
                     {isEditing && (
                         <div className="shrink-0 sm:w-80">
-                            <Label htmlFor="release-notes" className="mb-1 block text-xs font-semibold text-amber-950 dark:text-amber-200">{t('editor.release_notes_label', 'Master Revision Notes')}</Label>
+                            <Label htmlFor="release-notes" className="mb-1 block text-xs font-semibold text-ds-warning">{t('editor.release_notes_label', 'Master Revision Notes')}</Label>
                             <Input
                                 id="release-notes"
                                 placeholder={t('editor.release_notes_placeholder', 'e.g. Updated HACCP temperature thresholds')}
                                 value={releaseNotes}
                                 onChange={e => setReleaseNotes(e.target.value)}
-                                className="min-h-[38px] text-xs bg-background/80 border-amber-500/30"
+                                className="min-h-[38px] text-xs bg-background/80 border-ds-warning/30"
                             />
                         </div>
                     )}

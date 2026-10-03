@@ -175,7 +175,7 @@ export default function CourseDetailPage() {
 
           {/* What is it? */}
           <header className="space-y-4">
-            <CourseCover course={c} className="h-44 w-full rounded-xl sm:h-56">
+            <CourseCover course={c} className="h-44 w-full rounded-[8px] sm:h-56">
               {state === 'in_progress' && (
                 <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-1.5 bg-ds-surface/50">
                   <span className="block h-full bg-ds-accent" style={{ width: `${pct}%` }} />

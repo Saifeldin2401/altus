@@ -179,7 +179,7 @@ export default function KnowledgeHubPage() {
   return (
     <div className="mx-auto max-w-7xl space-y-6">
       {/* Hero: search first */}
-      <header className="relative isolate overflow-hidden rounded-2xl border border-ds-border bg-ds-surface p-6 sm:p-9">
+      <header className="relative isolate overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface p-6 sm:p-9">
         <div aria-hidden="true" className="absolute inset-y-0 end-0 -z-10 w-full bg-cover bg-center sm:w-[58%]" style={{ backgroundImage: "url('/assets/altus/knowledge-hero.jpg')" }} />
         <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-r from-ds-surface from-45% via-ds-surface/85 via-65% to-ds-surface/10 rtl:bg-gradient-to-l" />
 
@@ -201,14 +201,14 @@ export default function KnowledgeHubPage() {
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder={t('hub.searchPlaceholderLong', 'Search knowledge… try "late check-out", "lost items" or "housekeeping"')}
-              className="h-14 w-full rounded-xl border border-ds-border bg-ds-surface ps-12 pe-28 text-base text-ds-ink shadow-sm placeholder:text-ds-muted focus:border-ds-accent focus:outline-none focus:ring-2 focus:ring-ds-accent/30"
+              className="h-14 w-full rounded-[8px] border border-ds-border bg-ds-surface ps-12 pe-28 text-base text-ds-ink shadow-sm placeholder:text-ds-muted focus:border-ds-accent focus:outline-none focus:ring-2 focus:ring-ds-accent/30"
             />
             {text && (
               <button type="button" onClick={() => setText('')} aria-label={t('hub.clearSearch', 'Clear search')} className="absolute end-14 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-md text-ds-muted hover:bg-ds-surface-subtle">
                 <X aria-hidden="true" className="h-4 w-4" />
               </button>
             )}
-            <button type="submit" aria-label={t('hub.search', 'Search')} className="absolute end-2 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-lg bg-ds-brass text-white hover:bg-ds-brass/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent">
+            <button type="submit" aria-label={t('hub.search', 'Search')} className="absolute end-2 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-lg bg-ds-brass text-white dark:text-ds-on-ink hover:bg-ds-brass/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent">
               <ArrowRight aria-hidden="true" className="h-5 w-5 rtl:rotate-180" />
             </button>
           </form>
@@ -232,7 +232,7 @@ export default function KnowledgeHubPage() {
         </div>
 
         {scope && (
-          <div className="absolute end-8 top-8 hidden w-56 rounded-xl border border-ds-border bg-ds-surface/90 p-4 shadow-sm backdrop-blur-sm xl:block">
+          <div className="absolute end-8 top-8 hidden w-56 rounded-[8px] border border-ds-border bg-ds-surface/90 p-4 shadow-sm xl:block">
             <div className="flex items-center gap-2.5">
               <Building2 aria-hidden="true" className="h-7 w-7 shrink-0 text-ds-ink" />
               <p className="font-editorial text-lg font-semibold leading-tight text-ds-ink">{scope}</p>
@@ -260,7 +260,7 @@ export default function KnowledgeHubPage() {
           {results.isLoading ? (
             <div className="space-y-3" aria-busy="true"><Skeleton variant="card" className="h-20" /><Skeleton variant="card" className="h-20" /></div>
           ) : shown.length > 0 ? (
-            <ul className="divide-y divide-ds-border overflow-hidden rounded-xl border border-ds-border bg-ds-surface">
+            <ul className="divide-y divide-ds-border overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface">
               {shown.map((a) => <ArticleTrustRow key={a.id} article={a} now={now} />)}
             </ul>
           ) : (
@@ -283,7 +283,7 @@ export default function KnowledgeHubPage() {
                   <button
                     type="button"
                     onClick={() => setFilter(tile.id)}
-                    className={cn('group flex h-full w-full items-start gap-3 rounded-xl border p-4 text-start transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent', tile.tone)}
+                    className={cn('group flex h-full w-full items-start gap-3 rounded-[8px] border p-4 text-start transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent', tile.tone)}
                   >
                     <tile.icon aria-hidden="true" className={cn('h-7 w-7 shrink-0', tile.iconTone)} />
                     <span className="min-w-0 flex-1">
@@ -303,7 +303,7 @@ export default function KnowledgeHubPage() {
           <div className="grid items-start gap-6 lg:grid-cols-12">
             {/* Left: for you + browse by department */}
             <div className="space-y-5 lg:col-span-4">
-              <section aria-labelledby="kb-for-you" className="rounded-2xl border border-ds-border bg-ds-surface p-5">
+              <section aria-labelledby="kb-for-you" className="rounded-[8px] border border-ds-border bg-ds-surface p-5">
                 <SectionLabel id="kb-for-you">{t('hub.forYou', 'For you')}</SectionLabel>
                 <ul className="mt-3 divide-y divide-ds-border">
                   {forYou.map((r) => {
@@ -329,7 +329,7 @@ export default function KnowledgeHubPage() {
               </section>
 
               {departments.length > 0 && (
-                <section aria-labelledby="kb-departments" className="rounded-2xl border border-ds-chrome-border bg-ds-chrome p-5 text-ds-chrome-text">
+                <section aria-labelledby="kb-departments" className="rounded-[8px] border border-ds-chrome-border bg-ds-chrome p-5 text-ds-chrome-text">
                   <span aria-hidden="true" className="mb-3 block h-1 w-10 rounded-full bg-ds-chrome-accent" />
                   <h2 id="kb-departments" className="font-editorial text-[21px] font-semibold leading-tight text-white">{t('hub.needHelp', 'Need help finding something?')}</h2>
                   <p className="mt-1 text-sm text-ds-chrome-muted">{t('hub.browseByDepartment', 'Browse by department')}</p>
@@ -351,10 +351,10 @@ export default function KnowledgeHubPage() {
               {lastArticle.data && lastViewed && (
                 <section aria-labelledby="kb-continue" className="space-y-3">
                   <SectionLabel id="kb-continue">{t('hub.continue', 'Continue where you left off')}</SectionLabel>
-                  <div className="flex flex-col gap-4 rounded-2xl border border-ds-border bg-ds-surface p-4 sm:flex-row sm:items-center">
-                    <CourseCover course={{ id: lastArticle.data.id, title: lastArticle.data.title }} className="h-28 w-full rounded-xl sm:w-28" />
+                  <div className="flex flex-col gap-4 rounded-[8px] border border-ds-border bg-ds-surface p-4 sm:flex-row sm:items-center">
+                    <CourseCover course={{ id: lastArticle.data.id, title: lastArticle.data.title }} className="h-28 w-full rounded-[8px] sm:w-28" />
                     <div className="min-w-0 flex-1 space-y-1.5">
-                      <span className={cn('inline-flex rounded px-1.5 py-0.5 text-[10px] font-bold uppercase', knowledgeTypeStyle(lastArticle.data.content_type).soft, knowledgeTypeStyle(lastArticle.data.content_type).text)}>
+                      <span className={cn('inline-flex rounded px-1.5 py-0.5 text-[11px] font-bold uppercase', knowledgeTypeStyle(lastArticle.data.content_type).soft, knowledgeTypeStyle(lastArticle.data.content_type).text)}>
                         {t(`types.${lastArticle.data.content_type}`, lastArticle.data.content_type)}
                       </span>
                       <p className="font-editorial text-[22px] font-semibold leading-tight text-ds-ink">{titleOf(lastArticle.data)}</p>
@@ -383,7 +383,7 @@ export default function KnowledgeHubPage() {
                     action={can('content.author') ? <Link to="/studio/articles/new" className="text-sm font-semibold text-ds-accent hover:underline">{t('hub.writeFirst', 'Write an article')}</Link> : undefined}
                   />
                 ) : (
-                  <ul className="divide-y divide-ds-border overflow-hidden rounded-2xl border border-ds-border bg-ds-surface">
+                  <ul className="divide-y divide-ds-border overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface">
                     {latest.map((a) => {
                       const style = knowledgeTypeStyle(a.content_type)
                       const overdueReview = !!a.next_review_date && Date.parse(a.next_review_date) < now
@@ -393,7 +393,7 @@ export default function KnowledgeHubPage() {
                         <li key={a.id}>
                           <Link to={`/knowledge/${a.id}`} className="group flex items-center gap-3 px-4 py-3.5 hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ds-accent">
                             <span className={cn('inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg', style.soft, style.text)}><style.icon aria-hidden="true" className="h-5 w-5" /></span>
-                            <span className={cn('hidden w-16 shrink-0 rounded px-1.5 py-0.5 text-center text-[10px] font-bold uppercase sm:inline-block', style.soft, style.text)}>
+                            <span className={cn('hidden w-16 shrink-0 rounded px-1.5 py-0.5 text-center text-[11px] font-bold uppercase sm:inline-block', style.soft, style.text)}>
                               {t(`types.${a.content_type}`, a.content_type)}
                             </span>
                             <span className="min-w-0 flex-1">
@@ -423,7 +423,7 @@ export default function KnowledgeHubPage() {
               {(gaps.data ?? []).length > 0 && (
                 <section aria-labelledby="kb-gaps" className="space-y-3">
                   <SectionLabel id="kb-gaps">{t('hub.gapsTitle', 'Searched for but not found')}</SectionLabel>
-                  <div className="rounded-2xl border border-ds-warning/30 bg-ds-warning-soft/40 p-4">
+                  <div className="rounded-[8px] border border-ds-warning/30 bg-ds-warning-soft/40 p-4">
                     <p className="text-sm text-ds-ink-secondary">{t('hub.gapsHint', 'Your team looked for these in the last 30 days and found nothing. Each one is an article worth writing.')}</p>
                     <ul className="mt-3 divide-y divide-ds-border">
                       {(gaps.data ?? []).map((g) => (
@@ -451,7 +451,7 @@ export default function KnowledgeHubPage() {
                   <ul className="-mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-2 [scrollbar-width:thin]">
                     {(trending.data ?? []).map((a, i) => (
                       <li key={a.id} className="w-56 shrink-0 snap-start">
-                        <Link to={`/knowledge/${a.id}`} className="group flex h-full flex-col overflow-hidden rounded-xl border border-ds-border bg-ds-surface hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent">
+                        <Link to={`/knowledge/${a.id}`} className="group flex h-full flex-col overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent">
                           <CourseCover course={{ id: a.id, title: a.title }} className="h-24 w-full rounded-none">
                             <span className="absolute start-2 top-2 inline-flex items-center gap-1 rounded-full bg-ds-surface/95 px-2 py-0.5 text-[11px] font-semibold text-ds-ink">
                               {i === 0 && <Flame aria-hidden="true" className="h-3 w-3 text-ds-warning" />}#{i + 1}
@@ -473,7 +473,7 @@ export default function KnowledgeHubPage() {
                   <SectionLabel id="kb-review" action={<Link to="/studio/review/articles" className="text-xs font-semibold text-ds-accent hover:underline">{t('hub.openReview', 'Open review queue')}</Link>}>
                     {t('hub.reviewTitle', 'Past their review date')}
                   </SectionLabel>
-                  <ul className="divide-y divide-ds-border overflow-hidden rounded-xl border border-ds-border bg-ds-surface">
+                  <ul className="divide-y divide-ds-border overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface">
                     {needsReview.map((a) => <ArticleTrustRow key={a.id} article={a} now={now} />)}
                   </ul>
                 </section>

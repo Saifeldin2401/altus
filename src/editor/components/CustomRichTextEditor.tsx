@@ -308,7 +308,7 @@ function CustomRichTextEditor({
   return (
     <div
       className={cn(
-        'altus-rich-editor rounded-xl border bg-card shadow-sm',
+        'altus-rich-editor rounded-[8px] border bg-card shadow-sm',
         isFullscreen && 'altus-rich-editor--fullscreen',
         className,
       )}

@@ -117,7 +117,7 @@ export const WhatCanIDoSheet: React.FC = () => {
         </SheetHeader>
 
         {/* Quick Launch Interactive On-Page Spotlight Walkthrough */}
-        <div className="mx-6 mt-4 p-3 rounded-xl border border-primary/30 bg-primary/5 flex items-center justify-between gap-3 shadow-xs shrink-0">
+        <div className="mx-6 mt-4 p-3 rounded-[8px] border border-primary/30 bg-primary/5 flex items-center justify-between gap-3 shadow-xs shrink-0">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="h-8 w-8 rounded-lg bg-primary/20 text-primary flex items-center justify-center shrink-0">
               <Sparkles className="h-4 w-4" />
@@ -160,14 +160,14 @@ export const WhatCanIDoSheet: React.FC = () => {
 
             <TabsContent value="access" className="space-y-5 focus-visible:outline-none">
               <div className="space-y-2.5">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wide">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-ds-success uppercase tracking-wide">
                   <CheckCircle2 className="h-3.5 w-3.5" />
                   {t('sheet.you_can_do', 'What You Can Do')}
                 </div>
                 <div className="space-y-2">
                   {(blueprint?.youCanKeys || []).map((key, idx) => (
-                    <div key={idx} className="flex items-start gap-2.5 rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-2.5 text-xs leading-relaxed text-foreground">
-                      <div className="h-4 w-4 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <div key={idx} className="flex items-start gap-2.5 rounded-lg border border-ds-success/20 bg-ds-success/5 p-2.5 text-xs leading-relaxed text-foreground">
+                      <div className="h-4 w-4 rounded-full bg-ds-success/20 text-ds-success flex items-center justify-center shrink-0 mt-0.5">
                         <Check className="h-2.5 w-2.5" />
                       </div>
                       <span>{tKey(key)}</span>
@@ -177,14 +177,14 @@ export const WhatCanIDoSheet: React.FC = () => {
               </div>
 
               <div className="space-y-2.5 pt-2">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wide">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-ds-warning uppercase tracking-wide">
                   <Lock className="h-3.5 w-3.5" />
                   {t('sheet.you_cannot_do', 'Boundaries & Restrictions')}
                 </div>
                 <div className="space-y-2">
                   {(blueprint?.youCannotKeys || []).map((key, idx) => (
-                    <div key={idx} className="flex items-start gap-2.5 rounded-lg border border-amber-500/20 bg-amber-500/5 p-2.5 text-xs leading-relaxed text-muted-foreground">
-                      <div className="h-4 w-4 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <div key={idx} className="flex items-start gap-2.5 rounded-lg border border-ds-warning/20 bg-ds-warning/5 p-2.5 text-xs leading-relaxed text-muted-foreground">
+                      <div className="h-4 w-4 rounded-full bg-ds-warning/20 text-ds-warning flex items-center justify-center shrink-0 mt-0.5">
                         <Lock className="h-2.5 w-2.5" />
                       </div>
                       <span>{tKey(key)}</span>
@@ -197,7 +197,7 @@ export const WhatCanIDoSheet: React.FC = () => {
                 <div className="text-xs font-semibold text-foreground uppercase tracking-wide">
                   {t('sheet.capabilities_breakdown', 'Module Capabilities')}
                 </div>
-                <div className="divide-y divide-border rounded-xl border border-border bg-card overflow-hidden">
+                <div className="divide-y divide-border rounded-[8px] border border-border bg-card overflow-hidden">
                   {(blueprint?.capabilities || []).map((cap, idx) => (
                     <div key={idx} className="p-3 flex items-center justify-between gap-3 text-xs">
                       <div>
@@ -206,7 +206,7 @@ export const WhatCanIDoSheet: React.FC = () => {
                       </div>
                       <Badge 
                         variant={cap.level === 'manage' ? 'default' : cap.level === 'view' ? 'secondary' : 'outline'}
-                        className="text-[10px] uppercase font-bold tracking-wider shrink-0"
+                        className="text-[11px] uppercase font-bold tracking-wider shrink-0"
                       >
                         {cap.level === 'manage' ? t('caps.manage', 'Manage') : cap.level === 'view' ? t('caps.view', 'View') : t('caps.no_access', 'No Access')}
                       </Badge>
@@ -222,7 +222,7 @@ export const WhatCanIDoSheet: React.FC = () => {
               {(blueprint?.firstFiveTasks || []).map((task) => (
                 <div 
                   key={task.id}
-                  className="group flex items-center justify-between gap-3 p-3 rounded-xl border border-border bg-card hover:border-primary/40 hover:bg-accent/40 transition-colors"
+                  className="group flex items-center justify-between gap-3 p-3 rounded-[8px] border border-border bg-card hover:border-primary/40 hover:bg-accent/40 transition-colors"
                 >
                   <div className="space-y-1 flex-1">
                     <h5 className="text-xs font-semibold text-foreground">{tKey(task.titleKey)}</h5>
@@ -248,16 +248,16 @@ export const WhatCanIDoSheet: React.FC = () => {
               {roleEvents && roleEvents.map((evt) => (
                 <div 
                   key={evt.id}
-                  className="p-3.5 rounded-xl border border-border bg-card hover:border-primary/40 transition-all space-y-2.5 shadow-xs"
+                  className="p-3.5 rounded-[8px] border border-border bg-card hover:border-primary/40 transition-all space-y-2.5 shadow-xs"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <div className="h-6 w-6 rounded-lg bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                      <div className="h-6 w-6 rounded-lg bg-ds-warning/15 text-ds-warning flex items-center justify-center shrink-0">
                         <Zap className="h-3.5 w-3.5" />
                       </div>
                       <h5 className="text-xs font-bold text-foreground">{tKey(evt.nameKey)}</h5>
                     </div>
-                    <Badge variant="outline" className="text-[10px] font-semibold border-amber-500/30 text-amber-600 dark:text-amber-400 bg-amber-500/5 uppercase">
+                    <Badge variant="outline" className="text-[11px] font-semibold border-ds-warning/30 text-ds-warning bg-ds-warning/5 uppercase">
                       {t('sheet.event_badge', 'Workflow')}
                     </Badge>
                   </div>
@@ -286,7 +286,7 @@ export const WhatCanIDoSheet: React.FC = () => {
 
             <TabsContent value="tours" className="space-y-3.5 focus-visible:outline-none">
               {/* Featured On-Page Spotlight Walkthrough */}
-              <div className="rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-4 space-y-3">
+              <div className="rounded-[8px] border border-primary/30 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-4 space-y-3">
                 <div className="flex items-center gap-2">
                   <div className="h-7 w-7 rounded-lg bg-primary/20 text-primary flex items-center justify-center">
                     <Sparkles className="h-4 w-4" />
@@ -316,7 +316,7 @@ export const WhatCanIDoSheet: React.FC = () => {
               {(blueprint?.recommendedTours || []).map((tour) => (
                 <div 
                   key={tour.id}
-                  className="flex items-center justify-between gap-3 p-3 rounded-xl border border-border bg-card hover:border-primary/30 transition-colors"
+                  className="flex items-center justify-between gap-3 p-3 rounded-[8px] border border-border bg-card hover:border-primary/30 transition-colors"
                 >
                   <div className="space-y-1 flex-1">
                     <h5 className="text-xs font-semibold text-foreground flex items-center gap-1.5">

@@ -25,7 +25,7 @@ export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
           step={step}
           value={currentValue}
           onChange={(e) => onValueChange?.([Number(e.target.value)])}
-          className="w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer accent-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-400"
+          className="w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer accent-[rgb(var(--ds-ink))] focus:outline-none focus:ring-2 focus:ring-ds-accent"
           {...props}
         />
       </div>

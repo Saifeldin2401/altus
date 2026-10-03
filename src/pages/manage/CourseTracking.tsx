@@ -53,9 +53,7 @@ export default function CourseTracking() {
             />
             <TrainingTrackCommandCenter
                 canManageModules={canAny('content.author', 'content.publish')}
-                canAssignTraining={can('assignment.manage')}
                 onNavigateToBuilder={(id) => navigate(`/studio/courses/${id}`)}
-                onOpenAssignWizard={() => setWizardOpen(true)}
             />
             <AssignTrainingWizardModal
                 open={wizardOpen}

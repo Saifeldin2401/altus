@@ -21,22 +21,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -52,9 +37,8 @@ import { useAccountContext } from '@/contexts/auth/AccountContext';
 import { platformService } from '@/services/platformService';
 import { useQuery } from '@tanstack/react-query';
 import { useInvitations } from '@/hooks/useInvitations';
+import { InvitePersonDialog } from '@/components/admin/InvitePersonDialog';
 import { useDepartments } from '@/hooks/useDepartments';
-import { ROLE_HIERARCHY } from '@/lib/constants';
-import type { AppRole } from '@/lib/types';
 
 export default function UserInvitations() {
   const { t } = useTranslation(['admin', 'common']);
@@ -71,7 +55,7 @@ export default function UserInvitations() {
     cancelInvitation,
     refreshInvitations,
   } = useInvitations();
-  const { departments = [], isLoading: departmentsLoading } = useDepartments();
+  const { departments = [] } = useDepartments();
 
   const { data: entitlements, refetch: refetchEntitlements } = useQuery({
     queryKey: ['org-effective-entitlements', currentOrganization?.id],
@@ -85,58 +69,11 @@ export default function UserInvitations() {
   const [invitationToCancel, setInvitationToCancel] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Form state
-  const [formData, setFormData] = useState({
-    email: '',
-    role: '' as AppRole | '',
-    departmentId: '',
-  });
-  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
-
   const filteredInvitations = invitations.filter(
     (inv) =>
       inv.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
       inv.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  const validateForm = () => {
-    const errors: Record<string, string> = {};
-
-    if (!formData.email) {
-      errors.email = t('validation.required', { defaultValue: 'Email is required' });
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = t('validation.invalid_email', { defaultValue: 'Invalid email address' });
-    }
-
-    if (!formData.role) {
-      errors.role = t('validation.required', { defaultValue: 'Role is required' });
-    }
-
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (isSeatLimitReached) {
-      return;
-    }
-
-    if (!validateForm()) return;
-
-    const success = await createInvitation({
-      email: formData.email,
-      role: formData.role,
-      departmentId: formData.departmentId || undefined,
-    });
-
-    if (success) {
-      setFormData({ email: '', role: '', departmentId: '' });
-      setIsCreateDialogOpen(false);
-      refetchEntitlements();
-    }
-  };
 
   const handleCancel = async () => {
     if (!invitationToCancel) return;
@@ -282,90 +219,13 @@ export default function UserInvitations() {
         </div>
       )}
 
-      {/* Create Invitation Dialog */}
-      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>{t('invitations.create_title', { defaultValue: 'Invite New User' })}</DialogTitle>
-            <DialogDescription>
-              {t('invitations.create_description', { defaultValue: 'Send an invitation email to a new user' })}
-            </DialogDescription>
-          </DialogHeader>
-
-          <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">
-                {t('fields.email', { defaultValue: 'Email Address' })}
-                <span className="text-destructive">*</span>
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="user@example.com"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className={formErrors.email ? 'border-destructive' : ''}
-              />
-              {formErrors.email && <p className="text-sm text-destructive">{formErrors.email}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="role">
-                {t('fields.role', { defaultValue: 'Role' })}
-                <span className="text-destructive">*</span>
-              </Label>
-              <Select
-                value={formData.role}
-                onValueChange={(value) => setFormData({ ...formData, role: value as AppRole })}
-              >
-                <SelectTrigger className={formErrors.role ? 'border-destructive' : ''}>
-                  <SelectValue placeholder={t('fields.select_role', { defaultValue: 'Select a role' })} />
-                </SelectTrigger>
-                <SelectContent>
-                  {ROLE_HIERARCHY.map((role) => (
-                    <SelectItem key={role} value={role}>
-                      {role.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {formErrors.role && <p className="text-sm text-destructive">{formErrors.role}</p>}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="department">{t('fields.department', { defaultValue: 'Department (Optional)' })}</Label>
-              <Select
-                value={formData.departmentId}
-                onValueChange={(value) => setFormData({ ...formData, departmentId: value })}
-                disabled={departmentsLoading}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={t('fields.select_department', { defaultValue: 'Select a department' })} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">{t('fields.none', { defaultValue: 'None' })}</SelectItem>
-                  {departments.map((department) => (
-                    <SelectItem key={department.id} value={department.id}>
-                      {department.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="flex justify-end gap-3 pt-4">
-              <Button type="button" variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
-                {t('common.cancel', { defaultValue: 'Cancel' })}
-              </Button>
-              <Button type="submit" disabled={isCreating}>
-                {isCreating && <RefreshCw className="w-4 h-4 me-2 animate-spin" />}
-                <Send className="w-4 h-4 me-2" />
-                {t('invitations.send_invitation', { defaultValue: 'Send Invitation' })}
-              </Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <InvitePersonDialog
+        open={isCreateDialogOpen}
+        onOpenChange={setIsCreateDialogOpen}
+        createInvitation={createInvitation}
+        isCreating={isCreating}
+        onInvited={() => refetchEntitlements()}
+      />
 
       {/* Cancel Confirmation Dialog */}
       <AlertDialog open={!!invitationToCancel} onOpenChange={() => setInvitationToCancel(null)}>

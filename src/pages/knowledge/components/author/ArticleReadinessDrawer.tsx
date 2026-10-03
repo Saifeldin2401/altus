@@ -37,15 +37,15 @@ export function ArticleReadinessDrawer({
   const passedCount = items.filter((i) => i.passed).length
 
   const getScoreColor = (score: number) => {
-    if (score >= 85) return 'text-emerald-600 dark:text-emerald-400'
-    if (score >= 60) return 'text-amber-600 dark:text-amber-400'
-    return 'text-rose-600 dark:text-rose-400'
+    if (score >= 85) return 'text-ds-success'
+    if (score >= 60) return 'text-ds-warning'
+    return 'text-ds-danger'
   }
 
   const getScoreBadge = (score: number) => {
-    if (score >= 85) return { label: t('editor.readiness_ready', 'Publication Ready'), variant: 'default' as const, bg: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30' }
-    if (score >= 60) return { label: t('editor.readiness_needs_review', 'Good Progress'), variant: 'outline' as const, bg: 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30' }
-    return { label: t('editor.readiness_draft', 'Incomplete Draft'), variant: 'outline' as const, bg: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/30' }
+    if (score >= 85) return { label: t('editor.readiness_ready', 'Publication Ready'), variant: 'default' as const, bg: 'bg-ds-success/10 text-ds-success border-ds-success/30' }
+    if (score >= 60) return { label: t('editor.readiness_needs_review', 'Good Progress'), variant: 'outline' as const, bg: 'bg-ds-warning/10 text-ds-warning border-ds-warning/30' }
+    return { label: t('editor.readiness_draft', 'Incomplete Draft'), variant: 'outline' as const, bg: 'bg-ds-danger/10 text-ds-danger border-ds-danger/30' }
   }
 
   const badgeInfo = getScoreBadge(readinessScore)
@@ -56,7 +56,7 @@ export function ArticleReadinessDrawer({
         <SheetHeader className="pb-4 border-b">
           <div className="flex items-center justify-between gap-2">
             <SheetTitle className="text-base flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-hotel-gold" />
+              <ShieldCheck className="w-5 h-5 text-ds-accent" />
               <span>{t('editor.article_readiness', 'Article Quality & Readiness')}</span>
             </SheetTitle>
             <Badge variant="outline" className={`text-xs px-2 py-0.5 font-medium ${badgeInfo.bg}`}>
@@ -99,21 +99,21 @@ export function ArticleReadinessDrawer({
                 onClick={() => onNavigateToItem?.(item)}
                 className={`p-3 rounded-lg border transition-all text-xs flex items-start justify-between gap-3 ${
                   item.passed
-                    ? 'border-emerald-500/20 bg-emerald-50/40 dark:bg-emerald-950/10'
+                    ? 'border-ds-success/20 bg-ds-success-soft/40'
                     : item.importance === 'critical'
-                    ? 'border-rose-500/30 bg-rose-50/40 dark:bg-rose-950/15 cursor-pointer hover:border-rose-500/50'
-                    : 'border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 cursor-pointer hover:border-slate-300 dark:hover:border-slate-700'
+                    ? 'border-ds-danger/30 bg-ds-danger-soft/40 cursor-pointer hover:border-ds-danger/50'
+                    : 'border-ds-border bg-ds-surface-subtle/50 cursor-pointer hover:border-ds-border'
                 }`}
               >
                 <div className="flex items-start gap-2.5 overflow-hidden">
                   {item.passed ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-ds-success mt-0.5 shrink-0" />
                   ) : (
                     <AlertCircle
                       className={`w-4 h-4 mt-0.5 shrink-0 ${
                         item.importance === 'critical'
-                          ? 'text-rose-600 dark:text-rose-400'
-                          : 'text-amber-600 dark:text-amber-400'
+                          ? 'text-ds-danger'
+                          : 'text-ds-warning'
                       }`}
                     />
                   )}
@@ -123,7 +123,7 @@ export function ArticleReadinessDrawer({
                         {item.label}
                       </span>
                       {item.importance === 'critical' && !item.passed && (
-                        <Badge variant="destructive" className="text-[9px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
+                        <Badge variant="destructive" className="text-[11px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
                           Required
                         </Badge>
                       )}
@@ -153,7 +153,7 @@ export function ArticleReadinessDrawer({
         {/* Footer Actions */}
         <div className="pt-4 border-t mt-4 space-y-2">
           {!criticalPassed && (
-            <p className="text-[11px] text-rose-600 dark:text-rose-400 font-medium">
+            <p className="text-[11px] text-ds-danger font-medium">
               ⚠️ Critical requirements must be completed before submitting for review.
             </p>
           )}

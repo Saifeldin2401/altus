@@ -182,7 +182,7 @@ export default function SkillsMatrix() {
                                         <div className="flex flex-1 items-center justify-between gap-4 pe-2">
                                             <div className="flex items-center gap-2 text-start">
                                                 <span className="font-medium text-ds-ink">{skill.skillName}</span>
-                                                <Badge variant="outline" className="text-[10px]">{skill.skillCategory}</Badge>
+                                                <Badge variant="outline" className="text-[11px]">{skill.skillCategory}</Badge>
                                             </div>
                                             <div className="flex items-center gap-3 shrink-0">
                                                 <span className="text-xs text-muted-foreground">

@@ -26,13 +26,13 @@ export function ManagerSelect({
 
     const getRoleBadge = (role: string) => {
         const roleColors: Record<string, string> = {
-            regional_admin: 'bg-purple-100 text-purple-800',
-            regional_hr: 'bg-pink-100 text-pink-800',
+            regional_admin: 'bg-ds-accent-soft text-ds-accent',
+            regional_hr: 'bg-ds-surface-subtle text-ds-ink-secondary',
             property_manager: 'bg-info/10 text-info',
-            property_hr: 'bg-green-100 text-green-800',
-            department_head: 'bg-orange-100 text-orange-800'
+            property_hr: 'bg-ds-surface-subtle text-ds-ink-secondary',
+            department_head: 'bg-ds-surface-subtle text-ds-ink-secondary'
         }
-        return roleColors[role] || 'bg-gray-100 text-gray-800'
+        return roleColors[role] || 'bg-ds-surface-subtle text-ds-ink-secondary'
     }
 
     const getRoleLabel = (role: string) => {
@@ -58,7 +58,7 @@ export function ManagerSelect({
             <SelectContent>
                 {allowClear && (
                     <SelectItem value="__none__">
-                        <span className="flex items-center gap-2 text-gray-500">
+                        <span className="flex items-center gap-2 text-ds-muted">
                             <Users className="h-4 w-4" />
                             {t('organization.no_manager', 'No Manager (Top Level)')}
                         </span>
@@ -70,10 +70,10 @@ export function ManagerSelect({
                     return (
                         <SelectItem key={manager.id} value={manager.id}>
                             <span className="flex items-center gap-2">
-                                <User className="h-4 w-4 text-gray-500" />
+                                <User className="h-4 w-4 text-ds-muted" />
                                 <span>{manager.full_name}</span>
                                 {manager.job_title && (
-                                    <span className="text-gray-400 text-xs">({manager.job_title})</span>
+                                    <span className="text-ds-muted text-xs">({manager.job_title})</span>
                                 )}
                                 <Badge className={`${getRoleBadge(role)} text-xs px-1.5 py-0`}>
                                     {getRoleLabel(role)}
@@ -84,7 +84,7 @@ export function ManagerSelect({
                 })}
 
                 {!isLoading && managers?.length === 0 && (
-                    <div className="p-2 text-sm text-gray-500 text-center">
+                    <div className="p-2 text-sm text-ds-muted text-center">
                         {t('organization.no_managers_found', 'No managers found')}
                     </div>
                 )}

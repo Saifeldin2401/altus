@@ -43,7 +43,7 @@ export function ReadingProgress({ targetRef }: { targetRef: RefObject<HTMLElemen
       aria-valuenow={pct}
       className="pointer-events-none fixed inset-x-0 top-0 z-[60] h-1 bg-transparent print:hidden"
     >
-      <div className="h-full origin-left bg-gradient-to-r from-ds-accent to-ds-brass transition-transform duration-150 ease-out rtl:origin-right" style={{ transform: `scaleX(${pct / 100})` }} />
+      <div className="h-full origin-left bg-ds-accent transition-transform duration-150 ease-out rtl:origin-right" style={{ transform: `scaleX(${pct / 100})` }} />
     </div>
   )
 }

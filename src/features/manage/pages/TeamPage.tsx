@@ -113,7 +113,7 @@ export default function TeamPage() {
         <>
           {momentum && momentum.members > 0 && (
             <section aria-label={t('team.momentumTitle', 'Learning momentum')} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="flex flex-col rounded-xl border border-ds-border bg-ds-surface p-4">
+              <div className="flex flex-col rounded-[8px] border border-ds-border bg-ds-surface p-4">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-medium text-ds-muted">{t('team.activeLearners', 'Active learners')}</span>
                   <span className="flex h-7 w-7 items-center justify-center rounded-md bg-ds-success-soft text-ds-success">
@@ -128,7 +128,7 @@ export default function TeamPage() {
                 </p>
               </div>
 
-              <div className="flex flex-col rounded-xl border border-ds-border bg-ds-surface p-4">
+              <div className="flex flex-col rounded-[8px] border border-ds-border bg-ds-surface p-4">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-medium text-ds-muted">{t('team.learningNow', 'Learning right now')}</span>
                   <span className="flex h-7 w-7 items-center justify-center rounded-md bg-ds-warning-soft text-ds-warning">
@@ -143,7 +143,7 @@ export default function TeamPage() {
                 </p>
               </div>
 
-              <div className="flex flex-col rounded-xl border border-ds-border bg-ds-surface p-4 sm:col-span-2 lg:col-span-1">
+              <div className="flex flex-col rounded-[8px] border border-ds-border bg-ds-surface p-4 sm:col-span-2 lg:col-span-1">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-medium text-ds-muted">{t('team.trendTitle', '8-week activity')}</span>
                   <span className="flex h-7 w-7 items-center justify-center rounded-md bg-ds-accent-soft text-ds-accent">
@@ -164,7 +164,7 @@ export default function TeamPage() {
                     )
                   })}
                 </div>
-                <div className="mt-1.5 flex justify-between text-[10px] text-ds-muted font-mono">
+                <div className="mt-1.5 flex justify-between text-[11px] text-ds-muted font-mono">
                   <span>8w ago</span>
                   <span>This week</span>
                 </div>

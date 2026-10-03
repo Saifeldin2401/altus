@@ -43,7 +43,7 @@ export function Toaster() {
                         font-sans 
                         shadow-xl 
                         border 
-                        rounded-2xl 
+                        rounded-[8px] 
                         px-4 py-4 
                         text-sm 
                         w-full 
@@ -109,7 +109,6 @@ export function Toaster() {
                         p-2
                         rounded-full
                         hover:bg-black/5
-                        dark:hover:bg-white/10
                         touch-target
                         min-h-[36px]
                         min-w-[36px]
@@ -117,52 +116,33 @@ export function Toaster() {
                     `,
                     // Success variant - enhanced
                     success: `
-                        border-green-200 
-                        bg-green-50 
-                        text-green-900 
-                        dark:border-green-800 
-                        dark:bg-green-950 
-                        dark:text-green-100
-                        shadow-green-500/10
+                        border-ds-success/30 
+                        bg-ds-success-soft 
+                        text-ds-success 
                     `,
                     // Error variant - enhanced
                     error: `
-                        border-red-200 
-                        bg-red-50 
-                        text-red-900 
-                        dark:border-red-800 
-                        dark:bg-red-950 
-                        dark:text-red-100
-                        shadow-red-500/10
+                        border-ds-danger/30 
+                        bg-ds-danger-soft 
+                        text-ds-danger 
                     `,
                     // Warning variant - enhanced
                     warning: `
-                        border-amber-200 
-                        bg-amber-50 
-                        text-amber-900 
-                        dark:border-amber-800 
-                        dark:bg-amber-950 
-                        dark:text-amber-100
-                        shadow-amber-500/10
+                        border-ds-warning/30 
+                        bg-ds-warning-soft 
+                        text-ds-warning 
                     `,
                     // Info variant - enhanced
                     info: `
-                        border-blue-200 
-                        bg-blue-50 
-                        text-blue-900 
-                        dark:border-blue-800 
-                        dark:bg-blue-950 
-                        dark:text-blue-100
-                        shadow-blue-500/10
+                        border-ds-info/30 
+                        bg-ds-info-soft 
+                        text-ds-info 
                     `,
                     // Loading variant
                     loading: `
-                        border-gray-200 
-                        bg-gray-50 
-                        text-gray-900 
-                        dark:border-gray-700 
-                        dark:bg-gray-900 
-                        dark:text-gray-100
+                        border-ds-border 
+                        bg-ds-surface-subtle 
+                        text-ds-ink 
                     `,
                 }
             }}

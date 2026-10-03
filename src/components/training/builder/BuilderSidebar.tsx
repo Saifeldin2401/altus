@@ -9,7 +9,7 @@ export const BuilderSidebar = ({ className, children }: BuilderSidebarProps) => 
   return (
     <aside
       className={cn(
-        "w-[260px] xl:w-[280px] shrink-0 border-s border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-900/40 flex flex-col h-full overflow-y-auto overflow-x-hidden",
+        "w-[260px] xl:w-[280px] shrink-0 border-s border-ds-border bg-ds-surface-subtle/40 flex flex-col h-full overflow-y-auto overflow-x-hidden",
         className
       )}
     >

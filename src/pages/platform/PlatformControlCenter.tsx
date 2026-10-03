@@ -140,7 +140,7 @@ export default function PlatformControlCenter() {
 
         {/* Global Search Results Overlay */}
         {searchQuery.trim().length >= 2 && searchResults && !searchOverlayDismissed && (
-          <Card className="absolute top-14 start-0 end-0 z-50 shadow-2xl border bg-card/95 backdrop-blur-lg max-h-[32rem] overflow-y-auto">
+          <Card className="absolute top-14 start-0 end-0 z-50 max-h-[32rem] overflow-y-auto shadow-lg shadow-black/10 dark:shadow-black/40">
             <CardContent className="p-4 space-y-4 text-xs">
               {/* Organizations */}
               {searchResults.organizations?.length > 0 && (
@@ -157,10 +157,10 @@ export default function PlatformControlCenter() {
                       >
                         <div>
                           <div className="font-semibold text-foreground">{org.name}</div>
-                          <div className="text-[10px] text-muted-foreground font-mono">{org.slug}</div>
+                          <div className="text-[11px] text-muted-foreground font-mono">{org.slug}</div>
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <Badge variant="outline" className="text-[10px] capitalize">{org.lifecycle_status || (org.is_active ? 'active' : 'inactive')}</Badge>
+                          <Badge variant="outline" className="text-[11px] capitalize">{org.lifecycle_status || (org.is_active ? 'active' : 'inactive')}</Badge>
                         </div>
                       </div>
                     ))}
@@ -183,11 +183,11 @@ export default function PlatformControlCenter() {
                       >
                         <div>
                           <div className="font-semibold text-foreground">{u.full_name}</div>
-                          <div className="text-[10px] text-muted-foreground">
+                          <div className="text-[11px] text-muted-foreground">
                             {u.email} {u.organization_name ? `· ${u.organization_name}` : ''}
                           </div>
                         </div>
-                        <Badge variant="secondary" className="text-[10px] capitalize">{u.role || 'Member'}</Badge>
+                        <Badge variant="secondary" className="text-[11px] capitalize">{u.role || 'Member'}</Badge>
                       </div>
                     ))}
                   </div>
@@ -209,9 +209,9 @@ export default function PlatformControlCenter() {
                       >
                         <div>
                           <div className="font-semibold text-foreground">{c.title}</div>
-                          <div className="text-[10px] text-muted-foreground">Master Template · {c.category || 'General'}</div>
+                          <div className="text-[11px] text-muted-foreground">Master Template · {c.category || 'General'}</div>
                         </div>
-                        <Badge variant="outline" className="text-[10px] capitalize bg-ds-accent-soft text-ds-accent">Master</Badge>
+                        <Badge variant="outline" className="text-[11px] capitalize bg-ds-accent-soft text-ds-accent">Master</Badge>
                       </div>
                     ))}
                     {(searchResults.tenant_courses || []).map((c: any) => (
@@ -222,9 +222,9 @@ export default function PlatformControlCenter() {
                       >
                         <div>
                           <div className="font-semibold text-foreground">{c.title}</div>
-                          <div className="text-[10px] text-muted-foreground">{c.organization_name || 'Tenant'} · {c.category || 'General'}</div>
+                          <div className="text-[11px] text-muted-foreground">{c.organization_name || 'Tenant'} · {c.category || 'General'}</div>
                         </div>
-                        <Badge variant="secondary" className="text-[10px]">Tenant</Badge>
+                        <Badge variant="secondary" className="text-[11px]">Tenant</Badge>
                       </div>
                     ))}
                   </div>
@@ -246,9 +246,9 @@ export default function PlatformControlCenter() {
                       >
                         <div>
                           <div className="font-semibold text-foreground">{a.title}</div>
-                          <div className="text-[10px] text-muted-foreground">{a.organization_name || 'Global'} · Pass {a.passing_score}%</div>
+                          <div className="text-[11px] text-muted-foreground">{a.organization_name || 'Global'} · Pass {a.passing_score}%</div>
                         </div>
-                        <Badge variant="outline" className="text-[10px]">Assessment</Badge>
+                        <Badge variant="outline" className="text-[11px]">Assessment</Badge>
                       </div>
                     ))}
                     {(searchResults.question_banks || []).map((qb: any) => (
@@ -259,9 +259,9 @@ export default function PlatformControlCenter() {
                       >
                         <div>
                           <div className="font-semibold text-foreground">{qb.name}</div>
-                          <div className="text-[10px] text-muted-foreground">{qb.organization_name || 'Global'}</div>
+                          <div className="text-[11px] text-muted-foreground">{qb.organization_name || 'Global'}</div>
                         </div>
-                        <Badge variant="outline" className="text-[10px]">Bank</Badge>
+                        <Badge variant="outline" className="text-[11px]">Bank</Badge>
                       </div>
                     ))}
                   </div>
@@ -283,7 +283,7 @@ export default function PlatformControlCenter() {
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-2xl font-black text-ds-ink dark:text-white">
+              <span className="text-2xl font-black text-ds-ink">
                 {isLoadingStats ? <Skeleton className="h-8 w-12" /> : stats?.totalOrganizations || 0}
               </span>
               <span className="text-xs text-ds-success font-bold">
@@ -308,7 +308,7 @@ export default function PlatformControlCenter() {
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-2xl font-black text-ds-ink dark:text-white">
+              <span className="text-2xl font-black text-ds-ink">
                 {isLoadingStats ? <Skeleton className="h-8 w-12" /> : stats?.totalLearners || 0}
               </span>
               <span className="text-xs text-ds-accent font-bold">Platform-wide</span>
@@ -331,7 +331,7 @@ export default function PlatformControlCenter() {
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-2xl font-black text-ds-ink dark:text-white">
+              <span className="text-2xl font-black text-ds-ink">
                 {isLoadingStats ? <Skeleton className="h-8 w-12" /> : (stats?.totalMasterCourses || 0) + (stats?.totalMasterSops || 0)}
               </span>
               <span className="text-xs text-ds-success font-bold">
@@ -356,7 +356,7 @@ export default function PlatformControlCenter() {
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-2xl font-black text-ds-ink dark:text-white">
+              <span className="text-2xl font-black text-ds-ink">
                 {isLoadingOps ? <Skeleton className="h-8 w-12" /> : operations?.active_jobs || 0}
               </span>
               <span className="text-xs text-ds-accent font-bold">Processing</span>
@@ -404,7 +404,7 @@ export default function PlatformControlCenter() {
                   {operations.recent_jobs.slice(0, 5).map((job) => (
                     <div
                       key={job.id}
-                      className="p-3 rounded-xl border border-ds-border bg-ds-surface-subtle flex items-center justify-between text-xs gap-3"
+                      className="p-3 rounded-[8px] border border-ds-border bg-ds-surface-subtle flex items-center justify-between text-xs gap-3"
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <div className={`w-2 h-2 rounded-full shrink-0 ${
@@ -415,10 +415,10 @@ export default function PlatformControlCenter() {
                             : 'bg-ds-warning animate-pulse'
                         }`} />
                         <div className="truncate">
-                          <div className="font-bold text-ds-ink dark:text-white capitalize truncate">
+                          <div className="font-bold text-ds-ink capitalize truncate">
                             {job.mode || 'Course Generation'} Job
                           </div>
-                          <div className="text-[10px] text-muted-foreground">
+                          <div className="text-[11px] text-muted-foreground">
                             {format(new Date(job.created_at), 'dd MMM yyyy HH:mm:ss')} • Duration: {job.duration_ms ? `${(job.duration_ms / 1000).toFixed(1)}s` : 'Running'}
                           </div>
                         </div>
@@ -427,7 +427,7 @@ export default function PlatformControlCenter() {
                       <div className="flex items-center gap-2 shrink-0">
                         <Badge
                           variant="outline"
-                          className={`text-[10px] capitalize ${
+                          className={`text-[11px] capitalize ${
  job.status === 'completed' || job.status === 'success'
  ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
  : job.status === 'failed' || job.status === 'error'
@@ -466,7 +466,7 @@ export default function PlatformControlCenter() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             <Card
               onClick={() => navigate('/platform/organizations')}
-              className="p-4 rounded-xl border hover:border-ds-warning/30 hover:bg-ds-warning-soft cursor-pointer transition-all flex flex-col justify-between"
+              className="p-4 rounded-[8px] border hover:border-ds-warning/30 hover:bg-ds-warning-soft cursor-pointer transition-all flex flex-col justify-between"
             >
               <div>
                 <Building2 className="h-5 w-5 text-ds-warning mb-2" />
@@ -482,7 +482,7 @@ export default function PlatformControlCenter() {
 
             <Card
               onClick={() => navigate('/platform/users')}
-              className="p-4 rounded-xl border hover:border-ds-accent/30 hover:bg-ds-accent-soft cursor-pointer transition-all flex flex-col justify-between"
+              className="p-4 rounded-[8px] border hover:border-ds-accent/30 hover:bg-ds-accent-soft cursor-pointer transition-all flex flex-col justify-between"
             >
               <div>
                 <Users className="h-5 w-5 text-ds-accent mb-2" />
@@ -498,7 +498,7 @@ export default function PlatformControlCenter() {
 
             <Card
               onClick={() => navigate('/platform/master-library')}
-              className="p-4 rounded-xl border hover:border-ds-success/30 hover:bg-ds-success-soft cursor-pointer transition-all flex flex-col justify-between"
+              className="p-4 rounded-[8px] border hover:border-ds-success/30 hover:bg-ds-success-soft cursor-pointer transition-all flex flex-col justify-between"
             >
               <div>
                 <BookOpen className="h-5 w-5 text-ds-success mb-2" />
@@ -514,7 +514,7 @@ export default function PlatformControlCenter() {
 
             <Card
               onClick={() => navigate('/platform/ai-settings')}
-              className="p-4 rounded-xl border hover:border-ds-accent/30 hover:bg-ds-accent-soft cursor-pointer transition-all flex flex-col justify-between"
+              className="p-4 rounded-[8px] border hover:border-ds-accent/30 hover:bg-ds-accent-soft cursor-pointer transition-all flex flex-col justify-between"
             >
               <div>
                 <Bot className="h-5 w-5 text-ds-accent mb-2" />
@@ -530,7 +530,7 @@ export default function PlatformControlCenter() {
 
             <Card
               onClick={() => navigate('/platform/email-templates')}
-              className="p-4 rounded-xl border hover:border-ds-accent/30 hover:bg-ds-accent-soft cursor-pointer transition-all flex flex-col justify-between"
+              className="p-4 rounded-[8px] border hover:border-ds-accent/30 hover:bg-ds-accent-soft cursor-pointer transition-all flex flex-col justify-between"
             >
               <div>
                 <Mail className="h-5 w-5 text-ds-accent mb-2" />
@@ -546,7 +546,7 @@ export default function PlatformControlCenter() {
 
             <Card
               onClick={() => navigate('/platform/operations')}
-              className="p-4 rounded-xl border hover:border-ds-accent/30 hover:bg-ds-accent-soft cursor-pointer transition-all flex flex-col justify-between"
+              className="p-4 rounded-[8px] border hover:border-ds-accent/30 hover:bg-ds-accent-soft cursor-pointer transition-all flex flex-col justify-between"
             >
               <div>
                 <Cpu className="h-5 w-5 text-ds-accent mb-2" />
@@ -583,14 +583,14 @@ export default function PlatformControlCenter() {
                 {recentAudit.map((log) => (
                   <div key={log.id} className="p-2.5 rounded-lg border text-xs bg-card space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-ds-ink dark:text-white capitalize">
+                      <span className="font-bold text-ds-ink capitalize">
                         {log.action.replace(/_/g, ' ')}
                       </span>
-                      <span className="text-[10px] text-muted-foreground">
+                      <span className="text-[11px] text-muted-foreground">
                         {format(new Date(log.created_at), 'HH:mm:ss')}
                       </span>
                     </div>
-                    <div className="text-[10px] text-muted-foreground truncate">
+                    <div className="text-[11px] text-muted-foreground truncate">
                       Actor: <span className="font-semibold text-ds-ink">{log.actor_name}</span> &bull; Tenant: {log.target_organization_name}
                     </div>
                   </div>
@@ -605,7 +605,7 @@ export default function PlatformControlCenter() {
                 <Settings className="h-4 w-4 text-ds-warning" />
                 <span className="font-bold text-xs">Platform Configuration</span>
               </div>
-              <Badge variant="outline" className="text-[10px] border-ds-warning/30 text-ds-warning">
+              <Badge variant="outline" className="text-[11px] border-ds-warning/30 text-ds-warning">
                 Production GA
               </Badge>
             </div>
@@ -615,7 +615,7 @@ export default function PlatformControlCenter() {
             <Button
               size="sm"
               onClick={() => navigate('/platform/settings')}
-              className="w-full bg-ds-ink hover:bg-ds-ink text-white border border-ds-border-strong text-xs font-semibold h-8"
+              className="w-full bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink border border-ds-border-strong text-xs font-semibold h-8"
             >
               Open Platform Settings &rarr;
             </Button>

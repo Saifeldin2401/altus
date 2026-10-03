@@ -120,7 +120,7 @@ export function MultiDepartmentSelector({
                         const dept = departments?.find(d => d.id === deptId)
                         if (!dept) return null
                         return (
-                            <Badge key={deptId} variant="secondary" className="text-[10px] ps-2 pe-1 py-0.5 h-6 gap-1 group">
+                            <Badge key={deptId} variant="secondary" className="text-[11px] ps-2 pe-1 py-0.5 h-6 gap-1 group">
                                 {dept.name}
                                 <button
                                     type="button"
@@ -136,7 +136,7 @@ export function MultiDepartmentSelector({
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="h-6 px-2 text-[10px] text-muted-foreground hover:text-destructive"
+                        className="h-6 px-2 text-[11px] text-muted-foreground hover:text-destructive"
                         onClick={() => onValueChange([])}
                     >
                         Clear all

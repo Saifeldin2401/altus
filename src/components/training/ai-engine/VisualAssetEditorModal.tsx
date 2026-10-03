@@ -322,12 +322,12 @@ export function VisualAssetEditorModal({
     : 'Cloudflare Workers AI Free Tier ($0.00/step)'
 
   const providerBadgeColor = isGoogle
-    ? 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300'
+    ? 'bg-ds-info-soft text-ds-info border-ds-info/30'
     : isOpenRouter
-    ? 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/30 dark:text-purple-300'
+    ? 'bg-ds-accent-soft text-ds-accent border-ds-accent/30'
     : isVector
-    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300'
-    : 'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950/30 dark:text-orange-300'
+    ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
+    : 'bg-ds-warning-soft text-ds-warning border-ds-warning/30'
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -335,7 +335,7 @@ export function VisualAssetEditorModal({
         <DialogHeader className="p-5 border-b bg-muted/20">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300">
+              <div className="p-2 rounded-[8px] bg-ds-accent-soft text-ds-accent">
                 <ImageIcon className="w-5 h-5" />
               </div>
               <div>
@@ -347,7 +347,7 @@ export function VisualAssetEditorModal({
                 </DialogDescription>
               </div>
             </div>
-            <Badge variant="outline" className={`text-[10px] font-semibold ${providerBadgeColor}`}>
+            <Badge variant="outline" className={`text-[11px] font-semibold ${providerBadgeColor}`}>
               {providerBadgeLabel}
             </Badge>
           </div>
@@ -356,14 +356,14 @@ export function VisualAssetEditorModal({
         <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
           {/* Left Preview Box */}
           <div className="w-full md:w-1/2 p-6 bg-muted/10 border-e flex flex-col items-center justify-center space-y-4">
-            <div className="relative w-full rounded-2xl overflow-hidden border shadow-sm bg-slate-950 aspect-[16/9] flex items-center justify-center">
+            <div className="relative w-full rounded-[8px] overflow-hidden border shadow-sm bg-ds-ink aspect-[16/9] flex items-center justify-center">
               {isRegenerating && (
-                <div className="absolute inset-0 z-20 bg-slate-950/85 backdrop-blur-sm flex flex-col items-center justify-center text-white space-y-3 p-4">
-                  <Loader2 className="w-8 h-8 animate-spin text-purple-400" />
+                <div className="absolute inset-0 z-20 bg-ds-ink/85 flex flex-col items-center justify-center text-ds-on-ink space-y-3 p-4">
+                  <Loader2 className="w-8 h-8 animate-spin text-ds-accent" />
                   <p className="text-xs font-semibold text-center">
                     Synthesizing visual with {selectedModelDisplayName}...
                   </p>
-                  <p className="text-[10px] text-slate-400 text-center">
+                  <p className="text-[11px] text-ds-muted text-center">
                     Applying 5-star hospitality visual standards
                   </p>
                 </div>
@@ -416,15 +416,15 @@ export function VisualAssetEditorModal({
                 }
 
                 return (
-                  <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 space-y-2 p-4">
+                  <div className="w-full h-full flex flex-col items-center justify-center text-ds-muted space-y-2 p-4">
                     <ImageIcon className="w-10 h-10 stroke-1" />
                     <p className="text-xs">No image generated yet.</p>
-                    <p className="text-[10px] text-slate-600 text-center">Click "Regenerate Visual" below to synthesize with {selectedModelDisplayName}.</p>
+                    <p className="text-[11px] text-ds-ink-secondary text-center">Click "Regenerate Visual" below to synthesize with {selectedModelDisplayName}.</p>
                   </div>
                 )
               })()}
               <div className="absolute top-2 end-2 z-10">
-                <Badge className="bg-black/60 backdrop-blur text-white text-[10px]">
+                <Badge className="bg-black/60 text-white text-[11px]">
                   {aspectRatio}
                 </Badge>
               </div>
@@ -529,7 +529,7 @@ export function VisualAssetEditorModal({
                       </SelectItem>
 
                       {/* Cloudflare Workers AI — free */}
-                      <div className="px-2 py-1 text-[10px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/40 rounded-sm mt-2 mb-1">
+                      <div className="px-2 py-1 text-[11px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/40 rounded-sm mt-2 mb-1">
                         Cloudflare Workers AI (Free)
                       </div>
                       <SelectItem value="@cf/leonardo/lucid-origin">
@@ -552,7 +552,7 @@ export function VisualAssetEditorModal({
                       </SelectItem>
 
                       {/* Deterministic SVG — always available */}
-                      <div className="px-2 py-1 text-[10px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/40 rounded-sm mt-2 mb-1">
+                      <div className="px-2 py-1 text-[11px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/40 rounded-sm mt-2 mb-1">
                         Vector (Free • instant)
                       </div>
                       <SelectItem value="recraft-vector">
@@ -560,7 +560,7 @@ export function VisualAssetEditorModal({
                       </SelectItem>
 
                       {/* OpenRouter — paid, needs credits */}
-                      <div className="px-2 py-1 text-[10px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/40 rounded-sm mt-2 mb-1">
+                      <div className="px-2 py-1 text-[11px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/40 rounded-sm mt-2 mb-1">
                         OpenRouter (Paid • needs credits)
                       </div>
                       <SelectItem value="google/gemini-3-pro-image">
@@ -595,7 +595,7 @@ export function VisualAssetEditorModal({
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <Label className="text-xs font-semibold">{`${selectedModelDisplayName} Prompt`}</Label>
-                  <span className={`text-[10px] font-semibold ${isCloudflare || isVector ? 'text-emerald-600' : 'text-primary'}`}>
+                  <span className={`text-[11px] font-semibold ${isCloudflare || isVector ? 'text-ds-success' : 'text-primary'}`}>
                     {isCloudflare || isVector ? '$0.00 / step' : isGoogle ? 'Google AI Studio' : 'OpenRouter Unified'}
                   </span>
                 </div>
@@ -611,7 +611,7 @@ export function VisualAssetEditorModal({
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <Label className="text-xs font-semibold">{t('builder.negativePrompt', 'Negative Prompt (Artifact Elimination)')}</Label>
-                  <span className="text-[10px] text-muted-foreground">Auto-tuned</span>
+                  <span className="text-[11px] text-muted-foreground">Auto-tuned</span>
                 </div>
                 <Textarea
                   value={negativePrompt}
@@ -646,7 +646,7 @@ export function VisualAssetEditorModal({
             size="sm"
             onClick={handleDelete}
             disabled={deleteMutation.isPending}
-            className="text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
+            className="text-xs text-ds-danger hover:text-ds-danger hover:bg-ds-danger-soft"
           >
             <Trash2 className="w-3.5 h-3.5 me-1" />
             <span>{t('common:delete', 'Delete Visual')}</span>
@@ -660,7 +660,7 @@ export function VisualAssetEditorModal({
               size="sm"
               onClick={handleSave}
               disabled={updateMutation.isPending}
-              className="bg-purple-600 hover:bg-purple-700 text-white font-bold"
+              className="bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink font-bold"
             >
               {updateMutation.isPending ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin me-1" />

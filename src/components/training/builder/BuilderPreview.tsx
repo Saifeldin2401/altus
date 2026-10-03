@@ -34,33 +34,33 @@ export const BuilderPreview = ({ title, description, sections }: BuilderPreviewP
     const { t } = useTranslation('training')
 
     return (
-        <div className="flex-1 p-6 bg-slate-50/30 overflow-y-auto min-h-[calc(100vh-4rem)]">
+        <div className="flex-1 p-6 bg-ds-surface-subtle/30 overflow-y-auto min-h-[calc(100vh-4rem)]">
             <div className="max-w-4xl mx-auto">
-                <Card className="animate-fade-in border-t-4 border-t-ds-ink shadow-md">
-                    <CardHeader className={cn("bg-white border-b border-gray-100", 'text-start')}>
+                <Card className="animate-fade-in border-t-4 border-t-ds-ink">
+                    <CardHeader className={cn("bg-ds-surface border-b border-ds-border", 'text-start')}>
                         <div className={`flex items-center justify-between`}>
                             <CardTitle className="text-xl font-bold text-ds-ink">{t('builder.preview')}</CardTitle>
-                            <div className="text-xs text-gray-400 uppercase tracking-wider">{t('builder.draftMode')}</div>
+                            <div className="text-xs text-ds-muted uppercase tracking-wider">{t('builder.draftMode')}</div>
                         </div>
                     </CardHeader>
                     <CardContent className="p-8">
                         <div className={cn("prose max-w-none dark:prose-invert", 'text-start')}>
-                            <h1 className="text-3xl font-bold text-gray-900 mb-4">{title}</h1>
-                            <p className="text-lg text-gray-600 mb-10 leading-relaxed">{description}</p>
+                            <h1 className="text-3xl font-bold text-ds-ink mb-4">{title}</h1>
+                            <p className="text-lg text-ds-ink-secondary mb-10 leading-relaxed">{description}</p>
 
                             {sections.map((section) => (
-                                <div key={section.id} className="mb-10 p-6 bg-slate-50/50 rounded-xl border border-slate-100">
+                                <div key={section.id} className="mb-10 p-6 bg-ds-surface-subtle/50 rounded-[8px] border border-ds-border">
                                     <h2 className={`text-2xl font-bold mb-3 text-ds-ink flex items-center`}>
                                         <span className={cn("w-2 h-8 bg-ds-brass rounded-full", "me-3")}></span>
                                         {section.title}
                                     </h2>
-                                    {section.description && <p className={cn("text-gray-600 mb-6", "ps-5")}>{section.description}</p>}
+                                    {section.description && <p className={cn("text-ds-ink-secondary mb-6", "ps-5")}>{section.description}</p>}
 
                                     <div className="space-y-6 mt-6">
                                         {section.items.map((item) => (
-                                            <div key={item.id} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                                            <div key={item.id} className="bg-ds-surface p-6 rounded-lg shadow-sm border border-ds-border transition-shadow">
                                                 <div className={`flex items-start gap-4`}>
-                                                    <div className="mt-1 p-2 bg-slate-100 rounded-lg text-slate-500">
+                                                    <div className="mt-1 p-2 bg-ds-surface-subtle rounded-lg text-ds-muted">
                                                         {item.type === 'video' && <Video className="w-5 h-5" />}
                                                         {item.type === 'audio' && <Headphones className="w-5 h-5" />}
                                                         {item.type === 'interactive' && <Gamepad2 className="w-5 h-5" />}
@@ -71,18 +71,18 @@ export const BuilderPreview = ({ title, description, sections }: BuilderPreviewP
                                                         {item.type === 'sop_reference' && <BookOpen className="w-5 h-5" />}
                                                     </div>
                                                     <div className={cn("flex-1 min-w-0", "text-start")}>
-                                                        <h3 className="text-lg font-semibold mb-2 text-gray-900">{item.title}</h3>
+                                                        <h3 className="text-lg font-semibold mb-2 text-ds-ink">{item.title}</h3>
                                                         {item.content && (
                                                             <InlineErrorBoundary>
                                                                 <div
                                                                     dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.content) }}
-                                                                    className="mb-4 text-gray-600 prose-sm"
+                                                                    className="mb-4 text-ds-ink-secondary prose-sm"
                                                                 />
                                                             </InlineErrorBoundary>
                                                         )}
 
                                                         {item.type === 'video' && item.content_url && (
-                                                            <div className="aspect-video rounded-lg overflow-hidden bg-black shadow-inner mt-4">
+                                                            <div className="aspect-video rounded-lg overflow-hidden bg-black mt-4">
                                                                 <iframe
                                                                     src={item.content_url}
                                                                     className="w-full h-full"
@@ -99,7 +99,7 @@ export const BuilderPreview = ({ title, description, sections }: BuilderPreviewP
                                                         )}
 
                                                         {item.type === 'interactive' && item.content_url && (
-                                                            <div className="aspect-video rounded-lg overflow-hidden bg-slate-900 shadow-inner mt-4">
+                                                            <div className="aspect-video rounded-[8px] overflow-hidden bg-black mt-4">
                                                                 <iframe
                                                                     src={item.content_url}
                                                                     className="w-full h-full"
@@ -114,18 +114,18 @@ export const BuilderPreview = ({ title, description, sections }: BuilderPreviewP
                                                             <img
                                                                 src={item.content_url}
                                                                 alt={item.title}
-                                                                className="max-w-full rounded-lg shadow-md mt-4 border"
+                                                                className="max-w-full rounded-lg mt-4 border"
                                                             />
                                                         )}
 
                                                         {item.type === 'document_link' && item.content_url && (
-                                                            <div className={`mt-4 p-4 bg-blue-50 border border-blue-100 rounded-lg flex items-center gap-3`}>
-                                                                <div className="p-2 bg-white rounded-full text-blue-600 shadow-sm">
+                                                            <div className={`mt-4 p-4 bg-ds-info-soft border border-ds-info/30 rounded-lg flex items-center gap-3`}>
+                                                                <div className="p-2 bg-ds-surface rounded-full text-ds-info shadow-sm">
                                                                     <Link className="w-5 h-5" />
                                                                 </div>
                                                                 <div className={'text-start'}>
-                                                                    <p className="font-medium text-blue-900">{t('builder.attachedDocument')}</p>
-                                                                    <a href={item.content_url} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:underline hover:text-blue-800">
+                                                                    <p className="font-medium text-ds-info">{t('builder.attachedDocument')}</p>
+                                                                    <a href={item.content_url} target="_blank" rel="noopener noreferrer" className="text-sm text-ds-info hover:underline hover:text-ds-info">
                                                                         {t('builder.openDocument')}
                                                                     </a>
                                                                 </div>
@@ -136,13 +136,13 @@ export const BuilderPreview = ({ title, description, sections }: BuilderPreviewP
                                             </div>
                                         ))}
                                         {section.items.length === 0 && (
-                                            <p className="text-center text-gray-400 italic py-4">{t('builder.noContentInSection')}</p>
+                                            <p className="text-center text-ds-muted italic py-4">{t('builder.noContentInSection')}</p>
                                         )}
                                     </div>
                                 </div>
                             ))}
                             {sections.length === 0 && (
-                                <p className="text-center text-gray-400 italic py-10 border-2 border-dashed rounded-xl">{t('builder.noSectionsAdded')}</p>
+                                <p className="text-center text-ds-muted italic py-10 border-2 border-dashed rounded-[8px]">{t('builder.noSectionsAdded')}</p>
                             )}
                         </div>
                     </CardContent>

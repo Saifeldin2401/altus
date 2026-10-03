@@ -129,14 +129,14 @@ export function ModuleSkillsEditor({ moduleId, readonly = false }: ModuleSkillsE
         s => s?.id && !moduleSkills.some(ms => ms.skill_id === s.id)
     )
 
-    if (loading) return <div className={`text-sm text-gray-500 ${'text-start'}`}>{t('skillsManagement.loading')}</div>
+    if (loading) return <div className={`text-sm text-ds-muted ${'text-start'}`}>{t('skillsManagement.loading')}</div>
 
     return (
         <TooltipProvider>
         <div className={`space-y-4 ${'text-start'}`}>
             <div className={`flex items-center justify-between ${'flex-row'}`}>
                 <h3 className={`text-sm font-medium flex items-center gap-2 ${'flex-row'}`}>
-                    <Award className="h-4 w-4 text-hotel-gold" />
+                    <Award className="h-4 w-4 text-ds-accent" />
                     {t('skillsManagement.title')}
                 </h3>
                 {!readonly && isValidModuleId && (
@@ -164,7 +164,7 @@ export function ModuleSkillsEditor({ moduleId, readonly = false }: ModuleSkillsE
                                         </SelectTrigger>
                                         <SelectContent className={'text-start'}>
                                             {unlinkedSkills.length === 0 ? (
-                                                <div className="p-2 text-sm text-gray-500 text-center">
+                                                <div className="p-2 text-sm text-ds-muted text-center">
                                                     {t('skillsManagement.noAvailableSkills')}
                                                 </div>
                                             ) : (
@@ -187,7 +187,7 @@ export function ModuleSkillsEditor({ moduleId, readonly = false }: ModuleSkillsE
                                         onChange={(e) => setPoints(parseInt(e.target.value) || 0)}
                                         className={'text-start'}
                                     />
-                                    <p className="text-xs text-gray-500">
+                                    <p className="text-xs text-ds-muted">
                                         {t('skillsManagement.pointsHint')}
                                     </p>
                                 </div>
@@ -203,7 +203,7 @@ export function ModuleSkillsEditor({ moduleId, readonly = false }: ModuleSkillsE
 
             <div className="space-y-2">
                 {moduleSkills.length === 0 ? (
-                    <div className="text-sm text-gray-500 italic border border-dashed rounded p-3 text-center">
+                    <div className="text-sm text-ds-muted italic border border-dashed rounded p-3 text-center">
                         {t('skillsManagement.noSkillsLinked')}
                     </div>
                 ) : (
@@ -211,16 +211,16 @@ export function ModuleSkillsEditor({ moduleId, readonly = false }: ModuleSkillsE
                         {moduleSkills.map(ms => (
                             <div
                                 key={ms.id}
-                                className={`flex items-center justify-between p-2 rounded bg-gray-50 border group ${'flex-row'}`}
+                                className={`flex items-center justify-between p-2 rounded bg-ds-surface-subtle border group ${'flex-row'}`}
                             >
                                 <div className={'text-start'}>
                                     <div className="font-medium text-sm">{ms.skill?.name || t('skillsManagement.unknownSkill')}</div>
-                                    <div className={`text-xs text-gray-500 flex gap-2 ${'flex-row'}`}>
-                                        <Badge variant="secondary" className="text-[10px] h-5">
+                                    <div className={`text-xs text-ds-muted flex gap-2 ${'flex-row'}`}>
+                                        <Badge variant="secondary" className="text-[11px] h-5">
                                             {ms.points_awarded} {t('inlineQuiz.pts')}
                                         </Badge>
                                         {ms.skill?.category && (
-                                            <span className="text-gray-400">| {ms.skill.category}</span>
+                                            <span className="text-ds-muted">| {ms.skill.category}</span>
                                         )}
                                     </div>
                                 </div>
@@ -230,7 +230,7 @@ export function ModuleSkillsEditor({ moduleId, readonly = false }: ModuleSkillsE
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-6 w-6 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                className="h-6 w-6 text-ds-muted hover:text-ds-danger opacity-0 group-hover:opacity-100 transition-opacity"
                                                 onClick={() => handleRemoveSkill(ms.skill_id)}
                                                 aria-label={t('skillsManagement.removeSkill')}
                                             >

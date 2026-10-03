@@ -202,7 +202,7 @@ export function QuestionReview() {
                                         {question.options?.sort((a, b) => a.display_order - b.display_order).map((option) => (
                                             <div
                                                 key={option.id}
-                                                className={`p-3 rounded-md border flex items-center justify-between ${option.is_correct ? 'bg-ds-success-soft border-ds-success/30' : 'bg-white'
+                                                className={`p-3 rounded-md border flex items-center justify-between ${option.is_correct ? 'bg-ds-success-soft border-ds-success/30' : 'bg-ds-surface'
                                                     }`}
                                             >
                                                 <span className={option.is_correct ? 'font-medium text-ds-success' : 'text-ds-ink'}>

@@ -159,7 +159,7 @@ export const GuidedWizardModal: React.FC = () => {
     <Dialog open={isOpen} onOpenChange={closeWizard}>
       <DialogContent className="max-w-3xl max-h-[92vh] flex flex-col p-0 overflow-hidden shadow-2xl border-border/80">
         {isSimulating && (
-          <div className="bg-indigo-600 text-white px-4 py-2 text-xs flex items-center justify-between font-medium">
+          <div className="bg-ds-info text-white dark:text-ds-on-ink px-4 py-2 text-xs flex items-center justify-between font-medium">
             <div className="flex items-center gap-2">
               <Eye className="h-4 w-4" />
               <span>
@@ -202,7 +202,7 @@ export const GuidedWizardModal: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+            <div className="h-10 w-10 rounded-[8px] bg-primary/10 text-primary flex items-center justify-center shrink-0">
               {renderStepIcon(currentStep.icon)}
             </div>
             <div>
@@ -224,8 +224,8 @@ export const GuidedWizardModal: React.FC = () => {
           {/* STEP 1: WELCOME */}
           {currentStep.id === 'welcome' && (
             <div className="space-y-6">
-              <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-6 text-center sm:text-start flex flex-col sm:flex-row items-center gap-5">
-                <div className="h-16 w-16 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold shrink-0 shadow-lg shadow-primary/20">
+              <div className="rounded-[8px] border border-primary/20 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-6 text-center sm:text-start flex flex-col sm:flex-row items-center gap-5">
+                <div className="h-16 w-16 rounded-[8px] bg-primary text-primary-foreground flex items-center justify-center text-2xl font-bold shrink-0 shadow-lg shadow-primary/20">
                   {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'P'}
                 </div>
                 <div className="space-y-1.5 flex-1">
@@ -253,7 +253,7 @@ export const GuidedWizardModal: React.FC = () => {
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {blueprint.youCanKeys.slice(0, 4).map((key, idx) => (
-                    <div key={idx} className="flex items-start gap-2.5 p-3 rounded-xl border border-border bg-card/80 text-xs text-foreground">
+                    <div key={idx} className="flex items-start gap-2.5 p-3 rounded-[8px] border border-border bg-card/80 text-xs text-foreground">
                       <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                       <span className="leading-relaxed">{tKey(key)}</span>
                     </div>
@@ -271,15 +271,15 @@ export const GuidedWizardModal: React.FC = () => {
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-4 space-y-3">
-                  <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
+                <div className="rounded-[8px] border border-ds-success/30 bg-ds-success/5 p-4 space-y-3">
+                  <div className="flex items-center gap-2 text-xs font-bold text-ds-success uppercase tracking-wider">
                     <CheckCircle2 className="h-4 w-4" />
                     {t('role_step.you_can_title', 'What You Can Do')}
                   </div>
                   <div className="space-y-2">
                     {blueprint.youCanKeys.map((key, idx) => (
                       <div key={idx} className="flex items-start gap-2 text-xs text-foreground">
-                        <div className="h-4 w-4 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                        <div className="h-4 w-4 rounded-full bg-ds-success/20 text-ds-success flex items-center justify-center shrink-0 mt-0.5">
                           <Check className="h-2.5 w-2.5" />
                         </div>
                         <span className="leading-relaxed">{tKey(key)}</span>
@@ -288,15 +288,15 @@ export const GuidedWizardModal: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-3">
-                  <div className="flex items-center gap-2 text-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
+                <div className="rounded-[8px] border border-ds-warning/30 bg-ds-warning/5 p-4 space-y-3">
+                  <div className="flex items-center gap-2 text-xs font-bold text-ds-warning uppercase tracking-wider">
                     <Lock className="h-4 w-4" />
                     {t('role_step.you_cannot_title', 'What Lies Outside Your Role')}
                   </div>
                   <div className="space-y-2">
                     {blueprint.youCannotKeys.map((key, idx) => (
                       <div key={idx} className="flex items-start gap-2 text-xs text-muted-foreground">
-                        <div className="h-4 w-4 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0 mt-0.5">
+                        <div className="h-4 w-4 rounded-full bg-ds-warning/20 text-ds-warning flex items-center justify-center shrink-0 mt-0.5">
                           <Lock className="h-2.5 w-2.5" />
                         </div>
                         <span className="leading-relaxed">{tKey(key)}</span>
@@ -316,7 +316,7 @@ export const GuidedWizardModal: React.FC = () => {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="p-3.5 rounded-xl border border-border bg-card space-y-1.5">
+                <div className="p-3.5 rounded-[8px] border border-border bg-card space-y-1.5">
                   <div className="flex items-center gap-2 font-semibold text-xs text-foreground">
                     <LayoutDashboard className="h-4 w-4 text-primary" />
                     <span>{t('nav_step.dashboard_title', 'Workspace Dashboard')}</span>
@@ -326,7 +326,7 @@ export const GuidedWizardModal: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="p-3.5 rounded-xl border border-border bg-card space-y-1.5">
+                <div className="p-3.5 rounded-[8px] border border-border bg-card space-y-1.5">
                   <div className="flex items-center gap-2 font-semibold text-xs text-foreground">
                     <GraduationCap className="h-4 w-4 text-primary" />
                     <span>{t('nav_step.training_title', 'Training & LMS')}</span>
@@ -336,7 +336,7 @@ export const GuidedWizardModal: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="p-3.5 rounded-xl border border-border bg-card space-y-1.5">
+                <div className="p-3.5 rounded-[8px] border border-border bg-card space-y-1.5">
                   <div className="flex items-center gap-2 font-semibold text-xs text-foreground">
                     <GitPullRequest className="h-4 w-4 text-primary" />
                     <span>{t('nav_step.requests_title', 'Requests & Approvals')}</span>
@@ -346,7 +346,7 @@ export const GuidedWizardModal: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="p-3.5 rounded-xl border border-border bg-card space-y-1.5">
+                <div className="p-3.5 rounded-[8px] border border-border bg-card space-y-1.5">
                   <div className="flex items-center gap-2 font-semibold text-xs text-foreground">
                     <Building2 className="h-4 w-4 text-primary" />
                     <span>{t('nav_step.knowledge_title', 'Knowledge & SOPs')}</span>
@@ -362,7 +362,7 @@ export const GuidedWizardModal: React.FC = () => {
           {/* STEP 4: DAILY WORKSPACE */}
           {currentStep.id === 'daily_workspace' && (
             <div className="space-y-4">
-              <div className="rounded-xl border border-border bg-card p-4 space-y-3">
+              <div className="rounded-[8px] border border-border bg-card p-4 space-y-3">
                 <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
                   <LayoutDashboard className="h-4 w-4 text-primary" />
                   {t('workspace_step.dashboard_heading', 'How to Use Your Dashboard Every Day')}
@@ -404,8 +404,8 @@ export const GuidedWizardModal: React.FC = () => {
                   return (
                     <div 
                       key={task.id}
-                      className={`flex items-center justify-between gap-3 p-3.5 rounded-xl border transition-all ${
-                        isDone ? 'border-emerald-500/40 bg-emerald-500/5' : 'border-border bg-card'
+                      className={`flex items-center justify-between gap-3 p-3.5 rounded-[8px] border transition-all ${
+                        isDone ? 'border-ds-success/40 bg-ds-success/5' : 'border-border bg-card'
                       }`}
                     >
                       <div className="flex items-start gap-3 flex-1">
@@ -414,7 +414,7 @@ export const GuidedWizardModal: React.FC = () => {
                           onClick={() => toggleTaskDone(task.id)}
                           className={`h-5 w-5 rounded border flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
                             isDone 
-                              ? 'bg-emerald-600 border-emerald-600 text-white' 
+                              ? 'bg-ds-success border-ds-success text-white dark:text-ds-on-ink' 
                               : 'border-muted-foreground/40 hover:border-primary'
                           }`}
                         >
@@ -426,7 +426,7 @@ export const GuidedWizardModal: React.FC = () => {
                               {idx + 1}. {tKey(task.titleKey)}
                             </span>
                             {isDone && (
-                              <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-600 border-emerald-500/30">
+                              <Badge variant="outline" className="text-[11px] bg-ds-success/10 text-ds-success border-ds-success/30">
                                 {t('actions.completed', 'Completed')}
                               </Badge>
                             )}
@@ -460,7 +460,7 @@ export const GuidedWizardModal: React.FC = () => {
                 {t('profile_step.intro', 'Complete your profile details below to ensure shift communications, notifications, and certificates display correctly:')}
               </p>
 
-              <div className="rounded-xl border border-border bg-card p-4 space-y-4">
+              <div className="rounded-[8px] border border-border bg-card p-4 space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <Label htmlFor="fullName" className="text-xs font-medium">
@@ -536,9 +536,9 @@ export const GuidedWizardModal: React.FC = () => {
           {/* STEP 7: TENANT IDENTITY */}
           {currentStep.id === 'tenant_identity' && (
             <div className="space-y-4">
-              <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+              <div className="rounded-[8px] border border-border bg-card p-5 space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="h-12 w-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center text-xl font-bold">
+                  <div className="h-12 w-12 rounded-[8px] bg-primary/10 text-primary flex items-center justify-center text-xl font-bold">
                     <Building2 className="h-6 w-6" />
                   </div>
                   <div>
@@ -576,7 +576,7 @@ export const GuidedWizardModal: React.FC = () => {
                 {t('caps_step.intro', 'Based on your assigned role and security policies, here is an explicit overview of your access level across platform features:')}
               </p>
 
-              <div className="rounded-xl border border-border bg-card divide-y divide-border overflow-hidden">
+              <div className="rounded-[8px] border border-border bg-card divide-y divide-border overflow-hidden">
                 {blueprint.capabilities.map((cap, idx) => (
                   <div key={idx} className="p-3.5 flex items-center justify-between gap-3 text-xs">
                     <div className="space-y-0.5">
@@ -585,7 +585,7 @@ export const GuidedWizardModal: React.FC = () => {
                     </div>
                     <Badge
                       variant={cap.level === 'manage' ? 'default' : cap.level === 'view' ? 'secondary' : 'outline'}
-                      className="uppercase font-bold tracking-wider text-[10px] shrink-0"
+                      className="uppercase font-bold tracking-wider text-[11px] shrink-0"
                     >
                       {cap.level === 'manage' ? t('caps.manage', 'Manage') : cap.level === 'view' ? t('caps.view', 'View') : t('caps.no_access', 'No Access')}
                     </Badge>
@@ -603,26 +603,26 @@ export const GuidedWizardModal: React.FC = () => {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 pt-2">
-                <div className="p-3 rounded-xl border border-border bg-card text-center space-y-1.5">
-                  <div className="h-8 w-8 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mx-auto text-xs font-bold">1</div>
+                <div className="p-3 rounded-[8px] border border-border bg-card text-center space-y-1.5">
+                  <div className="h-8 w-8 rounded-full bg-ds-info/10 text-ds-info flex items-center justify-center mx-auto text-xs font-bold">1</div>
                   <div className="text-xs font-semibold text-foreground">{t('requests_step.submit', 'Submit')}</div>
                   <p className="text-[11px] text-muted-foreground leading-relaxed">{t('requests_step.submit_desc', 'Fill request details with dates and justifications.')}</p>
                 </div>
 
-                <div className="p-3 rounded-xl border border-border bg-card text-center space-y-1.5">
-                  <div className="h-8 w-8 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto text-xs font-bold">2</div>
+                <div className="p-3 rounded-[8px] border border-border bg-card text-center space-y-1.5">
+                  <div className="h-8 w-8 rounded-full bg-ds-warning/10 text-ds-warning flex items-center justify-center mx-auto text-xs font-bold">2</div>
                   <div className="text-xs font-semibold text-foreground">{t('requests_step.review', 'Supervisor Review')}</div>
                   <p className="text-[11px] text-muted-foreground leading-relaxed">{t('requests_step.review_desc', 'Coverage, budget, and SOP compliance checked.')}</p>
                 </div>
 
-                <div className="p-3 rounded-xl border border-border bg-card text-center space-y-1.5">
-                  <div className="h-8 w-8 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto text-xs font-bold">3</div>
+                <div className="p-3 rounded-[8px] border border-border bg-card text-center space-y-1.5">
+                  <div className="h-8 w-8 rounded-full bg-ds-success/10 text-ds-success flex items-center justify-center mx-auto text-xs font-bold">3</div>
                   <div className="text-xs font-semibold text-foreground">{t('requests_step.decision', 'Approval / Return')}</div>
                   <p className="text-[11px] text-muted-foreground leading-relaxed">{t('requests_step.decision_desc', 'Approved, returned for correction, or rejected.')}</p>
                 </div>
 
-                <div className="p-3 rounded-xl border border-border bg-card text-center space-y-1.5">
-                  <div className="h-8 w-8 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center mx-auto text-xs font-bold">4</div>
+                <div className="p-3 rounded-[8px] border border-border bg-card text-center space-y-1.5">
+                  <div className="h-8 w-8 rounded-full bg-ds-accent/10 text-ds-accent flex items-center justify-center mx-auto text-xs font-bold">4</div>
                   <div className="text-xs font-semibold text-foreground">{t('requests_step.notify', 'Notification')}</div>
                   <p className="text-[11px] text-muted-foreground leading-relaxed">{t('requests_step.notify_desc', 'Instant notification and permanent audit record.')}</p>
                 </div>
@@ -634,7 +634,7 @@ export const GuidedWizardModal: React.FC = () => {
           {/* STEP 10: APPROVER RESPONSIBILITIES */}
           {currentStep.id === 'approval_responsibilities' && blueprint.approverResponsibility && (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl border border-primary/20 bg-primary/5 space-y-2">
+              <div className="p-4 rounded-[8px] border border-primary/20 bg-primary/5 space-y-2">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-primary flex items-center gap-1.5">
                   <Stamp className="h-4 w-4" />
                   {t('approver_step.heading', 'Approver Authority Guidelines')}
@@ -651,7 +651,7 @@ export const GuidedWizardModal: React.FC = () => {
                 <div className="space-y-2">
                   {blueprint.approverResponsibility.criteriaKeys.map((key, idx) => (
                     <div key={idx} className="flex items-start gap-2 text-xs text-muted-foreground p-2.5 rounded-lg border border-border bg-card">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                      <CheckCircle2 className="h-4 w-4 text-ds-success shrink-0 mt-0.5" />
                       <span className="leading-relaxed">{tKey(key)}</span>
                     </div>
                   ))}
@@ -670,7 +670,7 @@ export const GuidedWizardModal: React.FC = () => {
               </p>
 
               {blueprint.contentHierarchyFocus === 'creator' ? (
-                <div className="p-4 rounded-xl border border-border bg-card space-y-3">
+                <div className="p-4 rounded-[8px] border border-border bg-card space-y-3">
                   <div className="flex items-center gap-2 text-xs font-semibold text-primary">
                     <GraduationCap className="h-4 w-4" />
                     <span>{t('content_step.creator_hierarchy', 'Course → Module → Lesson → Assessment → Certificate')}</span>
@@ -682,7 +682,7 @@ export const GuidedWizardModal: React.FC = () => {
                   </ul>
                 </div>
               ) : (
-                <div className="p-4 rounded-xl border border-border bg-card space-y-3">
+                <div className="p-4 rounded-[8px] border border-border bg-card space-y-3">
                   <div className="flex items-center gap-2 text-xs font-semibold text-primary">
                     <GraduationCap className="h-4 w-4" />
                     <span>{t('content_step.learner_journey', 'Enrolled Course → Interactive Lessons → Quiz (>80%) → Certificate')}</span>
@@ -705,8 +705,8 @@ export const GuidedWizardModal: React.FC = () => {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="p-3.5 rounded-xl border border-border bg-card space-y-2">
-                  <Badge variant="default" className="text-[10px] bg-red-500/10 text-red-600 border-red-500/20">
+                <div className="p-3.5 rounded-[8px] border border-border bg-card space-y-2">
+                  <Badge variant="default" className="text-[11px] bg-ds-danger/10 text-ds-danger border-ds-danger/20">
                     {t('notifications_step.actionable', 'Actionable Notifications')}
                   </Badge>
                   <p className="text-xs text-muted-foreground leading-relaxed">
@@ -714,8 +714,8 @@ export const GuidedWizardModal: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="p-3.5 rounded-xl border border-border bg-card space-y-2">
-                  <Badge variant="secondary" className="text-[10px]">
+                <div className="p-3.5 rounded-[8px] border border-border bg-card space-y-2">
+                  <Badge variant="secondary" className="text-[11px]">
                     {t('notifications_step.informational', 'Informational Notifications')}
                   </Badge>
                   <p className="text-xs text-muted-foreground leading-relaxed">
@@ -746,28 +746,28 @@ export const GuidedWizardModal: React.FC = () => {
               </p>
 
               <div className="space-y-2.5">
-                <div className="p-3 rounded-xl border border-border bg-card flex items-center justify-between gap-3 text-xs">
+                <div className="p-3 rounded-[8px] border border-border bg-card flex items-center justify-between gap-3 text-xs">
                   <div>
                     <span className="font-semibold text-foreground">1. {t('help_step.sheet_title', 'Persistent Role Guide')}</span>
                     <p className="text-[11px] text-muted-foreground mt-0.5">{t('help_step.sheet_desc', 'Click "My Guide" anytime in the header to view your capabilities and replay tours.')}</p>
                   </div>
-                  <Badge variant="outline" className="text-[10px]">{t('help_step.always_on', 'Always Available')}</Badge>
+                  <Badge variant="outline" className="text-[11px]">{t('help_step.always_on', 'Always Available')}</Badge>
                 </div>
 
-                <div className="p-3 rounded-xl border border-border bg-card flex items-center justify-between gap-3 text-xs">
+                <div className="p-3 rounded-[8px] border border-border bg-card flex items-center justify-between gap-3 text-xs">
                   <div>
                     <span className="font-semibold text-foreground">2. {t('help_step.search_title', 'Role-Aware Help Search')}</span>
                     <p className="text-[11px] text-muted-foreground mt-0.5">{t('help_step.search_desc', 'Search frequently asked questions and operational workflows.')}</p>
                   </div>
-                  <Badge variant="outline" className="text-[10px]">{t('help_step.searchable', 'Instant')}</Badge>
+                  <Badge variant="outline" className="text-[11px]">{t('help_step.searchable', 'Instant')}</Badge>
                 </div>
 
-                <div className="p-3 rounded-xl border border-border bg-card flex items-center justify-between gap-3 text-xs">
+                <div className="p-3 rounded-[8px] border border-border bg-card flex items-center justify-between gap-3 text-xs">
                   <div>
                     <span className="font-semibold text-foreground">3. {t('help_step.hr_title', 'Department Manager & HR')}</span>
                     <p className="text-[11px] text-muted-foreground mt-0.5">{t('help_step.hr_desc', 'Direct escalation for scheduling, policy, or technical inquiries.')}</p>
                   </div>
-                  <Badge variant="outline" className="text-[10px]">{t('help_step.human_support', 'Assisted')}</Badge>
+                  <Badge variant="outline" className="text-[11px]">{t('help_step.human_support', 'Assisted')}</Badge>
                 </div>
               </div>
             </div>
@@ -776,9 +776,9 @@ export const GuidedWizardModal: React.FC = () => {
           {/* STEP 14: ACCOUNT SECURITY */}
           {currentStep.id === 'account_security' && (
             <div className="space-y-4">
-              <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 space-y-2 text-center sm:text-start">
+              <div className="p-4 rounded-[8px] border border-ds-success/20 bg-ds-success/5 space-y-2 text-center sm:text-start">
                 <h4 className="text-sm font-bold text-foreground flex items-center justify-center sm:justify-start gap-2">
-                  <ShieldCheck className="h-5 w-5 text-emerald-600" />
+                  <ShieldCheck className="h-5 w-5 text-ds-success" />
                   {t('security_step.ready_title', 'You are ready to use ALTUS!')}
                 </h4>
                 <p className="text-xs text-muted-foreground leading-relaxed">
@@ -787,19 +787,19 @@ export const GuidedWizardModal: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-center">
-                <div className="p-3 rounded-xl border border-border bg-card space-y-1">
+                <div className="p-3 rounded-[8px] border border-border bg-card space-y-1">
                   <Lock className="h-4 w-4 text-primary mx-auto" />
                   <span className="font-semibold text-foreground">{t('security_step.session', 'Session Timeout')}</span>
                   <p className="text-[11px] text-muted-foreground">{t('security_step.session_desc', 'Automatic lockout after inactivity.')}</p>
                 </div>
 
-                <div className="p-3 rounded-xl border border-border bg-card space-y-1">
+                <div className="p-3 rounded-[8px] border border-border bg-card space-y-1">
                   <ShieldCheck className="h-4 w-4 text-primary mx-auto" />
                   <span className="font-semibold text-foreground">{t('security_step.audit', 'Audit Logging')}</span>
                   <p className="text-[11px] text-muted-foreground">{t('security_step.audit_desc', 'Cryptographically verifiable actions.')}</p>
                 </div>
 
-                <div className="p-3 rounded-xl border border-border bg-card space-y-1">
+                <div className="p-3 rounded-[8px] border border-border bg-card space-y-1">
                   <KeyRound className="h-4 w-4 text-primary mx-auto" />
                   <span className="font-semibold text-foreground">{t('security_step.mfa', '2FA Options')}</span>
                   <p className="text-[11px] text-muted-foreground">{t('security_step.mfa_desc', 'Multi-factor authentication support.')}</p>
@@ -838,7 +838,7 @@ export const GuidedWizardModal: React.FC = () => {
               <Button
                 size="sm"
                 onClick={finishWizard}
-                className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5 shadow-sm"
+                className="text-xs bg-ds-success hover:bg-ds-success text-white dark:text-ds-on-ink gap-1.5 shadow-sm"
               >
                 <Check className="h-3.5 w-3.5" />
                 {t('actions.complete_onboarding', 'Complete Setup')}

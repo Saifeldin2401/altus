@@ -127,5 +127,29 @@
   "page": {
     "eyebrow": "Studio",
     "context": "{{total}} files · {{images}} images · {{videos}} videos. Used in courses and articles."
+  },
+  "screens": {
+    "MediaLibraryPage": {
+      "pleaseSelectAFileTo": "Please select a file to upload",
+      "failedToDeleteAsset": "Failed to delete asset",
+      "allTypes": "All Types",
+      "imagesOnly": "Images Only",
+      "videos": "Videos",
+      "documents": "Documents",
+      "audio": "Audio",
+      "asset": "Asset",
+      "type": "Type",
+      "category": "Category",
+      "size": "Size",
+      "date": "Date",
+      "actions": "Actions",
+      "mimeType": "MIME Type",
+      "securityScan": "Security Scan",
+      "addedDate": "Added Date",
+      "downloadFile": "Download File",
+      "clickToChangeFile": "Click to change file",
+      "clickToBrowseFiles": "Click to browse files",
+      "upTo100mb": "(up to 100MB)"
+    }
   }
 }

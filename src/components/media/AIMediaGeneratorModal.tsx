@@ -257,12 +257,12 @@ export function AIMediaGeneratorModal({
     : 'Cloudflare Workers AI ($0.00)'
 
   const providerBadgeColor = isGoogle
-    ? 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300'
+    ? 'bg-ds-info-soft text-ds-info border-ds-info/30'
     : isOpenRouter
-    ? 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/30 dark:text-purple-300'
+    ? 'bg-ds-accent-soft text-ds-accent border-ds-accent/30'
     : isVector
-    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300'
-    : 'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950/30 dark:text-orange-300'
+    ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
+    : 'bg-ds-warning-soft text-ds-warning border-ds-warning/30'
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -271,7 +271,7 @@ export function AIMediaGeneratorModal({
         <DialogHeader className="p-5 border-b bg-muted/20">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300">
+              <div className="p-2 rounded-[8px] bg-ds-accent-soft text-ds-accent">
                 <Wand2 className="w-5 h-5" />
               </div>
               <div>
@@ -283,7 +283,7 @@ export function AIMediaGeneratorModal({
                 </DialogDescription>
               </div>
             </div>
-            <Badge variant="outline" className={`text-[10px] font-semibold ${providerBadgeColor}`}>
+            <Badge variant="outline" className={`text-[11px] font-semibold ${providerBadgeColor}`}>
               {providerBadgeLabel}
             </Badge>
           </div>
@@ -293,14 +293,14 @@ export function AIMediaGeneratorModal({
         <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
           {/* Left Preview Box */}
           <div className="w-full md:w-1/2 p-6 bg-muted/10 border-e flex flex-col items-center justify-center space-y-4">
-            <div className="relative w-full rounded-2xl overflow-hidden border shadow-sm bg-slate-950 aspect-[16/9] flex items-center justify-center">
+            <div className="relative w-full rounded-[8px] overflow-hidden border shadow-sm bg-ds-ink aspect-[16/9] flex items-center justify-center">
               {isGenerating && (
-                <div className="absolute inset-0 z-20 bg-slate-950/85 backdrop-blur-sm flex flex-col items-center justify-center text-white space-y-3 p-4">
-                  <Loader2 className="w-8 h-8 animate-spin text-purple-400" />
+                <div className="absolute inset-0 z-20 bg-ds-ink/85 flex flex-col items-center justify-center text-ds-on-ink space-y-3 p-4">
+                  <Loader2 className="w-8 h-8 animate-spin text-ds-accent" />
                   <p className="text-xs font-semibold text-center">
                     Synthesizing with {selectedModelDisplayName}...
                   </p>
-                  <p className="text-[10px] text-slate-400 text-center">
+                  <p className="text-[11px] text-ds-muted text-center">
                     Applying 5-star hospitality aesthetics & lighting
                   </p>
                 </div>
@@ -324,17 +324,17 @@ export function AIMediaGeneratorModal({
                   />
                 )
               ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 space-y-2 p-4">
-                  <ImageIcon className="w-12 h-12 stroke-1 text-slate-600" />
-                  <p className="text-xs font-medium text-slate-400">Ready to Generate</p>
-                  <p className="text-[10px] text-slate-500 text-center max-w-xs">
+                <div className="w-full h-full flex flex-col items-center justify-center text-ds-muted space-y-2 p-4">
+                  <ImageIcon className="w-12 h-12 stroke-1 text-ds-ink-secondary" />
+                  <p className="text-xs font-medium text-ds-muted">Ready to Generate</p>
+                  <p className="text-[11px] text-ds-muted text-center max-w-xs">
                     Choose a preset or type a prompt, then click "Generate Visual".
                   </p>
                 </div>
               )}
 
               <div className="absolute top-2 end-2 z-10">
-                <Badge className="bg-black/60 backdrop-blur text-white text-[10px]">
+                <Badge className="bg-black/60 text-white text-[11px]">
                   {aspectRatio}
                 </Badge>
               </div>
@@ -352,10 +352,10 @@ export function AIMediaGeneratorModal({
                     type="button"
                     variant="outline"
                     size="sm"
-                    className="h-7 text-[11px] px-2.5 bg-background hover:bg-purple-50 hover:text-purple-700 hover:border-purple-300 dark:hover:bg-purple-950/40"
+                    className="h-7 text-[11px] px-2.5 bg-background hover:bg-ds-accent-soft hover:text-ds-accent hover:border-ds-accent/30"
                     onClick={() => handleApplyPreset(preset)}
                   >
-                    <Sparkles className="w-3 h-3 me-1 text-amber-500" />
+                    <Sparkles className="w-3 h-3 me-1 text-ds-warning" />
                     {isRTL ? preset.title_ar : preset.title}
                   </Button>
                 ))}
@@ -379,7 +379,7 @@ export function AIMediaGeneratorModal({
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <Label className="text-xs font-semibold">{t('ai_generator.prompt', 'Visual Prompt')}</Label>
-                  <span className="text-[10px] text-purple-600 font-semibold">{selectedModelDisplayName}</span>
+                  <span className="text-[11px] text-ds-accent font-semibold">{selectedModelDisplayName}</span>
                 </div>
                 <Textarea
                   value={prompt}
@@ -506,7 +506,7 @@ export function AIMediaGeneratorModal({
                 </div>
                 <div className="flex flex-wrap gap-1 mt-1.5">
                   {tags.map((tag) => (
-                    <Badge key={tag} variant="secondary" className="gap-1 text-[10px]">
+                    <Badge key={tag} variant="secondary" className="gap-1 text-[11px]">
                       {tag}
                       <button onClick={() => handleRemoveTag(tag)} className="hover:text-destructive">
                         <X className="w-3 h-3" />
@@ -521,7 +521,7 @@ export function AIMediaGeneratorModal({
                 type="button"
                 onClick={handleGenerate}
                 disabled={isGenerating || !prompt.trim()}
-                className="w-full text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white shadow-sm gap-1.5 py-5"
+                className="w-full text-xs font-bold bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink shadow-sm gap-1.5 py-5"
               >
                 {isGenerating ? (
                   <>
@@ -549,7 +549,7 @@ export function AIMediaGeneratorModal({
             size="sm"
             onClick={handleSaveToLibrary}
             disabled={!generatedImageUrl || isSaving}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold gap-1.5 px-5"
+            className="bg-ds-success hover:bg-ds-success text-white dark:text-ds-on-ink font-bold gap-1.5 px-5"
           >
             {isSaving ? (
               <Loader2 className="w-4 h-4 animate-spin" />

@@ -258,12 +258,12 @@ export default function MyLearningPage() {
                   <li key={c.id}>
                     <Link
                       to={`/learn/courses/${c.id}`}
-                      className="group flex h-full flex-col gap-3 rounded-xl border border-ds-border bg-ds-surface p-3 transition-[border-color,box-shadow] hover:border-ds-border-strong hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent"
+                      className="group flex h-full flex-col gap-3 rounded-[8px] border border-ds-border bg-ds-surface p-3 transition-[border-color,box-shadow] hover:border-ds-border-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent"
                     >
                       <span className="flex gap-3">
                         <CourseCover course={c} className="h-20 w-24 rounded-lg" />
                         <span className="min-w-0 space-y-1">
-                          <span className="block text-[10px] font-semibold uppercase tracking-[0.12em] text-ds-muted">{t('myDay.course', 'Course')}</span>
+                          <span className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-ds-muted">{t('myDay.course', 'Course')}</span>
                           <span className="line-clamp-2 block text-sm font-semibold leading-snug text-ds-ink group-hover:underline">{c.title}</span>
                           {c.description && <span className="line-clamp-2 block text-xs text-ds-ink-secondary">{c.description}</span>}
                         </span>
@@ -286,7 +286,7 @@ export default function MyLearningPage() {
         </div>
 
         <aside className="space-y-5 lg:col-span-4">
-          <section aria-labelledby="plan-overview" className="rounded-2xl border border-ds-border bg-ds-surface p-5 shadow-[0_12px_32px_rgb(21_33_46/0.05)]">
+          <section aria-labelledby="plan-overview" className="rounded-[8px] border border-ds-border bg-ds-surface p-5 shadow-[0_12px_32px_rgb(21_33_46/0.05)]">
             <h2 id="plan-overview" className="font-editorial text-[21px] font-semibold text-ds-ink">{t('plan.learningOverview', 'Your learning overview')}</h2>
             <ul className="mt-4 grid grid-cols-2 gap-2.5">
               {overview.map((o) => {
@@ -300,14 +300,14 @@ export default function MyLearningPage() {
                     <ChevronRight aria-hidden="true" className="h-4 w-4 shrink-0 text-ds-muted rtl:rotate-180" />
                   </>
                 )
-                const cls = 'flex min-h-[76px] items-center gap-2.5 rounded-xl border border-ds-border px-3 hover:border-ds-border-strong hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent'
+                const cls = 'flex min-h-[76px] items-center gap-2.5 rounded-[8px] border border-ds-border px-3 hover:border-ds-border-strong hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent'
                 return <li key={o.id}>{o.href.startsWith('#') ? <a href={o.href} className={cls}>{inner}</a> : <Link to={o.href} className={cls}>{inner}</Link>}</li>
               })}
             </ul>
           </section>
 
           {goals.length > 0 && (
-            <section aria-labelledby="plan-goals" className="rounded-2xl border border-ds-border bg-ds-surface p-5">
+            <section aria-labelledby="plan-goals" className="rounded-[8px] border border-ds-border bg-ds-surface p-5">
               <h2 id="plan-goals" className="font-editorial text-[21px] font-semibold text-ds-ink">{t('plan.goalsTitle', 'Your learning goals')}</h2>
               <ul className="mt-4 space-y-4">
                 {goals.map((g) => (
@@ -329,18 +329,18 @@ export default function MyLearningPage() {
           )}
 
           {doneItems.length > 0 && (
-            <section aria-labelledby="plan-recent" className="rounded-2xl border border-ds-border bg-ds-surface p-5">
+            <section aria-labelledby="plan-recent" className="rounded-[8px] border border-ds-border bg-ds-surface p-5">
               <div className="flex items-center justify-between">
                 <h2 id="plan-recent" className="font-editorial text-[21px] font-semibold text-ds-ink">{t('plan.recentlyCompleted', 'Recently completed ({{count}})', { count: doneItems.length })}</h2>
                 <Link to="/learn/certificates" className="text-xs font-semibold text-ds-brass hover:underline">{t('myDay.viewAll', 'View all')}</Link>
               </div>
               <ul className="mt-4 space-y-3">
                 {doneItems.slice(0, 2).map((a) => (
-                  <li key={a.id} className="space-y-3 rounded-xl border border-ds-border p-3">
+                  <li key={a.id} className="space-y-3 rounded-[8px] border border-ds-border p-3">
                     <div className="flex items-center gap-3">
                       <CourseCover course={{ id: a.content_id, title: a.content_title, category: catalogById.get(a.content_id)?.category }} className="h-14 w-20 rounded-lg" />
                       <div className="min-w-0 flex-1">
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ds-muted">{t('myDay.course', 'Course')}</p>
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ds-muted">{t('myDay.course', 'Course')}</p>
                         <p className="truncate text-sm font-semibold text-ds-ink">{a.content_title ?? t('untitledAssignment', 'Untitled item')}</p>
                         {a.progress?.completed_at && <p className="text-xs text-ds-muted">{t('plan.completedOnDate', 'Completed on {{date}}', { date: date(a.progress.completed_at) })}</p>}
                       </div>
@@ -361,7 +361,7 @@ export default function MyLearningPage() {
       {/* Everything assigned, on a timeline */}
       <section id="plan-all" aria-labelledby="plan-all-title" className="mt-12 space-y-4 scroll-mt-24">
         <SectionTitle id="plan-all-title" title={t('plan.allTitle', 'All my learning')} />
-        <div className="flex flex-col gap-3 rounded-xl border border-ds-border bg-ds-surface p-3 sm:flex-row sm:items-center sm:p-4">
+        <div className="flex flex-col gap-3 rounded-[8px] border border-ds-border bg-ds-surface p-3 sm:flex-row sm:items-center sm:p-4">
           <div role="search" className="relative flex-1">
             <label htmlFor="plan-search" className="sr-only">{t('plan.searchLabel', 'Search my learning')}</label>
             <Search aria-hidden="true" className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ds-muted" />
@@ -399,7 +399,7 @@ export default function MyLearningPage() {
                 <h3 id={`plan-${key}`} className={cn('flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em]', key === 'overdue' ? 'text-ds-danger' : 'text-ds-muted')}>
                   {bucketTitle[key]} <span className="font-mono tabular-nums">{buckets[key].length}</span>
                 </h3>
-                <ul className={cn('divide-y divide-ds-border overflow-hidden rounded-xl border bg-ds-surface', key === 'overdue' ? 'border-ds-danger/40' : 'border-ds-border')}>
+                <ul className={cn('divide-y divide-ds-border overflow-hidden rounded-[8px] border bg-ds-surface', key === 'overdue' ? 'border-ds-danger/40' : 'border-ds-border')}>
                   {buckets[key].map((a) => <Row key={a.id} a={a} />)}
                 </ul>
               </section>
@@ -412,7 +412,7 @@ export default function MyLearningPage() {
                     {t('plan.completedTitle', 'Completed ({{count}})', { count: done.length })}
                   </button>
                 </h3>
-                {showDone && <ul className="divide-y divide-ds-border overflow-hidden rounded-xl border border-ds-border bg-ds-surface">{done.map((a) => <Row key={a.id} a={a} />)}</ul>}
+                {showDone && <ul className="divide-y divide-ds-border overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface">{done.map((a) => <Row key={a.id} a={a} />)}</ul>}
               </section>
             )}
           </div>

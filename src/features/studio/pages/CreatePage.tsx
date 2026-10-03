@@ -38,7 +38,7 @@ function OptionList({ heading, id, options, aiNote }: { heading: string; id: str
                 <span className="flex flex-wrap items-center gap-2 text-sm font-semibold text-ds-ink">
                   {o.title}
                   {o.ai && (
-                    <span className="rounded-[4px] border border-ds-accent/40 bg-ds-accent-soft/50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.08em] text-ds-accent">
+                    <span className="rounded-[4px] border border-ds-accent/40 bg-ds-accent-soft/50 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-ds-accent">
                       {aiNote}
                     </span>
                   )}

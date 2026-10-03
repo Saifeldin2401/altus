@@ -54,25 +54,25 @@ import { toast } from 'sonner';
 
 // Media type configuration
 const MEDIA_TYPE_CONFIG: Record<MediaType, { icon: React.ElementType; label: string; color: string; bg: string }> = {
-  video: { icon: Video, label: 'Video', color: 'text-rose-500', bg: 'bg-rose-50' },
-  image: { icon: ImageIcon, label: 'Image', color: 'text-blue-500', bg: 'bg-blue-50' },
-  document: { icon: FileText, label: 'Document', color: 'text-amber-500', bg: 'bg-amber-50' },
-  audio: { icon: FileAudio, label: 'Audio', color: 'text-purple-500', bg: 'bg-purple-50' },
+  video: { icon: Video, label: 'Video', color: 'text-ds-danger', bg: 'bg-ds-danger-soft' },
+  image: { icon: ImageIcon, label: 'Image', color: 'text-ds-info', bg: 'bg-ds-info-soft' },
+  document: { icon: FileText, label: 'Document', color: 'text-ds-warning', bg: 'bg-ds-warning-soft' },
+  audio: { icon: FileAudio, label: 'Audio', color: 'text-ds-accent', bg: 'bg-ds-accent-soft' },
 };
 
 // Scan status icons
 const ScanStatusIcon = ({ status }: { status: VirusScanStatus }) => {
   switch (status) {
     case 'clean':
-      return <ShieldCheck className="w-4 h-4 text-green-500" />;
+      return <ShieldCheck className="w-4 h-4 text-ds-success" />;
     case 'suspicious':
-      return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+      return <AlertTriangle className="w-4 h-4 text-ds-warning" />;
     case 'infected':
-      return <ShieldAlert className="w-4 h-4 text-red-500" />;
+      return <ShieldAlert className="w-4 h-4 text-ds-danger" />;
     case 'pending':
-      return <Shield className="w-4 h-4 text-gray-400" />;
+      return <Shield className="w-4 h-4 text-ds-muted" />;
     default:
-      return <Shield className="w-4 h-4 text-gray-400" />;
+      return <Shield className="w-4 h-4 text-ds-muted" />;
   }
 };
 
@@ -115,10 +115,10 @@ function MediaPickerItem({
         ) : asset.media_type === 'image' && asset.public_url ? (
           <img src={asset.public_url} alt={asset.title} className="w-full h-full object-cover" />
         ) : asset.media_type === 'video' && asset.public_url ? (
-          <div className="relative w-full h-full flex items-center justify-center bg-slate-950">
+          <div className="relative w-full h-full flex items-center justify-center bg-ds-ink">
             <video src={asset.public_url} className="w-full h-full object-cover opacity-80 pointer-events-none" muted preload="metadata" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-8 h-8 rounded-full bg-rose-500/90 text-white flex items-center justify-center shadow">
+              <div className="w-8 h-8 rounded-full bg-ds-danger/90 text-white flex items-center justify-center shadow">
                 <Video className="w-4 h-4" />
               </div>
             </div>
@@ -136,7 +136,7 @@ function MediaPickerItem({
           <div
             className={cn(
               'absolute top-2 end-2 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors',
-              isSelected ? 'bg-primary border-primary' : 'bg-white/90 border-gray-300'
+              isSelected ? 'bg-primary border-primary' : 'bg-white/90 border-ds-border'
             )}
           >
             {isSelected && <Check className="w-4 h-4 text-white" />}
@@ -145,7 +145,7 @@ function MediaPickerItem({
 
         {/* Scan Status Badge */}
         <div className="absolute top-2 start-2">
-          <Badge variant="secondary" className="text-[10px] gap-1">
+          <Badge variant="secondary" className="text-[11px] gap-1">
             <ScanStatusIcon status={asset.virus_scan_status} />
             <TypeIcon className="w-3 h-3" />
             {typeConfig.label}
@@ -154,14 +154,14 @@ function MediaPickerItem({
 
         {/* Usage count */}
         {asset.usage_count > 0 && (
-          <Badge variant="outline" className="absolute bottom-2 end-2 text-[10px] bg-white/90">
+          <Badge variant="outline" className="absolute bottom-2 end-2 text-[11px] bg-white/90">
             {asset.usage_count} uses
           </Badge>
         )}
 
         {/* Quarantine warning */}
         {isQuarantined && (
-          <div className="absolute inset-0 bg-red-500/20 flex items-center justify-center">
+          <div className="absolute inset-0 bg-ds-danger/20 flex items-center justify-center">
             <Badge variant="destructive" className="gap-1">
               <ShieldAlert className="w-3 h-3" />
               {asset.virus_scan_status === 'infected' ? 'Infected' : 'Suspicious'}
@@ -180,12 +180,12 @@ function MediaPickerItem({
         {asset.tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-2">
             {asset.tags.slice(0, 2).map((tag) => (
-              <Badge key={tag} variant="outline" className="text-[9px] px-1 py-0">
+              <Badge key={tag} variant="outline" className="text-[11px] px-1 py-0">
                 {tag}
               </Badge>
             ))}
             {asset.tags.length > 2 && (
-              <Badge variant="outline" className="text-[9px] px-1 py-0">
+              <Badge variant="outline" className="text-[11px] px-1 py-0">
                 +{asset.tags.length - 2}
               </Badge>
             )}
@@ -311,7 +311,7 @@ function UploadTab({
       )}
 
       {scanStatus === 'clean' && (
-        <div className="flex items-center gap-2 text-sm text-green-600 mb-4">
+        <div className="flex items-center gap-2 text-sm text-ds-success mb-4">
           <ShieldCheck className="w-4 h-4" />
           File passed security scan
         </div>
@@ -346,7 +346,7 @@ function UploadTab({
       )}
       
       {requireCleanScan && (
-        <p className="text-xs text-green-600 mt-2 flex items-center gap-1">
+        <p className="text-xs text-ds-success mt-2 flex items-center gap-1">
           <ShieldCheck className="w-3 h-3" />
           Security scan required for all uploads
         </p>
@@ -474,7 +474,7 @@ export function MediaPicker({ open, onOpenChange, onSelect, config = {}, title }
           <DialogDescription>
             Choose from your media library or upload a new file
             {requireCleanScan && (
-              <span className="flex items-center gap-1 text-green-600 mt-1">
+              <span className="flex items-center gap-1 text-ds-success mt-1">
                 <ShieldCheck className="w-3 h-3" />
                 Only security-scanned files are shown
               </span>

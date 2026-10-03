@@ -42,11 +42,11 @@ function SettingRow({
   }
 
   return (
-    <div className="p-3 rounded-xl border space-y-2">
+    <div className="p-3 rounded-[8px] border space-y-2">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="font-mono text-[11px] font-semibold text-ds-ink truncate">{s.key}</div>
-          {s.description && <div className="text-[10px] text-muted-foreground">{s.description}</div>}
+          {s.description && <div className="text-[11px] text-muted-foreground">{s.description}</div>}
         </div>
         {isBool ? (
           <Switch checked={!!s.value} disabled={disabled} onCheckedChange={(v) => onSave(s.key, v)} />
@@ -168,7 +168,7 @@ export default function PlatformSettings() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Card
           onClick={() => navigate('/platform/ai-settings')}
-          className="p-4 rounded-xl border border-ds-accent/30 hover:border-ds-accent/30 bg-ds-accent-soft hover:bg-ds-accent-soft cursor-pointer transition-all flex items-center justify-between shadow-xs"
+          className="p-4 rounded-[8px] border border-ds-accent/30 hover:border-ds-accent/30 bg-ds-accent-soft hover:bg-ds-accent-soft cursor-pointer transition-all flex items-center justify-between shadow-xs"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-ds-accent-soft text-ds-accent flex items-center justify-center shrink-0">
@@ -177,7 +177,7 @@ export default function PlatformSettings() {
             <div>
               <div className="font-bold text-xs flex items-center gap-1.5">
                 <span>AI Course Engine & Multi-Provider Gateways</span>
-                <Badge variant="outline" className="text-[9px] border-ds-accent/30 text-ds-accent">
+                <Badge variant="outline" className="text-[11px] border-ds-accent/30 text-ds-accent">
                   Global
                 </Badge>
               </div>
@@ -191,7 +191,7 @@ export default function PlatformSettings() {
 
         <Card
           onClick={() => navigate('/platform/email-templates')}
-          className="p-4 rounded-xl border border-ds-accent/30 hover:border-ds-accent/30 bg-ds-accent-soft hover:bg-ds-accent-soft cursor-pointer transition-all flex items-center justify-between shadow-xs"
+          className="p-4 rounded-[8px] border border-ds-accent/30 hover:border-ds-accent/30 bg-ds-accent-soft hover:bg-ds-accent-soft cursor-pointer transition-all flex items-center justify-between shadow-xs"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-ds-accent-soft text-ds-accent flex items-center justify-center shrink-0">
@@ -200,7 +200,7 @@ export default function PlatformSettings() {
             <div>
               <div className="font-bold text-xs flex items-center gap-1.5">
                 <span>System Notification & Email Templates</span>
-                <Badge variant="outline" className="text-[9px] border-ds-accent/30 text-ds-accent">
+                <Badge variant="outline" className="text-[11px] border-ds-accent/30 text-ds-accent">
                   Resend
                 </Badge>
               </div>
@@ -227,16 +227,16 @@ export default function PlatformSettings() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {(matrix?.flags || []).map((f) => (
-                <div key={f.key} className="p-3 rounded-xl border flex items-start justify-between gap-3">
+                <div key={f.key} className="p-3 rounded-[8px] border flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="text-xs font-semibold flex items-center gap-1.5">
                       {f.label}
                       {f.min_plan_code && (
-                        <Badge variant="outline" className="text-[9px] capitalize">{f.min_plan_code}+</Badge>
+                        <Badge variant="outline" className="text-[11px] capitalize">{f.min_plan_code}+</Badge>
                       )}
                     </div>
-                    <div className="text-[10px] text-muted-foreground">{f.description}</div>
-                    <div className="text-[9px] font-mono text-ds-muted mt-0.5">{f.key}</div>
+                    <div className="text-[11px] text-muted-foreground">{f.description}</div>
+                    <div className="text-[11px] font-mono text-ds-muted mt-0.5">{f.key}</div>
                   </div>
                   <Switch
                     checked={f.default_enabled}
@@ -264,14 +264,14 @@ export default function PlatformSettings() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {notificationPolicies.map((np) => (
-                <div key={np.key} className="p-3.5 rounded-xl border flex items-start justify-between gap-3 bg-card/60">
+                <div key={np.key} className="p-3.5 rounded-[8px] border flex items-start justify-between gap-3 bg-card/60">
                   <div className="min-w-0 space-y-1">
                     <div className="text-xs font-semibold flex items-center gap-1.5">
                       {np.name}
-                      <Badge variant="outline" className="text-[9px] capitalize">{np.category}</Badge>
+                      <Badge variant="outline" className="text-[11px] capitalize">{np.category}</Badge>
                     </div>
-                    {np.description && <div className="text-[10px] text-muted-foreground leading-snug">{np.description}</div>}
-                    <div className="flex items-center gap-2 text-[10px] text-ds-muted pt-1">
+                    {np.description && <div className="text-[11px] text-muted-foreground leading-snug">{np.description}</div>}
+                    <div className="flex items-center gap-2 text-[11px] text-ds-muted pt-1">
                       <span className="font-mono">{np.key}</span>
                       <span>•</span>
                       <span>{np.allow_tenant_override ? 'Tenant overrides allowed' : 'Locked by platform'}</span>
@@ -283,7 +283,7 @@ export default function PlatformSettings() {
                       disabled={!canConfig || notifPolicyMutation.isPending}
                       onCheckedChange={(v) => notifPolicyMutation.mutate({ key: np.key, patch: { default_enabled: v } })}
                     />
-                    <span className="text-[9px] text-muted-foreground">{np.default_enabled ? 'Active' : 'Disabled'}</span>
+                    <span className="text-[11px] text-muted-foreground">{np.default_enabled ? 'Active' : 'Disabled'}</span>
                   </div>
                 </div>
               ))}
@@ -326,17 +326,17 @@ export default function PlatformSettings() {
               onBlur={(e) => { const v = Number(e.target.value); if (!Number.isNaN(v) && v !== cfg?.min_session_reason_length) cfgMutation.mutate({ min_session_reason_length: v }) }}
               className="h-8" />
           </div>
-          <div className="flex items-center justify-between p-3 rounded-xl border">
+          <div className="flex items-center justify-between p-3 rounded-[8px] border">
             <div>
               <div className="font-semibold text-[11px]">Require a written access reason</div>
-              <div className="text-[10px] text-muted-foreground">Block tenant entry without a logged justification</div>
+              <div className="text-[11px] text-muted-foreground">Block tenant entry without a logged justification</div>
             </div>
             <Switch checked={!!cfg?.require_session_reason} disabled={!canSessionCfg}
               onCheckedChange={(v) => cfgMutation.mutate({ require_session_reason: v })} />
           </div>
-          <div className="sm:col-span-2 flex items-center gap-2 p-3 rounded-xl bg-ds-ink border">
+          <div className="sm:col-span-2 flex items-center gap-2 p-3 rounded-[8px] bg-ds-ink border">
             <ShieldCheck className="h-3.5 w-3.5 text-ds-muted shrink-0" />
-            <span className="text-[10px] text-muted-foreground">
+            <span className="text-[11px] text-muted-foreground">
               Legacy role fallback (super_admin / corporate_admin auto-operator):{' '}
               <strong>{cfg?.legacy_role_fallback_enabled ? 'ENABLED' : 'disabled'}</strong>
               {cfg?.legacy_role_fallback_enabled && ' — disable once every operator is provisioned in the directory.'}

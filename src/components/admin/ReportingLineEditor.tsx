@@ -70,14 +70,14 @@ export function ReportingLineEditor({
 
                 <div className="space-y-4 py-4">
                     {/* Employee Info */}
-                    <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4">
+                    <div className="bg-ds-surface-subtle rounded-lg p-4">
                         <div className="flex items-center gap-3">
-                            <div className="h-12 w-12 rounded-full bg-primary text-white flex items-center justify-center font-semibold">
+                            <div className="h-12 w-12 rounded-full bg-ds-ink text-ds-on-ink flex items-center justify-center font-semibold">
                                 {employee.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                             </div>
                             <div>
-                                <p className="font-semibold text-gray-900 dark:text-white">{employee.full_name}</p>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">{employee.job_title || t('common:common.no_title')}</p>
+                                <p className="font-semibold text-ds-ink">{employee.full_name}</p>
+                                <p className="text-sm text-ds-muted">{employee.job_title || t('common:common.no_title')}</p>
                             </div>
                         </div>
                     </div>
@@ -85,7 +85,7 @@ export function ReportingLineEditor({
                     {/* Current Reporting Chain */}
                     {reportingChain && reportingChain.length > 1 && (
                         <div>
-                            <Label className="text-xs text-gray-500 uppercase tracking-wide mb-2 block">
+                            <Label className="text-xs text-ds-muted uppercase tracking-wide mb-2 block">
                                 {t('organization.current_chain', 'Current Reporting Chain')}
                             </Label>
                             <div className="flex flex-wrap items-center gap-1">
@@ -98,7 +98,7 @@ export function ReportingLineEditor({
                                             {node.full_name}
                                         </Badge>
                                         {index < reportingChain.length - 1 && (
-                                            <ArrowRight className="h-3 w-3 text-gray-400" />
+                                            <ArrowRight className="h-3 w-3 text-ds-muted" />
                                         )}
                                     </span>
                                 ))}
@@ -121,13 +121,13 @@ export function ReportingLineEditor({
 
                     {/* Warning for significant changes */}
                     {hasChanged && (
-                        <div className="flex items-start gap-2 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-                            <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+                        <div className="flex items-start gap-2 p-3 bg-ds-warning-soft border border-ds-warning/30 rounded-lg">
+                            <AlertTriangle className="h-5 w-5 text-ds-warning flex-shrink-0 mt-0.5" />
                             <div className="text-sm">
-                                <p className="font-medium text-amber-800 dark:text-amber-200">
+                                <p className="font-medium text-ds-warning">
                                     {t('organization.change_warning', 'This change will affect:')}
                                 </p>
-                                <ul className="mt-1 text-amber-700 dark:text-amber-300 list-disc list-inside">
+                                <ul className="mt-1 text-ds-warning list-disc list-inside">
                                     <li>{t('organization.impact_approvals', 'Approval workflows for this employee')}</li>
                                     <li>{t('organization.impact_visibility', 'Manager visibility in reports')}</li>
                                     <li>{t('organization.impact_notifications', 'Notification routing')}</li>

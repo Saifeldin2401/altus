@@ -101,25 +101,25 @@ const CONFIDENTIALITY_OPTIONS: Array<{
     {
       value: "public",
       label: "Public",
-      color: "bg-gray-100 text-gray-700 border-gray-200",
+      color: "bg-ds-surface-subtle text-ds-ink-secondary border-ds-border",
       description: "Accessible to everyone",
     },
     {
       value: "internal",
       label: "Internal",
-      color: "bg-blue-100 text-blue-700 border-blue-200",
+      color: "bg-ds-info-soft text-ds-info border-ds-info/30",
       description: "Staff and management only",
     },
     {
       value: "confidential",
       label: "Confidential",
-      color: "bg-orange-100 text-orange-700 border-orange-200",
+      color: "bg-ds-warning-soft text-ds-warning border-ds-warning/30",
       description: "Management only",
     },
     {
       value: "restricted",
       label: "Restricted",
-      color: "bg-red-100 text-red-700 border-red-200",
+      color: "bg-ds-danger-soft text-ds-danger border-ds-danger/30",
       description: "Authorized personnel only",
     },
   ];
@@ -487,7 +487,7 @@ export function DocumentSearchAdvanced({
                     className={cn(
                       "px-2.5 py-1 rounded-md text-xs font-medium transition-colors border",
                       filters.fileTypes?.includes(type.value)
-                        ? "bg-ds-ink text-white border-ds-ink"
+                        ? "bg-ds-ink text-ds-on-ink border-ds-ink"
                         : "bg-background border-input hover:bg-accent"
                     )}
                   >

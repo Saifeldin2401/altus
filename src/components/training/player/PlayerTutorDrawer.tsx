@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { sanitizeHtml } from '@/lib/sanitize'
+import i18n from '@/i18n/i18n'
 
 interface ChatMessage {
     id: string
@@ -119,7 +120,7 @@ INSTRUCTIONS:
                 temperature: 0.5,
             })
 
-            const replyText = res.rawText || (isRTL ? 'عذراً، حدث خطأ في معالجة الإجابة. يرجى المحاولة مرة أخرى.' : 'Sorry, I encountered an issue generating a response. Please try again.')
+            const replyText = res.rawText || (i18n.t('training:screens.PlayerTutorDrawer.sorryIEncounteredAnIssue', 'Sorry, I encountered an issue generating a response. Please try again.'))
 
             setMessages(prev => [
                 ...prev,
@@ -174,32 +175,32 @@ INSTRUCTIONS:
             {/* Backdrop Overlay */}
             <div
                 onClick={onClose}
-                className="fixed inset-0 z-[95] bg-black/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
+                className="fixed inset-0 z-[95] bg-black/60 transition-opacity animate-in fade-in duration-200"
             />
 
             {/* Drawer */}
             <div
                 className={cn(
-                    "fixed inset-y-0 z-[100] w-full sm:w-[440px] bg-slate-950 text-slate-100 shadow-2xl border-s border-slate-800 flex flex-col transition-transform duration-300 animate-in slide-in-from-right rtl:slide-in-from-left end-0",
+                    "fixed inset-y-0 z-[100] w-full sm:w-[440px] bg-ds-ink text-ds-on-ink shadow-2xl border-s border-ds-ink-secondary flex flex-col transition-transform duration-300 animate-in slide-in-from-right rtl:slide-in-from-left end-0",
                 )}
             >
                 {/* Header */}
-                <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900 shrink-0">
+                <div className="p-4 border-b border-ds-ink-secondary flex items-center justify-between bg-ds-ink shrink-0">
                     <div className="flex items-center gap-2.5">
-                        <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-slate-950 shadow-md shadow-amber-500/20 shrink-0">
+                        <div className="h-9 w-9 rounded-lg bg-ds-accent-soft flex items-center justify-center text-ds-accent shrink-0">
                             <Bot className="h-5 w-5" />
                         </div>
                         <div className="min-w-0">
                             <div className="flex items-center gap-1.5 flex-wrap">
-                                <h3 className="text-sm font-bold text-white whitespace-nowrap">
-                                    {isRTL ? 'المرشد الذكي ألتوس' : 'Altus AI Coach'}
+                                <h3 className="text-sm font-bold text-ds-on-ink whitespace-nowrap">
+                                    {i18n.t('training:screens.PlayerTutorDrawer.altusAiCoach', 'Altus AI Coach')}
                                 </h3>
-                                <Badge className="bg-amber-500/20 text-amber-300 border-amber-500/40 text-[10px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
+                                <Badge className="bg-ds-warning/20 text-ds-warning border-ds-warning/40 text-[11px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
                                     GPT-4o
                                 </Badge>
                             </div>
-                            <p className="text-[11px] text-slate-400 truncate max-w-[200px]">
-                                {blockTitle || moduleTitle || (isRTL ? 'مساعد التعلم المباشر' : 'Live Learning Assistant')}
+                            <p className="text-[11px] text-ds-muted truncate max-w-[200px]">
+                                {blockTitle || moduleTitle || (i18n.t('training:screens.PlayerTutorDrawer.liveLearningAssistant', 'Live Learning Assistant'))}
                             </p>
                         </div>
                     </div>
@@ -209,8 +210,8 @@ INSTRUCTIONS:
                         variant="ghost"
                         size="sm"
                         onClick={handleResetChat}
-                        title={isRTL ? 'محادثة جديدة' : 'Reset Chat'}
-                        className="h-8 w-8 p-0 text-slate-400 hover:text-white hover:bg-slate-800"
+                        title={i18n.t('training:screens.PlayerTutorDrawer.resetChat', 'Reset Chat')}
+                        className="h-8 w-8 p-0 text-ds-muted hover:text-ds-on-ink hover:bg-ds-ink"
                     >
                         <RotateCcw className="h-3.5 w-3.5" />
                     </Button>
@@ -218,7 +219,7 @@ INSTRUCTIONS:
                         variant="ghost"
                         size="sm"
                         onClick={onClose}
-                        className="h-8 w-8 p-0 text-slate-400 hover:text-white hover:bg-slate-800"
+                        className="h-8 w-8 p-0 text-ds-muted hover:text-ds-on-ink hover:bg-ds-ink"
                     >
                         <X className="h-4 w-4" />
                     </Button>
@@ -226,41 +227,41 @@ INSTRUCTIONS:
             </div>
 
             {/* Quick Actions Bar */}
-            <div className="px-3 py-2 bg-slate-900/40 border-b border-slate-800/80 flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs">
+            <div className="px-3 py-2 bg-ds-ink/40 border-b border-ds-ink-secondary/80 flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs">
                 <button
                     onClick={() => handleSend(
-                        isRTL ? 'لخص هذا الدرس في 3 نقاط محددة وسريعة.' : 'Summarize this section in 3 clear, actionable bullet points.',
+                        i18n.t('training:screens.PlayerTutorDrawer.summarizeThisSectionIn3', 'Summarize this section in 3 clear, actionable bullet points.'),
                         'summary'
                     )}
                     disabled={loading}
-                    className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-amber-500/20 hover:text-amber-300 border border-slate-700/60 text-slate-300 transition-colors text-[11px]"
+                    className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full bg-ds-ink/80 hover:bg-ds-warning/20 hover:text-ds-warning border border-ds-ink-secondary/60 text-ds-muted transition-colors text-[11px]"
                 >
-                    <ListChecks className="h-3 w-3 text-amber-400" />
-                    <span>{isRTL ? 'ملخص سريع' : '3-Bullet Summary'}</span>
+                    <ListChecks className="h-3 w-3 text-ds-warning" />
+                    <span>{i18n.t('training:screens.PlayerTutorDrawer.3BulletSummary', '3-Bullet Summary')}</span>
                 </button>
 
                 <button
                     onClick={() => handleSend(
-                        isRTL ? 'أعطني مثالاً واقعياً لموقف مع نزيل يطبق هذا الإجراء.' : 'Give me a realistic hotel guest scenario applying this rule.',
+                        i18n.t('training:screens.PlayerTutorDrawer.giveMeARealisticHotel', 'Give me a realistic hotel guest scenario applying this rule.'),
                         'scenario'
                     )}
                     disabled={loading}
-                    className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-amber-500/20 hover:text-amber-300 border border-slate-700/60 text-slate-300 transition-colors text-[11px]"
+                    className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full bg-ds-ink/80 hover:bg-ds-warning/20 hover:text-ds-warning border border-ds-ink-secondary/60 text-ds-muted transition-colors text-[11px]"
                 >
-                    <Lightbulb className="h-3 w-3 text-amber-400" />
-                    <span>{isRTL ? 'موقف وسيناريو' : 'Guest Scenario'}</span>
+                    <Lightbulb className="h-3 w-3 text-ds-warning" />
+                    <span>{i18n.t('training:screens.PlayerTutorDrawer.guestScenario', 'Guest Scenario')}</span>
                 </button>
 
                 <button
                     onClick={() => handleSend(
-                        isRTL ? 'اختبرني بسؤال سريع من هذا الدرس للتأكد من فهمي.' : 'Quiz me with 1 quick practice question from this section.',
+                        i18n.t('training:screens.PlayerTutorDrawer.quizMeWith1Quick', 'Quiz me with 1 quick practice question from this section.'),
                         'practice'
                     )}
                     disabled={loading}
-                    className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-800/80 hover:bg-amber-500/20 hover:text-amber-300 border border-slate-700/60 text-slate-300 transition-colors text-[11px]"
+                    className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full bg-ds-ink/80 hover:bg-ds-warning/20 hover:text-ds-warning border border-ds-ink-secondary/60 text-ds-muted transition-colors text-[11px]"
                 >
-                    <HelpCircle className="h-3 w-3 text-amber-400" />
-                    <span>{isRTL ? 'اختبر فهمي' : 'Practice Question'}</span>
+                    <HelpCircle className="h-3 w-3 text-ds-warning" />
+                    <span>{i18n.t('training:screens.PlayerTutorDrawer.practiceQuestion', 'Practice Question')}</span>
                 </button>
             </div>
 
@@ -276,17 +277,17 @@ INSTRUCTIONS:
                             )}
                         >
                             {msg.sender === 'ai' && (
-                                <div className="h-6 w-6 rounded-full bg-amber-500/20 border border-amber-400/30 flex items-center justify-center shrink-0 text-amber-400 mt-0.5">
+                                <div className="h-6 w-6 rounded-full bg-ds-warning/20 border border-ds-warning/30 flex items-center justify-center shrink-0 text-ds-warning mt-0.5">
                                     <Bot className="h-3.5 w-3.5" />
                                 </div>
                             )}
 
                             <div
                                 className={cn(
-                                    "max-w-[85%] rounded-2xl px-3.5 py-2.5 leading-relaxed relative group",
+                                    "max-w-[85%] rounded-[8px] px-3.5 py-2.5 leading-relaxed relative group",
                                     msg.sender === 'user'
-                                        ? "bg-amber-500 text-slate-950 font-medium rounded-se-xs"
-                                        : "bg-slate-900 border border-slate-800 text-slate-200 rounded-ss-xs shadow-md"
+                                        ? "bg-ds-accent-soft text-ds-ink font-medium rounded-se-xs"
+                                        : "bg-ds-ink border border-ds-ink-secondary text-ds-on-ink rounded-ss-xs"
                                 )}
                             >
                                 <p className="whitespace-pre-wrap">{msg.text}</p>
@@ -294,11 +295,11 @@ INSTRUCTIONS:
                                 {msg.sender === 'ai' && (
                                     <button
                                         onClick={() => handleCopy(msg.id, msg.text)}
-                                        className="absolute top-2 end-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded bg-slate-800 text-slate-400 hover:text-white"
-                                        title={isRTL ? 'نسخ الإجابة' : 'Copy'}
+                                        className="absolute top-2 end-2 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded bg-ds-ink text-ds-muted hover:text-ds-on-ink"
+                                        title={i18n.t('training:screens.PlayerTutorDrawer.copy', 'Copy')}
                                     >
                                         {copiedId === msg.id ? (
-                                            <Check className="h-3 w-3 text-emerald-400" />
+                                            <Check className="h-3 w-3 text-ds-success" />
                                         ) : (
                                             <Copy className="h-3 w-3" />
                                         )}
@@ -307,7 +308,7 @@ INSTRUCTIONS:
                             </div>
 
                             {msg.sender === 'user' && (
-                                <div className="h-6 w-6 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0 text-slate-300 mt-0.5">
+                                <div className="h-6 w-6 rounded-full bg-ds-ink border border-ds-ink-secondary flex items-center justify-center shrink-0 text-ds-muted mt-0.5">
                                     <User className="h-3.5 w-3.5" />
                                 </div>
                             )}
@@ -315,9 +316,9 @@ INSTRUCTIONS:
                     ))}
 
                     {loading && (
-                        <div className="flex items-center gap-2 text-xs text-amber-400 ps-8">
+                        <div className="flex items-center gap-2 text-xs text-ds-warning ps-8">
                             <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                            <span>{isRTL ? 'جاري إعداد الإجابة...' : 'Thinking...'}</span>
+                            <span>{i18n.t('training:screens.PlayerTutorDrawer.thinking', 'Thinking...')}</span>
                         </div>
                     )}
                     <div ref={messagesEndRef} />
@@ -325,7 +326,7 @@ INSTRUCTIONS:
             </ScrollArea>
 
             {/* Input Bar */}
-            <div className="p-3 border-t border-slate-800 bg-slate-900/90">
+            <div className="p-3 border-t border-ds-ink-secondary bg-ds-ink/90">
                 <form
                     onSubmit={(e) => {
                         e.preventDefault()
@@ -336,14 +337,14 @@ INSTRUCTIONS:
                     <Input
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        placeholder={isRTL ? 'اسأل عن أي نقطة في هذا الدرس...' : 'Ask about this section...'}
-                        className="bg-slate-950 border-slate-800 text-xs text-white placeholder:text-slate-500 focus-visible:ring-amber-500 h-9"
+                        placeholder={i18n.t('training:screens.PlayerTutorDrawer.askAboutThisSection', 'Ask about this section...')}
+                        className="bg-ds-ink border-ds-ink-secondary text-xs text-ds-on-ink placeholder:text-ds-muted focus-visible:ring-ds-warning h-9"
                     />
                     <Button
                         type="submit"
                         disabled={!input.trim() || loading}
                         size="sm"
-                        className="h-9 w-9 p-0 bg-amber-500 hover:bg-amber-600 text-slate-950 shrink-0 disabled:opacity-50"
+                        className="h-9 w-9 p-0 bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink shrink-0 disabled:opacity-50"
                     >
                         <Send className={cn("h-4 w-4", isRTL && "rotate-180")} />
                     </Button>

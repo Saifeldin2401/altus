@@ -134,7 +134,7 @@ export function RelatedArticlesEditor({
             <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                     <CardTitle className="text-base flex items-center gap-2">
-                        <Link2 className="h-5 w-5 text-indigo-500" />
+                        <Link2 className="h-5 w-5 text-ds-info" />
                         Related Articles
                         <Badge variant="secondary" className="ms-2">{relatedArticles.length}</Badge>
                     </CardTitle>
@@ -206,7 +206,7 @@ export function RelatedArticlesEditor({
                                                     role="button"
                                                     tabIndex={0}
                                                 >
-                                                    <FileText className="h-4 w-4 me-2 text-gray-400" />
+                                                    <FileText className="h-4 w-4 me-2 text-ds-muted" />
                                                     <div className="flex-1">
                                                         <p className="text-sm">{article.title}</p>
                                                     </div>
@@ -222,8 +222,8 @@ export function RelatedArticlesEditor({
             </CardHeader>
             <CardContent className="space-y-2">
                 {relatedArticles.length === 0 ? (
-                    <div className="text-center py-6 text-gray-500">
-                        <Link2 className="h-10 w-10 mx-auto mb-2 text-gray-300" />
+                    <div className="text-center py-6 text-ds-muted">
+                        <Link2 className="h-10 w-10 mx-auto mb-2 text-ds-muted" />
                         <p className="text-sm">No related articles linked</p>
                         <p className="text-xs">Click "Link Article" to connect related content</p>
                     </div>
@@ -233,13 +233,13 @@ export function RelatedArticlesEditor({
                         return (
                             <div
                                 key={article.id}
-                                className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border"
+                                className="flex items-center gap-3 p-3 bg-ds-surface-subtle rounded-lg border"
                             >
-                                <FileText className="h-5 w-5 text-gray-400 flex-shrink-0" />
+                                <FileText className="h-5 w-5 text-ds-muted flex-shrink-0" />
                                 <div className="flex-1 min-w-0">
                                     <p className="font-medium text-sm truncate">{article.title}</p>
                                     <div className="flex items-center gap-2 mt-1">
-                                        <ArrowRight className="h-3 w-3 text-gray-400" />
+                                        <ArrowRight className="h-3 w-3 text-ds-muted" />
                                         <Badge
                                             variant="secondary"
                                             className={`text-xs bg-${relationConfig.color}-100 text-${relationConfig.color}-700`}
@@ -252,7 +252,7 @@ export function RelatedArticlesEditor({
                                     type="button"
                                     variant="ghost"
                                     size="icon"
-                                    className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                                    className="h-8 w-8 text-ds-danger hover:text-ds-danger hover:bg-ds-danger-soft"
                                     onClick={() => removeRelation.mutate(article.id)}
                                     disabled={removeRelation.isPending}
                                     aria-label={t('accessibility.remove_related_article', 'Remove related article')}

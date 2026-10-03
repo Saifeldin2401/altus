@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
-import { WorkspaceHeader, headerActionClass } from '@/ui'
+import { Link, useSearchParams } from 'react-router-dom'
+import { ConfirmDialog, WorkspaceHeader, headerActionClass } from '@/ui'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
@@ -8,7 +8,8 @@ import { useAuth } from '@/hooks/useAuth'
 import {
     useAllCertificates,
     useDownloadCertificate,
-    useOrganizationLogo
+    useOrganizationLogo,
+    useStartRecertification
 } from '@/hooks/useCertificates'
 import { usePermissions } from '@/hooks/usePermissions'
 import { createQRCodeDataUrl, type Certificate } from '@/services/certificateService'
@@ -20,6 +21,7 @@ import {
     Download,
     ExternalLink,
     Printer,
+    RotateCcw,
     Search,
     Shield
 } from 'lucide-react'
@@ -37,7 +39,12 @@ export default function TrainingCertificates() {
 
   // State
   const [search, setSearch] = useState('')
-  const [registerFilter, setRegisterFilter] = useState<RegisterFilter>('all')
+  // ?filter= lets other pages (Course tracking) open the register pre-filtered.
+  const [searchParams] = useSearchParams()
+  const initialFilter = searchParams.get('filter') as RegisterFilter | null
+  const [registerFilter, setRegisterFilter] = useState<RegisterFilter>(
+    initialFilter && ['all', 'valid', 'expiring', 'expired', 'revoked'].includes(initialFilter) ? initialFilter : 'all'
+  )
   const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null)
   const [showCertificateDialog, setShowCertificateDialog] = useState(false)
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('')
@@ -67,6 +74,54 @@ export default function TrainingCertificates() {
   // Hooks
   const { data: allCertificates, isLoading: allLoading } = useAllCertificates()
   const downloadMutation = useDownloadCertificate()
+  const recertify = useStartRecertification()
+  const [recertTarget, setRecertTarget] = useState<Certificate | null>(null)
+
+  const confirmRecertify = async () => {
+    if (!recertTarget?.trainingModuleId) return
+    try {
+      await recertify.mutateAsync({ userId: recertTarget.userId, courseId: recertTarget.trainingModuleId })
+      toast({
+        title: t('certRegister.recertStarted', 'Recertification assigned'),
+        description: t('certRegister.recertStartedBody', '{{name}} has 14 days to complete {{course}} again.', { name: recertTarget.recipientName, course: recertTarget.title }),
+      })
+      setRecertTarget(null)
+    } catch (err) {
+      toast({
+        title: t('certRegister.recertFailed', 'Recertification was not assigned'),
+        description: err instanceof Error ? err.message : undefined,
+        variant: 'destructive',
+      })
+    }
+  }
+
+  const exportCsv = (list: Certificate[]) => {
+    const cell = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`
+    const header = [
+      t('certRegister.csv.number', 'Certificate number'),
+      t('certRegister.csv.holder', 'Holder'),
+      t('certRegister.csv.email', 'Email'),
+      t('certRegister.csv.course', 'Course'),
+      t('certRegister.csv.department', 'Department'),
+      t('certRegister.csv.score', 'Score'),
+      t('certRegister.csv.issued', 'Issued'),
+      t('certRegister.csv.expires', 'Expires'),
+      t('certRegister.csv.status', 'Status'),
+      t('certRegister.csv.code', 'Verification code'),
+    ]
+    const iso = (d?: Date | string | null) => (d ? new Date(d).toISOString().slice(0, 10) : '')
+    const lines = list.map((c) => [
+      c.certificateNumber, c.recipientName, c.recipientEmail, c.title, c.departmentName,
+      c.score ?? '', iso(c.completionDate), iso(c.expiryDate), stateTag[stateOf(c)].label, c.verificationCode,
+    ].map(cell).join(','))
+    const blob = new Blob(['\ufeff' + [header.map(cell).join(','), ...lines].join('\n')], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `certificates-${new Date().toISOString().slice(0, 10)}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
 
   const handleDownload = async (certId: string) => {
     await downloadMutation.mutateAsync(certId)
@@ -139,9 +194,14 @@ export default function TrainingCertificates() {
           ? t('certRegister.contextExpiring', '{{count}} expire in the next 60 days.', { count: counts.expiring })
           : t('certRegister.context', 'Every certificate issued in your organization.')}
         actions={
-          <Link to="/manage/certificates/issue" className={headerActionClass.primary}>
-            <Award aria-hidden="true" className="h-4 w-4" />{t('certRegister.issue', 'Issue a certificate')}
-          </Link>
+          <>
+            <button type="button" onClick={() => exportCsv(rows)} disabled={rows.length === 0} className={`${headerActionClass.secondary} disabled:opacity-50`}>
+              <Download aria-hidden="true" className="h-4 w-4" />{t('certRegister.export', 'Export CSV')}
+            </button>
+            <Link to="/manage/certificates/issue" className={headerActionClass.primary}>
+              <Award aria-hidden="true" className="h-4 w-4" />{t('certRegister.issue', 'Issue a certificate')}
+            </Link>
+          </>
         }
       />
 
@@ -204,6 +264,11 @@ export default function TrainingCertificates() {
                     <td className="px-4 py-3"><span className={`text-xs ${stateTag[st].cls}`}>{stateTag[st].label}</span></td>
                     <td className="px-4 py-3">
                       <div className="flex justify-end gap-1">
+                        {(st === 'expiring' || st === 'expired') && cert.trainingModuleId && (
+                          <Button variant="outline" size="sm" className="min-h-[36px]" onClick={() => setRecertTarget(cert)}>
+                            <RotateCcw aria-hidden="true" />{t('certRegister.recertify', 'Recertify')}
+                          </Button>
+                        )}
                         <Button variant="ghost" size="sm" className="min-h-[36px]" onClick={() => handleView(cert)}>
                           {t('certRegister.view', 'View')}
                         </Button>
@@ -222,6 +287,16 @@ export default function TrainingCertificates() {
           </table>
         </div>
       )}
+
+      <ConfirmDialog
+        isOpen={!!recertTarget}
+        onClose={() => setRecertTarget(null)}
+        onConfirm={confirmRecertify}
+        isLoading={recertify.isPending}
+        title={t('certRegister.recertTitle', 'Recertify {{name}}?', { name: recertTarget?.recipientName ?? '' })}
+        description={t('certRegister.recertBody', '{{course}} is assigned to them again, due in 14 days. Their current certificate is replaced when they pass.', { course: recertTarget?.title ?? '' })}
+        confirmButtonText={t('certRegister.recertConfirm', 'Assign recertification')}
+      />
 
       {/* Preview Dialog */}
       <Dialog open={showCertificateDialog} onOpenChange={setShowCertificateDialog}>
@@ -439,14 +514,14 @@ export default function TrainingCertificates() {
               </div>
 
               {/* Action Buttons */}
-              <div className="bg-white/90 backdrop-blur p-4 flex flex-wrap justify-center gap-3 border-t border-[rgb(var(--cert-gold))]/30">
-                <Button className="bg-[rgb(var(--cert-gold))] text-white hover:bg-[rgb(var(--cert-gold-deep))] shadow-md font-semibold px-5" onClick={() => handleDownload(selectedCertificate.id)} disabled={downloadMutation.isPending}>
+              <div className="flex flex-wrap justify-center gap-3 border-t border-ds-border bg-ds-surface p-4">
+                <Button onClick={() => handleDownload(selectedCertificate.id)} disabled={downloadMutation.isPending}>
                   <Download className="w-4 h-4 me-2" />
                   {t('download')}
                 </Button>
                 <Button
                   // eslint-disable-next-line no-restricted-syntax -- LinkedIn's own brand blue, not a design-system color.
-                  className="bg-[#0A66C2] text-white hover:bg-[#084e96] shadow-md font-semibold px-5"
+                  className="bg-[#0A66C2] text-white hover:bg-[#084e96]"
                   onClick={() => {
                     const issueDate = new Date(selectedCertificate.completionDate)
                     const year = issueDate.getFullYear()
@@ -458,11 +533,11 @@ export default function TrainingCertificates() {
                   <ExternalLink className="w-4 h-4 me-2" />
                   {t('certRegister.addToLinkedIn', 'Add to LinkedIn Profile')}
                 </Button>
-                <Button variant="outline" className="border-slate-300 text-slate-700 hover:bg-slate-50" onClick={() => window.print()}>
+                <Button variant="outline" onClick={() => window.print()}>
                   <Printer className="w-4 h-4 me-2" />
                   {t('printCertificate')}
                 </Button>
-                <Button variant="outline" className="border-slate-300" onClick={() => setShowCertificateDialog(false)}>
+                <Button variant="ghost" onClick={() => setShowCertificateDialog(false)}>
                   {t('common:actions.close')}
                 </Button>
               </div>

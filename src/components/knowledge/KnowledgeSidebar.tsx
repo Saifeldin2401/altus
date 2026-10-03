@@ -42,17 +42,17 @@ function NavItem({ icon: Icon, label, href, active, badge, className }: NavItemP
             <div className={cn(
                 "flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-200",
                 "hover:bg-accent group-hover:translate-x-0.5",
-                active ? "bg-hotel-navy dark:bg-hotel-gold text-white dark:text-hotel-navy shadow-sm font-semibold" : "text-muted-foreground hover:text-foreground",
+                active ? "bg-ds-ink dark:bg-ds-accent text-ds-on-ink dark:text-ds-ink shadow-sm font-semibold" : "text-muted-foreground hover:text-foreground",
                 className
             )}>
                 <div className="flex items-center gap-3 min-w-0">
-                    <Icon className={cn("h-4 w-4 shrink-0", active ? "text-hotel-gold dark:text-hotel-navy" : "text-muted-foreground group-hover:text-foreground")} />
+                    <Icon className={cn("h-4 w-4 shrink-0", active ? "text-ds-accent dark:text-ds-ink" : "text-muted-foreground group-hover:text-foreground")} />
                     <span className="text-sm font-medium truncate">{label}</span>
                 </div>
                 {badge !== undefined && (
                     <Badge variant={active ? "outline" : "secondary"} className={cn(
-                        "text-[10px] px-1.5 h-4 min-w-4 flex items-center justify-center border-none",
-                        active ? "bg-white/20 text-white dark:bg-hotel-navy/20 dark:text-hotel-navy" : "bg-muted text-muted-foreground"
+                        "text-[11px] px-1.5 h-4 min-w-4 flex items-center justify-center border-none",
+                        active ? "bg-white/20 text-white dark:bg-ds-ink/20 dark:text-ds-ink" : "bg-muted text-muted-foreground"
                     )}>
                         {badge}
                     </Badge>
@@ -123,12 +123,12 @@ export function KnowledgeSidebar({ className }: KnowledgeSidebarProps) {
             {/* Sidebar Header */}
             <div className="p-4 border-b border-border">
                 <div className="flex items-center gap-2 mb-4">
-                    <div className="w-8 h-8 rounded-lg bg-hotel-navy flex items-center justify-center shadow-md">
-                        <Library className="h-4 w-4 text-hotel-gold" />
+                    <div className="w-8 h-8 rounded-lg bg-ds-ink flex items-center justify-center">
+                        <Library className="h-4 w-4 text-ds-accent" />
                     </div>
                     <div>
                         <h2 className="text-sm font-bold text-foreground uppercase tracking-wider">{t('library.nav_title', 'Knowledge Library')}</h2>
-                        <p className="text-[10px] text-muted-foreground font-medium">{t('library.version', 'ALTUS ADVISORY v2')}</p>
+                        <p className="text-[11px] text-muted-foreground font-medium">{t('library.version', 'ALTUS ADVISORY v2')}</p>
                     </div>
                 </div>
                 <Link to="/studio/articles" className="block">
@@ -136,7 +136,7 @@ export function KnowledgeSidebar({ className }: KnowledgeSidebarProps) {
                         <div className="absolute inset-y-0 start-3 flex items-center pointer-events-none">
                             <Search className="h-4 w-4 text-muted-foreground group-hover:text-foreground transition-colors" />
                         </div>
-                        <div className="w-full bg-muted/60 border border-border rounded-lg py-2 ps-10 pe-4 text-sm text-muted-foreground group-hover:bg-card group-hover:border-hotel-gold/40 group-hover:text-foreground group-hover:shadow-xs transition-all">
+                        <div className="w-full bg-muted/60 border border-border rounded-lg py-2 ps-10 pe-4 text-sm text-muted-foreground group-hover:bg-card group-hover:border-ds-accent/40 group-hover:text-foreground group-hover:shadow-xs transition-all">
                             {t('library.quick_search', 'Quick Search...')}
                         </div>
                     </div>
@@ -169,7 +169,7 @@ export function KnowledgeSidebar({ className }: KnowledgeSidebarProps) {
 
                     {/* Departments */}
                     <div className="space-y-2">
-                        <h3 className="px-3 text-[11px] font-bold text-gray-400 uppercase tracking-widest flex items-center justify-between">
+                        <h3 className="px-3 text-[11px] font-bold text-ds-muted uppercase tracking-widest flex items-center justify-between">
                             {t('library.departments', 'Departments')}
                             <Briefcase className="h-3 w-3" />
                         </h3>
@@ -189,7 +189,7 @@ export function KnowledgeSidebar({ className }: KnowledgeSidebarProps) {
 
                     {/* Content Types */}
                     <div className="space-y-2">
-                        <h3 className="px-3 text-[11px] font-bold text-gray-400 uppercase tracking-widest flex items-center justify-between">
+                        <h3 className="px-3 text-[11px] font-bold text-ds-muted uppercase tracking-widest flex items-center justify-between">
                             {t('library.types', 'Content Types')}
                             <LayoutGrid className="h-3 w-3" />
                         </h3>
@@ -216,7 +216,7 @@ export function KnowledgeSidebar({ className }: KnowledgeSidebarProps) {
             {user && (
                 <div className="p-4 bg-muted/40 border-t border-border">
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-hotel-navy flex items-center justify-center text-hotel-gold text-xs font-bold ring-2 ring-hotel-gold/20">
+                        <div className="w-8 h-8 rounded-full bg-ds-ink flex items-center justify-center text-ds-accent text-xs font-bold ring-2 ring-ds-accent/20">
                             {user.email?.[0].toUpperCase()}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -224,7 +224,7 @@ export function KnowledgeSidebar({ className }: KnowledgeSidebarProps) {
                                 {t('library.my_dept', 'My Dept: {{name}}', { name: departments?.[0]?.name || 'N/A' })}
                             </p>
                             {primaryRole !== 'staff' && (
-                                <Link to="/studio/articles/new" className="text-[10px] text-altus-copper dark:text-hotel-gold font-bold hover:underline">
+                                <Link to="/studio/articles/new" className="text-[11px] text-ds-accent dark:text-ds-accent font-bold hover:underline">
                                     + {t('library.create_new', 'Create New Article')}
                                 </Link>
                             )}

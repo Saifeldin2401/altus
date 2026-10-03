@@ -80,24 +80,24 @@ export function LessonAudioNarrator({
   return (
     <div
       className={cn(
-        'flex items-center justify-between gap-3 p-2.5 px-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/80 shadow-xs',
+        'flex items-center justify-between gap-3 p-2.5 px-3 rounded-[8px] border border-ds-border bg-ds-surface-subtle/80 shadow-xs',
         className
       )}
     >
       <div className="flex items-center gap-2">
-        <div className="w-7 h-7 rounded-lg bg-blue-600/10 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+        <div className="w-7 h-7 rounded-lg bg-ds-info/10 text-ds-info flex items-center justify-center">
           <Volume2 className="w-4 h-4" />
         </div>
         <div>
           <div className="flex items-center gap-1.5">
-            <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+            <span className="text-xs font-bold text-ds-ink">
               {t('audio.narratorTitle', 'AI Audio Briefing')}
             </span>
-            <Badge variant="outline" className="text-[9px] font-semibold bg-white dark:bg-slate-950 px-1 py-0 text-blue-700 dark:text-blue-300 border-blue-200">
+            <Badge variant="outline" className="text-[11px] font-semibold bg-ds-surface px-1 py-0 text-ds-info border-ds-info/30">
               {selectedLanguage === 'ar-SA' ? '🇸🇦 Saudi Voice' : '🇬🇧 UK English'}
             </Badge>
           </div>
-          <p className="text-[10px] text-muted-foreground">
+          <p className="text-[11px] text-muted-foreground">
             {isPlaying
               ? t('audio.playing', 'Playing audio narration...')
               : t('audio.listenBriefing', 'Listen to lesson summary & SOP points')}
@@ -111,7 +111,7 @@ export function LessonAudioNarrator({
           size="sm"
           variant="ghost"
           onClick={cycleSpeed}
-          className="h-7 text-[10px] font-semibold px-1.5"
+          className="h-7 text-[11px] font-semibold px-1.5"
           title="Playback speed"
         >
           <Gauge className="w-3 h-3 me-1" />
@@ -123,7 +123,7 @@ export function LessonAudioNarrator({
           size="sm"
           variant="ghost"
           onClick={toggleLanguage}
-          className="h-7 text-[10px] font-semibold px-2"
+          className="h-7 text-[11px] font-semibold px-2"
         >
           <span>{selectedLanguage === 'ar-SA' ? 'AR' : 'EN'}</span>
         </Button>
@@ -134,7 +134,7 @@ export function LessonAudioNarrator({
           onClick={handleTogglePlay}
           className={cn(
             'h-7 text-xs px-3 font-semibold text-white shadow-xs gap-1',
-            isPlaying ? 'bg-amber-600 hover:bg-amber-700' : 'bg-blue-600 hover:bg-blue-700'
+            isPlaying ? 'bg-ds-ink hover:bg-ds-ink/90' : 'bg-ds-info hover:bg-ds-info'
           )}
         >
           {isPlaying ? (

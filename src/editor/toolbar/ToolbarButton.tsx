@@ -30,9 +30,9 @@ function ToolbarButton({
       className={cn(
         'inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md border text-muted-foreground transition-colors',
         'hover:bg-accent hover:text-accent-foreground disabled:cursor-not-allowed disabled:opacity-40',
-        active && 'border-hotel-gold/60 bg-hotel-gold/15 text-hotel-navy',
-        variant === 'floating' && 'border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white',
-        variant === 'floating' && active && 'border-hotel-gold bg-hotel-gold/20 text-hotel-gold',
+        active && 'border-ds-accent/60 bg-ds-accent/15 text-ds-ink',
+        variant === 'floating' && 'border-ds-ink-secondary bg-ds-ink text-ds-muted hover:bg-ds-ink hover:text-ds-on-ink',
+        variant === 'floating' && active && 'border-ds-accent bg-ds-accent/20 text-ds-accent',
         className
       )}
     >

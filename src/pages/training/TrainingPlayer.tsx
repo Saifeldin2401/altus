@@ -1371,12 +1371,12 @@ export default function TrainingPlayer() {
                 {leadingAssets.length > 0 && <BlockVisualAssets assets={leadingAssets} isRTL={isRTL} />}
 
                 {showFallback && (
-                    <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-8 text-center dark:border-slate-700 dark:bg-slate-900/40">
-                        <AlertCircle className="mx-auto mb-3 h-8 w-8 text-slate-300" />
-                        <p className="text-sm font-medium text-ds-ink dark:text-slate-200">
+                    <div className="rounded-[8px] border border-dashed border-ds-border bg-ds-surface-subtle p-8 text-center">
+                        <AlertCircle className="mx-auto mb-3 h-8 w-8 text-ds-muted" />
+                        <p className="text-sm font-medium text-ds-ink">
                             {t('blockContentUnavailable', 'This section is being prepared')}
                         </p>
-                        <p className="mt-1 text-xs text-slate-400">
+                        <p className="mt-1 text-xs text-ds-muted">
                             {t('blockContentUnavailableHint', 'Content for this step is not available yet. You can continue to the next step.')}
                         </p>
                     </div>
@@ -1408,7 +1408,7 @@ export default function TrainingPlayer() {
 
                     return (
                         <div className="space-y-6">
-                            <div className="aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border-2 border-white/10 ring-1 ring-amber-500/20 relative group">
+                            <div className="aspect-video bg-black rounded-[8px] overflow-hidden shadow-2xl border-2 border-white/10 ring-1 ring-ds-warning/20 relative group">
                                 {videoUrl ? (
                                     isDirectVideo ? (
                                         <VideoPlayer
@@ -1433,18 +1433,18 @@ export default function TrainingPlayer() {
                                     )
                                 ) : (
                                     <div className="flex flex-col items-center justify-center h-full text-white/50 space-y-3">
-                                        <div className="h-16 w-16 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10">
-                                            <VideoIcon className="h-8 w-8 text-amber-400 animate-pulse" />
+                                        <div className="h-16 w-16 rounded-[8px] bg-white/5 flex items-center justify-center border border-white/10">
+                                            <VideoIcon className="h-8 w-8 text-ds-warning animate-pulse" />
                                         </div>
                                         <span className="text-sm font-medium font-sans">{t('videoUrlMissing')}</span>
                                     </div>
                                 )}
                             </div>
                             {block.is_mandatory && (
-                                <div className="flex flex-col items-start gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/[0.04] p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5 backdrop-blur-sm">
+                                <div className="flex flex-col items-start gap-3 rounded-[8px] border border-ds-warning/30 bg-ds-warning/[0.04] p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5">
                                     <div className="space-y-0.5">
                                         <p className="text-sm font-bold text-foreground flex items-center gap-1.5">
-                                            <Sparkles className="h-4 w-4 text-amber-500" />
+                                            <Sparkles className="h-4 w-4 text-ds-warning" />
                                             {completedMediaBlocks.has(block.id)
                                                 ? t('videoCompleted', 'Video requirement completed')
                                                 : t('videoRequired', 'Mandatory video walkthrough')}
@@ -1458,7 +1458,7 @@ export default function TrainingPlayer() {
                                             variant="outline"
                                             size="sm"
                                             onClick={() => handleMarkWatched(block.id)}
-                                            className="w-full sm:w-auto text-xs font-semibold border-amber-500/40 text-amber-600 hover:bg-amber-500/10 active:scale-95 transition-all"
+                                            className="w-full sm:w-auto text-xs font-semibold border-ds-warning/40 text-ds-warning hover:bg-ds-warning/10 active:scale-95 transition-all"
                                         >
                                             <CheckCircle className="h-3.5 w-3.5 me-1.5" />
                                             {t('markWatched', 'Mark as watched')}
@@ -1467,7 +1467,7 @@ export default function TrainingPlayer() {
                                 </div>
                             )}
                             {block.content && (
-                                <div className="bg-card/70 p-6 rounded-2xl border border-border/60 shadow-sm backdrop-blur-sm">
+                                <div className="bg-card/70 p-6 rounded-[8px] border border-border/60 shadow-sm">
                                     <RichTextBlockContent
                                         originalHtml={block.content}
                                         translatedHtml={translatedBlockContent}
@@ -1487,7 +1487,7 @@ export default function TrainingPlayer() {
                     const audioUrl = getBlockMediaUrl(block)
                     return (
                         <div className="space-y-6">
-                            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                            <div className="rounded-[8px] border border-ds-border bg-ds-surface p-6 shadow-sm">
                                 {audioUrl ? (
                                     <AudioPlayer
                                         src={audioUrl}
@@ -1497,21 +1497,21 @@ export default function TrainingPlayer() {
                                         t={t}
                                     />
                                 ) : (
-                                    <div className="flex items-center gap-3 text-slate-500">
+                                    <div className="flex items-center gap-3 text-ds-muted">
                                         <Headphones className="h-6 w-6" />
                                         <span>{t('audioUrlMissing', 'Audio URL missing')}</span>
                                     </div>
                                 )}
                             </div>
                             {block.is_mandatory && (
-                                <div className="flex flex-col items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5">
+                                <div className="flex flex-col items-start gap-3 rounded-[8px] border border-ds-border bg-ds-surface-subtle px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5">
                                     <div>
                                         <p className="text-sm font-semibold text-ds-ink">
                                             {completedMediaBlocks.has(block.id)
                                                 ? t('audioCompleted', 'Audio completed')
                                                 : t('audioRequired', 'Listen to the audio to continue')}
                                         </p>
-                                        <p className="text-xs text-slate-500">
+                                        <p className="text-xs text-ds-muted">
                                             {t('audioCompletionHint', 'You can mark it as listened if the player does not support tracking.')}
                                         </p>
                                     </div>
@@ -1528,7 +1528,7 @@ export default function TrainingPlayer() {
                                 </div>
                             )}
                             {block.content && (
-                                <div className="bg-slate-50 p-6 rounded-xl border border-slate-100">
+                                <div className="bg-ds-surface-subtle p-6 rounded-[8px] border border-ds-border">
                                     <RichTextBlockContent
                                         originalHtml={block.content}
                                         translatedHtml={translatedBlockContent}
@@ -1555,14 +1555,14 @@ export default function TrainingPlayer() {
                     const trailingSections = (
                         <>
                             {block.is_mandatory && (
-                                <div className="flex flex-col items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5">
+                                <div className="flex flex-col items-start gap-3 rounded-[8px] border border-ds-border bg-ds-surface-subtle px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-5">
                                     <div>
                                         <p className="text-sm font-semibold text-ds-ink">
                                             {completedMediaBlocks.has(block.id)
                                                 ? t('interactiveCompleted', 'Activity completed')
                                                 : t('interactiveRequired', 'Complete the activity to continue')}
                                         </p>
-                                        <p className="text-xs text-slate-500">
+                                        <p className="text-xs text-ds-muted">
                                             {t('interactiveCompletionHint', 'Mark complete once finished to unlock the next step.')}
                                         </p>
                                     </div>
@@ -1579,7 +1579,7 @@ export default function TrainingPlayer() {
                                 </div>
                             )}
                             {block.content && (
-                                <div className="bg-slate-50 p-6 rounded-xl border border-slate-100">
+                                <div className="bg-ds-surface-subtle p-6 rounded-[8px] border border-ds-border">
                                     <RichTextBlockContent
                                         originalHtml={block.content}
                                         translatedHtml={translatedBlockContent}
@@ -1625,9 +1625,9 @@ export default function TrainingPlayer() {
 
                     return (
                         <div className="space-y-6">
-                            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                            <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 shadow-sm">
                                 {interactiveUrl ? (
-                                    <div className="aspect-video rounded-xl overflow-hidden bg-slate-900">
+                                    <div className="aspect-video rounded-[8px] overflow-hidden bg-black">
                                         <iframe
                                             src={interactiveUrl}
                                             className="w-full h-full"
@@ -1639,7 +1639,7 @@ export default function TrainingPlayer() {
                                         />
                                     </div>
                                 ) : (
-                                    <div className="flex items-center gap-3 text-slate-500">
+                                    <div className="flex items-center gap-3 text-ds-muted">
                                         <Gamepad2 className="h-6 w-6" />
                                         <span>{t('interactiveUrlMissing', 'Interactive URL missing')}</span>
                                     </div>
@@ -1677,7 +1677,7 @@ export default function TrainingPlayer() {
                 {block.type === 'quiz' && (
                     <div className="py-8">
                         <div className="flex items-center gap-4 mb-8">
-                            <div className="h-12 w-12 rounded-xl bg-ds-brass/20 flex items-center justify-center">
+                            <div className="h-12 w-12 rounded-[8px] bg-ds-brass/20 flex items-center justify-center">
                                 <HelpCircle className="h-6 w-6 text-ds-brass" />
                             </div>
                             <div>
@@ -1915,7 +1915,7 @@ export default function TrainingPlayer() {
             railOpen={sidebarOpen}
             onRailOpenChange={setSidebarOpen}
             contentWide
-            contentClassName={cn(isZenMode && 'bg-slate-950 text-slate-100')}
+            contentClassName={cn(isZenMode && 'bg-ds-chrome text-ds-chrome-text')}
             contentInnerClassName={cn(
                 'flex min-h-full flex-col',
                 fontSizeModifier === 'sm' ? 'text-sm' : fontSizeModifier === 'lg' ? 'text-lg' : 'text-base',
@@ -1980,12 +1980,12 @@ export default function TrainingPlayer() {
             banners={
                 <>
                     {!isOnline && (
-                        <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-xs font-medium text-amber-900 sm:px-6" role="status">
+                        <div className="border-b border-ds-warning/30 bg-ds-warning-soft px-4 py-2 text-xs font-medium text-ds-warning sm:px-6" role="status">
                             {t('offlineNotice', "You're offline — progress is saved on this device and will sync when you reconnect.")}
                         </div>
                     )}
                     {resumeNotice && (
-                        <div className="border-b border-emerald-200 bg-emerald-50 px-4 py-2 text-xs text-emerald-800 sm:px-6" role="status">
+                        <div className="border-b border-ds-success/30 bg-ds-success-soft px-4 py-2 text-xs text-ds-success sm:px-6" role="status">
                             {resumeNotice}
                         </div>
                     )}
@@ -1994,7 +1994,7 @@ export default function TrainingPlayer() {
                         const blockerIndex = moduleData.blocks.findIndex((b) => b.id === blocker.blockId)
                         const isOnBlockerAlready = blockerIndex === activeBlockIndex
                         return (
-                            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-amber-100 bg-amber-50 px-4 py-2 text-xs text-amber-900 sm:px-6" role="status">
+                            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-ds-warning/30 bg-ds-warning-soft px-4 py-2 text-xs text-ds-warning sm:px-6" role="status">
                                 <span>
                                     <span className="font-semibold">{t('requirementsRemaining', 'Requirements remaining')}:</span>{' '}
                                     {blocker.reason === 'quiz-not-passed'
@@ -2007,7 +2007,7 @@ export default function TrainingPlayer() {
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        className="h-7 border-amber-300 text-xs text-amber-900 hover:bg-amber-100"
+                                        className="h-7 border-ds-warning/30 text-xs text-ds-warning hover:bg-ds-warning-soft"
                                         onClick={() => setActiveBlockIndex(blockerIndex)}
                                     >
                                         {t('goToRequirement', 'Go to it')}
@@ -2073,7 +2073,7 @@ export default function TrainingPlayer() {
                 idleTimeoutMs={60000}
             >
                 {(!isFocused || isIdle) && (
-                    <div className="pointer-events-none absolute inset-x-0 top-0 z-40 mx-auto flex w-fit items-center gap-2 rounded-full bg-amber-100 px-3 py-1.5 text-xs font-medium text-amber-800 shadow-sm">
+                    <div className="pointer-events-none absolute inset-x-0 top-0 z-40 mx-auto flex w-fit items-center gap-2 rounded-full bg-ds-warning-soft px-3 py-1.5 text-xs font-medium text-ds-warning shadow-sm">
                         {isIdle ? <MousePointer2 className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
                         {isIdle ? t('sessionPausedIdle', 'Session Paused (Idle)') : t('sessionPausedFocus', 'Session Paused (Focus lost)')}
                     </div>

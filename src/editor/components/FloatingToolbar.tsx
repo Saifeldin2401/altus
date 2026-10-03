@@ -67,7 +67,7 @@ function FloatingToolbar({ editor, disabled = false, onOpenAiPanel }: FloatingTo
         return slice.length > 0
       }}
     >
-      <div className="flex items-center gap-0.5 rounded-lg border border-slate-700 bg-slate-900 p-1 shadow-xl ring-1 ring-white/10">
+      <div className="flex items-center gap-0.5 rounded-lg border border-ds-ink-secondary bg-ds-ink p-1 shadow-xl ring-1 ring-white/10">
         {state?.isImage ? (
           <>
             <ToolbarButton
@@ -103,28 +103,28 @@ function FloatingToolbar({ editor, disabled = false, onOpenAiPanel }: FloatingTo
                 }).run()
               }}
             />
-            <div className="mx-1 h-6 w-px bg-slate-700" />
+            <div className="mx-1 h-6 w-px bg-ds-ink" />
             {[25, 50, 75, 100].map((w) => (
               <button
                 key={w}
                 type="button"
                 onClick={() => editor.chain().focus().updateAttributes('image', { width: `${w}%` }).run()}
                 className={cn(
-                  'h-7 min-w-[34px] rounded px-1.5 text-[10px] font-bold transition-colors',
+                  'h-7 min-w-[34px] rounded px-1.5 text-[11px] font-bold transition-colors',
                   state.imageWidth === w
-                    ? 'bg-hotel-gold text-white'
-                    : 'text-slate-400 hover:bg-slate-700 hover:text-white',
+                    ? 'bg-ds-accent text-white dark:text-ds-on-ink'
+                    : 'text-ds-muted hover:bg-ds-ink hover:text-ds-on-ink',
                 )}
               >
                 {w}%
               </button>
             ))}
-            <div className="mx-1 h-6 w-px bg-slate-700" />
+            <div className="mx-1 h-6 w-px bg-ds-ink" />
             <ToolbarButton
               variant="floating"
               icon={Trash2}
               label="Delete image"
-              className="text-red-400 hover:bg-red-900 hover:text-white"
+              className="text-ds-danger hover:bg-ds-danger hover:text-white"
               onClick={() => editor.chain().focus().deleteSelection().run()}
             />
           </>
@@ -151,10 +151,10 @@ function FloatingToolbar({ editor, disabled = false, onOpenAiPanel }: FloatingTo
                 editor.chain().focus().extendMarkRange('link').setLink({ href: normalized }).run()
               }}
             />
-            <div className="mx-0.5 h-6 w-px bg-slate-700" />
+            <div className="mx-0.5 h-6 w-px bg-ds-ink" />
             <button
               type="button"
-              className="inline-flex h-8 items-center rounded-md px-2 text-xs font-medium text-hotel-gold transition-colors hover:bg-slate-700 hover:text-white"
+              className="inline-flex h-8 items-center rounded-md px-2 text-xs font-medium text-ds-accent transition-colors hover:bg-ds-ink hover:text-ds-on-ink"
               onClick={onOpenAiPanel}
             >
               <Sparkles className="me-1 h-3.5 w-3.5" />

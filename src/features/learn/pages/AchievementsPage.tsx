@@ -108,7 +108,7 @@ export default function AchievementsPage() {
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
-          <section aria-label={t('game.levelSection', 'Level')} className="flex items-center gap-5 rounded-2xl border border-ds-border bg-gradient-to-br from-ds-brass/10 via-ds-surface to-ds-surface p-5">
+          <section aria-label={t('game.levelSection', 'Level')} className="flex items-center gap-5 rounded-[8px] border border-ds-border bg-gradient-to-br from-ds-brass/10 via-ds-surface to-ds-surface p-5">
             <ProgressRing
               value={level.percent}
               size={112}
@@ -117,7 +117,7 @@ export default function AchievementsPage() {
               label={t('game.levelProgress', 'Level {{level}}, {{pct}}% of the way to level {{next}}', { level: level.level, pct: level.percent, next: level.level + 1 })}
             >
               <span className="flex flex-col items-center leading-none">
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-ds-muted">{t('game.level', 'Level')}</span>
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-ds-muted">{t('game.level', 'Level')}</span>
                 <span className="font-editorial text-4xl font-bold text-ds-ink">{level.level}</span>
               </span>
             </ProgressRing>
@@ -143,7 +143,7 @@ export default function AchievementsPage() {
             </div>
           </section>
 
-          <section aria-label={t('game.streakSection', 'Streak')} className="space-y-4 rounded-2xl border border-ds-border bg-gradient-to-br from-ds-warning/10 via-ds-surface to-ds-surface p-5">
+          <section aria-label={t('game.streakSection', 'Streak')} className="space-y-4 rounded-[8px] border border-ds-border bg-gradient-to-br from-ds-warning/10 via-ds-surface to-ds-surface p-5">
             <div className="flex items-center gap-3">
               <span className={cn('inline-flex h-12 w-12 items-center justify-center rounded-full', stats.streak_current > 0 ? 'bg-ds-warning-soft text-ds-warning' : 'bg-ds-surface-subtle text-ds-muted')}>
                 <Flame aria-hidden="true" className="h-7 w-7" />

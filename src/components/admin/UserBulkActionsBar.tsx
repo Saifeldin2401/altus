@@ -9,7 +9,9 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import {
     Select,
     SelectContent,
@@ -95,9 +97,9 @@ export function UserBulkActionsBar({ selectedIds, onClearSelection, userNames, r
 
     return (
         <TooltipProvider>
-            <div className="bg-hotel-navy text-white rounded-lg p-3 flex flex-wrap items-center gap-3 shadow-lg animate-in slide-in-from-bottom-2">
+            <div role="toolbar" aria-label={t('bulk.toolbar', 'Actions for selected people')} className="flex flex-wrap items-center gap-3 rounded-[8px] border border-ds-border bg-ds-surface-subtle p-3">
                 <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="bg-white/20 text-white border-0">
+                    <Badge variant="navy">
                         {t('bulk.selected', { count })}
                     </Badge>
                     <Tooltip>
@@ -105,7 +107,7 @@ export function UserBulkActionsBar({ selectedIds, onClearSelection, userNames, r
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-6 w-6 text-white/60 hover:text-white hover:bg-white/10"
+                                className="h-8 w-8 text-ds-muted hover:text-ds-ink"
                                 onClick={onClearSelection}
                                 aria-label={t('common:clearselection')}
                             >
@@ -120,9 +122,8 @@ export function UserBulkActionsBar({ selectedIds, onClearSelection, userNames, r
 
                 <div className="flex items-center gap-2 ms-auto flex-wrap">
                     <Button
-                        variant="secondary"
+                        variant="outline"
                         size="sm"
-                        className="text-xs gap-1.5 bg-white/10 hover:bg-white/20 text-white border-0"
                         onClick={() => openDialog('assign_role')}
                         disabled={isLoading}
                     >
@@ -131,9 +132,8 @@ export function UserBulkActionsBar({ selectedIds, onClearSelection, userNames, r
                     </Button>
 
                     <Button
-                        variant="secondary"
+                        variant="outline"
                         size="sm"
-                        className="text-xs gap-1.5 bg-white/10 hover:bg-white/20 text-white border-0"
                         onClick={() => openDialog('activate')}
                         disabled={isLoading}
                     >
@@ -142,9 +142,8 @@ export function UserBulkActionsBar({ selectedIds, onClearSelection, userNames, r
                     </Button>
 
                     <Button
-                        variant="secondary"
+                        variant="outline"
                         size="sm"
-                        className="text-xs gap-1.5 bg-white/10 hover:bg-white/20 text-white border-0"
                         onClick={() => openDialog('reset_password')}
                         disabled={isLoading}
                     >
@@ -153,9 +152,8 @@ export function UserBulkActionsBar({ selectedIds, onClearSelection, userNames, r
                     </Button>
 
                     <Button
-                        variant="secondary"
+                        variant="outline"
                         size="sm"
-                        className="text-xs gap-1.5 bg-white/10 hover:bg-white/20 text-white border-0"
                         onClick={() => openDialog('cancel_reset')}
                         disabled={isLoading || resetRequiredCount === 0}
                     >
@@ -164,9 +162,9 @@ export function UserBulkActionsBar({ selectedIds, onClearSelection, userNames, r
                     </Button>
 
                     <Button
-                        variant="secondary"
+                        variant="outline"
                         size="sm"
-                        className="text-xs gap-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-200 border-0"
+                        className="text-ds-danger hover:border-ds-danger/40 hover:bg-ds-danger-soft hover:text-ds-danger"
                         onClick={() => openDialog('deactivate')}
                         disabled={isLoading}
                     >
@@ -191,17 +189,17 @@ export function UserBulkActionsBar({ selectedIds, onClearSelection, userNames, r
                     <div className="space-y-4 py-2">
                         {/* User list preview */}
                         {userNames && userNames.size > 0 && (
-                            <div className="bg-gray-50 rounded-md p-3 max-h-32 overflow-y-auto">
-                                <p className="text-xs font-medium text-gray-500 mb-1">Affected Users:</p>
+                            <div className="max-h-32 overflow-y-auto rounded-[6px] border border-ds-border bg-ds-surface-subtle p-3">
+                                <p className="text-xs font-medium text-ds-muted mb-1">{t('bulk.affected', 'People affected')}</p>
                                 <div className="flex flex-wrap gap-1">
                                     {Array.from(selectedIds).slice(0, 10).map(id => (
-                                        <Badge key={id} variant="outline" className="text-[10px]">
+                                        <Badge key={id} variant="outline" className="text-[11px]">
                                             {userNames.get(id) || id.slice(0, 8)}
                                         </Badge>
                                     ))}
                                     {selectedIds.size > 10 && (
-                                        <Badge variant="outline" className="text-[10px]">
-                                            +{selectedIds.size - 10} more
+                                        <Badge variant="outline" className="text-[11px]">
+                                            {t('bulk.more', '+{{count}} more', { count: selectedIds.size - 10 })}
                                         </Badge>
                                     )}
                                 </div>
@@ -210,9 +208,7 @@ export function UserBulkActionsBar({ selectedIds, onClearSelection, userNames, r
 
                         {dialogAction === 'assign_role' && (
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('bulk.assign_role')}
-                                </label>
+                                <Label className="mb-1.5 block">{t('bulk.assign_role')}</Label>
                                 <Select value={selectedRole} onValueChange={(v) => setSelectedRole(v as AppRole)}>
                                     <SelectTrigger>
                                         <SelectValue placeholder={t('form.select_role', 'Select a role')} />
@@ -228,14 +224,13 @@ export function UserBulkActionsBar({ selectedIds, onClearSelection, userNames, r
 
                         {dialogAction === 'deactivate' && (
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    {t('account_actions.suspend_reason')}
-                                </label>
-                                <textarea
+                                <Label htmlFor="bulk-reason" className="mb-1.5 block">{t('account_actions.suspend_reason')}</Label>
+                                <Textarea
+                                    id="bulk-reason"
                                     value={bulkReason}
                                     onChange={(e) => setBulkReason(e.target.value)}
                                     placeholder={t('account_actions.suspend_reason_placeholder')}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-hotel-navy focus:border-hotel-navy resize-none"
+                                    className="resize-none"
                                     rows={3}
                                 />
                             </div>
@@ -243,12 +238,12 @@ export function UserBulkActionsBar({ selectedIds, onClearSelection, userNames, r
 
                         {(dialogAction === 'deactivate') && (
                             <div>
-                                <Label className="text-sm font-medium text-gray-700 mb-1">Suspend Until (Optional)</Label>
-                                <input
+                                <Label htmlFor="bulk-suspend-until" className="mb-1.5 block">{t('bulk.suspend_until', 'Suspend until (optional)')}</Label>
+                                <Input
+                                    id="bulk-suspend-until"
                                     type="datetime-local"
                                     value={suspendUntil}
                                     onChange={(e) => setSuspendUntil(e.target.value)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-hotel-navy focus:border-hotel-navy"
                                 />
                             </div>
                         )}
@@ -257,15 +252,16 @@ export function UserBulkActionsBar({ selectedIds, onClearSelection, userNames, r
                             <div className="space-y-2">
                                 <div className="flex items-center gap-2">
                                     <Checkbox id="notify-users" checked={notifyUser} onCheckedChange={(checked) => setNotifyUser(!!checked)} />
-                                    <Label htmlFor="notify-users" className="text-sm">Notify affected users</Label>
+                                    <Label htmlFor="notify-users" className="text-sm">{t('bulk.notify', 'Tell the people affected by email')}</Label>
                                 </div>
                                 <div>
-                                    <Label className="text-sm font-medium text-gray-700 mb-1">Internal Note (Optional)</Label>
-                                    <textarea
+                                    <Label htmlFor="bulk-note" className="mb-1.5 block">{t('bulk.note', 'Internal note (optional)')}</Label>
+                                    <Textarea
+                                        id="bulk-note"
                                         value={actionNote}
                                         onChange={(e) => setActionNote(e.target.value)}
-                                        placeholder="Add a note for audit trail"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-hotel-navy focus:border-hotel-navy resize-none"
+                                        placeholder={t('bulk.note_placeholder', 'Saved in the audit log')}
+                                        className="resize-none"
                                         rows={2}
                                     />
                                 </div>
@@ -275,7 +271,7 @@ export function UserBulkActionsBar({ selectedIds, onClearSelection, userNames, r
 
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setDialogOpen(false)} disabled={isLoading}>
-                            Cancel
+                            {t('common:cancel', 'Cancel')}
                         </Button>
                         <Button
                             onClick={executeAction}

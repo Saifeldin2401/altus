@@ -149,11 +149,11 @@ export function QuestionBank() {
             type="button"
             onClick={() => setView(s.view)}
             className={cn(
-              'flex items-center gap-3 rounded-xl border bg-ds-surface p-4 text-start transition-[border-color,box-shadow] hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent',
+              'flex items-center gap-3 rounded-[8px] border bg-ds-surface p-4 text-start transition-[border-color,box-shadow] hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent',
               view === s.view ? 'border-ds-ink' : 'border-ds-border hover:border-ds-border-strong',
             )}
           >
-            <span className={cn('inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl', s.tone)}><s.icon aria-hidden="true" className="h-5 w-5" /></span>
+            <span className={cn('inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[8px]', s.tone)}><s.icon aria-hidden="true" className="h-5 w-5" /></span>
             <span className="min-w-0">
               <span className="block text-xs font-medium text-ds-muted">{s.label}</span>
               <span className="block font-editorial text-[28px] font-semibold leading-none text-ds-ink tabular-nums">{s.value ?? '–'}</span>
@@ -178,7 +178,7 @@ export function QuestionBank() {
           >
             {tab.label}
             {tab.count !== undefined && (
-              <span className={cn('rounded-full px-1.5 font-mono text-xs tabular-nums', tab.id === 'review' && tab.count ? 'bg-ds-warning text-white' : 'bg-ds-surface-subtle text-ds-muted')}>{tab.count}</span>
+              <span className={cn('rounded-full px-1.5 font-mono text-xs tabular-nums', tab.id === 'review' && tab.count ? 'bg-ds-warning text-white dark:text-ds-on-ink' : 'bg-ds-surface-subtle text-ds-muted')}>{tab.count}</span>
             )}
           </button>
         ))}
@@ -292,7 +292,7 @@ function QuizzesView({ quizzes, isLoading, isError, onRetry, onGenerate, onChang
       </div>
 
       {isLoading ? (
-        <div className="space-y-2" aria-busy="true">{[0, 1, 2].map((i) => <Skeleton key={i} className="h-20 w-full rounded-xl" />)}</div>
+        <div className="space-y-2" aria-busy="true">{[0, 1, 2].map((i) => <Skeleton key={i} className="h-20 w-full rounded-[8px]" />)}</div>
       ) : quizzes.length === 0 ? (
         <EmptyState
           illustration="courses"
@@ -306,9 +306,9 @@ function QuizzesView({ quizzes, isLoading, isError, onRetry, onGenerate, onChang
           }
         />
       ) : shown.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-ds-border p-6 text-center text-sm text-ds-muted">{t('quizBank.noMatch', 'Nothing matches. Try another search or filter.')}</p>
+        <p className="rounded-[8px] border border-dashed border-ds-border p-6 text-center text-sm text-ds-muted">{t('quizBank.noMatch', 'Nothing matches. Try another search or filter.')}</p>
       ) : (
-        <ul className="divide-y divide-ds-border overflow-hidden rounded-xl border border-ds-border bg-ds-surface">
+        <ul className="divide-y divide-ds-border overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface">
           {shown.map((quiz) => (
             <li key={quiz.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:gap-5">
               <div className="min-w-0 flex-1 space-y-1">
@@ -466,7 +466,7 @@ function QuestionsView({ onPreview, labels }: { onPreview: (q: KnowledgeQuestion
       </div>
 
       {list.isLoading ? (
-        <div className="space-y-2" aria-busy="true">{[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-16 w-full rounded-xl" />)}</div>
+        <div className="space-y-2" aria-busy="true">{[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-16 w-full rounded-[8px]" />)}</div>
       ) : list.isError ? (
         <EmptyState
           title={t('quizBank.questionsError', 'Questions could not be loaded')}
@@ -482,7 +482,7 @@ function QuestionsView({ onPreview, labels }: { onPreview: (q: KnowledgeQuestion
         />
       ) : (
         <>
-          <ul className="divide-y divide-ds-border overflow-hidden rounded-xl border border-ds-border bg-ds-surface">
+          <ul className="divide-y divide-ds-border overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface">
             {(list.data?.questions ?? []).map((q) => (
               <QuestionRow
                 key={q.id}
@@ -556,7 +556,7 @@ function ReviewView({ onPreview, labels }: { onPreview: (q: KnowledgeQuestion) =
   const [notes, setNotes] = useState('')
   const items = pending.data?.questions ?? []
 
-  if (pending.isLoading) return <div className="space-y-2" aria-busy="true">{[0, 1, 2].map((i) => <Skeleton key={i} className="h-16 w-full rounded-xl" />)}</div>
+  if (pending.isLoading) return <div className="space-y-2" aria-busy="true">{[0, 1, 2].map((i) => <Skeleton key={i} className="h-16 w-full rounded-[8px]" />)}</div>
   if (items.length === 0) {
     return (
       <EmptyState
@@ -569,7 +569,7 @@ function ReviewView({ onPreview, labels }: { onPreview: (q: KnowledgeQuestion) =
   return (
     <div className="space-y-3">
       <p className="text-sm text-ds-ink-secondary">{t('quizBank.reviewIntro', 'Check each question and its answer key. Approved questions become available for quizzes; rejected ones go back to the author with your note.')}</p>
-      <ul className="divide-y divide-ds-border overflow-hidden rounded-xl border border-ds-border bg-ds-surface">
+      <ul className="divide-y divide-ds-border overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface">
         {items.map((q) => (
           <QuestionRow
             key={q.id}
@@ -580,7 +580,7 @@ function ReviewView({ onPreview, labels }: { onPreview: (q: KnowledgeQuestion) =
               <>
                 <Button variant="outline" size="sm" onClick={() => onPreview(q)}><Eye aria-hidden="true" className="me-1.5 h-4 w-4" />{t('quizBank.check', 'Check')}</Button>
                 <Button variant="outline" size="sm" onClick={() => { setRejecting(q); setNotes('') }}>{t('quizBank.reject', 'Send back')}</Button>
-                <Button size="sm" onClick={() => approve.mutate({ id: q.id })} disabled={approve.isPending} className="bg-ds-success text-white hover:bg-ds-success/90">
+                <Button size="sm" onClick={() => approve.mutate({ id: q.id })} disabled={approve.isPending} className="bg-ds-success text-white dark:text-ds-on-ink hover:bg-ds-success/90">
                   <CheckCircle aria-hidden="true" className="me-1.5 h-4 w-4" />{t('quizBank.approveShort', 'Approve')}
                 </Button>
               </>

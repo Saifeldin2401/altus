@@ -67,31 +67,28 @@ function OrgTreeNodeItem({
     const isSelected = selectedNodeId === node.id
 
     const getDepthColor = (depth: number) => {
-        const colors = [
-            'border-s-purple-500 bg-purple-50/50 dark:bg-purple-900/10',
-            'border-s-hotel-navy bg-hotel-navy/10 dark:bg-hotel-navy/5',
-            'border-s-green-500 bg-green-50/50 dark:bg-green-900/10',
-            'border-s-orange-500 bg-orange-50/50 dark:bg-orange-900/10',
-            'border-s-pink-500 bg-pink-50/50 dark:bg-pink-900/10',
-        ]
-        return colors[depth % colors.length]
+        // Depth is structure, not status: only the top of the tree is marked.
+        return depth === 0 ? 'border-s-ds-accent bg-ds-surface' : 'border-s-ds-border bg-ds-surface'
     }
 
     return (
         <div className="select-none">
             <div
                 className={cn(
-                    "flex items-center gap-2 p-2 rounded-lg border-s-4 transition-all cursor-pointer hover:shadow-sm",
+                    "flex items-center gap-2 rounded-[6px] border border-ds-border border-s-2 p-2 transition-colors cursor-pointer hover:bg-ds-surface-subtle",
                     getDepthColor(node.depth),
-                    isSelected && "ring-2 ring-primary ring-offset-1"
+                    isSelected && "ring-2 ring-ds-accent ring-offset-1 ring-offset-ds-background"
                 )}
-                style={{ marginLeft: `${level * 24}px` }}
+                style={{ marginInlineStart: `${level * 24}px` }}
                 onClick={() => onNodeClick?.(node)}
             >
                 {/* Expand/Collapse Toggle */}
                 <button
+                    type="button"
+                    aria-expanded={hasChildren ? isExpanded : undefined}
+                    aria-label={node.full_name ?? undefined}
                     className={cn(
-                        "p-1 rounded hover:bg-white/50 dark:hover:bg-gray-800/50 transition-colors",
+                        "inline-flex h-8 w-8 items-center justify-center rounded-[4px] hover:bg-ds-surface-subtle transition-colors",
                         !hasChildren && "invisible"
                     )}
                     onClick={(e) => {
@@ -100,18 +97,16 @@ function OrgTreeNodeItem({
                     }}
                 >
                     {isExpanded ? (
-                        <ChevronDown className="h-4 w-4 text-gray-500" />
+                        <ChevronDown className="h-4 w-4 text-ds-muted" />
                     ) : (
-                        <ChevronRight className="h-4 w-4 text-gray-500" />
+                        <ChevronRight className="h-4 w-4 text-ds-muted rtl:rotate-180" />
                     )}
                 </button>
 
                 {/* Avatar/Icon */}
                 <div className={cn(
-                    "h-10 w-10 rounded-full flex items-center justify-center text-white font-semibold text-sm",
-                    node.depth === 0 ? "bg-purple-600" :
-                        node.depth === 1 ? "bg-hotel-navy" :
-                            node.depth === 2 ? "bg-green-600" : "bg-gray-500"
+                    "h-10 w-10 shrink-0 rounded-full flex items-center justify-center font-semibold text-sm",
+                    node.depth === 0 ? "bg-ds-ink text-ds-on-ink" : "bg-ds-surface-subtle text-ds-ink-secondary"
                 )}>
                     {node.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || '??'}
                 </div>
@@ -119,7 +114,7 @@ function OrgTreeNodeItem({
                 {/* Name and Title */}
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                        <span className="font-medium text-gray-900 dark:text-white truncate">
+                        <span className="font-medium text-ds-ink truncate">
                             {node.full_name}
                         </span>
                         {hasChildren && (
@@ -130,7 +125,7 @@ function OrgTreeNodeItem({
                         )}
                     </div>
                     {node.job_title && (
-                        <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                        <p className="text-sm text-ds-muted truncate">
                             {node.job_title}
                         </p>
                     )}
@@ -201,36 +196,36 @@ export function OrgChartStats({ nodes }: OrgChartStatsProps) {
 
     return (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border shadow-sm">
-                <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mb-1">
+            <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4">
+                <div className="flex items-center gap-2 text-ds-muted mb-1">
                     <Users className="h-4 w-4" />
                     <span className="text-sm">{t('organization.total_employees', 'Total Employees')}</span>
                 </div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalEmployees}</p>
+                <p className="text-2xl font-semibold tabular-nums text-ds-ink">{totalEmployees}</p>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border shadow-sm">
-                <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mb-1">
+            <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4">
+                <div className="flex items-center gap-2 text-ds-muted mb-1">
                     <Building2 className="h-4 w-4" />
                     <span className="text-sm">{t('organization.top_level', 'Top Level')}</span>
                 </div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{topLevel}</p>
+                <p className="text-2xl font-semibold tabular-nums text-ds-ink">{topLevel}</p>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border shadow-sm">
-                <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mb-1">
+            <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4">
+                <div className="flex items-center gap-2 text-ds-muted mb-1">
                     <Briefcase className="h-4 w-4" />
                     <span className="text-sm">{t('organization.hierarchy_depth', 'Hierarchy Depth')}</span>
                 </div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{maxDepth + 1}</p>
+                <p className="text-2xl font-semibold tabular-nums text-ds-ink">{maxDepth + 1}</p>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border shadow-sm">
-                <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mb-1">
+            <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4">
+                <div className="flex items-center gap-2 text-ds-muted mb-1">
                     <User className="h-4 w-4" />
                     <span className="text-sm">{t('organization.avg_direct_reports', 'Avg. Direct Reports')}</span>
                 </div>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white">{avgReports}</p>
+                <p className="text-2xl font-semibold tabular-nums text-ds-ink">{avgReports}</p>
             </div>
         </div>
     )

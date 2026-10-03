@@ -61,11 +61,11 @@ export function NotificationBell() {
           whileTap={{ scale: 0.95 }}
           className="inline-block"
         >
-          <Button variant="ghost" size="icon" className="relative text-gray-500 hover:text-gray-700 hover:bg-gray-100/50" aria-label={t('accessibility.notifications', 'Notifications')}>
+          <Button variant="ghost" size="icon" className="relative text-ds-muted hover:text-ds-ink-secondary hover:bg-ds-surface-subtle/50" aria-label={t('accessibility.notifications', 'Notifications')}>
             <Bell className="h-5 w-5" />
             {unreadCount > 0 && (
               <Badge
-                className="absolute -top-1 -end-1 h-4 w-4 flex items-center justify-center p-0 bg-red-500 text-white rounded-full text-[10px] border-2 border-white"
+                className="absolute -top-1 -end-1 h-4 w-4 flex items-center justify-center p-0 bg-ds-danger text-white rounded-full text-[11px] border-2 border-white"
               >
                 {unreadCount > 9 ? '9+' : unreadCount}
               </Badge>
@@ -100,7 +100,7 @@ export function NotificationBell() {
               {notifications.map((notification) => (
                 <button
                   key={notification.id}
-                  className={`flex flex-col items-start gap-1 p-4 text-start hover:bg-muted/50 transition-colors border-b last:border-0 ${!notification.is_read ? 'bg-blue-50/50' : ''
+                  className={`flex flex-col items-start gap-1 p-4 text-start hover:bg-muted/50 transition-colors border-b last:border-0 ${!notification.is_read ? 'bg-ds-info-soft/50' : ''
                     }`}
                   onClick={() => handleNotificationClick(notification)}
                 >
@@ -109,13 +109,13 @@ export function NotificationBell() {
                       {notification.title}
                     </span>
                     {!notification.is_read && (
-                      <span className="h-2 w-2 rounded-full bg-blue-500 mt-1.5" />
+                      <span className="h-2 w-2 rounded-full bg-ds-info mt-1.5" />
                     )}
                   </div>
                   <p className="text-xs text-muted-foreground line-clamp-2">
                     {notification.message}
                   </p>
-                  <span className="text-[10px] text-muted-foreground mt-1">
+                  <span className="text-[11px] text-muted-foreground mt-1">
                     {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true, locale: dateLocale })}
                   </span>
                 </button>

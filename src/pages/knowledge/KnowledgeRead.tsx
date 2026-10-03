@@ -779,9 +779,9 @@ export default function KnowledgeRead() {
     if (error || !article) {
         return (
             <div className="container mx-auto py-8 px-4 text-center">
-                <AlertTriangle className="h-16 w-16 mx-auto text-orange-500 mb-4" />
+                <AlertTriangle className="h-16 w-16 mx-auto text-ds-warning mb-4" />
                 <h1 className="text-2xl font-bold mb-2">{t('viewer.not_found_title')}</h1>
-                <p className="text-gray-600 mb-4">{t('viewer.not_found_desc')}</p>
+                <p className="text-ds-ink-secondary mb-4">{t('viewer.not_found_desc')}</p>
                 <Button onClick={() => navigate('/knowledge')}>
                     <ArrowLeft className="h-4 w-4 me-2 rtl:rotate-180" />
                     {t('viewer.back_to_home')}
@@ -802,10 +802,10 @@ export default function KnowledgeRead() {
     return (
         <div className={cn(
             "min-h-screen kb-focus-transition transition-colors duration-500",
-            readerTheme === 'light' && "bg-gray-50",
+            readerTheme === 'light' && "bg-ds-surface-subtle",
             readerTheme === 'sepia' && "kb-theme-sepia",
             readerTheme === 'dark' && "kb-theme-dark",
-            isFocusMode && (readerTheme === 'light' ? "bg-white" : "bg-[var(--kb-bg-main)]")
+            isFocusMode && (readerTheme === 'light' ? "bg-ds-surface" : "bg-[var(--kb-bg-main)]")
         )}>
             <ReadingProgress targetRef={contentRef} />
             <HighlightPassage containerRef={contentRef} doneRef={highlightDoneRef} ready={!!article} />
@@ -1093,7 +1093,7 @@ export default function KnowledgeRead() {
                                                 <Button
                                                     variant="outline"
                                                     size="sm"
-                                                    className="h-9 px-2 sm:px-3 text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-200 rounded-lg group"
+                                                    className="h-9 px-2 sm:px-3 text-ds-danger hover:text-ds-danger hover:bg-ds-danger-soft hover:border-ds-danger/30 rounded-lg group"
                                                 >
                                                     <Trash2 className="h-3.5 w-3.5 sm:me-2 group-hover:scale-110 transition-transform" />
                                                     <span className="hidden sm:inline">{t('viewer.delete')}</span>
@@ -1111,7 +1111,7 @@ export default function KnowledgeRead() {
                                                     <AlertDialogAction
                                                         onClick={handleDelete}
                                                         disabled={isDeleting}
-                                                        className="bg-red-600 hover:bg-red-700"
+                                                        className="bg-ds-danger hover:bg-ds-danger"
                                                     >
                                                         {isDeleting ? t('viewer.deleting') : t('viewer.delete_confirm')}
                                                     </AlertDialogAction>
@@ -1146,7 +1146,7 @@ export default function KnowledgeRead() {
                                 <DropdownMenuContent align="end" className="w-48">
                                     {!translatedData ? (
                                         <>
-                                            <div className="px-2 py-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                                            <div className="px-2 py-1.5 text-[11px] font-bold text-muted-foreground uppercase tracking-widest">
                                                 {t('viewer.translate_ai', 'Translate to')}
                                             </div>
                                             {SUPPORTED_TRANSLATION_LANGUAGES.map(lang => (
@@ -1164,7 +1164,7 @@ export default function KnowledgeRead() {
                                             </DropdownMenuItem>
                                             {translationTarget && translationDiagnostics?.partialFailures ? (
                                                 <DropdownMenuItem onClick={() => handleAITranslate(translationTarget, { force: true })}>
-                                                    <Sparkles className="h-4 w-4 me-2 text-amber-600" />
+                                                    <Sparkles className="h-4 w-4 me-2 text-ds-warning" />
                                                     {t('viewer.retry_translation', 'Retry Translation')}
                                                 </DropdownMenuItem>
                                             ) : null}
@@ -1184,7 +1184,7 @@ export default function KnowledgeRead() {
                                                 setShowBilingual(false)
                                                 setTranslationTarget(null)
                                             }}>
-                                                <Trash2 className="h-4 w-4 me-2 text-red-500" />
+                                                <Trash2 className="h-4 w-4 me-2 text-ds-danger" />
                                                 {t('viewer.clear_translation', 'Clear')}
                                             </DropdownMenuItem>
                                         </>
@@ -1231,8 +1231,8 @@ export default function KnowledgeRead() {
 
             {translationTarget && translationDiagnostics?.partialFailures ? (
                 <div className="max-w-[1400px] mx-auto px-3 pt-3 sm:px-4 print:hidden">
-                    <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <div className="text-sm text-amber-900">
+                    <div className="rounded-[8px] border border-ds-warning/30 bg-ds-warning-soft px-4 py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="text-sm text-ds-warning">
                             {t(
                                 'viewer.translation_incomplete_banner',
                                 `Translation is incomplete. ${translationDiagnostics.partialFailures} section${translationDiagnostics.partialFailures === 1 ? '' : 's'} are still using the original language.`
@@ -1241,7 +1241,7 @@ export default function KnowledgeRead() {
                         <Button
                             variant="outline"
                             size="sm"
-                            className="border-amber-300 bg-white text-amber-900 hover:bg-amber-100"
+                            className="border-ds-warning/30 bg-ds-surface text-ds-warning hover:bg-ds-warning-soft"
                             onClick={() => handleAITranslate(translationTarget, { force: true })}
                             disabled={isTranslating}
                         >
@@ -1274,10 +1274,10 @@ export default function KnowledgeRead() {
                 isFocusMode ? "max-w-4xl py-24 z-[45] relative kb-focus-content" : "relative z-10"
             )}>
                 {/* Print Header - only visible when printing */}
-                <div className="hidden print:block print-header mb-8 pb-4 border-b-2 border-gray-300">
+                <div className="hidden print:block print-header mb-8 pb-4 border-b-2 border-ds-border">
                     <div className="text-center">
                         <h1 className="text-3xl font-bold mb-2">{article.title}</h1>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-ds-ink-secondary">
                             Altus Connect · Knowledge | {article.department?.id === 'multiple' ? t('viewer.multiple_departments', 'Multiple Departments') : (article.department?.name || 'General')} | Last updated: {new Date(article.updated_at).toLocaleDateString()}
                         </p>
                     </div>
@@ -1323,7 +1323,7 @@ export default function KnowledgeRead() {
 
                         {/* TL;DR Quick Summary */}
                         {article.summary && (
-                            <div className="relative group p-[1px] rounded-2xl bg-gradient-to-br from-ds-brass/30 via-ds-brass/20 to-transparent">
+                            <div className="relative group p-[1px] rounded-[8px] bg-gradient-to-br from-ds-brass/30 via-ds-brass/20 to-transparent">
                                 <div className="bg-card rounded-[15px] p-6 shadow-xs overflow-hidden relative border border-border">
                                     <div className="absolute -top-4 -end-4 h-24 w-24 bg-ds-brass/10 rounded-full opacity-50 group-hover:scale-110 transition-transform duration-700 pointer-events-none" />
                                     <h3 className="text-[11px] font-bold text-ds-brass uppercase tracking-[0.2em] mb-3 flex items-center gap-2">
@@ -1354,24 +1354,24 @@ export default function KnowledgeRead() {
 
                         {/* Revision Release Notes */}
                         {article.content_data?.release_notes && (
-                            <div className="rounded-2xl border border-indigo-200/80 bg-gradient-to-br from-indigo-50/70 via-white to-background p-5 sm:p-6 shadow-2xs dark:border-indigo-900/50 dark:from-indigo-950/20">
+                            <div className="rounded-[8px] border border-ds-info/80 bg-gradient-to-br from-ds-info-soft/70 via-white to-background p-5 sm:p-6 shadow-2xs">
                                 <div className="flex items-start gap-3.5">
-                                    <div className="h-9 w-9 rounded-xl bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 flex items-center justify-center border border-indigo-500/20 shrink-0 mt-0.5 shadow-2xs">
+                                    <div className="h-9 w-9 rounded-[8px] bg-ds-info/10 text-ds-info flex items-center justify-center border border-ds-info/20 shrink-0 mt-0.5 shadow-2xs">
                                         <History className="h-4 w-4" />
                                     </div>
                                     <div className="space-y-1.5 min-w-0 flex-1">
                                         <div className="flex items-center gap-2">
-                                            <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                                            <h4 className="text-sm font-bold text-ds-ink">
                                                 {t('viewer.release_notes_title', 'Revision Release Notes & Guidance')}
                                             </h4>
-                                            <Badge variant="outline" className="text-[10px] bg-indigo-100/60 text-indigo-900 border-indigo-300 dark:bg-indigo-900/40 dark:text-indigo-200 font-semibold">
+                                            <Badge variant="outline" className="text-[11px] bg-ds-info-soft/60 text-ds-info border-ds-info/30 font-semibold">
                                                 {`v${article.current_version || article.version || 1}`}
                                             </Badge>
                                         </div>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                                        <p className="text-xs text-ds-muted">
                                             {t('viewer.release_notes_desc', 'Key operational updates and standard procedural directives introduced in this revision.')}
                                         </p>
-                                        <div className="mt-3 p-3.5 rounded-xl bg-white/80 dark:bg-slate-900/60 border border-indigo-100 dark:border-indigo-900/30 text-sm text-slate-800 dark:text-slate-200 leading-relaxed whitespace-pre-wrap font-sans">
+                                        <div className="mt-3 p-3.5 rounded-[8px] bg-white/80 border border-ds-info/30 text-sm text-ds-ink leading-relaxed whitespace-pre-wrap font-sans">
                                             {article.content_data.release_notes}
                                         </div>
                                     </div>
@@ -1381,7 +1381,7 @@ export default function KnowledgeRead() {
 
                         {/* File Attachment Quick Preview */}
                         {article.file_url && (!translationTarget || translationTarget === 'en' || (!article.content_ar && !translatedData)) && (
-                            <div className="bg-muted/40 border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div className="bg-muted/40 border border-border rounded-[8px] p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                                 <div className="flex items-center gap-3 min-w-0">
                                     <div className="h-10 w-10 rounded-lg bg-ds-brass/10 flex items-center justify-center text-ds-brass">
                                         <FileText className="h-5 w-5" />
@@ -1406,7 +1406,7 @@ export default function KnowledgeRead() {
 
                         {/* PDF Viewer if applicable */}
                         {article.file_url?.toLowerCase().endsWith('.pdf') && resolvedFileUrl && (
-                            <div className="mt-4 rounded-xl overflow-hidden shadow-sm border border-slate-200">
+                            <div className="mt-4 rounded-[8px] overflow-hidden shadow-sm border border-ds-border">
                                 <PdfViewer url={resolvedFileUrl} />
                             </div>
                         )}
@@ -1424,7 +1424,7 @@ export default function KnowledgeRead() {
                             )}>
                                 {translatedData || article.content_ar ? (
                                     showBilingual ? (
-                                        <div ref={mermaidRef} className="grid grid-cols-1 lg:grid-cols-2 gap-16 text-slate-800">
+                                        <div ref={mermaidRef} className="grid grid-cols-1 lg:grid-cols-2 gap-16 text-ds-ink">
                                             <InlineErrorBoundary>
                                                 <div
                                                     className={cn(
@@ -1443,8 +1443,8 @@ export default function KnowledgeRead() {
                                                     className={cn(
                                                         "prose max-w-none transition-all duration-300",
                                                         shouldUseRtl
-                                                            ? "border-e-2 border-indigo-100 pe-10 text-end font-arabic"
-                                                            : "border-s-2 border-indigo-100 ps-10",
+                                                            ? "border-e-2 border-ds-info/30 pe-10 text-end font-arabic"
+                                                            : "border-s-2 border-ds-info/30 ps-10",
                                                         fontSize === 'sm' && "text-kb-sm",
                                                         fontSize === 'base' && "text-kb-base",
                                                         fontSize === 'lg' && "text-kb-lg",
@@ -1479,7 +1479,7 @@ export default function KnowledgeRead() {
                                             <ArticleContent
                                                 content={article.content || ''}
                                                 className={cn(
-                                                    "prose md:prose-lg max-w-none text-slate-800 kb-prose transition-all duration-300",
+                                                    "prose md:prose-lg max-w-none text-ds-ink kb-prose transition-all duration-300",
                                                     fontFamily === 'serif' && "kb-prose-serif",
                                                     fontSize === 'sm' && "text-kb-sm",
                                                     fontSize === 'base' && "text-kb-base",
@@ -1492,7 +1492,7 @@ export default function KnowledgeRead() {
                                     </div>
                                 ) : (
                                     !article.file_url && (
-                                        <div className="flex flex-col items-center justify-center py-12 text-slate-400">
+                                        <div className="flex flex-col items-center justify-center py-12 text-ds-muted">
                                             <AlertTriangle className="h-10 w-10 mb-3 opacity-20" />
                                             <p className="italic">{t('viewer.no_content')}</p>
                                         </div>
@@ -1504,22 +1504,22 @@ export default function KnowledgeRead() {
 
                                 {/* Property Local Addendum Box */}
                                 {article.content_data?.local_addendum && (article.content_data.local_addendum.en || article.content_data.local_addendum.ar) && (
-                                    <div className="mt-10 rounded-2xl border border-amber-300/80 bg-gradient-to-br from-amber-50/60 via-orange-50/20 to-card p-6 sm:p-7 shadow-xs dark:border-amber-800/60 dark:from-amber-950/25">
-                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-amber-200/80 dark:border-amber-800/40">
+                                    <div className="mt-10 rounded-[8px] border border-ds-warning/80 bg-gradient-to-br from-ds-warning-soft/60 via-ds-warning-soft/20 to-card p-6 sm:p-7 shadow-xs">
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-ds-warning/80">
                                             <div className="flex items-center gap-3">
-                                                <div className="h-10 w-10 rounded-xl bg-amber-500/15 text-amber-800 dark:text-amber-300 flex items-center justify-center border border-amber-500/25 shadow-2xs shrink-0">
+                                                <div className="h-10 w-10 rounded-[8px] bg-ds-warning/15 text-ds-warning flex items-center justify-center border border-ds-warning/25 shadow-2xs shrink-0">
                                                     <Building className="h-5 w-5" />
                                                 </div>
                                                 <div>
                                                     <div className="flex items-center gap-2">
-                                                        <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                                                        <h3 className="text-base font-bold text-ds-ink">
                                                             {t('viewer.local_addendum_title', 'Property Local Addendum & Operational Annex')}
                                                         </h3>
-                                                        <Badge variant="outline" className="text-[10px] font-semibold bg-amber-100/70 text-amber-900 border-amber-300 dark:bg-amber-900/50 dark:text-amber-200">
+                                                        <Badge variant="outline" className="text-[11px] font-semibold bg-ds-warning-soft/70 text-ds-warning border-ds-warning/30">
                                                             {t('viewer.property_specific', 'Property-Specific')}
                                                         </Badge>
                                                     </div>
-                                                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+                                                    <p className="text-xs text-ds-ink-secondary mt-0.5">
                                                         {t('viewer.local_addendum_desc', 'Local operational modifications and property-specific protocols preserved from central blueprint synchronization.')}
                                                     </p>
                                                 </div>
@@ -1529,37 +1529,37 @@ export default function KnowledgeRead() {
                                         <div className="mt-5">
                                             {showBilingual && article.content_data.local_addendum.en && article.content_data.local_addendum.ar ? (
                                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                                    <div className="p-4 rounded-xl bg-white/90 dark:bg-slate-900/70 border border-amber-100 dark:border-amber-900/30 space-y-2">
-                                                        <div className="text-[11px] font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider">
+                                                    <div className="p-4 rounded-[8px] bg-white/90 border border-ds-warning/30 space-y-2">
+                                                        <div className="text-[11px] font-bold text-ds-warning uppercase tracking-wider">
                                                             {t('viewer.english_version', 'English Version')}
                                                         </div>
-                                                        <div className="text-sm text-slate-800 dark:text-slate-200 whitespace-pre-wrap leading-relaxed">
+                                                        <div className="text-sm text-ds-ink whitespace-pre-wrap leading-relaxed">
                                                             {article.content_data.local_addendum.en}
                                                         </div>
                                                     </div>
-                                                    <div dir="rtl" className="p-4 rounded-xl bg-white/90 dark:bg-slate-900/70 border border-amber-100 dark:border-amber-900/30 space-y-2 font-arabic text-end">
-                                                        <div className="text-[11px] font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider">
+                                                    <div dir="rtl" className="p-4 rounded-[8px] bg-white/90 border border-ds-warning/30 space-y-2 font-arabic text-end">
+                                                        <div className="text-[11px] font-bold text-ds-warning uppercase tracking-wider">
                                                             {t('viewer.arabic_version', 'النسخة العربية')}
                                                         </div>
-                                                        <div className="text-sm text-slate-800 dark:text-slate-200 whitespace-pre-wrap leading-relaxed">
+                                                        <div className="text-sm text-ds-ink whitespace-pre-wrap leading-relaxed">
                                                             {article.content_data.local_addendum.ar}
                                                         </div>
                                                     </div>
                                                 </div>
                                             ) : article.content_data.local_addendum.en && article.content_data.local_addendum.ar ? (
                                                 <Tabs defaultValue={shouldUseRtl ? "ar" : "en"} className="w-full">
-                                                    <TabsList className="bg-amber-100/60 dark:bg-amber-950/40 p-1 border border-amber-200 dark:border-amber-900/40">
-                                                        <TabsTrigger value="en" className="text-xs font-semibold data-[state=active]:bg-white dark:data-[state=active]:bg-slate-900">
+                                                    <TabsList className="bg-ds-warning-soft/60 p-1 border border-ds-warning/30">
+                                                        <TabsTrigger value="en" className="text-xs font-semibold data-[state=active]:bg-ds-surface dark:data-[state=active]:bg-ds-ink">
                                                             {t('viewer.english_version', 'English Version')}
                                                         </TabsTrigger>
-                                                        <TabsTrigger value="ar" className="text-xs font-semibold data-[state=active]:bg-white dark:data-[state=active]:bg-slate-900 font-arabic">
+                                                        <TabsTrigger value="ar" className="text-xs font-semibold data-[state=active]:bg-ds-surface dark:data-[state=active]:bg-ds-ink font-arabic">
                                                             {t('viewer.arabic_version', 'النسخة العربية')}
                                                         </TabsTrigger>
                                                     </TabsList>
-                                                    <TabsContent value="en" className="mt-3 p-4 rounded-xl bg-white/90 dark:bg-slate-900/70 border border-amber-100 dark:border-amber-900/30 text-sm text-slate-800 dark:text-slate-200 whitespace-pre-wrap leading-relaxed">
+                                                    <TabsContent value="en" className="mt-3 p-4 rounded-[8px] bg-white/90 border border-ds-warning/30 text-sm text-ds-ink whitespace-pre-wrap leading-relaxed">
                                                         {article.content_data.local_addendum.en}
                                                     </TabsContent>
-                                                    <TabsContent value="ar" dir="rtl" className="mt-3 p-4 rounded-xl bg-white/90 dark:bg-slate-900/70 border border-amber-100 dark:border-amber-900/30 text-sm text-slate-800 dark:text-slate-200 whitespace-pre-wrap leading-relaxed font-arabic text-end">
+                                                    <TabsContent value="ar" dir="rtl" className="mt-3 p-4 rounded-[8px] bg-white/90 border border-ds-warning/30 text-sm text-ds-ink whitespace-pre-wrap leading-relaxed font-arabic text-end">
                                                         {article.content_data.local_addendum.ar}
                                                     </TabsContent>
                                                 </Tabs>
@@ -1567,7 +1567,7 @@ export default function KnowledgeRead() {
                                                 <div
                                                     dir={article.content_data.local_addendum.ar ? 'rtl' : 'ltr'}
                                                     className={cn(
-                                                        "p-4 rounded-xl bg-white/90 dark:bg-slate-900/70 border border-amber-100 dark:border-amber-900/30 text-sm text-slate-800 dark:text-slate-200 whitespace-pre-wrap leading-relaxed",
+                                                        "p-4 rounded-[8px] bg-white/90 border border-ds-warning/30 text-sm text-ds-ink whitespace-pre-wrap leading-relaxed",
                                                         article.content_data.local_addendum.ar && "font-arabic text-end"
                                                     )}
                                                 >
@@ -1585,19 +1585,19 @@ export default function KnowledgeRead() {
                                     )}
 
                                     {article.checklist_items && article.checklist_items.length > 0 && (
-                                        <div className="pt-8 border-t border-slate-100">
+                                        <div className="pt-8 border-t border-ds-border">
                                             <ChecklistRenderer items={article.checklist_items} />
                                         </div>
                                     )}
 
                                     {article.faq_items && article.faq_items.length > 0 && (
-                                        <div className="pt-8 border-t border-slate-100">
+                                        <div className="pt-8 border-t border-ds-border">
                                             <FAQAccordion items={article.faq_items} />
                                         </div>
                                     )}
 
                                     {article.content_type === 'visual' && article.images && article.images.length > 0 && (
-                                        <div className="pt-8 border-t border-slate-100">
+                                        <div className="pt-8 border-t border-ds-border">
                                             <ImageGalleryRenderer
                                                 images={article.images}
                                                 cacheVersion={article.updated_at || undefined}
@@ -1668,7 +1668,7 @@ export default function KnowledgeRead() {
 
                         {/* Comments Section */}
                         <Card className={cn(
-                            "border-none shadow-sm bg-slate-50/50 print:hidden transition-all duration-500",
+                            "border-none shadow-sm bg-ds-surface-subtle/50 print:hidden transition-all duration-500",
                             isFocusMode && "opacity-0 pointer-events-none translate-y-8"
                         )}>
                             <CardHeader className="pb-4">
@@ -1685,7 +1685,7 @@ export default function KnowledgeRead() {
                             </CardHeader>
                             {showComments && (
                                 <CardContent className="space-y-6">
-                                    <div className="space-y-3 bg-card p-4 rounded-xl border border-border shadow-2xs">
+                                    <div className="space-y-3 bg-card p-4 rounded-[8px] border border-border shadow-2xs">
                                         <Textarea
                                             value={newComment}
                                             onChange={(e) => setNewComment(e.target.value)}
@@ -1693,7 +1693,7 @@ export default function KnowledgeRead() {
                                             className="min-h-[80px] border-none focus-visible:ring-0 p-0 text-sm resize-none bg-transparent"
                                         />
                                         <div className="flex justify-end pt-2 border-t border-border">
-                                            <Button size="sm" onClick={handleComment} disabled={!newComment.trim() || createComment.isPending} className="bg-ds-ink hover:bg-ds-ink-secondary text-white font-semibold">
+                                            <Button size="sm" onClick={handleComment} disabled={!newComment.trim() || createComment.isPending} className="bg-ds-ink hover:bg-ds-ink-secondary text-ds-on-ink font-semibold">
                                                 <Send className="h-3.5 w-3.5 me-2" /> {t('viewer.post')}
                                             </Button>
                                         </div>
@@ -1717,11 +1717,11 @@ export default function KnowledgeRead() {
                                                     <div className="flex-1 space-y-1.5 min-w-0">
                                                         <div className="flex items-center justify-between">
                                                             <span className="text-sm font-bold text-foreground">{comment.author?.full_name || t('viewer.unknown_author')}</span>
-                                                            <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-tight">
+                                                            <span className="text-[11px] font-mono text-muted-foreground uppercase tracking-tight">
                                                                 {new Date(comment.created_at).toLocaleDateString()}
                                                             </span>
                                                         </div>
-                                                        <div className="text-sm text-foreground/90 leading-relaxed bg-muted/40 p-3.5 rounded-2xl rounded-ss-none border border-border shadow-2xs">
+                                                        <div className="text-sm text-foreground/90 leading-relaxed bg-muted/40 p-3.5 rounded-[8px] rounded-ss-none border border-border shadow-2xs">
                                                             {comment.content}
                                                         </div>
                                                     </div>
@@ -1739,15 +1739,15 @@ export default function KnowledgeRead() {
                         <aside className="lg:col-span-3 space-y-8 sticky top-20 h-fit print:hidden">
                             {/* Table of Contents - Primary Sidebar Widget */}
                             {tocItems.length > 0 && (
-                                <div className="space-y-4 bg-card/85 backdrop-blur-xl border border-border rounded-2xl p-4 shadow-xs">
-                                    <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] px-2">{t('viewer.on_this_page')}</h4>
+                                <div className="space-y-4 bg-card/85 border border-border rounded-[8px] p-4 shadow-xs">
+                                    <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-[0.2em] px-2">{t('viewer.on_this_page')}</h4>
                                     <nav className="space-y-0.5">
                                         {tocItems.map(item => (
                                             <button
                                                 key={item.id}
                                                 onClick={() => scrollToSection(item.id)}
                                                 className={cn(
-                                                    "kb-sidebar-item w-full text-start text-sm py-2 px-3 rounded-xl transition-all flex items-center gap-3",
+                                                    "kb-sidebar-item w-full text-start text-sm py-2 px-3 rounded-[8px] transition-all flex items-center gap-3",
                                                     activeSection === item.id ? "bg-ds-brass/10 text-ds-brass font-semibold" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                                                 )}
                                             >
@@ -1764,8 +1764,8 @@ export default function KnowledgeRead() {
 
                             {/* Tags */}
                             {article.tags && article.tags.length > 0 && (
-                                <div className="space-y-4 bg-card/85 backdrop-blur-xl border border-border rounded-2xl p-4 shadow-xs">
-                                    <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] px-2">{t('viewer.tags')}</h4>
+                                <div className="space-y-4 bg-card/85 border border-border rounded-[8px] p-4 shadow-xs">
+                                    <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-[0.2em] px-2">{t('viewer.tags')}</h4>
                                     <div className="flex flex-wrap gap-2 px-2">
                                         {article.tags.map(tag => (
                                             <Badge
@@ -1783,9 +1783,9 @@ export default function KnowledgeRead() {
 
                             {/* Linked Learning */}
                             {(article.linked_training_id || article.linked_quiz_id) ? (
-                                <div className="p-[1px] rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600">
-                                    <div className="bg-white/95 dark:bg-slate-900/95 rounded-[15px] p-5 backdrop-blur-sm">
-                                        <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 mb-3">
+                                <div className="p-[1px] rounded-[8px] bg-ds-info">
+                                    <div className="bg-white/95 rounded-[15px] p-5">
+                                        <div className="flex items-center gap-2 text-ds-info mb-3">
                                             <GraduationCap className="h-5 w-5" />
                                             <span className="text-[11px] font-black uppercase tracking-wider">{t('viewer.linked_learning', 'Linked Learning')}</span>
                                         </div>
@@ -1793,9 +1793,9 @@ export default function KnowledgeRead() {
                                         <div className="space-y-4">
                                             {article.linked_training_id && (
                                                 <div className="space-y-3">
-                                                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">{t('viewer.training_hint', 'Complete this interactive training course based on this SOP.')}</p>
+                                                    <p className="text-xs text-ds-muted leading-relaxed font-medium">{t('viewer.training_hint', 'Complete this interactive training course based on this SOP.')}</p>
                                                     <Button
-                                                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-200 dark:shadow-none rounded-xl"
+                                                        className="w-full bg-ds-info hover:bg-ds-info text-white dark:text-ds-on-ink dark:shadow-none rounded-[8px]"
                                                         onClick={() => navigate(`/learn/player/${article.linked_training_id}`)}
                                                     >
                                                         <PlayCircle className="h-4 w-4 me-2" />
@@ -1806,11 +1806,11 @@ export default function KnowledgeRead() {
 
                                             {article.linked_quiz_id && (
                                                 <div className="space-y-3">
-                                                    {article.linked_training_id && <div className="h-px bg-slate-100 dark:bg-slate-800" />}
-                                                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">{t('viewer.quiz_hint', 'Verify your procedural understanding with a quick checkpoint assessment.')}</p>
+                                                    {article.linked_training_id && <div className="h-px bg-ds-surface-subtle" />}
+                                                    <p className="text-xs text-ds-muted leading-relaxed font-medium">{t('viewer.quiz_hint', 'Verify your procedural understanding with a quick checkpoint assessment.')}</p>
                                                     <Button
                                                         variant="outline"
-                                                        className="w-full border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 rounded-xl"
+                                                        className="w-full border-ds-info/30 text-ds-info hover:bg-ds-info-soft rounded-[8px]"
                                                         onClick={() => navigate(`/learn/quizzes/${article.linked_quiz_id}`)}
                                                     >
                                                         <Lightbulb className="h-4 w-4 me-2" />
@@ -1824,19 +1824,19 @@ export default function KnowledgeRead() {
                             ) : (
                                 /* AI Course & Quiz Generation Quick Actions for Authors/Managers */
                                 (hasPermission('training.create') || profile?.role === 'super_admin' || profile?.role === 'administrator') && (
-                                    <div className="p-[1px] rounded-2xl bg-gradient-to-br from-amber-500 via-ds-brass to-yellow-600">
-                                        <div className="bg-white/95 dark:bg-slate-900/95 rounded-[15px] p-5 backdrop-blur-sm space-y-3">
-                                            <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
-                                                <Sparkles className="h-4 w-4 text-amber-500" />
+                                    <div className="p-[1px] rounded-[8px] bg-ds-warning">
+                                        <div className="bg-white/95 rounded-[15px] p-5 space-y-3">
+                                            <div className="flex items-center gap-2 text-ds-warning">
+                                                <Sparkles className="h-4 w-4 text-ds-warning" />
                                                 <span className="text-[11px] font-black uppercase tracking-wider">{t('viewer.ai_learning_pipeline', 'AI Learning Pipeline')}</span>
                                             </div>
-                                            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+                                            <p className="text-xs text-ds-muted leading-relaxed font-medium">
                                                 {t('viewer.ai_pipeline_desc', 'Convert this verified SOP into an interactive course with Bloom-level quizzes.')}
                                             </p>
                                             <div className="space-y-2 pt-1">
                                                 <Button
                                                     size="sm"
-                                                    className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-sm rounded-xl text-xs font-semibold"
+                                                    className="w-full bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink shadow-sm rounded-[8px] text-xs font-semibold"
                                                     onClick={() => navigate(`/studio/courses/new?source_doc_id=${article.id}`)}
                                                 >
                                                     <GraduationCap className="h-3.5 w-3.5 me-1.5" />
@@ -1845,7 +1845,7 @@ export default function KnowledgeRead() {
                                                 <Button
                                                     size="sm"
                                                     variant="outline"
-                                                    className="w-full border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-950/40 rounded-xl text-xs font-semibold"
+                                                    className="w-full border-ds-warning/30 text-ds-warning hover:bg-ds-warning-soft rounded-[8px] text-xs font-semibold"
                                                     onClick={() => navigate(`/studio/quizzes/generate?source_doc_id=${article.id}`)}
                                                 >
                                                     <Lightbulb className="h-3.5 w-3.5 me-1.5" />
@@ -1860,7 +1860,7 @@ export default function KnowledgeRead() {
                             {/* Related Articles */}
                             {relatedArticles && relatedArticles.length > 0 && (
                                 <div className="space-y-4">
-                                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] px-2">{t('viewer.related')}</h4>
+                                    <h4 className="text-[11px] font-black text-ds-muted uppercase tracking-[0.2em] px-2">{t('viewer.related')}</h4>
                                     <RelatedArticles
                                         articles={relatedArticles}
                                         sourceId={article.id}
@@ -1880,8 +1880,8 @@ export default function KnowledgeRead() {
 
             {/* Premium Floating Readability Toolbar */}
             <div className={cn(
-                "kb-floating-toolbar fixed bottom-[max(4.5rem,calc(env(safe-area-inset-bottom)+1rem))] md:bottom-8 start-1/2 -translate-x-1/2 h-14 max-w-[calc(100vw-1rem)] flex items-center px-1 py-1 rounded-2xl print:hidden z-50 transition-all duration-500 ease-out",
-                isFocusMode ? "ring-2 ring-indigo-500 ring-offset-4 ring-offset-slate-50" : "bg-white/80"
+                "kb-floating-toolbar fixed bottom-[max(4.5rem,calc(env(safe-area-inset-bottom)+1rem))] md:bottom-8 start-1/2 -translate-x-1/2 h-14 max-w-[calc(100vw-1rem)] flex items-center px-1 py-1 rounded-[8px] print:hidden z-50 transition-all duration-500 ease-out",
+                isFocusMode ? "ring-2 ring-ds-info ring-offset-4 ring-offset-ds-background" : "bg-white/80"
             )}>
                 <div className="flex items-center">
                     <Button
@@ -1893,7 +1893,7 @@ export default function KnowledgeRead() {
                         }}
                         className={cn(
                             "h-12 w-12 rounded-[14px] transition-all duration-300",
-                            isFocusMode ? "text-indigo-600 bg-indigo-50 scale-105" : "text-slate-500 hover:bg-slate-100"
+                            isFocusMode ? "text-ds-info bg-ds-info-soft scale-105" : "text-ds-muted hover:bg-ds-surface-subtle"
                         )}
                         title={isFocusMode ? "Exit Focus Mode" : "Enter Focus Mode"}
                         aria-label={isFocusMode ? t('accessibility.exit_focus', 'Exit focus mode') : t('accessibility.enter_focus', 'Enter focus mode')}
@@ -1909,26 +1909,26 @@ export default function KnowledgeRead() {
                                 aria-label={t('common:a11y.textSettings', 'Text settings')}
                                 variant="ghost"
                                 size="icon"
-                                className="h-12 w-12 rounded-[14px] text-slate-500 hover:bg-slate-100 transition-all"
+                                className="h-12 w-12 rounded-[14px] text-ds-muted hover:bg-ds-surface-subtle transition-all"
                             >
                                 <Type className="h-5 w-5" />
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="center" className="w-64 p-5 rounded-2xl shadow-2xl border-slate-200/60 animate-in fade-in zoom-in-95 duration-200">
+                        <DropdownMenuContent align="center" className="w-64 p-5 rounded-[8px] shadow-2xl border-ds-border/60 animate-in fade-in zoom-in-95 duration-200">
                             <div className="space-y-6">
                                 <div className="space-y-3">
                                     <div className="flex items-center justify-between">
-                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('viewer.font_size', 'Font Size')}</p>
-                                        <span className="text-[10px] font-bold text-indigo-500 uppercase">{fontSize}</span>
+                                        <p className="text-[11px] font-black text-ds-muted uppercase tracking-widest">{t('viewer.font_size', 'Font Size')}</p>
+                                        <span className="text-[11px] font-bold text-ds-info uppercase">{fontSize}</span>
                                     </div>
-                                    <div className="grid grid-cols-4 gap-1 bg-slate-100 p-1 rounded-xl">
+                                    <div className="grid grid-cols-4 gap-1 bg-ds-surface-subtle p-1 rounded-[8px]">
                                         {(['sm', 'base', 'lg', 'xl'] as const).map((size) => (
                                             <button
                                                 key={size}
                                                 onClick={() => setFontSize(size)}
                                                 className={cn(
-                                                    "py-2 rounded-lg text-[10px] font-black transition-all uppercase",
-                                                    fontSize === size ? "bg-white text-indigo-600 shadow-sm" : "text-slate-400 hover:text-slate-600"
+                                                    "py-2 rounded-lg text-[11px] font-black transition-all uppercase",
+                                                    fontSize === size ? "bg-ds-surface text-ds-info shadow-sm" : "text-ds-muted hover:text-ds-ink-secondary"
                                                 )}
                                             >
                                                 {size}
@@ -1938,62 +1938,62 @@ export default function KnowledgeRead() {
                                 </div>
 
                                 <div className="space-y-3">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('viewer.typeface', 'Typeface')}</p>
+                                    <p className="text-[11px] font-black text-ds-muted uppercase tracking-widest">{t('viewer.typeface', 'Typeface')}</p>
                                     <div className="grid grid-cols-2 gap-2">
                                         <button
                                             onClick={() => setFontFamily('sans')}
                                             className={cn(
-                                                "py-3 rounded-xl border-2 transition-all flex flex-col items-center gap-1",
-                                                fontFamily === 'sans' ? "border-indigo-600 bg-indigo-50/50" : "border-slate-100 hover:border-slate-300"
+                                                "py-3 rounded-[8px] border-2 transition-all flex flex-col items-center gap-1",
+                                                fontFamily === 'sans' ? "border-ds-info bg-ds-info-soft/50" : "border-ds-border hover:border-ds-border"
                                             )}
                                         >
                                             <span className="text-lg font-bold">Aa</span>
-                                            <span className="text-[10px] font-bold text-slate-500">SANS</span>
+                                            <span className="text-[11px] font-bold text-ds-muted">SANS</span>
                                         </button>
                                         <button
                                             onClick={() => setFontFamily('serif')}
                                             className={cn(
-                                                "py-3 rounded-xl border-2 transition-all flex flex-col items-center gap-1 font-serif",
-                                                fontFamily === 'serif' ? "border-indigo-600 bg-indigo-50/50" : "border-slate-100 hover:border-slate-300"
+                                                "py-3 rounded-[8px] border-2 transition-all flex flex-col items-center gap-1",
+                                                fontFamily === 'serif' ? "border-ds-info bg-ds-info-soft/50" : "border-ds-border hover:border-ds-border"
                                             )}
                                         >
                                             <span className="text-lg font-bold italic">Aa</span>
-                                            <span className="text-[10px] font-bold text-slate-500">SERIF</span>
+                                            <span className="text-[11px] font-bold text-ds-muted">SERIF</span>
                                         </button>
                                     </div>
                                 </div>
 
-                                <Separator className="bg-slate-100" />
+                                <Separator className="bg-ds-surface-subtle" />
 
                                 <div className="space-y-3">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('viewer.appearance', 'Appearance')}</p>
+                                    <p className="text-[11px] font-black text-ds-muted uppercase tracking-widest">{t('viewer.appearance', 'Appearance')}</p>
                                     <div className="grid grid-cols-3 gap-3">
                                         <button
                                             onClick={() => setReaderTheme('light')}
                                             className={cn(
-                                                "h-10 rounded-xl border-2 transition-all flex items-center justify-center",
-                                                readerTheme === 'light' ? "border-indigo-600 ring-2 ring-indigo-50 ring-offset-1" : "border-slate-100 bg-white"
+                                                "h-10 rounded-[8px] border-2 transition-all flex items-center justify-center",
+                                                readerTheme === 'light' ? "border-ds-info ring-2 ring-ds-info ring-offset-1" : "border-ds-border bg-ds-surface"
                                             )}
                                         >
-                                            <div className="w-5 h-5 bg-white rounded-full border border-slate-200" title="Light" />
+                                            <div className="w-5 h-5 bg-ds-surface rounded-full border border-ds-border" title="Light" />
                                         </button>
                                         <button
                                             onClick={() => setReaderTheme('sepia')}
                                             className={cn(
-                                                "h-10 rounded-xl border-2 transition-all flex items-center justify-center",
-                                                readerTheme === 'sepia' ? "border-indigo-600 ring-2 ring-indigo-50 ring-offset-1" : "border-slate-100 bg-[#FDF6E3]" // eslint-disable-line no-restricted-syntax -- reading-theme swatch preview, not app chrome
+                                                "h-10 rounded-[8px] border-2 transition-all flex items-center justify-center",
+                                                readerTheme === 'sepia' ? "border-ds-info ring-2 ring-ds-info ring-offset-1" : "border-ds-border bg-[#FDF6E3]" // eslint-disable-line no-restricted-syntax -- reading-theme swatch preview, not app chrome
                                             )}
                                         >
-                                            <div className="w-5 h-5 bg-[#FDF6E3] rounded-full border border-slate-200" title="Sepia" /> {/* eslint-disable-line no-restricted-syntax -- reading-theme swatch preview */}
+                                            <div className="w-5 h-5 bg-[#FDF6E3] rounded-full border border-ds-border" title="Sepia" /> {/* eslint-disable-line no-restricted-syntax -- reading-theme swatch preview */}
                                         </button>
                                         <button
                                             onClick={() => setReaderTheme('dark')}
                                             className={cn(
-                                                "h-10 rounded-xl border-2 transition-all flex items-center justify-center",
-                                                readerTheme === 'dark' ? "border-indigo-600 ring-2 ring-indigo-50 ring-offset-1" : "border-slate-100 bg-slate-900"
+                                                "h-10 rounded-[8px] border-2 transition-all flex items-center justify-center",
+                                                readerTheme === 'dark' ? "border-ds-info ring-2 ring-ds-info ring-offset-1" : "border-ds-border bg-ds-ink"
                                             )}
                                         >
-                                            <div className="w-5 h-5 bg-slate-900 rounded-full border border-slate-700" title="Dark" />
+                                            <div className="w-5 h-5 bg-ds-ink rounded-full border border-ds-ink-secondary" title="Dark" />
                                         </button>
                                     </div>
                                 </div>
@@ -2007,7 +2007,7 @@ export default function KnowledgeRead() {
                             variant="ghost"
                             size="icon"
                             onClick={handleShare}
-                            className="h-12 w-12 rounded-[14px] text-slate-500 hover:bg-slate-100 transition-all"
+                            className="h-12 w-12 rounded-[14px] text-ds-muted hover:bg-ds-surface-subtle transition-all"
                             title="Share"
                         >
                             <Share2 className="h-5 w-5" />
@@ -2016,7 +2016,7 @@ export default function KnowledgeRead() {
                             variant="ghost"
                             size="icon"
                             onClick={handlePrint}
-                            className="h-12 w-12 rounded-[14px] text-slate-500 hover:bg-slate-100 transition-all"
+                            className="h-12 w-12 rounded-[14px] text-ds-muted hover:bg-ds-surface-subtle transition-all"
                             title="Print"
                         >
                             <Printer className="h-5 w-5" />

@@ -173,9 +173,11 @@ function resolveMatchingUserIds(
     }
 
     if (assignment.target_type === 'role') {
-        return context.userRoles
-            .filter((row) => row.role === assignment.target_id && activeUserIds.has(row.user_id))
-            .map((row) => row.user_id)
+        return Array.from(new Set(
+            context.userRoles
+                .filter((row) => row.role === assignment.target_id && activeUserIds.has(row.user_id))
+                .map((row) => row.user_id)
+        ))
     }
 
     return []
@@ -240,7 +242,7 @@ async function fetchModuleAssignmentContext(moduleId: string): Promise<ModuleAss
             .select('user_id, role'),
         supabase
             .from('organization_memberships')
-            .select('user_id, department_id')
+            .select('user_id, department_id, role')
             .eq('is_active', true),
         supabase
             .from('departments')
@@ -274,7 +276,15 @@ async function fetchModuleAssignmentContext(moduleId: string): Promise<ModuleAss
     return {
         assignments: (assignmentsResult.data || []) as AssignmentRow[],
         profiles: (profilesResult.data || []) as ProfileRow[],
-        userRoles: (userRolesResult.data || []) as UserRoleRow[],
+        // Role assignments are resolved on the server against the membership role
+        // (organization_admin, department_manager, ...). Older assignments used the
+        // app_role projection (administrator, author, ...), so match either.
+        userRoles: [
+            ...((userRolesResult.data || []) as UserRoleRow[]),
+            ...((userDepartmentsResult.data || []) as Array<UserDepartmentRow & { role?: string | null }>)
+                .filter((row) => typeof row.role === 'string' && row.role.length > 0)
+                .map((row) => ({ user_id: row.user_id, role: row.role as string })),
+        ],
         userDepartments: (userDepartmentsResult.data || []) as UserDepartmentRow[],
         departments: (departmentsResult.data || []) as DepartmentRow[],
         progressRows: (progressResult.data || []) as LearningProgress[],
@@ -689,7 +699,7 @@ export const learningService = {
                 .eq('user_id', user.id),
             supabase
                 .from('organization_memberships')
-                .select('department_id')
+                .select('department_id, role')
                 .eq('user_id', user.id)
                 .eq('is_active', true),
         ])
@@ -697,9 +707,13 @@ export const learningService = {
         if (rolesResult.error) throw rolesResult.error
         if (departmentsResult.error) throw departmentsResult.error
 
-        const roleIds = (rolesResult.data || [])
-            .map((row: { role?: string | null }) => row.role)
-            .filter((role): role is string => typeof role === 'string' && role.length > 0)
+        // Role assignments target the membership role (what the server matches on);
+        // older ones used the app_role projection, so include both.
+        const roleIds = Array.from(new Set(
+            [...(rolesResult.data || []), ...(departmentsResult.data || [])]
+                .map((row: { role?: string | null }) => row.role)
+                .filter((role): role is string => typeof role === 'string' && role.length > 0)
+        ))
 
         const departmentIds = (departmentsResult.data || [])
             .map((row: { department_id?: string | null }) => row.department_id)

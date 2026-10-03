@@ -19,7 +19,7 @@ export function PlayerShellSkeleton() {
             <div className="flex min-h-0 flex-1">
                 <div className="hidden w-[320px] shrink-0 flex-col gap-2 border-e border-border/60 bg-ds-surface-subtle p-4 lg:flex">
                     {Array.from({ length: 7 }).map((_, i) => (
-                        <Skeleton key={i} className="h-14 w-full rounded-xl" />
+                        <Skeleton key={i} className="h-14 w-full rounded-[8px]" />
                     ))}
                 </div>
                 <div className="min-w-0 flex-1 overflow-hidden p-6 lg:p-10">
@@ -28,15 +28,15 @@ export function PlayerShellSkeleton() {
                         <Skeleton className="h-4 w-full" />
                         <Skeleton className="h-4 w-full" />
                         <Skeleton className="h-4 w-5/6" />
-                        <Skeleton className="h-56 w-full rounded-2xl" />
+                        <Skeleton className="h-56 w-full rounded-[8px]" />
                         <Skeleton className="h-4 w-full" />
                         <Skeleton className="h-4 w-4/6" />
                     </div>
                 </div>
             </div>
             <div className="flex h-[4.5rem] shrink-0 items-center justify-between border-t border-border/60 px-4 sm:px-6">
-                <Skeleton className="h-11 w-28 rounded-xl" />
-                <Skeleton className="h-11 w-40 rounded-xl" />
+                <Skeleton className="h-11 w-28 rounded-[8px]" />
+                <Skeleton className="h-11 w-40 rounded-[8px]" />
             </div>
         </div>
     )

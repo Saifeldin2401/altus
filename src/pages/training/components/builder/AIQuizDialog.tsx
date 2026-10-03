@@ -67,7 +67,7 @@ export function AIQuizDialog({
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className={`flex items-center gap-2`}>
-            <Sparkles className="w-5 h-5 text-purple-600" />
+            <Sparkles className="w-5 h-5 text-ds-accent" />
             {t('builder.aiQuestionGenerator')}
           </DialogTitle>
           <DialogDescription className={''}>
@@ -75,8 +75,8 @@ export function AIQuizDialog({
           </DialogDescription>
         </DialogHeader>
         <div className="py-4 space-y-4">
-          <div className="bg-slate-50 p-3.5 rounded-lg border border-slate-200 space-y-1.5">
-            <label className="text-sm font-semibold text-slate-800 block">
+          <div className="bg-ds-surface-subtle p-3.5 rounded-lg border border-ds-border space-y-1.5">
+            <label className="text-sm font-semibold text-ds-ink block">
               {t('builder.quizTitle', 'Quiz Title')}
             </label>
             <input
@@ -84,7 +84,7 @@ export function AIQuizDialog({
               value={quizCustomTitle}
               onChange={(e) => setQuizCustomTitle(e.target.value)}
               placeholder={t('builder.quizTitlePlaceholder', 'Enter quiz title (e.g. Linen Care Knowledge Assessment)')}
-              className={`w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500`}
+              className={`w-full rounded-md border border-ds-border bg-ds-surface px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ds-accent`}
             />
           </div>
 

@@ -12,6 +12,7 @@ import {
     X,
 } from 'lucide-react'
 import { sanitizeHtml } from '@/lib/sanitize'
+import i18n from '@/i18n/i18n'
 
 interface PlayerAudioNarratorProps {
     text: string
@@ -171,24 +172,24 @@ export function PlayerAudioNarrator({
         : 0
 
     return (
-        <div className="w-full bg-slate-900/95 text-white backdrop-blur-md border-y border-amber-500/30 px-4 py-3 shadow-xl transition-all duration-300">
+        <div className="w-full bg-ds-ink/95 text-ds-on-ink border-y border-ds-warning/30 px-4 py-3 shadow-xl transition-all duration-300">
             <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
                 {/* Status & Current Sentence Indicator */}
                 <div className="flex items-center gap-3 w-full md:w-auto overflow-hidden">
-                    <div className="h-9 w-9 rounded-full bg-amber-500/20 border border-amber-400/40 flex items-center justify-center shrink-0 text-amber-300 animate-pulse">
+                    <div className="h-9 w-9 rounded-full bg-ds-warning/20 border border-ds-warning/40 flex items-center justify-center shrink-0 text-ds-warning animate-pulse">
                         <Sparkles className="h-4 w-4" />
                     </div>
                     <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                            <span className="text-xs font-semibold uppercase tracking-wider text-amber-400">
-                                {isRTL ? 'قارئ صوتي ذكي' : 'AI Voice Narrator'}
+                            <span className="text-xs font-semibold uppercase tracking-wider text-ds-warning">
+                                {i18n.t('training:screens.PlayerAudioNarrator.aiVoiceNarrator', 'AI Voice Narrator')}
                             </span>
-                            <Badge variant="outline" className="text-[10px] px-1.5 py-0.5 shrink-0 whitespace-nowrap border-slate-700 text-slate-300">
+                            <Badge variant="outline" className="text-[11px] px-1.5 py-0.5 shrink-0 whitespace-nowrap border-ds-ink-secondary text-ds-muted">
                                 {sentences.length > 0 ? `${currentSentenceIndex + 1}/${sentences.length}` : 'Ready'}
                             </Badge>
                         </div>
-                        <p className="text-xs text-slate-300 truncate max-w-md">
-                            {sentences[currentSentenceIndex] || title || (isRTL ? 'جاهز للقراءة' : 'Ready to narrate')}
+                        <p className="text-xs text-ds-muted truncate max-w-md">
+                            {sentences[currentSentenceIndex] || title || (i18n.t('training:screens.PlayerAudioNarrator.readyToNarrate', 'Ready to narrate'))}
                         </p>
                     </div>
                 </div>
@@ -199,8 +200,8 @@ export function PlayerAudioNarrator({
                         variant="ghost"
                         size="sm"
                         onClick={handleRestart}
-                        title={isRTL ? 'إعادة من البداية' : 'Restart'}
-                        className="h-8 w-8 p-0 text-slate-300 hover:text-white hover:bg-slate-800"
+                        title={i18n.t('training:screens.PlayerAudioNarrator.restart', 'Restart')}
+                        className="h-8 w-8 p-0 text-ds-muted hover:text-ds-on-ink hover:bg-ds-ink"
                     >
                         <RotateCcw className="h-4 w-4" />
                     </Button>
@@ -209,19 +210,19 @@ export function PlayerAudioNarrator({
                         <Button
                             size="sm"
                             onClick={handlePause}
-                            className="h-9 px-4 bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold gap-1.5 shadow-md shadow-amber-500/20"
+                            className="h-9 px-4 bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink font-semibold gap-1.5"
                         >
                             <Pause className="h-4 w-4 fill-current" />
-                            <span className="text-xs">{isRTL ? 'إيقاف مؤقت' : 'Pause'}</span>
+                            <span className="text-xs">{i18n.t('training:screens.PlayerAudioNarrator.pause', 'Pause')}</span>
                         </Button>
                     ) : (
                         <Button
                             size="sm"
                             onClick={handlePlay}
-                            className="h-9 px-4 bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold gap-1.5 shadow-md shadow-amber-500/20"
+                            className="h-9 px-4 bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink font-semibold gap-1.5"
                         >
                             <Play className="h-4 w-4 fill-current" />
-                            <span className="text-xs">{isRTL ? 'استماع' : 'Listen'}</span>
+                            <span className="text-xs">{i18n.t('training:screens.PlayerAudioNarrator.listen', 'Listen')}</span>
                         </Button>
                     )}
 
@@ -229,8 +230,8 @@ export function PlayerAudioNarrator({
                         variant="ghost"
                         size="sm"
                         onClick={cycleSpeed}
-                        className="h-8 px-2 text-xs font-mono text-slate-300 hover:text-white hover:bg-slate-800 gap-1"
-                        title={isRTL ? 'سرعة القراءة' : 'Playback Speed'}
+                        className="h-8 px-2 text-xs font-mono text-ds-muted hover:text-ds-on-ink hover:bg-ds-ink gap-1"
+                        title={i18n.t('training:screens.PlayerAudioNarrator.playbackSpeed', 'Playback Speed')}
                     >
                         <Gauge className="h-3.5 w-3.5" />
                         <span>{speed}x</span>
@@ -240,10 +241,10 @@ export function PlayerAudioNarrator({
                         variant="ghost"
                         size="sm"
                         onClick={() => setIsMuted(prev => !prev)}
-                        className="h-8 w-8 p-0 text-slate-300 hover:text-white hover:bg-slate-800"
-                        title={isMuted ? (isRTL ? 'إلغاء الكتم' : 'Unmute') : (isRTL ? 'كتم' : 'Mute')}
+                        className="h-8 w-8 p-0 text-ds-muted hover:text-ds-on-ink hover:bg-ds-ink"
+                        title={isMuted ? (i18n.t('training:screens.PlayerAudioNarrator.unmute', 'Unmute')) : (i18n.t('training:screens.PlayerAudioNarrator.mute', 'Mute'))}
                     >
-                        {isMuted ? <VolumeX className="h-4 w-4 text-red-400" /> : <Volume2 className="h-4 w-4" />}
+                        {isMuted ? <VolumeX className="h-4 w-4 text-ds-danger" /> : <Volume2 className="h-4 w-4" />}
                     </Button>
 
                     {onClose && (
@@ -254,7 +255,7 @@ export function PlayerAudioNarrator({
                                 handleStop()
                                 onClose()
                             }}
-                            className="h-8 w-8 p-0 text-slate-400 hover:text-white hover:bg-slate-800 ms-1"
+                            className="h-8 w-8 p-0 text-ds-muted hover:text-ds-on-ink hover:bg-ds-ink ms-1"
                         >
                             <X className="h-4 w-4" />
                         </Button>
@@ -264,9 +265,9 @@ export function PlayerAudioNarrator({
 
             {/* Micro Progress Line */}
             {isPlaying && (
-                <div className="w-full bg-slate-800 h-1 mt-2 rounded-full overflow-hidden">
+                <div className="w-full bg-ds-ink h-1 mt-2 rounded-full overflow-hidden">
                     <div
-                        className="bg-amber-400 h-full transition-all duration-300"
+                        className="bg-ds-warning h-full transition-all duration-300"
                         style={{ width: `${progressPct}%` }}
                     />
                 </div>

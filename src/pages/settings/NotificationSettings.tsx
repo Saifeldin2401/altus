@@ -26,10 +26,10 @@ export function NotificationSettings() {
     return (
         <div className="space-y-6">
             {/* Master Channels */}
-            <Card className="bg-white dark:bg-hotel-navy border-border/50 shadow-sm overflow-hidden">
-                <CardHeader className="bg-slate-50/50 dark:bg-white/5 border-b border-border/50">
+            <Card className="bg-ds-surface dark:bg-ds-ink border-border/50 shadow-sm overflow-hidden">
+                <CardHeader className="bg-ds-surface-subtle/50 border-b border-border/50">
                     <CardTitle className="flex items-center gap-2">
-                        <Bell className="h-5 w-5 text-hotel-gold" />
+                        <Bell className="h-5 w-5 text-ds-accent" />
                         {t('notificationSettings.title')}
                     </CardTitle>
                     <CardDescription>{t('notificationSettings.description')}</CardDescription>
@@ -37,12 +37,12 @@ export function NotificationSettings() {
                 <CardContent className="space-y-6 pt-6">
                     <div className="flex items-center justify-between pb-4 border-b border-border/50">
                         <div className="flex items-center gap-x-4">
-                            <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-full">
-                                <Globe className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                            <div className="p-2 bg-ds-info-soft rounded-full">
+                                <Globe className="h-5 w-5 text-ds-info" />
                             </div>
                             <div>
                                 <Label className="text-base font-medium">{t('notificationSettings.browser_notifications')}</Label>
-                                <p className="text-sm text-gray-500">{t('notificationSettings.types.browser_notifications_desc_detailed')}</p>
+                                <p className="text-sm text-ds-muted">{t('notificationSettings.types.browser_notifications_desc_detailed')}</p>
                             </div>
                         </div>
                         <Switch
@@ -73,7 +73,7 @@ export function NotificationSettings() {
                             </div>
                             <div>
                                 <Label className="text-base font-medium">{t('notificationSettings.types.enable_all_emails')}</Label>
-                                <p className="text-sm text-gray-500">{t('notificationSettings.types.enable_all_emails_desc')}</p>
+                                <p className="text-sm text-ds-muted">{t('notificationSettings.types.enable_all_emails_desc')}</p>
                             </div>
                         </div>
                         <Switch
@@ -85,9 +85,9 @@ export function NotificationSettings() {
             </Card>
 
             {/* Granular Controls */}
-            <Card className="bg-white dark:bg-hotel-navy border-border/50 shadow-sm overflow-hidden">
-                <CardHeader className="bg-slate-50/50 dark:bg-white/5 border-b border-border/50">
-                    <CardTitle className="text-gray-900 dark:text-white flex items-center gap-2 text-base">
+            <Card className="bg-ds-surface dark:bg-ds-ink border-border/50 shadow-sm overflow-hidden">
+                <CardHeader className="bg-ds-surface-subtle/50 border-b border-border/50">
+                    <CardTitle className="text-ds-ink flex items-center gap-2 text-base">
                         {t_ext('granular_preferences', 'Granular Preferences')}</CardTitle>
                     <CardDescription>{t_ext('choose_exactly_how_you_want_to_be_notifi', 'Choose exactly how you want to be notified for each category')}</CardDescription>
                 </CardHeader>
@@ -96,17 +96,17 @@ export function NotificationSettings() {
                         {/* Approvals */}
                         <div className="p-6 flex items-center justify-between group">
                             <div className="flex items-center gap-x-4">
-                                <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full">
-                                    <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
+                                <div className="p-2 bg-ds-success-soft rounded-full">
+                                    <CheckCircle className="h-5 w-5 text-ds-success" />
                                 </div>
                                 <div>
                                     <Label className="text-base font-medium">{t('notificationSettings.types.approvals')}</Label>
-                                    <p className="text-sm text-gray-500">{t('notificationSettings.types.approvals_desc')}</p>
+                                    <p className="text-sm text-ds-muted">{t('notificationSettings.types.approvals_desc')}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-8">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-xs text-gray-400 font-medium tracking-wider uppercase">{t_ext('email', 'Email')}</span>
+                                    <span className="text-xs text-ds-muted font-medium tracking-wider uppercase">{t_ext('email', 'Email')}</span>
                                     <Switch
                                         checked={preferences.approval_email}
                                         onCheckedChange={() => handleToggle('approval_email')}
@@ -114,7 +114,7 @@ export function NotificationSettings() {
                                     />
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="text-xs text-gray-400 font-medium tracking-wider uppercase">{t_ext('push', 'Push')}</span>
+                                    <span className="text-xs text-ds-muted font-medium tracking-wider uppercase">{t_ext('push', 'Push')}</span>
                                     <Switch
                                         checked={preferences.approval_push}
                                         onCheckedChange={() => handleToggle('approval_push')}
@@ -127,17 +127,17 @@ export function NotificationSettings() {
                         {/* Learning & Training */}
                         <div className="p-6 flex items-center justify-between group">
                             <div className="flex items-center gap-x-4">
-                                <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-full">
-                                    <BookOpen className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                                <div className="p-2 bg-ds-info-soft rounded-full">
+                                    <BookOpen className="h-5 w-5 text-ds-info" />
                                 </div>
                                 <div>
                                     <Label className="text-base font-medium">{t('notificationSettings.types.training')}</Label>
-                                    <p className="text-sm text-gray-500">{t('notificationSettings.types.training_desc')}</p>
+                                    <p className="text-sm text-ds-muted">{t('notificationSettings.types.training_desc')}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-8">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-xs text-gray-400 font-medium tracking-wider uppercase">{t_ext('email', 'Email')}</span>
+                                    <span className="text-xs text-ds-muted font-medium tracking-wider uppercase">{t_ext('email', 'Email')}</span>
                                     <Switch
                                         checked={preferences.training_email}
                                         onCheckedChange={() => handleToggle('training_email')}
@@ -145,7 +145,7 @@ export function NotificationSettings() {
                                     />
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="text-xs text-gray-400 font-medium tracking-wider uppercase">{t_ext('push', 'Push')}</span>
+                                    <span className="text-xs text-ds-muted font-medium tracking-wider uppercase">{t_ext('push', 'Push')}</span>
                                     <Switch
                                         checked={preferences.training_push}
                                         onCheckedChange={() => handleToggle('training_push')}
@@ -158,17 +158,17 @@ export function NotificationSettings() {
                         {/* Announcements */}
                         <div className="p-6 flex items-center justify-between group">
                             <div className="flex items-center gap-x-4">
-                                <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-full">
-                                    <AlertCircle className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                                <div className="p-2 bg-ds-accent-soft rounded-full">
+                                    <AlertCircle className="h-5 w-5 text-ds-accent" />
                                 </div>
                                 <div>
                                     <Label className="text-base font-medium">{t('notificationSettings.types.announcements')}</Label>
-                                    <p className="text-sm text-gray-500">{t('notificationSettings.types.announcements_desc')}</p>
+                                    <p className="text-sm text-ds-muted">{t('notificationSettings.types.announcements_desc')}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-8">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-xs text-gray-400 font-medium tracking-wider uppercase">{t_ext('email', 'Email')}</span>
+                                    <span className="text-xs text-ds-muted font-medium tracking-wider uppercase">{t_ext('email', 'Email')}</span>
                                     <Switch
                                         checked={preferences.announcement_email}
                                         onCheckedChange={() => handleToggle('announcement_email')}
@@ -176,7 +176,7 @@ export function NotificationSettings() {
                                     />
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="text-xs text-gray-400 font-medium tracking-wider uppercase">{t_ext('push', 'Push')}</span>
+                                    <span className="text-xs text-ds-muted font-medium tracking-wider uppercase">{t_ext('push', 'Push')}</span>
                                     <Switch
                                         checked={preferences.announcement_push}
                                         onCheckedChange={() => handleToggle('announcement_push')}
@@ -189,17 +189,17 @@ export function NotificationSettings() {
                         {/* Maintenance */}
                         <div className="p-6 flex items-center justify-between group">
                             <div className="flex items-center gap-x-4">
-                                <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-full">
-                                    <Wrench className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                                <div className="p-2 bg-ds-warning-soft rounded-full">
+                                    <Wrench className="h-5 w-5 text-ds-warning" />
                                 </div>
                                 <div>
                                     <Label className="text-base font-medium">{t('notificationSettings.types.maintenance')}</Label>
-                                    <p className="text-sm text-gray-500">{t('notificationSettings.types.maintenance_desc')}</p>
+                                    <p className="text-sm text-ds-muted">{t('notificationSettings.types.maintenance_desc')}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-8">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-xs text-gray-400 font-medium tracking-wider uppercase">{t_ext('email', 'Email')}</span>
+                                    <span className="text-xs text-ds-muted font-medium tracking-wider uppercase">{t_ext('email', 'Email')}</span>
                                     <Switch
                                         checked={preferences.maintenance_email}
                                         onCheckedChange={() => handleToggle('maintenance_email')}
@@ -207,7 +207,7 @@ export function NotificationSettings() {
                                     />
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <span className="text-xs text-gray-400 font-medium tracking-wider uppercase">{t_ext('push', 'Push')}</span>
+                                    <span className="text-xs text-ds-muted font-medium tracking-wider uppercase">{t_ext('push', 'Push')}</span>
                                     <Switch
                                         checked={preferences.maintenance_push}
                                         onCheckedChange={() => handleToggle('maintenance_push')}
@@ -223,11 +223,11 @@ export function NotificationSettings() {
             {/* Advanced Settings */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Quiet Hours */}
-                <Card className="bg-white dark:bg-hotel-navy border-border/50 shadow-sm overflow-hidden">
-                    <CardHeader className="bg-slate-50/50 dark:bg-white/5 border-b border-border/50 py-4 px-6 text-base">
+                <Card className="bg-ds-surface dark:bg-ds-ink border-border/50 shadow-sm overflow-hidden">
+                    <CardHeader className="bg-ds-surface-subtle/50 border-b border-border/50 py-4 px-6 text-base">
                         <div className="flex items-center justify-between">
                             <CardTitle className="text-base flex items-center gap-2">
-                                <Clock className="h-4 w-4 text-hotel-gold" />
+                                <Clock className="h-4 w-4 text-ds-accent" />
                                 {t('notificationSettings.scheduling.title')}
                             </CardTitle>
                             <Switch
@@ -237,24 +237,24 @@ export function NotificationSettings() {
                         </div>
                     </CardHeader>
                     <CardContent className="p-6 pt-4 space-y-4">
-                        <p className="text-sm text-gray-500">{t('notificationSettings.scheduling.description')}</p>
+                        <p className="text-sm text-ds-muted">{t('notificationSettings.scheduling.description')}</p>
                         <div className={`flex items-center gap-4 ${preferences.quiet_hours_enabled ? '' : 'opacity-40 pointer-events-none'}`}>
                             <div className="flex-1 space-y-1.5">
-                                <Label className="text-xs uppercase font-semibold text-gray-400">{t('notificationSettings.scheduling.from')}</Label>
+                                <Label className="text-xs uppercase font-semibold text-ds-muted">{t('notificationSettings.scheduling.from')}</Label>
                                 <input
                                     type="time"
                                     value={preferences.quiet_hours_start || '22:00'}
                                     onChange={(e) => updatePreferences.mutate({ quiet_hours_start: e.target.value })}
-                                    className="w-full bg-slate-50 dark:bg-hotel-navy-dark border border-border/50 rounded-md px-3 py-2 text-sm"
+                                    className="w-full bg-ds-surface-subtle dark:bg-ds-ink border border-border/50 rounded-md px-3 py-2 text-sm"
                                 />
                             </div>
                             <div className="flex-1 space-y-1.5">
-                                <Label className="text-xs uppercase font-semibold text-gray-400">{t('notificationSettings.scheduling.to')}</Label>
+                                <Label className="text-xs uppercase font-semibold text-ds-muted">{t('notificationSettings.scheduling.to')}</Label>
                                 <input
                                     type="time"
                                     value={preferences.quiet_hours_end || '08:00'}
                                     onChange={(e) => updatePreferences.mutate({ quiet_hours_end: e.target.value })}
-                                    className="w-full bg-slate-50 dark:bg-hotel-navy-dark border border-border/50 rounded-md px-3 py-2 text-sm"
+                                    className="w-full bg-ds-surface-subtle dark:bg-ds-ink border border-border/50 rounded-md px-3 py-2 text-sm"
                                 />
                             </div>
                         </div>
@@ -262,17 +262,17 @@ export function NotificationSettings() {
                 </Card>
 
                 {/* Sounds & Summary */}
-                <Card className="bg-white dark:bg-hotel-navy border-border/50 shadow-sm overflow-hidden h-full">
-                    <CardHeader className="bg-slate-50/50 dark:bg-white/5 border-b border-border/50 py-4 px-6 text-base">
+                <Card className="bg-ds-surface dark:bg-ds-ink border-border/50 shadow-sm overflow-hidden h-full">
+                    <CardHeader className="bg-ds-surface-subtle/50 border-b border-border/50 py-4 px-6 text-base">
                         <CardTitle className="text-base flex items-center gap-2">
-                            <Bell className="h-4 w-4 text-hotel-gold" />
+                            <Bell className="h-4 w-4 text-ds-accent" />
                             {t_ext('sound_summary', 'Sound & Summary')}</CardTitle>
                     </CardHeader>
                     <CardContent className="p-6 pt-4 space-y-6">
                         <div className="flex items-center justify-between">
                             <div className="space-y-0.5">
                                 <Label className="text-sm font-medium">{t('notificationSettings.sounds.enable')}</Label>
-                                <p className="text-xs text-gray-500">{t('notificationSettings.sounds.enable_desc')}</p>
+                                <p className="text-xs text-ds-muted">{t('notificationSettings.sounds.enable_desc')}</p>
                             </div>
                             <Switch
                                 checked={preferences.notification_sounds_enabled ?? true}
@@ -282,7 +282,7 @@ export function NotificationSettings() {
                         <div className="flex items-center justify-between">
                             <div className="space-y-0.5">
                                 <Label className="text-sm font-medium">{t('notificationSettings.digest.title')}</Label>
-                                <p className="text-xs text-gray-500">{t('notificationSettings.digest.description')}</p>
+                                <p className="text-xs text-ds-muted">{t('notificationSettings.digest.description')}</p>
                             </div>
                             <Switch
                                 checked={preferences.daily_digest_enabled}

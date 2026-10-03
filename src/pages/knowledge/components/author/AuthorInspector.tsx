@@ -129,16 +129,16 @@ export function AuthorInspector({
         <TabsContent value="publishing" className="space-y-4 mt-3">
           {/* Master Mode Banner */}
           {isMasterMode && (
-            <div className="p-3 rounded-xl bg-gradient-to-r from-amber-500/15 via-amber-500/10 to-transparent border border-amber-500/30 shadow-xs">
+            <div className="p-3 rounded-[8px] bg-gradient-to-r from-ds-warning/15 via-ds-warning/10 to-transparent border border-ds-warning/30 shadow-xs">
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-md bg-amber-500/20 flex items-center justify-center text-amber-700 dark:text-amber-300 shrink-0">
+                <div className="w-6 h-6 rounded-md bg-ds-warning/20 flex items-center justify-center text-ds-warning shrink-0">
                   <Crown className="w-3.5 h-3.5" />
                 </div>
                 <div>
-                  <span className="text-xs font-bold text-amber-900 dark:text-amber-200">
+                  <span className="text-xs font-bold text-ds-warning">
                     {t('editor.master_studio_mode', 'Master Studio Mode')}
                   </span>
-                  <span className="block text-[10px] text-amber-800/80 dark:text-amber-300/80">
+                  <span className="block text-[11px] text-ds-warning/80">
                     {t('editor.master_studio_desc', 'Chain-wide brand template. Deploys to all hotel properties.')}
                   </span>
                 </div>
@@ -165,7 +165,7 @@ export function AuthorInspector({
                     <Label className="text-xs font-semibold">
                       {t('editor.target_discipline', 'Target Operational Discipline')}
                     </Label>
-                    <span className="text-[10px] text-muted-foreground font-normal">
+                    <span className="text-[11px] text-muted-foreground font-normal">
                       {t('editor.optional_all_depts', '(Defaults to All Departments)')}
                     </span>
                   </div>
@@ -194,7 +194,7 @@ export function AuthorInspector({
                   className="w-full text-xs"
                 />
                 {isMasterMode && (
-                  <p className="text-[10px] text-muted-foreground mt-1">
+                  <p className="text-[11px] text-muted-foreground mt-1">
                     {t('editor.master_dept_hint', 'Applies to this department across all properties, or across the whole hotel if All Departments is chosen.')}
                   </p>
                 )}
@@ -251,7 +251,7 @@ export function AuthorInspector({
                       <SelectItem key={o.value} value={o.value}>
                         <div className="flex flex-col py-0.5">
                           <span className="font-semibold text-xs">{o.label}</span>
-                          <span className="text-[10px] text-muted-foreground">{o.description}</span>
+                          <span className="text-[11px] text-muted-foreground">{o.description}</span>
                         </div>
                       </SelectItem>
                     ))}
@@ -293,7 +293,7 @@ export function AuthorInspector({
                     {isMasterMode ? (
                       <>
                         <SelectItem value="global">
-                          <span className="font-semibold text-amber-700 dark:text-amber-300">
+                          <span className="font-semibold text-ds-warning">
                             {t('editor.master_scope_level', 'Platform Master Library (Chain-wide)')}
                           </span>
                         </SelectItem>
@@ -309,7 +309,7 @@ export function AuthorInspector({
                   </SelectContent>
                 </Select>
                 {isMasterMode && (
-                  <p className="text-[10px] text-muted-foreground mt-0.5">
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
                     {t('editor.master_scope_desc', 'Chain-wide brand standard. Deploys to all hotel properties via the Master Content Library.')}
                   </p>
                 )}
@@ -352,15 +352,15 @@ export function AuthorInspector({
               {isPlatformAdmin && (
                 <div className={`pt-2 border-t flex items-center justify-between p-2.5 rounded-lg border ${
                   isMasterMode
-                    ? 'bg-amber-500/10 border-amber-500/30 text-amber-900 dark:text-amber-200'
+                    ? 'bg-ds-warning/10 border-ds-warning/30 text-ds-warning'
                     : 'bg-ds-warning-soft border-ds-warning/30 text-ds-warning'
                 }`}>
                   <div className="space-y-0.5">
                     <Label className="text-xs font-bold cursor-pointer flex items-center gap-1.5" htmlFor="master-switch">
-                      <Crown className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                      <Crown className="w-3.5 h-3.5 text-ds-warning shrink-0" />
                       <span>{t('editor.master_sop_template', 'Master SOP Template')}</span>
                     </Label>
-                    <p className="text-[10px] text-muted-foreground">
+                    <p className="text-[11px] text-muted-foreground">
                       {isMasterMode
                         ? t('editor.master_template_active_desc', 'Active Master Template — Stored in Platform Master Library for cross-property distribution')
                         : t('editor.master_template_toggle_desc', 'Publish to Platform Master Library for cross-tenant distribution')}
@@ -389,7 +389,7 @@ export function AuthorInspector({
                   size="sm"
                   onClick={onGenerateSummary}
                   disabled={isGeneratingSummary || !formData.content}
-                  className="h-6 text-[10px] text-ds-ink hover:bg-ds-accent/10 px-1.5 gap-1"
+                  className="h-6 text-[11px] text-ds-ink hover:bg-ds-accent/10 px-1.5 gap-1"
                 >
                   <Sparkles className="w-3 h-3 text-ds-accent" />
                   AI Summary
@@ -398,7 +398,7 @@ export function AuthorInspector({
             </CardHeader>
             <CardContent className="px-4 pb-4 pt-0 space-y-3">
               <div className="space-y-1">
-                <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                <Label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                   English
                 </Label>
                 <Textarea
@@ -412,7 +412,7 @@ export function AuthorInspector({
               </div>
 
               <div className="space-y-1 pt-1 border-t border-dashed">
-                <Label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                <Label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                   العربية
                 </Label>
                 <Textarea
@@ -478,7 +478,7 @@ export function AuthorInspector({
                     {decodeURIComponent(formData.video_url.split('/').pop()?.split('?')[0] || 'Linked Video')}
                   </span>
                 </div>
-                <Badge variant="secondary" className="bg-ds-success-soft text-ds-success text-[10px] px-1.5 shrink-0">
+                <Badge variant="secondary" className="bg-ds-success-soft text-ds-success text-[11px] px-1.5 shrink-0">
                   ✓ Linked
                 </Badge>
               </div>
@@ -552,7 +552,7 @@ export function AuthorInspector({
                 📎 {decodeURIComponent(formData.file_url.split('/').pop()?.split('?')[0] || formData.file_url)}
               </span>
               <div className="flex items-center gap-1 shrink-0">
-                <Badge variant="secondary" className="bg-ds-success-soft text-ds-success text-[10px] px-1.5">
+                <Badge variant="secondary" className="bg-ds-success-soft text-ds-success text-[11px] px-1.5">
                   Linked
                 </Badge>
                 <Button
@@ -629,11 +629,11 @@ export function AuthorInspector({
               </CardHeader>
               <CardContent className="px-4 pb-4 pt-0 space-y-2.5 text-xs">
                 <div className="flex items-center justify-between">
-                  <Badge className="bg-ds-success text-white font-bold px-2 py-0.5">
+                  <Badge className="bg-ds-success text-white dark:text-ds-on-ink font-bold px-2 py-0.5">
                     Score: {formData.ai_compliance_score}/100
                   </Badge>
                   {formData.ai_compliance_checked_at && (
-                    <span className="text-[10px] text-muted-foreground">
+                    <span className="text-[11px] text-muted-foreground">
                       Audited {new Date(formData.ai_compliance_checked_at).toLocaleDateString()}
                     </span>
                   )}
@@ -666,7 +666,7 @@ export function AuthorInspector({
                 )}
 
                 {(formData.ai_model_used || formData.ai_provider_used) && (
-                  <p className="text-[10px] text-muted-foreground pt-1 border-t border-dashed">
+                  <p className="text-[11px] text-muted-foreground pt-1 border-t border-dashed">
                     Generated via {[formData.ai_provider_used, formData.ai_model_used].filter(Boolean).join(' / ')}
                   </p>
                 )}
@@ -708,7 +708,7 @@ export function AuthorInspector({
                   rows={3}
                   className="text-xs bg-background"
                 />
-                <p className="text-[10px] text-muted-foreground">
+                <p className="text-[11px] text-muted-foreground">
                   Recorded in the audit trail with the revision history.
                 </p>
               </CardContent>

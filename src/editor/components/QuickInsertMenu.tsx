@@ -78,7 +78,7 @@ export function QuickInsertMenu({ editor, position, onClose, onUploadImage, onAd
   return (
     <div
       ref={ref}
-      className="fixed z-[120] w-[232px] overflow-hidden rounded-xl border bg-popover shadow-xl"
+      className="fixed z-[120] w-[232px] overflow-hidden rounded-[8px] border bg-popover shadow-xl"
       style={{ left: coords.left, top: coords.top }}
     >
       <Command loop>

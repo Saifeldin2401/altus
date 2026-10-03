@@ -36,7 +36,7 @@ export function AskKnowledgePanel({ question }: { question: string }) {
   useEffect(() => { reset() }, [question, reset])
 
   return (
-    <section aria-labelledby="kb-ask" className="rounded-2xl border border-ds-brass/30 bg-ds-brass/5 p-5">
+    <section aria-labelledby="kb-ask" className="rounded-[8px] border border-ds-brass/30 bg-ds-brass/5 p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 id="kb-ask" className="flex items-center gap-2 font-editorial text-[19px] font-semibold text-ds-ink">
           <Sparkles aria-hidden="true" className="h-5 w-5 text-ds-brass" />

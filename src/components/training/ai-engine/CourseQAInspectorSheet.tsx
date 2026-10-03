@@ -80,10 +80,10 @@ export function CourseQAInspectorSheet({
 
   const scoreColor =
     qaReport.overallScore >= 90
-      ? 'text-emerald-600 dark:text-emerald-400'
+      ? 'text-ds-success'
       : qaReport.overallScore >= 80
-      ? 'text-purple-600 dark:text-purple-400'
-      : 'text-amber-600 dark:text-amber-400'
+      ? 'text-ds-accent'
+      : 'text-ds-warning'
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -94,7 +94,7 @@ export function CourseQAInspectorSheet({
         <SheetHeader className="p-6 border-b bg-muted/20">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300">
+              <div className="p-2 rounded-lg bg-ds-accent-soft text-ds-accent">
                 <FileCheck className="w-5 h-5" />
               </div>
               <div>
@@ -110,7 +110,7 @@ export function CourseQAInspectorSheet({
               <span className={cn('text-2xl font-black', scoreColor)}>
                 {qaReport.overallScore}%
               </span>
-              <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
+              <p className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
                 {t('builder.qaScore', 'QA Index')}
               </p>
             </div>
@@ -125,12 +125,12 @@ export function CourseQAInspectorSheet({
                 size="sm"
                 onClick={handleFixAll}
                 disabled={isRemediatingAll || loadingArea !== null}
-                className="bg-purple-600 hover:bg-purple-700 text-white font-bold h-8 text-xs shadow-sm"
+                className="bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink font-bold h-8 text-xs shadow-sm"
               >
                 {isRemediatingAll ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin me-1.5" />
                 ) : (
-                  <Zap className="w-3.5 h-3.5 me-1.5 text-amber-300" />
+                  <Zap className="w-3.5 h-3.5 me-1.5 text-ds-warning" />
                 )}
                 <span>{t('builder.remediateAllBtn', '⚡ Auto-Remediate All Issues')}</span>
               </Button>
@@ -143,14 +143,14 @@ export function CourseQAInspectorSheet({
           <div className="grid grid-cols-2 gap-3 mb-6">
             <Card className="p-3 bg-card/60">
               <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground mb-1.5">
-                <Target className="w-3.5 h-3.5 text-blue-500" />
+                <Target className="w-3.5 h-3.5 text-ds-info" />
                 <span>{t('builder.objAlignment', 'Objective Alignment')}</span>
               </div>
               <div className="flex items-center justify-between mb-1">
                 <span className="text-lg font-bold text-foreground">
                   {qaReport.objectiveAlignmentScore}%
                 </span>
-                <Badge variant="outline" className="text-[10px] bg-blue-50 text-blue-700">
+                <Badge variant="outline" className="text-[11px] bg-ds-info-soft text-ds-info">
                   {t('builder.aligned', 'Strong')}
                 </Badge>
               </div>
@@ -159,14 +159,14 @@ export function CourseQAInspectorSheet({
 
             <Card className="p-3 bg-card/60">
               <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground mb-1.5">
-                <GraduationCap className="w-3.5 h-3.5 text-purple-500" />
+                <GraduationCap className="w-3.5 h-3.5 text-ds-accent" />
                 <span>{t('builder.cognitiveProgression', 'Cognitive Pacing')}</span>
               </div>
               <div className="flex items-center justify-between mb-1">
                 <span className="text-lg font-bold text-foreground">
                   {qaReport.cognitiveProgressionScore}%
                 </span>
-                <Badge variant="outline" className="text-[10px] bg-purple-50 text-purple-700">
+                <Badge variant="outline" className="text-[11px] bg-ds-accent-soft text-ds-accent">
                   {t('builder.progressive', 'Progressive')}
                 </Badge>
               </div>
@@ -175,14 +175,14 @@ export function CourseQAInspectorSheet({
 
             <Card className="p-3 bg-card/60">
               <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground mb-1.5">
-                <Layers className="w-3.5 h-3.5 text-indigo-500" />
+                <Layers className="w-3.5 h-3.5 text-ds-info" />
                 <span>{t('builder.contentDepthScore', 'Content Depth')}</span>
               </div>
               <div className="flex items-center justify-between mb-1">
                 <span className="text-lg font-bold text-foreground">
                   {qaReport.contentDepthScore}%
                 </span>
-                <Badge variant="outline" className="text-[10px] bg-indigo-50 text-indigo-700">
+                <Badge variant="outline" className="text-[11px] bg-ds-info-soft text-ds-info">
                   {t('builder.exhaustive', 'Rigorous')}
                 </Badge>
               </div>
@@ -191,14 +191,14 @@ export function CourseQAInspectorSheet({
 
             <Card className="p-3 bg-card/60">
               <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground mb-1.5">
-                <Award className="w-3.5 h-3.5 text-emerald-500" />
+                <Award className="w-3.5 h-3.5 text-ds-success" />
                 <span>{t('builder.quizRigour', 'Quiz Discrimination')}</span>
               </div>
               <div className="flex items-center justify-between mb-1">
                 <span className="text-lg font-bold text-foreground">
                   {qaReport.quizRigourScore}%
                 </span>
-                <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700">
+                <Badge variant="outline" className="text-[11px] bg-ds-success-soft text-ds-success">
                   {t('builder.validated', 'High')}
                 </Badge>
               </div>
@@ -210,17 +210,17 @@ export function CourseQAInspectorSheet({
           <div className="space-y-3 mb-6">
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
+                <AlertTriangle className="w-3.5 h-3.5 text-ds-warning" />
                 <span>{t('builder.identifiedGaps', 'Identified Gaps & Refinement Opportunities')}</span>
               </h4>
-              <Badge variant="secondary" className="text-[10px]">
+              <Badge variant="secondary" className="text-[11px]">
                 {qaReport.identifiedGaps.length} {t('builder.issues', 'items')}
               </Badge>
             </div>
 
             {qaReport.identifiedGaps.length === 0 ? (
-              <div className="p-4 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 text-emerald-800 dark:text-emerald-200 text-xs flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <div className="p-4 rounded-lg bg-ds-success-soft border border-ds-success/30 text-ds-success text-xs flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-ds-success shrink-0" />
                 <span>{t('builder.noGapsFound', 'Zero structural gaps detected. Course meets all LCMS publication benchmarks.')}</span>
               </div>
             ) : (
@@ -228,7 +228,7 @@ export function CourseQAInspectorSheet({
                 {qaReport.identifiedGaps.map((gap, idx) => {
                   const isThisLoading = loadingArea === gap.area
                   return (
-                    <Card key={idx} className="p-3.5 border-s-4 border-s-amber-500">
+                    <Card key={idx} className="p-3.5 border-s-4 border-s-ds-warning">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
@@ -238,10 +238,10 @@ export function CourseQAInspectorSheet({
                             <Badge
                               variant="outline"
                               className={cn(
-                                'text-[9px] px-1.5 py-0 uppercase font-bold',
+                                'text-[11px] px-1.5 py-0 uppercase font-bold',
                                 gap.severity === 'high'
-                                  ? 'bg-red-50 text-red-700 border-red-200'
-                                  : 'bg-amber-50 text-amber-700 border-amber-200'
+                                  ? 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
+                                  : 'bg-ds-warning-soft text-ds-warning border-ds-warning/30'
                               )}
                             >
                               {gap.severity}
@@ -250,7 +250,7 @@ export function CourseQAInspectorSheet({
                           <p className="text-xs text-muted-foreground mt-1">
                             {isRTL ? gap.issue_ar || gap.issue : gap.issue}
                           </p>
-                          <p className="text-xs text-purple-700 dark:text-purple-300 font-medium mt-1.5 bg-purple-50 dark:bg-purple-950/40 p-2 rounded">
+                          <p className="text-xs text-ds-accent font-medium mt-1.5 bg-ds-accent-soft p-2 rounded">
                             💡 <strong>{t('builder.recommendedFix', 'Fix')}:</strong>{' '}
                             {isRTL ? gap.suggestedFix_ar || gap.suggestedFix : gap.suggestedFix}
                           </p>
@@ -261,7 +261,7 @@ export function CourseQAInspectorSheet({
                             size="sm"
                             variant="outline"
                             disabled={isThisLoading || isRemediatingAll}
-                            className="text-xs shrink-0 text-purple-700 border-purple-200 hover:bg-purple-50 font-bold"
+                            className="text-xs shrink-0 text-ds-accent border-ds-accent/30 hover:bg-ds-accent-soft font-bold"
                             onClick={() => handleFixArea(gap.area)}
                           >
                             {isThisLoading ? (
@@ -283,7 +283,7 @@ export function CourseQAInspectorSheet({
           {/* KSA Compliance Verification */}
           <div className="space-y-2 mb-6">
             <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <ShieldAlert className="w-3.5 h-3.5 text-emerald-600" />
+              <ShieldAlert className="w-3.5 h-3.5 text-ds-success" />
               <span>{t('builder.complianceAudit', 'KSA Labor & Hospitality Standards')}</span>
             </h4>
             <div className="p-3.5 rounded-lg border bg-muted/30 flex items-center justify-between">
@@ -295,7 +295,7 @@ export function CourseQAInspectorSheet({
                   {t('builder.verifiedServiceKsa', 'Verified against five-star benchmarks & local hotel hospitality regulations.')}
                 </p>
               </div>
-              <Badge className="bg-emerald-600 text-white text-[10px] font-bold">
+              <Badge className="bg-ds-success text-white dark:text-ds-on-ink text-[11px] font-bold">
                 ✓ {t('builder.compliant', 'Verified')}
               </Badge>
             </div>
@@ -305,13 +305,13 @@ export function CourseQAInspectorSheet({
           {qaReport.recommendations && qaReport.recommendations.length > 0 && (
             <div className="space-y-2">
               <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-purple-500" />
+                <Sparkles className="w-3.5 h-3.5 text-ds-accent" />
                 <span>{t('builder.lcmsRecommendations', 'LCMS Insights & Enhancements')}</span>
               </h4>
               <ul className="space-y-1.5 text-xs text-muted-foreground">
                 {qaReport.recommendations.map((rec, rIdx) => (
                   <li key={rIdx} className="flex items-start gap-2">
-                    <span className="text-purple-600 font-bold">•</span>
+                    <span className="text-ds-accent font-bold">•</span>
                     <span>{rec}</span>
                   </li>
                 ))}
