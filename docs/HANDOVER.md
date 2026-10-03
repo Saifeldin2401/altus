@@ -1,6 +1,6 @@
 # Altus Connect - Handover Guide
 
-Last updated: 2026-09-27. This is the entry point for anyone taking over the
+Last updated: 2026-10-03. This is the entry point for anyone taking over the
 codebase. It describes how the system is put together, the rules that keep it
 safe, how to ship changes, and what is still open.
 
@@ -107,11 +107,26 @@ Live project: Supabase project ref `dhbfaclkfysqwfppuxxa`.
 
 ## 5. Deploying
 
-- Frontend: static build (`npm run build` -> `dist/`). The repository contains
-  configs for Vercel (`vercel.json`), Netlify (`netlify.toml`) and Render
-  (`render.yaml`); confirm which host is live and delete the others to avoid drift.
-  The CSP must stay identical across `index.html` and the host config.
-- Edge Functions: `supabase functions deploy <name>`.
+- Frontend: static build (`npm run build` -> `dist/`). Vercel (`vercel.json`) and
+  Netlify (`netlify.toml`, site `primehotels-connect`) are both connected to the
+  repository and build every push; `render.yaml` is a third, unconfirmed config.
+  Confirm which host serves the production domain before removing any of them.
+  The CSP must stay identical across `index.html` and the host configs.
+- **Merging to `master` deploys to production.** The Supabase GitHub integration
+  deploys every Edge Function in the repo (with the `verify_jwt` each one declares
+  in `supabase/config.toml`) and applies any new migration file, within a minute
+  or two of each push. Treat a merge as a production release, and never merge a
+  migration you have not tested.
+- Edge Functions: deploy by hand only in an emergency, and from `master`: hand
+  deploys are how production drifted to 50 functions against 27 in git. Every
+  function must be declared in `config.toml`, and `npm run check:functions`
+  type-checks them all. The **Deploy Edge Functions** workflow is a manual
+  fallback (needs the `SUPABASE_ACCESS_TOKEN` repository secret) for when the
+  integration is disconnected.
+- Migrations: the integration records each file under the version in its name.
+  Anything applied another way (dashboard, MCP tools) must be recorded with that
+  same version, or the integration will try to apply it again. Tools that assign
+  their own version number recreate the drift fixed on 2026-10-03.
 - **Order matters** when a migration removes access the old frontend used (for
   example the personal-data column lockdown, `20260927091000`): deploy the matching
   frontend at the same time.
@@ -141,12 +156,20 @@ changes that touch the build or the database.
 Operations (Supabase dashboard - cannot be done from code):
 - Upgrade to a plan with point-in-time recovery and confirm backups.
 - Enable leaked-password protection, confirm MFA (TOTP) and auth rate limits.
+  Sign-in throttling is Supabase Auth's job: the app has no client-side lockout.
+- Delete the 23 orphan Edge Functions that exist only in production. 19 already
+  return 410 (`debug-secrets-tmp`, `apply-migrations`, `dummy-func`, `slack-*`,
+  `password-reminders-test`, `send-eid-greeting`, `automated-greetings`, ...); the
+  other 4 (`fetch-news`, `compute-related-articles`, `refresh-all-relationships`,
+  `track-related-click`) require sign-in and are unused by the app.
 
 Engineering:
 - Verify the stricter CSP in a browser on the deployed build (login, video upload in
   the article editor, PDF viewing) - it passed the build but was not browser-tested.
 - Adopt the typed Supabase client (`createClient<Database>`) incrementally.
-- Burn down ESLint warnings; decide which of the three deploy configs is live.
+- Burn down ESLint warnings; decide which of the deploy configs is live.
+- `scheduled-reports` calls `enqueue_due_reports`, which no longer exists, so due
+  reports never queue automatically. Restore the function or remove the option.
 - Knowledge base roadmap (not built yet): step-by-step mode for SOPs, side-by-side
   English/Arabic, "what changed since you last read", server-side reading progress,
   understanding checks on required reading, per-article "who hasn't read it",

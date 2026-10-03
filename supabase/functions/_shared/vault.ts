@@ -1,7 +1,10 @@
-import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+// Callers pass clients from both the esm.sh and the jsr build of supabase-js,
+// whose class types are not interchangeable, so only the shape used is required.
+// deno-lint-ignore no-explicit-any
+type VaultReader = { from: (relation: string) => any };
 
 export async function getVaultSecret(
-  supabase: SupabaseClient,
+  supabase: VaultReader,
   name: string,
 ): Promise<string | null> {
   const { data, error } = await supabase

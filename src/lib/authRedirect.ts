@@ -188,6 +188,10 @@ export function registerGlobalDeeplinkHandler(navigate: (path: string) => void) 
   ;(window as Window & { __ALTUS_HANDLE_DEEPLINK__?: (pathOrUrl: string) => void }).__ALTUS_HANDLE_DEEPLINK__ = handler
 
   window.addEventListener('message', (event) => {
+    // Only this page or a native WebView host may steer navigation. Messages a
+    // native host dispatches into the page carry an empty origin; any other
+    // origin is a framing page or opener and is ignored.
+    if (event.origin !== '' && event.origin !== window.location.origin) return
     try {
       const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data
       if (data?.type === 'NAVIGATE' && data?.payload) {

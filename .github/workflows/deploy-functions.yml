@@ -1,0 +1,55 @@
+name: Deploy Edge Functions
+
+# Manual fallback only. The Supabase GitHub integration already deploys every
+# function (and applies new migrations) on each push to master, so running this
+# on push as well would deploy everything twice. Use it to redeploy all
+# functions from master, with the verify_jwt setting each one declares in
+# supabase/config.toml, if the integration is disconnected or a deploy failed.
+#
+# Needs the repository secret SUPABASE_ACCESS_TOKEN (a Supabase personal access
+# token with access to the project). Without it the job only warns.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-edge-functions
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: dhbfaclkfysqwfppuxxa
+
+    steps:
+      - name: Report missing access token
+        if: env.SUPABASE_ACCESS_TOKEN == ''
+        run: echo "::warning::SUPABASE_ACCESS_TOKEN secret is not set; Edge Functions were not deployed."
+
+      - name: Checkout
+        if: env.SUPABASE_ACCESS_TOKEN != ''
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        if: env.SUPABASE_ACCESS_TOKEN != ''
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Type-check before deploying
+        if: env.SUPABASE_ACCESS_TOKEN != ''
+        run: deno check --config supabase/functions/deno.jsonc supabase/functions/*/index.ts supabase/functions/_shared/*.ts
+
+      - name: Setup Supabase CLI
+        if: env.SUPABASE_ACCESS_TOKEN != ''
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Deploy all functions
+        if: env.SUPABASE_ACCESS_TOKEN != ''
+        run: supabase functions deploy --project-ref "$SUPABASE_PROJECT_REF"

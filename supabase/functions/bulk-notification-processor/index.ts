@@ -112,6 +112,7 @@ interface NotificationQueueRow {
   id: string;
   batch_id: string;
   user_id: string;
+  organization_id?: string | null;
   notification_type: string;
   notification_data: NotificationData;
   status: "pending" | "processing" | "sent" | "failed";
@@ -680,7 +681,7 @@ Deno.serve(async (req) => {
 });
 
 async function processNotifications(
-  supabase: ReturnType<typeof createClient>,
+  supabase: ReturnType<typeof createClient<any>>,
   batchId: string | undefined,
   batchSize: number,
   runtimeConfig: RuntimeConfig,
@@ -938,7 +939,7 @@ async function processNotifications(
               notificationType: normalizeNotificationType(
                 item.notification_type,
               ),
-              errorMessage: resendResult.errorMessage,
+              errorMessage: resendResult.errorMessage ?? null,
               requestPayload: { subject, html, text, context },
               responsePayload: resendResult.payload,
             });
@@ -1051,7 +1052,7 @@ async function processNotifications(
 }
 
 async function resolveTemplate(
-  supabase: ReturnType<typeof createClient>,
+  supabase: ReturnType<typeof createClient<any>>,
   item: NotificationQueueRow,
   payload: NotificationData,
   cache: Map<string, NotificationTemplateRow>,
@@ -1091,7 +1092,7 @@ async function resolveTemplate(
 }
 
 async function createInAppNotification(
-  supabase: ReturnType<typeof createClient>,
+  supabase: ReturnType<typeof createClient<any>>,
   item: NotificationQueueRow,
   dataPayload: NotificationData,
   userLanguage: string = "en",
@@ -1157,7 +1158,7 @@ async function createInAppNotification(
 }
 
 async function isEmailEnabledForType(
-  supabase: ReturnType<typeof createClient>,
+  supabase: ReturnType<typeof createClient<any>>,
   userId: string,
   type: string,
 ): Promise<boolean> {
@@ -1274,7 +1275,7 @@ async function sendWithResend(params: {
 }
 
 async function logDeliveryEvent(
-  supabase: ReturnType<typeof createClient>,
+  supabase: ReturnType<typeof createClient<any>>,
   payload: {
     organizationId?: string | null;
     queueId?: string;
@@ -1654,7 +1655,7 @@ function resolveAbsoluteUrlWithBase(
 }
 
 async function loadRuntimeConfig(
-  supabase: ReturnType<typeof createClient>,
+  supabase: ReturnType<typeof createClient<any>>,
 ): Promise<RuntimeConfig> {
   const { data } = await supabase.rpc("get_email_runtime_config");
   const config =
@@ -1673,7 +1674,7 @@ async function loadRuntimeConfig(
 }
 
 async function getRemainingCount(
-  supabase: ReturnType<typeof createClient>,
+  supabase: ReturnType<typeof createClient<any>>,
   batchId?: string,
 ): Promise<number> {
   let query = supabase

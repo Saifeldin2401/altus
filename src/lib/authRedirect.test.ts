@@ -1,10 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
   consumePostLoginRedirect,
   getRedirectFromSearch,
   getSpaRedirectFromSearch,
   peekPostLoginRedirect,
+  registerGlobalDeeplinkHandler,
   setPostLoginRedirect,
 } from './authRedirect'
 
@@ -46,5 +47,25 @@ describe('authRedirect', () => {
     expect(peekPostLoginRedirect()).toBe('/dashboard?tab=team')
     expect(consumePostLoginRedirect()).toBe('/dashboard?tab=team')
     expect(peekPostLoginRedirect()).toBeNull()
+  })
+})
+
+describe('registerGlobalDeeplinkHandler', () => {
+  const dispatch = (origin: string, payload: string) =>
+    window.dispatchEvent(new MessageEvent('message', { origin, data: { type: 'NAVIGATE', payload } }))
+
+  it('navigates for same-origin and native (empty-origin) messages only', () => {
+    const navigate = vi.fn()
+    registerGlobalDeeplinkHandler(navigate)
+
+    dispatch('https://evil.example', '/learn/courses')
+    expect(navigate).not.toHaveBeenCalled()
+
+    dispatch(window.location.origin, '/learn/courses')
+    expect(navigate).toHaveBeenLastCalledWith('/learn/courses')
+
+    dispatch('', '/knowledge')
+    expect(navigate).toHaveBeenLastCalledWith('/knowledge')
+    expect(navigate).toHaveBeenCalledTimes(2)
   })
 })

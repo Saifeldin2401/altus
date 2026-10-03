@@ -440,7 +440,7 @@ serve(async (req) => {
 });
 
 async function resolveTemplate(
-  serviceClient: ReturnType<typeof createClient>,
+  serviceClient: ReturnType<typeof createClient<any>>,
   templateKey?: string,
 ): Promise<TemplateRow | null> {
   if (!templateKey) return null;
@@ -720,7 +720,7 @@ async function sendWithResendWithRetry(params: {
 }
 
 async function trackDelivery(
-  serviceClient: ReturnType<typeof createClient>,
+  serviceClient: ReturnType<typeof createClient<any>>,
   data: {
     organizationId?: string;
     userId?: string;
@@ -759,7 +759,7 @@ async function trackDelivery(
 }
 
 async function loadRuntimeConfig(
-  serviceClient: ReturnType<typeof createClient>,
+  serviceClient: ReturnType<typeof createClient<any>>,
 ): Promise<RuntimeConfig> {
   let resendApiKey = ENV_RESEND_API_KEY;
   let appBaseUrl = ENV_APP_BASE_URL;

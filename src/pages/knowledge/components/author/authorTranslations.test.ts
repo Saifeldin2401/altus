@@ -38,7 +38,7 @@ describe('Editor & Author Inspector Translations', () => {
     expect(enKnowledge.editor.all_departments_brand).toBe('All Departments (General Brand Standard)')
     expect(arKnowledge.editor.all_departments_brand).toBe('جميع الأقسام (معيار عام للعلامة التجارية)')
 
-    expect(enKnowledge.editor.visibility.master_all_properties).toBe('All hotels (chain-wide)')
+    expect(enKnowledge.editor.visibility.master_all_properties).toBe('All Hotels (Chain-Wide)')
     expect(arKnowledge.editor.visibility.master_all_properties).toBe('كافة فنادق السلسلة (معيار موحد)')
   })
 })

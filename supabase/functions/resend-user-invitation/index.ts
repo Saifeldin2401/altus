@@ -242,10 +242,10 @@ Deno.serve(async (req: Request) => {
     const generatedInvite = await adminClient.auth.admin.generateLink({
       type: "invite",
       email: invitation.email,
-      data: {
-        full_name: typeof metadata.full_name === "string" ? metadata.full_name : "",
-      },
       options: {
+        data: {
+          full_name: typeof metadata.full_name === "string" ? metadata.full_name : "",
+        },
         redirectTo,
       },
     });

@@ -8,7 +8,7 @@ import './index.css'
 import './rtl.css'
 
 import { getSpaRedirectFromSearch } from '@/lib/authRedirect'
-import { clearAltusServiceWorkersAndCaches } from '@/lib/runtimeRecovery'
+import { clearAltusServiceWorkersAndCaches, clearLegacyServiceWorkers } from '@/lib/runtimeRecovery'
 import { isValidSentryDsn } from '@/lib/sentry'
 
 if (typeof globalThis.t_ext !== 'function') {
@@ -131,7 +131,9 @@ async function cleanupLegacyPwaArtifacts() {
   }
 
   try {
-    await clearAltusServiceWorkersAndCaches()
+    // Only workers from the retired PWA build: the app's own /sw.js carries push
+    // subscriptions and is registered again below on every load.
+    await clearLegacyServiceWorkers()
   } catch (error) {
     if (sentryEnabled) {
       Sentry.captureException(error, {
