@@ -6,28 +6,28 @@ import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
   // Tokenized base. Tactile press feedback (active:scale-[0.98]) with Apple/Emil snappy transition curve. Motion is auto-disabled via prefers-reduced-motion.
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold tracking-[-0.01em] ring-offset-background transition-[transform,background-color,border-color,color,box-shadow] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 motion-reduce:transform-none [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-[0.97]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[6px] text-sm font-semibold tracking-[-0.01em] ring-offset-background transition-[transform,background-color,border-color,color,box-shadow] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 motion-reduce:transform-none [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-[0.97]",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow-sm shadow-primary/20 hover:bg-primary/90 hover:shadow-md hover:shadow-primary/20",
+        default: "bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-sm shadow-destructive/20 hover:bg-destructive/90 hover:shadow-md hover:shadow-destructive/20",
+          "bg-ds-danger text-white hover:bg-ds-danger/90",
         outline:
-          "border border-input bg-background/90 shadow-sm hover:border-ring/40 hover:bg-accent hover:text-accent-foreground",
+          "border border-ds-border bg-ds-surface text-ds-ink hover:border-ds-border-strong hover:bg-ds-surface-subtle",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground", // Transparent by default — recedes until hovered
-        link: "text-primary underline-offset-4 hover:underline",
-        gold: "bg-hotel-gold text-white shadow-sm shadow-hotel-gold/25 hover:bg-hotel-gold-dark hover:shadow-md",
-        navy: "bg-hotel-navy text-white shadow-sm shadow-hotel-navy/25 hover:bg-hotel-navy-light hover:shadow-md",
-        copper: "bg-altus-copper text-white shadow-sm shadow-altus-copper/25 hover:bg-altus-copper/90 hover:shadow-md",
-        sand: "bg-altus-sand text-hotel-navy hover:bg-altus-sand/80 shadow-sm",
+          "bg-ds-surface-subtle text-ds-ink hover:bg-ds-border/50",
+        ghost: "text-ds-ink hover:bg-ds-surface-subtle", // Transparent by default — recedes until hovered
+        link: "text-ds-accent underline-offset-4 hover:underline",
+        gold: "bg-ds-accent text-white hover:bg-ds-accent-hover",
+        navy: "bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90",
+        copper: "bg-ds-accent text-white hover:bg-ds-accent-hover",
+        sand: "bg-ds-accent-soft text-ds-ink hover:bg-ds-accent-soft/80",
       },
       size: {
         default: "h-11 px-4 py-2.5 text-sm",
-        sm: "h-9 rounded-md px-3 text-xs",
-        lg: "h-12 rounded-md px-8 text-base",
+        sm: "h-9 rounded-[6px] px-3 text-xs",
+        lg: "h-12 rounded-[6px] px-8 text-base",
         icon: "h-11 w-11",
         "icon-sm": "h-9 w-9",
         "mobile": "h-12 px-5 py-3 text-base w-full",

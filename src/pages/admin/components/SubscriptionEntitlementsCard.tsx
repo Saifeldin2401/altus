@@ -8,7 +8,6 @@ import { supabase } from '@/lib/supabase'
 import { useQuery } from '@tanstack/react-query'
 import {
   CreditCard,
-  Sparkles,
   Users,
   HardDrive,
   Cpu,
@@ -17,7 +16,6 @@ import {
   AlertTriangle,
   ArrowUpRight,
   ShieldCheck,
-  Calendar,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { Subscription, SubscriptionPlan } from '@/lib/types/tenant'
@@ -138,32 +136,32 @@ export function SubscriptionEntitlementsCard() {
   const planBadgeStyle = useMemo(() => {
     switch (planCode) {
       case 'enterprise':
-        return 'bg-ds-accent-soft text-ds-accent border-ds-accent/30 font-bold'
+        return 'bg-ds-accent-soft text-ds-accent border-ds-accent/30'
       case 'growth':
-        return 'bg-ds-accent-soft text-ds-accent border-ds-accent/30 font-bold'
+        return 'bg-ds-accent-soft text-ds-accent border-ds-accent/30'
       default:
-        return 'bg-ds-success-soft text-ds-success border-ds-success/30 font-bold'
+        return 'bg-ds-surface-subtle text-ds-ink-secondary border-ds-border'
     }
   }, [planCode])
 
   const getCapacityBadge = (pct: number) => {
     if (pct >= 100) {
       return (
-        <Badge variant="destructive" className="bg-ds-danger text-white font-bold text-[10px] px-1.5 py-0 shadow-sm">
+        <Badge variant="destructive" size="sm">
           {t('admin:quota_capacity_full', '100% Full')}
         </Badge>
       )
     }
     if (pct >= 90) {
       return (
-        <Badge className="bg-ds-warning text-ds-ink font-bold text-[10px] px-1.5 py-0 shadow-sm">
+        <Badge variant="warning" size="sm">
           {t('admin:quota_capacity_critical', '90%+ Critical')}
         </Badge>
       )
     }
     if (pct >= 80) {
       return (
-        <Badge className="bg-ds-warning-soft text-ds-warning border border-ds-warning/30 text-[10px] px-1.5 py-0">
+        <Badge variant="warning" size="sm">
           {t('admin:quota_capacity_warning', '80%+ Warning')}
         </Badge>
       )
@@ -172,110 +170,81 @@ export function SubscriptionEntitlementsCard() {
   }
 
   return (
-    <Card className="border shadow-sm overflow-hidden bg-card">
-      {/* Gradient Header Banner */}
-      <div className="p-6 text-ds-on-ink border-b border-ds-accent/20 bg-ds-ink">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <Card className="overflow-hidden">
+      <div className="border-b border-ds-border p-5">
+        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div className="space-y-1">
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <CreditCard className="h-5 w-5 text-ds-accent shrink-0" />
-              <h3 className="text-lg font-bold tracking-tight text-white">
-                {t('admin:subscription_and_entitlements', 'Subscription Plan & Quota Entitlements')}
+            <div className="flex flex-wrap items-center gap-2">
+              <CreditCard aria-hidden="true" className="h-5 w-5 shrink-0 text-ds-accent" />
+              <h3 className="text-base font-semibold text-ds-ink">
+                {t('admin:subscription_and_entitlements', 'Your plan')}
               </h3>
               <Badge variant="outline" className={planBadgeStyle}>
                 {planName}
               </Badge>
-              <Badge variant="secondary" className="bg-ds-success-soft text-ds-success border-ds-success/30 text-[11px] capitalize">
+              <Badge variant="outline" size="sm" className="capitalize">
                 {subscription?.status || 'active'}
               </Badge>
             </div>
-            <p className="text-xs text-white/70">
-              {t('admin:subscription_desc', 'Active license limits, quota consumption, and enabled SaaS capabilities.')}
+            <p className="text-sm text-ds-muted">
+              {t('admin:subscription_desc', 'What your plan includes and how much of it you are using.')}
+              {subscription?.current_period_end && (
+                <> {t('admin:renews_on_date', 'Renews on {{date}}.', { date: formatDateTime(subscription.current_period_end).split(',')[0] })}</>
+              )}
             </p>
           </div>
-
-          <div className="flex items-center gap-2">
-            {subscription?.current_period_end && (
-              <div className="hidden lg:flex items-center gap-1.5 text-xs text-ds-accent/90 bg-ds-ink/70 px-3 py-1.5 rounded-lg border border-ds-accent/20">
-                <Calendar className="h-3.5 w-3.5" />
-                <span>{t('admin:renews_on', 'Renews')}: {formatDateTime(subscription.current_period_end).split(',')[0]}</span>
-              </div>
-            )}
-            {isOrgAdmin && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle border-none font-semibold text-xs"
-                onClick={handleUpgradeClick}
-              >
-                <Sparkles className="h-3.5 w-3.5 me-1.5" />
-                {t('admin:upgrade_entitlements', 'Upgrade Entitlements')}
-                <ArrowUpRight className="h-3 w-3 ms-1" />
-              </Button>
-            )}
-          </div>
+          {isOrgAdmin && (
+            <Button variant="outline" size="sm" onClick={handleUpgradeClick} className="shrink-0">
+              {t('admin:upgrade_entitlements', 'Change plan')}
+              <ArrowUpRight aria-hidden="true" className="rtl:-scale-x-100" />
+            </Button>
+          )}
         </div>
 
-        {/* Proactive Quota Capacity Warning Alert Banner (80% / 90% / 100%) */}
         {isNearLimit && (
-          <div className={`mt-4 p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-inner ${
-            isAtCapacity
-              ? 'bg-ds-danger-soft border-ds-danger/30 text-ds-danger'
-              : isUrgentWarning
-                ? 'bg-ds-warning-soft border-ds-warning/30 text-ds-warning'
-                : 'bg-ds-warning-soft border-ds-warning/30 text-ds-warning'
-          }`}>
+          <div
+            role="status"
+            className={`mt-4 flex flex-col justify-between gap-3 rounded-[6px] border-s-[3px] px-4 py-3 text-sm sm:flex-row sm:items-center ${
+              isAtCapacity ? 'border-ds-danger bg-ds-danger-soft' : 'border-ds-warning bg-ds-warning-soft'
+            }`}
+          >
             <div className="flex items-start gap-3">
-              <AlertTriangle className={`h-5 w-5 shrink-0 mt-0.5 ${
-                isAtCapacity ? 'text-ds-danger' : isUrgentWarning ? 'text-ds-warning' : 'text-ds-warning'
-              }`} />
+              <AlertTriangle aria-hidden="true" className={`mt-0.5 h-4 w-4 shrink-0 ${isAtCapacity ? 'text-ds-danger' : 'text-ds-warning'}`} />
               <div className="space-y-0.5">
-                <p className="font-bold text-sm">
+                <p className="font-semibold text-ds-ink">
                   {isAtCapacity
-                    ? t('admin:capacity_100_warning', 'Critical: One or more resource quotas have reached 100% capacity. Additions and provisioning may be blocked until entitlements are upgraded.')
+                    ? t('admin:capacity_100_warning', 'You have reached a plan limit. Adding people or content may be blocked until the plan changes.')
                     : isUrgentWarning
-                      ? t('admin:capacity_90_warning', 'Warning: Resource utilization has reached 90%+. Upgrade entitlements now to prevent service disruptions.')
-                      : t('admin:capacity_80_warning', 'Notice: Resource utilization has reached 80% of plan capacity.')}
+                      ? t('admin:capacity_90_warning', 'You have used over 90% of a plan limit.')
+                      : t('admin:capacity_80_warning', 'You have used over 80% of a plan limit.')}
                 </p>
-                <p className="text-white/70 text-[11px]">
-                  {t('admin:alerts_notified_admins', 'Organization admins were proactively notified of this capacity threshold.')}
+                <p className="text-xs text-ds-ink-secondary">
+                  {t('admin:alerts_notified_admins', 'Organization admins have been emailed about this.')}
                 </p>
               </div>
             </div>
             {isOrgAdmin && (
-              <Button
-                size="sm"
-                className={`shrink-0 font-bold text-xs shadow-md border-none ${
-                  isAtCapacity
-                    ? 'bg-ds-danger hover:bg-ds-danger text-white'
-                    : isUrgentWarning
-                      ? 'bg-ds-warning hover:bg-ds-warning text-ds-ink'
-                      : 'bg-ds-warning hover:bg-ds-warning text-ds-ink'
-                }`}
-                onClick={handleUpgradeClick}
-              >
-                <Sparkles className="h-3.5 w-3.5 me-1.5" />
-                {t('admin:upgrade_entitlements', 'Upgrade Entitlements')}
-                <ArrowUpRight className="h-3 w-3 ms-1" />
+              <Button size="sm" variant={isAtCapacity ? 'destructive' : 'default'} onClick={handleUpgradeClick} className="shrink-0">
+                {t('admin:upgrade_entitlements', 'Change plan')}
               </Button>
             )}
           </div>
         )}
       </div>
 
-      <CardContent className="p-6 space-y-6">
+      <CardContent className="space-y-6 p-5">
         {/* Resource Usage Quotas Progress Deck */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {/* 1. Active Users */}
-          <div className="p-4 rounded-xl border bg-muted/20 space-y-2">
+          <div className="space-y-2 rounded-[6px] border border-ds-border bg-ds-surface-subtle p-4">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-muted-foreground flex items-center gap-1.5">
-                <Users className="h-4 w-4 text-primary" />
+                <Users className="h-4 w-4 text-ds-muted" />
                 {t('admin:user_seats', 'User Seats')}
               </span>
               <div className="flex items-center gap-1.5">
                 {getCapacityBadge(userPercent)}
-                <span className="font-mono font-bold text-foreground">
+                <span className="font-mono font-semibold tabular-nums text-ds-ink">
                   {userCount} / {maxUsers.toLocaleString()}
                 </span>
               </div>
@@ -291,15 +260,15 @@ export function SubscriptionEntitlementsCard() {
           </div>
 
           {/* 3. Monthly AI Generation Quota */}
-          <div className="p-4 rounded-xl border bg-muted/20 space-y-2">
+          <div className="space-y-2 rounded-[6px] border border-ds-border bg-ds-surface-subtle p-4">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-muted-foreground flex items-center gap-1.5">
-                <Cpu className="h-4 w-4 text-primary" />
+                <Cpu className="h-4 w-4 text-ds-muted" />
                 {t('admin:ai_monthly_compute', 'AI Monthly Credits')}
               </span>
               <div className="flex items-center gap-1.5">
                 {getCapacityBadge(aiPercent)}
-                <span className="font-mono font-bold text-foreground">
+                <span className="font-mono font-semibold tabular-nums text-ds-ink">
                   {aiCreditsUsed} / {aiMonthlyQuota.toLocaleString()}
                 </span>
               </div>
@@ -315,15 +284,15 @@ export function SubscriptionEntitlementsCard() {
           </div>
 
           {/* 4. Document & Media Storage */}
-          <div className="p-4 rounded-xl border bg-muted/20 space-y-2">
+          <div className="space-y-2 rounded-[6px] border border-ds-border bg-ds-surface-subtle p-4">
             <div className="flex items-center justify-between text-xs">
               <span className="font-semibold text-muted-foreground flex items-center gap-1.5">
-                <HardDrive className="h-4 w-4 text-primary" />
+                <HardDrive className="h-4 w-4 text-ds-muted" />
                 {t('admin:cloud_storage', 'Cloud Storage')}
               </span>
               <div className="flex items-center gap-1.5">
                 {getCapacityBadge(storagePercent)}
-                <span className="font-mono font-bold text-foreground">
+                <span className="font-mono font-semibold tabular-nums text-ds-ink">
                   {storageUsedGb.toFixed(1)} / {maxStorageGb} GB
                 </span>
               </div>
@@ -341,14 +310,14 @@ export function SubscriptionEntitlementsCard() {
 
         {/* Feature Entitlements Badges Grid */}
         <div className="space-y-3 pt-2">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-            <ShieldCheck className="h-4 w-4 text-primary" />
-            <span>{t('admin:feature_entitlements', 'Enterprise Feature Entitlements')}</span>
+          <h4 className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-ds-muted">
+            <ShieldCheck className="h-4 w-4 text-ds-muted" />
+            <span>{t('admin:feature_entitlements', 'Included features')}</span>
           </h4>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {/* Custom Branding */}
-            <div className={`p-3 rounded-xl border flex items-center gap-2.5 text-xs ${features?.custom_branding ? 'bg-ds-success-soft border-ds-success/30' : 'bg-muted/40 border-muted opacity-50'}`}>
+            <div className={`p-3 rounded-[6px] border flex items-center gap-2.5 text-xs ${features?.custom_branding ? 'border-ds-border bg-ds-surface' : 'border-ds-border bg-ds-surface-subtle opacity-60'}`}>
               {features?.custom_branding ? (
                 <CheckCircle2 className="h-4 w-4 text-ds-success shrink-0" />
               ) : (
@@ -361,7 +330,7 @@ export function SubscriptionEntitlementsCard() {
             </div>
 
             {/* AI Generation */}
-            <div className={`p-3 rounded-xl border flex items-center gap-2.5 text-xs ${features?.ai_generation ? 'bg-ds-success-soft border-ds-success/30' : 'bg-muted/40 border-muted opacity-50'}`}>
+            <div className={`p-3 rounded-[6px] border flex items-center gap-2.5 text-xs ${features?.ai_generation ? 'border-ds-border bg-ds-surface' : 'border-ds-border bg-ds-surface-subtle opacity-60'}`}>
               {features?.ai_generation ? (
                 <CheckCircle2 className="h-4 w-4 text-ds-success shrink-0" />
               ) : (
@@ -374,7 +343,7 @@ export function SubscriptionEntitlementsCard() {
             </div>
 
             {/* API Access */}
-            <div className={`p-3 rounded-xl border flex items-center gap-2.5 text-xs ${features?.api_access ? 'bg-ds-success-soft border-ds-success/30' : 'bg-muted/40 border-muted opacity-50'}`}>
+            <div className={`p-3 rounded-[6px] border flex items-center gap-2.5 text-xs ${features?.api_access ? 'border-ds-border bg-ds-surface' : 'border-ds-border bg-ds-surface-subtle opacity-60'}`}>
               {features?.api_access ? (
                 <CheckCircle2 className="h-4 w-4 text-ds-success shrink-0" />
               ) : (
@@ -387,7 +356,7 @@ export function SubscriptionEntitlementsCard() {
             </div>
 
             {/* Advanced Analytics */}
-            <div className={`p-3 rounded-xl border flex items-center gap-2.5 text-xs ${features?.advanced_analytics ? 'bg-ds-success-soft border-ds-success/30' : 'bg-muted/40 border-muted opacity-50'}`}>
+            <div className={`p-3 rounded-[6px] border flex items-center gap-2.5 text-xs ${features?.advanced_analytics ? 'border-ds-border bg-ds-surface' : 'border-ds-border bg-ds-surface-subtle opacity-60'}`}>
               {features?.advanced_analytics ? (
                 <CheckCircle2 className="h-4 w-4 text-ds-success shrink-0" />
               ) : (

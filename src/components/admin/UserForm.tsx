@@ -206,11 +206,11 @@ export function UserForm({ user, initialOrgId, onClose }: UserFormProps) {
             <p><strong>{t('form.email')}:</strong> {email}</p>
             {tempPwd ? (
               <>
-                <p><strong>{tCommon('common.password', 'Password')}:</strong> <code className="bg-gray-100 px-2 py-0.5 rounded">{tempPwd}</code></p>
-                <p className="text-xs text-gray-500">{t('form.success.password_copied')}</p>
+                <p><strong>{tCommon('common.password', 'Password')}:</strong> <code className="bg-ds-surface-subtle px-2 py-0.5 rounded">{tempPwd}</code></p>
+                <p className="text-xs text-ds-muted">{t('form.success.password_copied')}</p>
               </>
             ) : (
-              <p className="text-xs text-gray-500">{t('form.success.invite_sent', 'Invitation email sent to the user.')}</p>
+              <p className="text-xs text-ds-muted">{t('form.success.invite_sent', 'Invitation email sent to the user.')}</p>
             )}
           </div>
         ),
@@ -674,7 +674,7 @@ export function UserForm({ user, initialOrgId, onClose }: UserFormProps) {
         </CardHeader>
         <CardContent>
           {/* Organization Scope Section */}
-          <div className="mb-6 p-4 rounded-lg border bg-muted/30">
+          <div className="mb-6 p-4 rounded-[6px] border border-ds-border bg-ds-surface-subtle">
             {isPlatformAdmin && !user ? (
               <div className="space-y-2">
                 <Label htmlFor="targetOrg" className="text-sm font-medium flex items-center gap-2">
@@ -761,7 +761,7 @@ export function UserForm({ user, initialOrgId, onClose }: UserFormProps) {
                     {staffId || <span className="text-muted-foreground italic">Not assigned</span>}
                   </div>
                 ) : (
-                  <div className="flex items-center h-10 px-3 rounded-md border border-dashed bg-green-50 text-green-700 text-sm">
+                  <div className="flex items-center h-10 px-3 rounded-md border border-dashed bg-ds-success-soft text-ds-success text-sm">
                     <span className="me-2">✨</span>
                     {t('form.staff_id_auto', 'Auto-generated on creation')}
                   </div>
@@ -868,7 +868,7 @@ export function UserForm({ user, initialOrgId, onClose }: UserFormProps) {
 
             {/* User Status Toggle - Only show for existing users */}
             {user && (
-              <div className="flex items-center justify-between p-4 border rounded-lg bg-muted/50">
+              <div className="flex items-center justify-between p-4 rounded-[6px] border border-ds-border bg-ds-surface-subtle">
                 <div className="space-y-0.5">
                   <Label htmlFor="is-active" className="font-medium">{t('form.account_status')}</Label>
                   <p className="text-sm text-muted-foreground">
@@ -1024,14 +1024,14 @@ export function UserForm({ user, initialOrgId, onClose }: UserFormProps) {
                                 )}
                               />
                               <span>{manager.full_name}</span>
-                              <span className="ms-2 text-[10px] bg-slate-100 px-1 rounded text-slate-500 font-mono">
+                              <span className="ms-2 text-[10px] bg-ds-surface-subtle px-1 rounded text-ds-muted font-mono">
                                 {manager.staff_id || 'no-id'}
                               </span>
                               <span className="ms-auto text-xs text-muted-foreground">
                                 {manager.job_title || manager.roles?.join(', ')}
                               </span>
                               {manager.isDeptHead && (
-                                <span className="ms-2 text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">
+                                <span className="ms-2 text-xs bg-ds-info-soft text-ds-info px-1.5 py-0.5 rounded">
                                   {t('form.dept_head')}
                                 </span>
                               )}
@@ -1079,7 +1079,7 @@ export function UserForm({ user, initialOrgId, onClose }: UserFormProps) {
                                     )}
                                   />
                                   <span>{manager.full_name}</span>
-                                  <span className="ms-2 text-[10px] bg-slate-100 px-1 rounded text-slate-500 font-mono">
+                                  <span className="ms-2 text-[10px] bg-ds-surface-subtle px-1 rounded text-ds-muted font-mono">
                                     {manager.staff_id || 'no-id'}
                                   </span>
                                   <span className="ms-auto text-xs text-muted-foreground">

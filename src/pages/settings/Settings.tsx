@@ -10,22 +10,22 @@ import { useAuth } from '@/hooks/useAuth'
 import { useTenant } from '@/contexts/TenantContext'
 import { useAppRecovery } from '@/hooks/useAppRecovery'
 import { supabase } from '@/lib/supabase'
-import { Accessibility, Globe, Keyboard, Loader2, RefreshCw, Shield, Wrench } from 'lucide-react'
+import { Accessibility, Building2, ChevronRight, Globe, Keyboard, Loader2, RefreshCw, Shield, Wrench } from 'lucide-react'
 import { useCallback, useEffect, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
-import { cn } from '@/lib/utils'
 import { NotificationSettings } from './NotificationSettings'
 import { PushNotificationSettings } from '@/components/settings/PushNotificationSettings'
 import { SessionList } from '@/components/auth/SessionList'
-import { OrganizationProfileSettings } from '@/pages/admin/components/OrganizationProfileSettings'
-import { SubscriptionEntitlementsCard } from '@/pages/admin/components/SubscriptionEntitlementsCard'
+import { useCapabilities } from '@/hooks/useCapabilities'
 
 export default function Settings() {
     const { t: t_ext } = useTranslation('extracted');
-    const { user, primaryRole } = useAuth()
-    const { currentOrganization, isOrgAdmin, isPlatformAdmin } = useTenant()
+    const { user } = useAuth()
+    const { currentOrganization } = useTenant()
+    const { can } = useCapabilities()
+    const navigate = useNavigate()
     const [searchParams, setSearchParams] = useSearchParams()
     const { t, i18n } = useTranslation('settings')
     const {
@@ -45,13 +45,17 @@ export default function Settings() {
     const { forceRefresh } = useAppRecovery()
     const [clearingCache, setClearingCache] = useState(false)
 
-    const canManageOrg = isOrgAdmin || isPlatformAdmin || ['administrator', 'super_admin', 'corporate_admin', 'regional_admin'].includes(primaryRole || '')
+    // Organization profile, branding and plan live in Organization > Settings;
+    // this page holds only the signed-in person's own preferences.
+    const canManageOrg = can('org.settings')
     const currentTab = searchParams.get('tab') || 'general'
-    const validTabs = useMemo(() => {
-        return canManageOrg
-            ? ['general', 'organization', 'subscription', 'notifications', 'security', 'troubleshooting']
-            : ['general', 'notifications', 'security', 'troubleshooting']
-    }, [canManageOrg])
+    const validTabs = useMemo(() => ['general', 'notifications', 'security', 'troubleshooting'], [])
+
+    useEffect(() => {
+        if (!canManageOrg) return
+        if (currentTab === 'organization') navigate('/admin/settings#settings-profile', { replace: true })
+        else if (currentTab === 'subscription') navigate('/admin/settings#settings-plan', { replace: true })
+    }, [canManageOrg, currentTab, navigate])
 
     const activeTab = validTabs.includes(currentTab) ? currentTab : 'general'
 
@@ -62,8 +66,6 @@ export default function Settings() {
             return next
         })
     }
-
-    const isBroadTab = ['organization', 'subscription'].includes(activeTab)
 
     const loadSettings = useCallback(async () => {
         try {
@@ -158,11 +160,11 @@ export default function Settings() {
     }
 
     return (
-        <div className={cn("mx-auto space-y-6", isBroadTab ? "max-w-6xl" : "max-w-4xl")}>
+        <div className="mx-auto max-w-4xl space-y-6">
             <WorkspaceHeader
                 eyebrow={t('page.eyebrow', 'Account')}
                 title={t('title')}
-                context={canManageOrg && currentOrganization ? `${currentOrganization.name} · ${t('description')}` : t('description')}
+                context={t('description')}
             />
 
             <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
@@ -170,16 +172,6 @@ export default function Settings() {
                     <TabsTrigger value="general" className="min-h-[40px] rounded-none border-b-2 border-transparent px-3 text-sm text-ds-muted data-[state=active]:border-ds-ink data-[state=active]:bg-transparent data-[state=active]:text-ds-ink data-[state=active]:shadow-none">
                         {t('tabs.general')}
                     </TabsTrigger>
-                    {canManageOrg && (
-                        <TabsTrigger value="organization" className="min-h-[40px] rounded-none border-b-2 border-transparent px-3 text-sm text-ds-muted data-[state=active]:border-ds-ink data-[state=active]:bg-transparent data-[state=active]:text-ds-ink data-[state=active]:shadow-none">
-                            {t('tabs.organization')}
-                        </TabsTrigger>
-                    )}
-                    {canManageOrg && (
-                        <TabsTrigger value="subscription" className="min-h-[40px] rounded-none border-b-2 border-transparent px-3 text-sm text-ds-muted data-[state=active]:border-ds-ink data-[state=active]:bg-transparent data-[state=active]:text-ds-ink data-[state=active]:shadow-none">
-                            {t('tabs.subscription')}
-                        </TabsTrigger>
-                    )}
                     <TabsTrigger value="notifications" className="min-h-[40px] rounded-none border-b-2 border-transparent px-3 text-sm text-ds-muted data-[state=active]:border-ds-ink data-[state=active]:bg-transparent data-[state=active]:text-ds-ink data-[state=active]:shadow-none">
                         {t('tabs.notifications')}
                     </TabsTrigger>
@@ -193,6 +185,19 @@ export default function Settings() {
 
                 <TabsContent value="general">
                     <div className="grid gap-6">
+                        {canManageOrg && currentOrganization && (
+                            <Link
+                                to="/admin/settings"
+                                className="flex min-h-[64px] items-center gap-3 rounded-[6px] border border-ds-border bg-ds-surface px-4 py-3 hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent"
+                            >
+                                <Building2 aria-hidden="true" className="h-5 w-5 shrink-0 text-ds-accent" />
+                                <span className="min-w-0 flex-1">
+                                    <span className="block text-sm font-semibold text-ds-ink">{t('orgLink.title', 'Organization settings')}</span>
+                                    <span className="block text-xs text-ds-muted">{t('orgLink.body', "{{org}}'s profile, branding, policies and plan", { org: currentOrganization.name })}</span>
+                                </span>
+                                <ChevronRight aria-hidden="true" className="h-4 w-4 text-ds-muted rtl:rotate-180" />
+                            </Link>
+                        )}
                         {/* Language & Region */}
                         <Card className="overflow-hidden rounded-[6px] border border-ds-border bg-ds-surface shadow-none">
                             <CardHeader className="border-b border-ds-border">
@@ -289,17 +294,6 @@ export default function Settings() {
                     </div>
                 </TabsContent>
 
-                {canManageOrg && (
-                    <TabsContent value="organization" className="space-y-6">
-                        <OrganizationProfileSettings />
-                    </TabsContent>
-                )}
-
-                {canManageOrg && (
-                    <TabsContent value="subscription" className="space-y-6">
-                        <SubscriptionEntitlementsCard />
-                    </TabsContent>
-                )}
 
                 <TabsContent value="notifications">
                     <div className="grid gap-6">

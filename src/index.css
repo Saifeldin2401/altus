@@ -308,31 +308,21 @@
     height: auto;
   }
 
-  h1:not(:where(.bg-hotel-navy *, .bg-hotel-navy-dark *, header *)),
-  h2:not(:where(.bg-hotel-navy *, .bg-hotel-navy-dark *, header *)),
-  h3:not(:where(.bg-hotel-navy *, .bg-hotel-navy-dark *, header *)),
-  h4:not(:where(.bg-hotel-navy *, .bg-hotel-navy-dark *, header *)),
-  h5:not(:where(.bg-hotel-navy *, .bg-hotel-navy-dark *, header *)),
-  h6:not(:where(.bg-hotel-navy *, .bg-hotel-navy-dark *, header *)) {
-    @apply font-serif font-bold text-hotel-navy dark:text-hotel-gold;
-    letter-spacing: -0.01em;
-    /* Subtle architectural compression */
-  }
-
-  h1:where(.bg-hotel-navy *, .bg-hotel-navy-dark *, header *),
-  h2:where(.bg-hotel-navy *, .bg-hotel-navy-dark *, header *),
-  h3:where(.bg-hotel-navy *, .bg-hotel-navy-dark *, header *),
-  h4:where(.bg-hotel-navy *, .bg-hotel-navy-dark *, header *),
-  h5:where(.bg-hotel-navy *, .bg-hotel-navy-dark *, header *),
-  h6:where(.bg-hotel-navy *, .bg-hotel-navy-dark *, header *) {
-    @apply font-serif font-bold;
+  /* Default heading look, at zero specificity (:where) so any class on the
+     heading wins. ds-ink follows .dark by itself; the old dark:text-hotel-gold
+     override out-ranked utilities and turned every dark-mode heading brass. */
+  :where(h1, h2, h3, h4, h5, h6):not(:where(.bg-hotel-navy *, .bg-hotel-navy-dark *, header *)) {
+    @apply font-semibold text-ds-ink;
     letter-spacing: -0.01em;
   }
 
-  h1,
-  h2 {
+  :where(h1, h2, h3, h4, h5, h6):where(.bg-hotel-navy *, .bg-hotel-navy-dark *, header *) {
+    @apply font-semibold;
+    letter-spacing: -0.01em;
+  }
+
+  :where(h1, h2) {
     letter-spacing: -0.02em;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   }
 
   .uppercase {

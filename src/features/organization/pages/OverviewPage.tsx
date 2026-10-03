@@ -36,7 +36,7 @@ function hrefFor(gap: SetupGap): string {
     case 'department_without_manager':
       return '/admin/structure?tab=departments'
     case 'missing_logo':
-      return '/admin/settings'
+      return '/admin/settings#settings-profile'
   }
 }
 

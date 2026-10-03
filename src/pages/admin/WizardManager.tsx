@@ -199,7 +199,7 @@ export default function WizardManager() {
       </Card>
 
       {/* Operational Event Walkthrough Simulator */}
-      <Card className="border-border/80 bg-card/60 backdrop-blur-sm">
+      <Card className="border-border/80 bg-card/60">
         <CardHeader className="p-5 pb-3">
           <div className="flex items-center gap-2">
             <Zap className="h-4 w-4 text-ds-warning" />

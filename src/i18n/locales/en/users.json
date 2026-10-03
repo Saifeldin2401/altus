@@ -7,12 +7,12 @@
     "organization_directory_badge": "Tenant User Directory",
     "members_count": "Members",
     "platform_directory_button": "Platform Directory",
-    "no_tenant_selected_title": "Tenant Organization Context Required",
-    "no_tenant_selected_desc": "Organization User Management manages team members, learners, and role assignments for an active tenant organization.",
-    "go_to_global_directory": "Go to Platform User Directory",
-    "select_organization": "Select Customer Organization",
+    "no_tenant_selected_title": "Choose an organization first",
+    "no_tenant_selected_desc": "People are managed inside an organization. Open one to see and manage its members.",
+    "go_to_global_directory": "Platform user directory",
+    "select_organization": "Choose an organization",
     "user": "User",
-    "no_name": "No name",
+    "no_name": "No name yet",
     "add_user": "Add Employee",
     "directory": "Employee Directory",
     "search_placeholder": "Search by name, email, or staff ID...",
@@ -58,7 +58,14 @@
         "activate": "Activate",
         "reset_password": "Reset Password",
         "cancel_reset": "Cancel Reset",
-        "confirm_bulk": "This action will affect {{count}} user(s). Are you sure?"
+        "confirm_bulk": "This action will affect {{count}} user(s). Are you sure?",
+        "toolbar": "Actions for selected people",
+        "affected": "People affected",
+        "more": "+{{count}} more",
+        "suspend_until": "Suspend until (optional)",
+        "notify": "Tell the people affected by email",
+        "note": "Internal note (optional)",
+        "note_placeholder": "Saved in the audit log"
     },
     "empty": {
         "title": "No users found",
@@ -196,5 +203,27 @@
         "neverSignedIn": "Never signed in",
         "noMatch": "Nobody matches these filters",
         "noMatchBody": "Try another role, status or search."
+    },
+    "drawer": {
+        "title": "Person details",
+        "suspended": "This account is suspended. They cannot sign in.",
+        "reason": "Reason",
+        "reset_required": "They must choose a new password the next time they sign in.",
+        "contact": "Contact and account",
+        "email": "Email",
+        "phone": "Phone",
+        "staff_id": "Staff ID",
+        "joined": "Added on",
+        "last_sign_in": "Last signed in",
+        "never": "Never",
+        "placement": "Where they work",
+        "no_department": "Not placed in a department",
+        "edit": "Edit details and role",
+        "reactivate": "Reactivate",
+        "suspend": "Suspend",
+        "reset_password": "Reset password"
+    },
+    "invite": {
+        "joins": "Joins {{org}}"
     }
 }

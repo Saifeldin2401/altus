@@ -4,18 +4,18 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 const cardVariants = cva(
-  "rounded-xl border border-border/70 bg-card text-card-foreground shadow-sm transition-[transform,box-shadow,border-color] duration-200 ease-out",
+  "rounded-[8px] border border-ds-border bg-ds-surface text-ds-ink shadow-none transition-[border-color,background-color] duration-150 ease-out",
   {
     variants: {
       variant: {
         default: "",
-        glass: "bg-card/75 backdrop-blur-xl border-white/30 dark:border-white/10 shadow-sm hover:shadow-md hover:border-white/50",
-        gold: "bg-hotel-cream dark:bg-hotel-navy/60 border-hotel-gold/30 text-card-foreground shadow-sm hover:shadow-md hover:border-hotel-gold/60",
-        navy: "bg-hotel-navy text-white border-hotel-navy-light shadow-lg hover:shadow-xl hover:border-hotel-gold/40",
-        copper: "bg-card border-altus-copper/25 text-card-foreground shadow-sm hover:shadow-md hover:border-altus-copper/50",
-        elevated: "shadow-lg hover:shadow-xl ring-1 ring-black/5 dark:ring-white/10 hover:border-border",
-        premium: "bg-gradient-to-br from-card via-card to-hotel-cream/40 dark:to-hotel-navy/40 border-hotel-gold/30 shadow-lg relative overflow-hidden after:absolute after:inset-0 after:bg-gradient-to-br after:from-hotel-gold/5 after:to-transparent after:pointer-events-none hover:shadow-xl hover:border-hotel-gold/50",
-        interactive: "cursor-pointer hover:-translate-y-0.5 hover:border-ring/40 hover:shadow-md active:translate-y-0 active:scale-[0.995] motion-reduce:transform-none",
+        glass: "",
+        gold: "border-ds-accent/30 bg-ds-accent-soft",
+        navy: "border-transparent bg-ds-ink text-ds-on-ink",
+        copper: "border-ds-warning/30",
+        elevated: "border-ds-border-strong",
+        premium: "border-ds-accent/30",
+        interactive: "cursor-pointer hover:border-ds-border-strong hover:bg-ds-surface-subtle/60",
       },
       padding: {
         none: "p-0",
@@ -64,7 +64,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-2xl font-semibold leading-none tracking-tight",
+      "text-lg font-semibold leading-snug tracking-tight text-ds-ink",
       className
     )}
     {...props}
@@ -78,7 +78,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-sm text-ds-muted", className)}
     {...props}
   />
 ))

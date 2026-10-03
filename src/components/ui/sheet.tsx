@@ -15,7 +15,7 @@ const SheetOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <SheetPrimitive.Overlay
         className={cn(
-            "fixed inset-0 z-[9990] bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+            "fixed inset-0 z-[9990] bg-ds-ink/40 motion-reduce:animate-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
             className
         )}
         {...props}
@@ -25,7 +25,7 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName
 
 const sheetVariants = cva(
-    "fixed z-[10000] gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
+    "fixed z-[10000] gap-4 border-ds-border bg-ds-surface p-6 font-sans text-ds-ink shadow-xl shadow-black/10 dark:shadow-black/40 motion-reduce:animate-none transition ease-in-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
     {
         variants: {
             side: {
@@ -72,7 +72,7 @@ const SheetContent = React.forwardRef<
                 <SheetPrimitive.Description className="sr-only">
                     {a11yDescription || "Panel content"}
                 </SheetPrimitive.Description>
-                <SheetPrimitive.Close className="absolute end-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+                <SheetPrimitive.Close className="absolute end-3 top-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-[4px] text-ds-muted transition-colors hover:bg-ds-surface-subtle hover:text-ds-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent disabled:pointer-events-none">
                     <X className="h-4 w-4" />
                     <span className="sr-only">{t('actions.close', "Close")}</span>
                 </SheetPrimitive.Close>
@@ -89,7 +89,7 @@ const SheetHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
     <div
         className={cn(
-            "flex flex-col space-y-2 text-center sm:text-start",
+            "flex flex-col space-y-1.5 pe-8 text-start",
             className
         )}
         {...props}
@@ -117,7 +117,7 @@ const SheetTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <SheetPrimitive.Title
         ref={ref}
-        className={cn("text-lg font-semibold text-foreground", className)}
+        className={cn("text-base font-semibold text-ds-ink", className)}
         {...props}
     />
 ))
@@ -129,7 +129,7 @@ const SheetDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
     <SheetPrimitive.Description
         ref={ref}
-        className={cn("text-sm text-muted-foreground", className)}
+        className={cn("text-sm text-ds-muted", className)}
         {...props}
     />
 ))

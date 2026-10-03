@@ -367,7 +367,7 @@ export function MembershipsManagement() {
   }
 
   return (
-    <Card className="border shadow-sm">
+    <Card>
       <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
@@ -438,7 +438,7 @@ export function MembershipsManagement() {
               <TableHeader>
                 <TableRow>
                   <TableHead>{t('admin:member', 'Member')}</TableHead>
-                  <TableHead>{t('admin:role', 'Tenant Role')}</TableHead>
+                  <TableHead>{t('admin:role', 'Role')}</TableHead>
                   <TableHead>{t('admin:dept_scope', 'Department')}</TableHead>
                   <TableHead>{t('admin:status', 'Status')}</TableHead>
                   {isOrgAdmin && <TableHead className="text-end">{t('admin:actions', 'Actions')}</TableHead>}

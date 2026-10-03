@@ -1,11 +1,9 @@
-import { PageHeader } from '@/ui/components/PageHeader'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useSystemSettings, type SystemSetting } from '@/hooks/useSystemSettings'
+import { OrganizationProfileSettings } from '@/pages/admin/components/OrganizationProfileSettings'
 import { SubscriptionEntitlementsCard } from '@/pages/admin/components/SubscriptionEntitlementsCard'
 import { useTenant } from '@/contexts/TenantContext'
 import {
@@ -20,6 +18,7 @@ import {
     Users,
 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Skeleton, WorkspaceHeader } from '@/ui'
 
@@ -177,6 +176,15 @@ export default function SystemSettings() {
     const { t } = useTranslation(['admin', 'common'])
     const { groupedSettings, isLoading, updateSetting, resetSetting } = useSystemSettings()
 
+    const { hash } = useLocation()
+
+    // Links such as the Overview's "Add logo" land on a section by #id; the
+    // page renders after its settings load, so scroll once they are on screen.
+    useEffect(() => {
+        if (isLoading || !hash) return
+        document.getElementById(hash.slice(1))?.scrollIntoView({ block: 'start' })
+    }, [hash, isLoading])
+
     const handleUpdate = (key: string, value: unknown) => updateSetting.mutate({ key, value })
     const handleReset = (key: string) => resetSetting.mutate(key)
 
@@ -208,6 +216,11 @@ export default function SystemSettings() {
                     {/* Section index */}
                     <nav aria-label={t('admin:settingsPage.sections', 'Sections')} className="hidden lg:block">
                         <ul className="sticky top-20 space-y-0.5 border-s border-ds-border">
+                            <li>
+                                <a href="#settings-profile" className="-ms-px flex min-h-[36px] items-center border-s-2 border-transparent ps-4 text-sm text-ds-muted hover:border-ds-border-strong hover:text-ds-ink">
+                                    {t('admin:settingsPage.profile', 'Profile & branding')}
+                                </a>
+                            </li>
                             {sections.map(({ cat }) => (
                                 <li key={cat}>
                                     <a href={`#settings-${cat}`} className="-ms-px flex min-h-[36px] items-center border-s-2 border-transparent ps-4 text-sm text-ds-muted hover:border-ds-border-strong hover:text-ds-ink">
@@ -224,9 +237,14 @@ export default function SystemSettings() {
                     </nav>
 
                     <div className="min-w-0 space-y-12">
-                        {sections.length === 0 && (
-                            <p className="text-sm text-ds-muted">{t('admin:settingsPage.none', 'There are no organization settings to change yet.')}</p>
-                        )}
+                        <section id="settings-profile" aria-labelledby="settings-profile-title" className="scroll-mt-20 space-y-3">
+                            <div>
+                                <h2 id="settings-profile-title" className="text-lg font-semibold text-ds-ink">{t('admin:settingsPage.profile', 'Profile & branding')}</h2>
+                                <p className="text-sm text-ds-muted">{t('admin:settingsPage.profileHint', 'Your organization name, logo and colours, and how its emails are signed.')}</p>
+                            </div>
+                            <OrganizationProfileSettings />
+                        </section>
+
                         {sections.map(({ cat, list }) => {
                             const simple = list.filter((st) => typeof st.value !== 'object' || st.value === null)
                             const advanced = list.filter((st) => typeof st.value === 'object' && st.value !== null)

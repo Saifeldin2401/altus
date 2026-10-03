@@ -255,7 +255,7 @@ export function DepartmentsManagement() {
   }
 
   return (
-    <Card className="border shadow-sm">
+    <Card>
       <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
