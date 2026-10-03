@@ -258,5 +258,148 @@
         "copied": "Verification link copied",
         "pdfFailed": "The PDF could not be created. You can print this page instead.",
         "footer": "Verification reads the issuing organization’s records in Altus Connect at the moment you check."
+    },
+    "home": {
+        "meta": {
+            "title": "Altus Connect | Training, knowledge and certification for hospitality groups"
+        },
+        "skip": "Skip to content",
+        "brandTagline": "Hospitality learning platform",
+        "nav": {
+            "label": "Main",
+            "how": "How it works",
+            "roles": "Who it's for",
+            "knowledge": "Knowledge",
+            "verify": "Verify a certificate",
+            "signIn": "Sign in"
+        },
+        "hero": {
+            "eyebrow": "Training, knowledge and certification for hospitality groups",
+            "titleLead": "Training your hotels",
+            "titleAccent": "can prove.",
+            "body": "Altus Connect assigns the right courses to every team, checks what they learned, issues certificates anyone can verify, and shows compliance hotel by hotel.",
+            "primary": "Sign in",
+            "secondary": "Verify a certificate",
+            "note": "Accounts are created by your organization's administrator."
+        },
+        "preview": {
+            "workspace": "My learning",
+            "assigned": "Assigned to you",
+            "due_one": "Due in {{count}} day",
+            "due_other": "Due in {{count}} days",
+            "done": "Completed",
+            "courseA": "Guest arrival standards",
+            "courseB": "Food safety essentials",
+            "courseC": "Fire and life safety",
+            "quiz": "Quiz result",
+            "score": "Pass mark reached on the first attempt",
+            "passed": "Passed",
+            "certificate": "Certificate of completion",
+            "verifiable": "Verifiable"
+        },
+        "loop": {
+            "eyebrow": "How it works",
+            "title": "One loop, from assignment to evidence",
+            "body": "Every part of Altus Connect serves the same cycle, so a team's training never lives in scattered spreadsheets.",
+            "steps": {
+                "assign": {
+                    "title": "Assign",
+                    "body": "Give courses to a hotel, a department or one person, each with a due date."
+                },
+                "learn": {
+                    "title": "Learn",
+                    "body": "Staff work through short lessons on any device, in Arabic or English."
+                },
+                "assess": {
+                    "title": "Assess",
+                    "body": "A scored quiz confirms the course was understood, not just opened."
+                },
+                "certify": {
+                    "title": "Certify",
+                    "body": "A pass issues a certificate with a code and QR that anyone can check."
+                },
+                "prove": {
+                    "title": "Prove",
+                    "body": "See who is complete or overdue by hotel and department, and export the evidence."
+                }
+            }
+        },
+        "roles": {
+            "eyebrow": "Who it's for",
+            "title": "A clear job for every role in the group",
+            "learner": {
+                "title": "Learners",
+                "body": "See what is due and when, pick up where you left off, and keep every certificate in one place."
+            },
+            "author": {
+                "title": "Authors",
+                "body": "Turn the SOPs and documents you already have into draft courses and quizzes with AI, then refine and submit them for review."
+            },
+            "manager": {
+                "title": "Training managers",
+                "body": "Assign training, follow up on overdue work, and answer audits with real records."
+            },
+            "admin": {
+                "title": "Administrators",
+                "body": "Invite people, set roles, and keep brands, hotels and departments in order."
+            }
+        },
+        "knowledge": {
+            "eyebrow": "Knowledge",
+            "title": "The right SOP, found in seconds",
+            "body": "Standard operating procedures, guides and policies sit next to the training that teaches them. Staff search in plain words and read the approved version.",
+            "points": {
+                "types": "SOPs, guides and policies, each with a named owner",
+                "review": "Every draft is reviewed before it is published",
+                "current": "Owners publish updates and retire outdated versions"
+            },
+            "query": "How do I handle a late check-out?",
+            "resultA": "Late check-out requests",
+            "resultB": "Front desk shift handover",
+            "resultC": "Guest privacy",
+            "typeSop": "SOP",
+            "typeGuide": "Guide",
+            "typePolicy": "Policy"
+        },
+        "capabilities": {
+            "eyebrow": "Built for hospitality groups",
+            "title": "Made for the way hotel groups work",
+            "body": "From a single hotel to a portfolio of brands, each organization gets a workspace shaped like its business.",
+            "ai": {
+                "title": "AI-assisted authoring",
+                "body": "Start a course from a document you already have. People review every draft before learners see it."
+            },
+            "language": {
+                "title": "Arabic and English",
+                "body": "Every screen works in both languages, with a full right-to-left layout."
+            },
+            "structure": {
+                "title": "A workspace per organization",
+                "body": "Brands, hotels, departments and people, with each organization kept separate from the next."
+            },
+            "evidence": {
+                "title": "Evidence on demand",
+                "body": "Completion and certificate records by hotel and department, ready to export."
+            }
+        },
+        "verify": {
+            "eyebrow": "Certificate verification",
+            "title": "Received a certificate? Check it here.",
+            "body": "Enter the code printed on an Altus Connect certificate to confirm it is genuine and still valid. No account needed.",
+            "label": "Verification code",
+            "placeholder": "Certificate code",
+            "submit": "Verify"
+        },
+        "cta": {
+            "title": "Bring training, knowledge and certificates together.",
+            "body": "Our team sets up Altus Connect for each organization. Tell us about your hotels and we will be in touch.",
+            "contact": "Talk to us",
+            "subject": "Altus Connect for our hotels",
+            "signIn": "Sign in"
+        },
+        "footer": {
+            "label": "Footer",
+            "rights": "© {{year}} Altus Connect. All rights reserved."
+        }
     }
 }

@@ -21,6 +21,7 @@ import {
 } from 'react-router-dom'
 
 const NotFound = lazy(() => import('@/pages/NotFound'))
+const Home = lazy(() => import('@/pages/public/Home'))
 
 export const RootLayout = () => {
     const { loading } = useAuth()
@@ -133,8 +134,8 @@ export const RootIndex = () => {
         return <Navigate to={loginTarget} replace />
     }
 
-    // Signed-out visitors go straight to sign-in; the app has no marketing site.
-    return <Navigate to="/login" replace />
+    // Signed-out visitors see the public homepage.
+    return <Home />
 }
 
 /**
