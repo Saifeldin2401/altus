@@ -305,13 +305,55 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Platform Operator Scope: Can hard delete user globally or from a specific org
+    // Platform Operator Scope. With an organizationId (the tenant User Management
+    // page always sends one) this removes the user from that organization and
+    // deletes the account only when no other membership remains, the same rule
+    // tenant admins follow. Without one, the account is deleted platform-wide.
     if (typeof body?.organizationId === "string" && isUuid(body.organizationId)) {
-      await adminClient
+      const { error: memDeleteError } = await adminClient
         .from("organization_memberships")
         .delete()
         .eq("user_id", userIdRaw)
         .eq("organization_id", body.organizationId);
+
+      if (memDeleteError) {
+        return new Response(
+          JSON.stringify({ error: `Failed to remove organization membership: ${memDeleteError.message}` }),
+          {
+            status: 500,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
+      }
+
+      const { data: remainingMemberships } = await adminClient
+        .from("organization_memberships")
+        .select("id, organization_id")
+        .eq("user_id", userIdRaw)
+        .eq("is_active", true);
+
+      if (remainingMemberships && remainingMemberships.length > 0) {
+        await adminClient
+          .from("profiles")
+          .update({ organization_id: remainingMemberships[0].organization_id })
+          .eq("id", userIdRaw)
+          .eq("organization_id", body.organizationId);
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            hardDeleted: false,
+            membershipRemoved: true,
+            remainingTenants: remainingMemberships.length,
+            userId: userIdRaw,
+            message: "User was removed from this organization. Account remains active in other organizations.",
+          }),
+          {
+            status: 200,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
+      }
     }
 
     const { error: deleteError } = await adminClient.auth.admin.deleteUser(
