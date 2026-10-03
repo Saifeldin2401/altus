@@ -84,7 +84,7 @@ export function ManageAssigneesDialog() {
 
           {isLoadingModuleRoster ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-hotel-gold" />
+              <Loader2 className="h-8 w-8 animate-spin text-ds-accent" />
             </div>
           ) : (
             <div className="space-y-6">
@@ -116,7 +116,7 @@ export function ManageAssigneesDialog() {
                 </TabsList>
 
                 <TabsContent value="active" className="space-y-4">
-                  <div className="rounded-xl border">
+                  <div className="rounded-[8px] border">
                     <Table>
                       <TableHeader>
                         <TableRow>
@@ -168,7 +168,7 @@ export function ManageAssigneesDialog() {
                                     {t(entry.status)}
                                   </Badge>
                                   {entry.has_override && (
-                                    <Badge variant="outline" className="bg-amber-50 text-amber-700">
+                                    <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning">
                                       {t('override', 'Override')}
                                     </Badge>
                                   )}
@@ -231,7 +231,7 @@ export function ManageAssigneesDialog() {
                 </TabsContent>
 
                 <TabsContent value="exempted" className="space-y-4">
-                  <div className="rounded-xl border">
+                  <div className="rounded-[8px] border">
                     <Table>
                       <TableHeader>
                         <TableRow>

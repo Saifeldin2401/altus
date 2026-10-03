@@ -1940,9 +1940,7 @@ export default function TrainingHub() {
           ) : (
             <TrainingTrackCommandCenter
               canManageModules={canManageModules}
-              canAssignTraining={canAssignTraining}
               onNavigateToBuilder={(id) => setViewMode('builder', { moduleId: id })}
-              onOpenAssignWizard={() => setAssignWizardOpen(true)}
             />
           )}
         </TabsContent>

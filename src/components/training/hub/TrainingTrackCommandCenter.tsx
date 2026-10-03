@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { Link } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -10,32 +11,21 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { useToast } from '@/components/ui/use-toast'
-import { useAuth } from '@/hooks/useAuth'
-import { TrainingAssignmentsPanel } from '@/pages/training/TrainingAssignments'
-import { generateCertificatePDF, loadLogoAsDataUrl, type Certificate } from '@/services/certificateService'
 import {
     Activity,
-    AlertCircle,
     AlertTriangle,
     ArrowRight,
     Award,
     BarChart3,
     BookOpen,
     Brain,
-    CheckCircle2,
     Clock,
-    Download,
     Eye,
     Filter,
-    LineChart,
-    Loader2,
     RefreshCw,
     Search,
     Shield,
-    ShieldCheck,
     Sparkles,
-    Users
 } from 'lucide-react'
 import {
     AreaChart,
@@ -47,47 +37,34 @@ import {
     ResponsiveContainer
 } from 'recharts'
 
-type TrackSubTab = 'overview' | 'roster' | 'modules' | 'certifications'
+type TrackSubTab = 'overview' | 'modules'
 type TimeframeOption = '7d' | '30d' | '90d' | 'all'
-type CertStatusFilter = 'all' | 'active' | 'expiring' | 'expired' | 'revoked'
 
 interface TrainingTrackCommandCenterProps {
     canManageModules: boolean
-    canAssignTraining: boolean
     onNavigateToBuilder?: (moduleId: string) => void
-    onOpenAssignWizard?: () => void
 }
 
 export function TrainingTrackCommandCenter({
     canManageModules,
-    canAssignTraining,
     onNavigateToBuilder,
-    onOpenAssignWizard
 }: TrainingTrackCommandCenterProps) {
     const { t, i18n } = useTranslation('training')
     const isRTL = i18n.dir() === 'rtl'
-    const { toast } = useToast()
-    const { user } = useAuth()
-    const queryClient = useQueryClient()
 
     // Sub-tab state
     const [subTab, setSubTab] = useState<TrackSubTab>('overview')
     const [selectedDepartmentId, setSelectedDepartmentId] = useState<string>('all')
     const [timeframe, setTimeframe] = useState<TimeframeOption>('30d')
     
-    // Filter states for Modules & Certifications
+    // Course list filters
     const [moduleSearch, setModuleSearch] = useState('')
     const [moduleHealthFilter, setModuleHealthFilter] = useState<'all' | 'needs_attention' | 'healthy'>('all')
     
-    const [certSearch, setCertSearch] = useState('')
-    const [certStatusFilter, setCertStatusFilter] = useState<CertStatusFilter>('all')
 
     // Modal States
     const [selectedModuleForDrilldown, setSelectedModuleForDrilldown] = useState<any | null>(null)
     const [selectedQuestionForDetail, setSelectedQuestionForDetail] = useState<any | null>(null)
-    const [previewCertificate, setPreviewCertificate] = useState<any | null>(null)
-    const [recertTarget, setRecertTarget] = useState<any | null>(null)
-    const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
 
     // Fetch Departments
     const { data: departments = [] } = useQuery({
@@ -251,7 +228,6 @@ export function TrainingTrackCommandCenter({
                 departmentPerformance: [],
                 moduleHealthList: [],
                 knowledgeGaps: [],
-                filteredCertificates: []
             }
         }
 
@@ -310,31 +286,6 @@ export function TrainingTrackCommandCenter({
             return exp > now && exp <= in30Days
         })
 
-        // Filter certificates for Pillar 4
-        const filteredCertificates = certificates.filter((cert: any) => {
-            if (selectedDepartmentId !== 'all' && cert.department_id && cert.department_id !== selectedDepartmentId) return false
-            
-            if (certSearch) {
-                const q = certSearch.toLowerCase()
-                const matchName = (cert.recipient_name || '').toLowerCase().includes(q)
-                const matchNum = (cert.certificate_number || '').toLowerCase().includes(q)
-                const matchTitle = (cert.title || '').toLowerCase().includes(q)
-                const matchCode = (cert.verification_code || '').toLowerCase().includes(q)
-                if (!matchName && !matchNum && !matchTitle && !matchCode) return false
-            }
-
-            const exp = cert.expiry_date ? new Date(cert.expiry_date).getTime() : null
-            const isExpiring = exp && exp > now && exp <= in30Days
-            const isExpired = exp && exp <= now
-
-            if (certStatusFilter === 'active') return cert.status === 'active' && !isExpired
-            if (certStatusFilter === 'expiring') return isExpiring
-            if (certStatusFilter === 'expired') return isExpired
-            if (certStatusFilter === 'revoked') return cert.status === 'revoked'
-
-            return true
-        })
-
         // Completion Trend (Last 14 days)
         const trendMap = new Map<string, { date: string; completed: number; started: number }>()
         for (let i = 13; i >= 0; i--) {
@@ -364,7 +315,7 @@ export function TrainingTrackCommandCenter({
         filteredProgress.forEach(r => {
             const profile = r.profiles as any
             const memberships = profile?.organization_memberships || []
-            const deptName = memberships[0]?.department?.name || (isRTL ? 'عام' : 'General')
+            const deptName = memberships[0]?.department?.name || (t('tracking.cc.general', 'General'))
             if (!deptMap.has(deptName)) {
                 deptMap.set(deptName, { name: deptName, total: 0, completed: 0, scoreSum: 0, scoreCount: 0 })
             }
@@ -553,122 +504,8 @@ export function TrainingTrackCommandCenter({
             departmentPerformance,
             moduleHealthList,
             knowledgeGaps,
-            filteredCertificates
         }
-    }, [rawData, selectedDepartmentId, certSearch, certStatusFilter, isRTL])
-
-    // Action: 1-Click Recertification Trigger
-    const recertifyMutation = useMutation({
-        mutationFn: async ({ userId, moduleId }: { userId: string; moduleId: string }) => {
-            // Server-side: archives the previous completion, supersedes the active
-            // certificate and issues a 14-day recertification assignment.
-            const { data, error } = await supabase.rpc('start_recertification', {
-                p_user_id: userId,
-                p_training_module_id: moduleId,
-            })
-            if (error) throw error
-            return data
-        },
-        onSuccess: () => {
-            toast({
-                title: t('recertificationAssigned', 'Recertification Assigned'),
-                description: t('recertificationAssignedDesc', 'Training module has been re-assigned to the employee with a 14-day due date.')
-            })
-            setRecertTarget(null)
-            refetch()
-        },
-        onError: (err: any) => {
-            toast({
-                title: t('error', 'Error'),
-                description: err.message || 'Failed to assign recertification.',
-                variant: 'destructive'
-            })
-        }
-    })
-
-    // Action: Download PDF Certificate
-    const handleDownloadCertificatePdf = async (certRecord: any) => {
-        setIsGeneratingPdf(true)
-        try {
-            const mappedCert: Certificate = {
-                id: certRecord.id,
-                certificateNumber: certRecord.certificate_number,
-                verificationCode: certRecord.verification_code,
-                userId: certRecord.user_id,
-                recipientName: certRecord.recipient_name || 'Valued Team Member',
-                recipientEmail: certRecord.recipient_email,
-                certificateType: certRecord.certificate_type || 'training',
-                title: certRecord.title,
-                description: certRecord.description,
-                completionDate: new Date(certRecord.completion_date || certRecord.created_at),
-                expiryDate: certRecord.expiry_date ? new Date(certRecord.expiry_date) : undefined,
-                score: certRecord.score,
-                passingScore: certRecord.passing_score,
-                trainingModuleId: certRecord.training_module_id,
-                trainingProgressId: certRecord.training_progress_id,
-                organizationId: certRecord.organization_id,
-                departmentId: certRecord.department_id,
-                departmentName: certRecord.metadata?.departmentName,
-                status: certRecord.status || 'active',
-                createdAt: new Date(certRecord.created_at)
-            }
-
-            const logoUrl = await loadLogoAsDataUrl(mappedCert.organizationId)
-            const pdfBlob = await generateCertificatePDF(mappedCert, logoUrl || undefined)
-            
-            const blobUrl = URL.createObjectURL(pdfBlob)
-            const a = document.createElement('a')
-            a.href = blobUrl
-            a.download = `Certificate-${certRecord.certificate_number || 'Altus-Hospitality'}.pdf`
-            a.click()
-            URL.revokeObjectURL(blobUrl)
-
-            toast({
-                title: t('certificateDownloaded', 'Certificate Downloaded'),
-                description: t('certificateDownloadedDesc', 'Official PDF certificate saved successfully.')
-            })
-        } catch (error: any) {
-            console.error('PDF generation error:', error)
-            toast({
-                title: t('error', 'Error'),
-                description: t('pdfError', 'Failed to generate official PDF certificate.'),
-                variant: 'destructive'
-            })
-        } finally {
-            setIsGeneratingPdf(false)
-        }
-    }
-
-    // Action: Export Audit CSV
-    const handleExportAuditCSV = () => {
-        if (metrics.filteredCertificates.length === 0) {
-            toast({
-                title: t('noDataToExport', 'No certificate records to export'),
-                variant: 'destructive'
-            })
-            return
-        }
-
-        let csv = 'Certificate No,Recipient Name,Email,Course Title,Type,Score,Issue Date,Expiry Date,Verification Code,Status,Department\n'
-        metrics.filteredCertificates.forEach((c: any) => {
-            const exp = c.expiry_date ? new Date(c.expiry_date).toISOString().slice(0, 10) : 'Lifetime'
-            const iss = c.completion_date ? new Date(c.completion_date).toISOString().slice(0, 10) : '-'
-            csv += `"${c.certificate_number}","${c.recipient_name}","${c.recipient_email || ''}","${c.title}","${c.certificate_type}","${c.score ?? '-'}","${iss}","${exp}","${c.verification_code}","${c.status}","${c.metadata?.departmentName || ''}"\n`
-        })
-
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
-        const url = URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = `Altus-Hospitality-Audit-Log-${new Date().toISOString().slice(0, 10)}.csv`
-        a.click()
-        URL.revokeObjectURL(url)
-
-        toast({
-            title: t('auditLogExported', 'Official Audit Log Exported'),
-            description: t('auditLogExportedDesc', 'CSV ready for regulatory compliance inspections.')
-        })
-    }
+    }, [rawData, selectedDepartmentId, isRTL])
 
     // Filtered module list based on health toggle
     const displayedModules = useMemo(() => {
@@ -689,17 +526,17 @@ export function TrainingTrackCommandCenter({
                     <div className="flex items-center gap-2">
                         <Filter className="h-4 w-4 text-ds-accent" />
                         <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">
-                            {isRTL ? 'تصفية المركز' : 'Scope Filters'}
+                            {t('tracking.cc.filters', 'Show')}
                         </span>
                     </div>
 
                     {/* Department Selector */}
                     <Select value={selectedDepartmentId} onValueChange={setSelectedDepartmentId}>
                         <SelectTrigger className="h-9 w-[170px] bg-ds-surface border-ds-border text-xs font-medium text-ds-ink">
-                            <SelectValue placeholder={isRTL ? 'كل الأقسام' : 'All Departments'} />
+                            <SelectValue placeholder={t('tracking.cc.allDepartments', 'All departments')} />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">{isRTL ? 'جميع الأقسام التشغيلية' : 'All Departments'}</SelectItem>
+                            <SelectItem value="all">{t('tracking.cc.allDepartments', 'All departments')}</SelectItem>
                             {departments.map(d => (
                                 <SelectItem key={d.id} value={d.id}>{d.name}</SelectItem>
                             ))}
@@ -713,10 +550,10 @@ export function TrainingTrackCommandCenter({
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="7d">{isRTL ? 'آخر 7 أيام' : 'Last 7 Days'}</SelectItem>
-                            <SelectItem value="30d">{isRTL ? 'آخر 30 يوماً' : 'Last 30 Days'}</SelectItem>
-                            <SelectItem value="90d">{isRTL ? 'آخر 90 يوماً' : 'Last 90 Days'}</SelectItem>
-                            <SelectItem value="all">{isRTL ? 'كل السجلات' : 'All Time'}</SelectItem>
+                            <SelectItem value="7d">{t('tracking.cc.last7', 'Last 7 days')}</SelectItem>
+                            <SelectItem value="30d">{t('tracking.cc.last30', 'Last 30 days')}</SelectItem>
+                            <SelectItem value="90d">{t('tracking.cc.last90', 'Last 90 days')}</SelectItem>
+                            <SelectItem value="all">{t('tracking.cc.allTime', 'All time')}</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
@@ -730,44 +567,21 @@ export function TrainingTrackCommandCenter({
                         className="h-9 border-ds-border bg-ds-surface text-xs font-medium text-ds-ink hover:bg-ds-surface-subtle"
                     >
                         <RefreshCw className={cn("me-1.5 h-3.5 w-3.5", isLoading && "animate-spin")} />
-                        {isRTL ? 'تحديث البيانات' : 'Refresh'}
-                    </Button>
-
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleExportAuditCSV}
-                        className="h-9 border-ds-border bg-ds-surface text-xs font-medium text-ds-ink hover:bg-ds-surface-subtle"
-                    >
-                        <Download className="me-1.5 h-3.5 w-3.5 text-ds-muted" />
-                        {isRTL ? 'تصدير سجل التدقيق' : 'Export Audit Log'}
+                        {t('tracking.cc.refresh', 'Refresh')}
                     </Button>
                 </div>
             </div>
 
             {/* 4 Pillars Tab Navigation */}
             <Tabs value={subTab} onValueChange={(val: any) => setSubTab(val)} className="space-y-6">
-                <TabsList className="grid h-11 w-full grid-cols-2 rounded-[8px] bg-ds-surface-subtle border border-ds-border p-1 md:grid-cols-4">
-                    <TabsTrigger value="overview" className="flex items-center gap-2 rounded-[6px] text-xs font-medium data-[state=active]:bg-ds-surface data-[state=active]:text-ds-ink data-[state=active]:shadow-xs text-ds-muted">
-                        <BarChart3 className="h-4 w-4 text-ds-accent" />
-                        <span>{isRTL ? 'لوحة الامتثال التنفيذية' : 'Executive Overview'}</span>
+                <TabsList className="flex h-auto min-h-0 w-full justify-start gap-1 overflow-x-auto rounded-none border-0 border-b border-ds-border bg-transparent p-0">
+                    <TabsTrigger value="overview" className="min-h-[44px] gap-1.5 rounded-none border-b-2 border-transparent bg-transparent px-3 text-sm font-medium text-ds-muted shadow-none hover:text-ds-ink data-[state=active]:border-ds-brass data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-ds-ink data-[state=active]:shadow-none">
+                        <BarChart3 aria-hidden="true" className="h-4 w-4" />
+                        <span>{t('tracking.cc.tabOverview', 'Overview')}</span>
                     </TabsTrigger>
-                    <TabsTrigger value="roster" className="flex items-center gap-2 rounded-[6px] text-xs font-medium data-[state=active]:bg-ds-surface data-[state=active]:text-ds-ink data-[state=active]:shadow-xs text-ds-muted">
-                        <Users className="h-4 w-4 text-ds-accent" />
-                        <span>{isRTL ? 'متابعة المتدربين الحية' : 'Learner Operations'}</span>
-                    </TabsTrigger>
-                    <TabsTrigger value="modules" className="flex items-center gap-2 rounded-[6px] text-xs font-medium data-[state=active]:bg-ds-surface data-[state=active]:text-ds-ink data-[state=active]:shadow-xs text-ds-muted">
-                        <Brain className="h-4 w-4 text-ds-accent" />
-                        <span>{isRTL ? 'صحة المقررات والفجوات' : 'Course Health & Gaps'}</span>
-                    </TabsTrigger>
-                    <TabsTrigger value="certifications" className="flex items-center gap-2 rounded-[6px] text-xs font-medium data-[state=active]:bg-ds-surface data-[state=active]:text-ds-ink data-[state=active]:shadow-xs text-ds-muted">
-                        <Award className="h-4 w-4 text-ds-accent" />
-                        <span>{isRTL ? 'الشهادات وتفتيش الامتثال' : 'Certifications & Audit'}</span>
-                        {metrics.expiringCertificatesCount > 0 && (
-                            <span className="ms-1 px-1.5 py-0.5 rounded-full bg-ds-warning-soft text-ds-warning text-[10px] font-bold">
-                                {metrics.expiringCertificatesCount}
-                            </span>
-                        )}
+                    <TabsTrigger value="modules" className="min-h-[44px] gap-1.5 rounded-none border-b-2 border-transparent bg-transparent px-3 text-sm font-medium text-ds-muted shadow-none hover:text-ds-ink data-[state=active]:border-ds-brass data-[state=active]:bg-transparent data-[state=active]:font-semibold data-[state=active]:text-ds-ink data-[state=active]:shadow-none">
+                        <Brain aria-hidden="true" className="h-4 w-4" />
+                        <span>{t('tracking.cc.tabCourses', 'Courses')}</span>
                     </TabsTrigger>
                 </TabsList>
 
@@ -777,7 +591,7 @@ export function TrainingTrackCommandCenter({
                         {/* 1. Compliance Rate */}
                         <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 space-y-2 shadow-none transition-colors hover:border-ds-border-strong">
                             <div className="flex items-center justify-between">
-                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'معدل الامتثال' : 'Compliance Rate'}</span>
+                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{t('tracking.cc.complianceRate', 'Completed on time')}</span>
                                 <Shield className="h-4 w-4 text-ds-accent" />
                             </div>
                             <div className="flex items-baseline gap-2">
@@ -786,68 +600,68 @@ export function TrainingTrackCommandCenter({
                                     "px-1.5 py-0.5 rounded text-[10px] font-semibold",
                                     metrics.complianceRate >= 90 ? "bg-ds-success-soft text-ds-success" : "bg-ds-warning-soft text-ds-warning"
                                 )}>
-                                    {metrics.complianceRate >= 90 ? (isRTL ? 'ممتاز' : 'Target Met') : (isRTL ? 'قيد المتابعة' : 'On Track')}
+                                    {metrics.complianceRate >= 90 ? (t('tracking.cc.targetMet', 'On target')) : (t('tracking.cc.belowTarget', 'Below 90%'))}
                                 </span>
                             </div>
                             <p className="text-[11px] text-ds-muted">
-                                {metrics.completedCount} / {metrics.totalAssignments} {isRTL ? 'مكتمل' : 'Completed'}
+                                {metrics.completedCount} / {metrics.totalAssignments} {t('tracking.cc.completed', 'completed')}
                             </p>
                         </div>
 
                         {/* 2. Assessment Mastery Score */}
                         <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 space-y-2 shadow-none transition-colors hover:border-ds-border-strong">
                             <div className="flex items-center justify-between">
-                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'متوسط الدرجات' : 'Average Score'}</span>
+                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{t('tracking.cc.averageScore', 'Average quiz score')}</span>
                                 <Award className="h-4 w-4 text-ds-accent" />
                             </div>
                             <div className="flex items-baseline gap-2">
                                 <span className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{metrics.avgScore ?? '—'}%</span>
                                 <span className="px-1.5 py-0.5 rounded bg-ds-info-soft text-ds-info text-[10px] font-semibold">
-                                    {(metrics.avgScore ?? 0) >= 85 ? (isRTL ? '5 نجوم' : '5-Star Quality') : (isRTL ? 'معياري' : 'Standard')}
+                                    {(metrics.avgScore ?? 0) >= 85 ? (t('tracking.cc.scoreStrong', 'Strong')) : (t('tracking.cc.scoreOk', 'Fair'))}
                                 </span>
                             </div>
                             <p className="text-[11px] text-ds-muted">
-                                {isRTL ? 'عبر كافة الاختبارات' : 'Across all module quizzes'}
+                                {t('tracking.cc.acrossQuizzes', 'Across all course quizzes')}
                             </p>
                         </div>
 
                         {/* 3. Total Enrollments */}
                         <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 space-y-2 shadow-none transition-colors hover:border-ds-border-strong">
                             <div className="flex items-center justify-between">
-                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'إجمالي التكليفات' : 'Total Assignments'}</span>
+                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{t('tracking.cc.totalAssignments', 'Assignments')}</span>
                                 <BookOpen className="h-4 w-4 text-ds-accent" />
                             </div>
                             <div className="flex items-baseline gap-2">
                                 <span className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{metrics.totalAssignments}</span>
-                                <span className="text-xs text-ds-muted">{isRTL ? 'سجل تدريب' : 'records'}</span>
+                                <span className="text-xs text-ds-muted">{t('tracking.cc.records', 'in total')}</span>
                             </div>
                             <p className="text-[11px] text-ds-muted">
-                                {rawData?.modules.length || 0} {isRTL ? 'مقرراً معتمداً' : 'active courses'}
+                                {rawData?.modules.length || 0} {t('tracking.cc.activeCourses', 'courses')}
                             </p>
                         </div>
 
                         {/* 4. Active Learners */}
                         <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 space-y-2 shadow-none transition-colors hover:border-ds-border-strong">
                             <div className="flex items-center justify-between">
-                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'المتدربون النشطون' : 'Active Learners'}</span>
+                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{t('tracking.cc.activeLearners', 'People learning')}</span>
                                 <Activity className="h-4 w-4 text-ds-accent" />
                             </div>
                             <div className="flex items-baseline gap-2">
                                 <span className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{metrics.activeLearnersCount}</span>
-                                <span className="text-xs text-ds-muted font-medium">{isRTL ? 'موظف' : 'staff'}</span>
+                                <span className="text-xs text-ds-muted font-medium">{t('tracking.cc.people', 'people')}</span>
                             </div>
                             <p className="text-[11px] text-ds-muted">
-                                {metrics.inProgressCount} {isRTL ? 'جلسة قيد التنفيذ' : 'in-progress sessions'}
+                                {metrics.inProgressCount} {t('tracking.cc.inProgress', 'in progress')}
                             </p>
                         </div>
 
-                        {/* 5. Overdue Compliance Risk */}
-                        <div className={cn(
-                            "rounded-[8px] border p-4 space-y-2 shadow-none transition-colors",
+                        {/* 5. Overdue: the risk queue owns follow-up */}
+                        <Link to="/manage/risk" className={cn(
+                            "block rounded-[8px] border p-4 space-y-2 shadow-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent",
                             metrics.overdueCount > 0 ? "border-ds-danger/40 bg-ds-danger-soft/20 hover:border-ds-danger" : "border-ds-border bg-ds-surface hover:border-ds-border-strong"
                         )}>
                             <div className="flex items-center justify-between">
-                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'مخاطر التأخير' : 'Overdue Risk'}</span>
+                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{t('tracking.cc.overdue', 'Overdue')}</span>
                                 <AlertTriangle className={cn("h-4 w-4", metrics.overdueCount > 0 ? "text-ds-danger" : "text-ds-muted")} />
                             </div>
                             <div className="flex items-baseline gap-2">
@@ -856,36 +670,36 @@ export function TrainingTrackCommandCenter({
                                 </span>
                                 {metrics.overdueCount > 0 ? (
                                     <span className="px-1.5 py-0.5 rounded bg-ds-danger-soft text-ds-danger text-[10px] font-semibold">
-                                        {isRTL ? 'يتطلب إجراء' : 'Action Req.'}
+                                        {t('tracking.cc.needsFollowUp', 'Follow up')}
                                     </span>
                                 ) : (
                                     <span className="px-1.5 py-0.5 rounded bg-ds-success-soft text-ds-success text-[10px] font-semibold">
-                                        {isRTL ? 'لا يوجد تأخير' : 'Zero Overdue'}
+                                        {t('tracking.cc.noneOverdue', 'None overdue')}
                                     </span>
                                 )}
                             </div>
                             <p className="text-[11px] text-ds-muted">
-                                {isRTL ? 'تجاوز مهلة الـ 14 يوماً' : '> 14 days without completion'}
+                                {t('tracking.cc.overdueHint', 'Open the risk queue to follow up')}
                             </p>
-                        </div>
+                        </Link>
 
-                        {/* 6. Recertifications Due */}
-                        <div className={cn(
-                            "rounded-[8px] border p-4 space-y-2 shadow-none transition-colors",
+                        {/* 6. Recertifications due: the certificate register owns recertifying */}
+                        <Link to="/manage/certificates?filter=expiring" className={cn(
+                            "block rounded-[8px] border p-4 space-y-2 shadow-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent",
                             metrics.expiringCertificatesCount > 0 ? "border-ds-warning/40 bg-ds-warning-soft/20 hover:border-ds-warning" : "border-ds-border bg-ds-surface hover:border-ds-border-strong"
                         )}>
                             <div className="flex items-center justify-between">
-                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'إعادة التأهيل (30 يوم)' : 'Recert. Due'}</span>
+                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{t('tracking.cc.recertDue', 'Certificates expiring')}</span>
                                 <Clock className="h-4 w-4 text-ds-accent" />
                             </div>
                             <div className="flex items-baseline gap-2">
                                 <span className="text-2xl font-bold font-mono text-ds-ink tracking-tight">{metrics.expiringCertificatesCount}</span>
-                                <span className="text-xs text-ds-muted font-medium">{isRTL ? 'شهادة' : 'credentials'}</span>
+                                <span className="text-xs text-ds-muted font-medium">{t('tracking.cc.certificatesUnit', 'certificates')}</span>
                             </div>
                             <p className="text-[11px] text-ds-muted">
-                                {isRTL ? 'تنتهي خلال 30 يوماً' : 'Expiring within 30 days'}
+                                {t('tracking.cc.recertHint', 'Within 30 days. Open certificates to recertify')}
                             </p>
-                        </div>
+                        </Link>
                     </div>
 
                     {/* Charts */}
@@ -894,16 +708,12 @@ export function TrainingTrackCommandCenter({
                             <CardHeader className="flex flex-row items-center justify-between pb-2">
                                 <div>
                                     <CardTitle className="text-base font-semibold text-ds-ink">
-                                        {isRTL ? 'سرعة الإنجاز والنشاط التدريبي اليومي' : 'Completion Velocity & Daily Activity'}
+                                        {t('tracking.cc.activityTitle', 'Started and completed per day')}
                                     </CardTitle>
                                     <CardDescription className="text-xs text-ds-muted">
-                                        {isRTL ? 'مقارنة بين الجلسات الجديدة والمكتملة على مدار الـ 14 يوماً الماضية' : 'Daily comparison between newly started vs completed courses'}
+                                        {t('tracking.cc.activityHint', 'Last 14 days')}
                                     </CardDescription>
                                 </div>
-                                <Badge variant="outline" className="text-xs border-ds-border bg-ds-surface-subtle text-ds-muted">
-                                    <LineChart className="me-1 h-3.5 w-3.5 text-ds-accent" />
-                                    14-Day Velocity
-                                </Badge>
                             </CardHeader>
                             <CardContent className="pt-4">
                                 <div className="h-[280px] w-full min-w-0">
@@ -923,8 +733,8 @@ export function TrainingTrackCommandCenter({
                                             <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'rgb(var(--ds-muted))' }} />
                                             <YAxis tick={{ fontSize: 11, fill: 'rgb(var(--ds-muted))' }} allowDecimals={false} />
                                             <Tooltip contentStyle={{ backgroundColor: 'rgb(var(--ds-surface))', borderColor: 'rgb(var(--ds-border))', borderRadius: '8px', color: 'rgb(var(--ds-ink))', fontSize: '12px' }} />
-                                            <Area type="monotone" dataKey="completed" name={isRTL ? 'مكتمل' : 'Completed'} stroke="rgb(var(--ds-success))" strokeWidth={2.5} fillOpacity={1} fill="url(#completedGrad)" />
-                                            <Area type="monotone" dataKey="started" name={isRTL ? 'بدأ التدريب' : 'Started'} stroke="rgb(var(--ds-warning))" strokeWidth={2} strokeDasharray="4 4" fillOpacity={1} fill="url(#startedGrad)" />
+                                            <Area type="monotone" dataKey="completed" name={t('tracking.cc.completed', 'completed')} stroke="rgb(var(--ds-success))" strokeWidth={2.5} fillOpacity={1} fill="url(#completedGrad)" />
+                                            <Area type="monotone" dataKey="started" name={t('tracking.cc.started', 'Started')} stroke="rgb(var(--ds-warning))" strokeWidth={2} strokeDasharray="4 4" fillOpacity={1} fill="url(#startedGrad)" />
                                         </AreaChart>
                                     </ResponsiveContainer>
                                 </div>
@@ -935,10 +745,10 @@ export function TrainingTrackCommandCenter({
                             <CardHeader className="flex flex-row items-center justify-between pb-2">
                                 <div>
                                     <CardTitle className="text-base font-semibold text-ds-ink">
-                                        {isRTL ? 'مؤشر الامتثال حسب القسم' : 'Department Compliance Matrix'}
+                                        {t('tracking.cc.deptTitle', 'By department')}
                                     </CardTitle>
                                     <CardDescription className="text-xs text-ds-muted">
-                                        {isRTL ? 'نسبة الامتثال ومتوسط الدرجات لكل قسم تشغيلي' : 'Compliance % and avg score across departments'}
+                                        {t('tracking.cc.deptHint', 'Share completed on time, and average quiz score')}
                                     </CardDescription>
                                 </div>
                                 <Shield className="h-4 w-4 text-ds-accent" />
@@ -947,7 +757,7 @@ export function TrainingTrackCommandCenter({
                                 <div className="space-y-3 max-h-[280px] overflow-y-auto custom-scrollbar-light pe-1">
                                     {metrics.departmentPerformance.length === 0 ? (
                                         <div className="py-12 text-center text-xs text-ds-muted">
-                                            {isRTL ? 'لا توجد بيانات للأقسام المختارة' : 'No department data found'}
+                                            {t('tracking.cc.deptEmpty', 'No department data yet')}
                                         </div>
                                     ) : (
                                         metrics.departmentPerformance.map((dept) => (
@@ -957,7 +767,7 @@ export function TrainingTrackCommandCenter({
                                                     <div className="flex items-center gap-2">
                                                         {dept.avgScore !== null && (
                                                             <span className="text-[11px] text-ds-muted font-medium">
-                                                                {dept.avgScore}% {isRTL ? 'درجة' : 'Score'}
+                                                                {dept.avgScore}% {t('tracking.cc.score', 'score')}
                                                             </span>
                                                         )}
                                                         <span className={cn(
@@ -988,16 +798,6 @@ export function TrainingTrackCommandCenter({
                     </div>
                 </TabsContent>
 
-                {/* ─── TAB 2: LIVE LEARNER OPERATIONS ─── */}
-                <TabsContent value="roster" className="space-y-4 animate-in fade-in duration-300">
-                    <TrainingAssignmentsPanel
-                        embedded
-                        initialTab="overview"
-                        hideCreateButton
-                        hideHeaderActions
-                    />
-                </TabsContent>
-
                 {/* ─── TAB 3: COURSE HEALTH & KNOWLEDGE GAPS ─── */}
                 <TabsContent value="modules" className="space-y-6 animate-in fade-in duration-300">
                     {/* Top Radar: Tricky Knowledge Gaps */}
@@ -1010,10 +810,10 @@ export function TrainingTrackCommandCenter({
                                     </div>
                                     <div>
                                         <CardTitle className="text-base font-semibold text-ds-ink">
-                                            {isRTL ? 'رادار الفجوات المعرفية والأسئلة الأكثر صعوبة' : 'AI Knowledge Gap Radar & Weak Spots'}
+                                            {t('tracking.cc.gapsTitle', 'Questions people get wrong most')}
                                         </CardTitle>
                                         <CardDescription className="text-xs text-ds-muted">
-                                            {isRTL ? 'الأسئلة والإجراءات المعيارية التي سجلت أقل معدلات إجابة صحيحة من المتدربين' : 'Standard questions and SOP topics with lowest staff accuracy'}
+                                            {t('tracking.cc.gapsHint', 'Lowest share of correct answers. These topics may need clearer training.')}
                                         </CardDescription>
                                     </div>
                                 </div>
@@ -1026,7 +826,7 @@ export function TrainingTrackCommandCenter({
                             <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
                                 {metrics.knowledgeGaps.length === 0 ? (
                                     <div className="col-span-full py-8 text-center text-xs text-ds-muted">
-                                        {isRTL ? 'لا توجد فجوات حرجة مسجلة - كافة الاختبارات تحقق نسب النجاح المعيارية.' : 'No critical knowledge gaps detected. All questions meet benchmark standards.'}
+                                        {t('tracking.cc.gapsEmpty', 'No weak questions. Most people answer every question correctly.')}
                                     </div>
                                 ) : (
                                     metrics.knowledgeGaps.map((gap) => (
@@ -1043,16 +843,16 @@ export function TrainingTrackCommandCenter({
                                                     "font-bold text-xs",
                                                     gap.accuracyRate < 60 ? "text-ds-danger" : "text-ds-warning"
                                                 )}>
-                                                    {gap.accuracyRate}% {isRTL ? 'دقة' : 'Accuracy'}
+                                                    {gap.accuracyRate}% {t('tracking.cc.accuracy', 'correct')}
                                                 </span>
                                             </div>
                                             <p className="text-xs font-semibold text-ds-ink line-clamp-2 leading-relaxed group-hover:text-ds-accent transition-colors">
                                                 "{gap.questionText}"
                                             </p>
                                             <div className="text-[10px] text-ds-muted flex items-center justify-between pt-1 border-t border-ds-border/60">
-                                                <span>{gap.attempts} {isRTL ? 'محاولة' : 'attempts'}</span>
+                                                <span>{gap.attempts} {t('tracking.cc.attempts', 'attempts')}</span>
                                                 <span className="text-ds-accent font-semibold flex items-center gap-0.5">
-                                                    {isRTL ? 'تفاصيل' : 'Inspect'}
+                                                    {t('tracking.cc.view', 'View')}
                                                     <ArrowRight className="h-2.5 w-2.5 rtl:rotate-180" />
                                                 </span>
                                             </div>
@@ -1068,10 +868,10 @@ export function TrainingTrackCommandCenter({
                         <CardHeader className="flex flex-col gap-3 pb-3 sm:flex-row sm:items-center sm:justify-between">
                             <div>
                                 <CardTitle className="text-base font-semibold text-ds-ink">
-                                    {isRTL ? 'مؤشرات أداء وصحة المقررات التدريبية' : 'Course Performance & Completion Funnels'}
+                                    {t('tracking.cc.coursesTitle', 'Courses')}
                                 </CardTitle>
                                 <CardDescription className="text-xs text-ds-muted">
-                                    {isRTL ? 'اضغط على أي مقرر للاطلاع على مسار التسرب ونقاط التوقف وقائمة المتدربين' : 'Click on any course for full drop-off funnel analysis, block completions, and learner roster'}
+                                    {t('tracking.cc.coursesHint', 'Select a course to see where people stop and who is enrolled.')}
                                 </CardDescription>
                             </div>
                             <div className="flex flex-wrap items-center gap-2">
@@ -1080,9 +880,9 @@ export function TrainingTrackCommandCenter({
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="all">{isRTL ? 'جميع المقررات' : 'All Courses'}</SelectItem>
-                                        <SelectItem value="needs_attention">{isRTL ? 'تحتاج لمتابعة' : 'Needs Attention'}</SelectItem>
-                                        <SelectItem value="healthy">{isRTL ? 'مكتملة ومستقرة' : 'Healthy'}</SelectItem>
+                                        <SelectItem value="all">{t('tracking.cc.allCourses', 'All')}</SelectItem>
+                                        <SelectItem value="needs_attention">{t('tracking.cc.needsAttention', 'Needs attention')}</SelectItem>
+                                        <SelectItem value="healthy">{t('tracking.cc.healthy', 'On track')}</SelectItem>
                                     </SelectContent>
                                 </Select>
 
@@ -1091,7 +891,7 @@ export function TrainingTrackCommandCenter({
                                     <Input
                                         value={moduleSearch}
                                         onChange={(e) => setModuleSearch(e.target.value)}
-                                        placeholder={isRTL ? 'بحث في المقررات...' : 'Filter courses...'}
+                                        placeholder={t('tracking.cc.searchCourses', 'Search courses')}
                                         className="h-8 text-xs ps-8 bg-ds-surface border-ds-border text-ds-ink"
                                     />
                                 </div>
@@ -1102,20 +902,20 @@ export function TrainingTrackCommandCenter({
                                 <table className="w-full text-start text-xs">
                                     <thead className="bg-ds-surface-subtle text-ds-muted uppercase tracking-wider font-semibold border-y border-ds-border">
                                         <tr>
-                                            <th className="py-3 px-4">{isRTL ? 'عنوان المقرر' : 'Course Title'}</th>
-                                            <th className="py-3 px-4 text-center">{isRTL ? 'الحالة' : 'Status'}</th>
-                                            <th className="py-3 px-4 text-center">{isRTL ? 'المسجلون' : 'Enrollments'}</th>
-                                            <th className="py-3 px-4 text-center">{isRTL ? 'معدل الإكمال' : 'Completion Rate'}</th>
-                                            <th className="py-3 px-4 text-center">{isRTL ? 'متوسط الدرجة' : 'Avg Score'}</th>
-                                            <th className="py-3 px-4 text-center">{isRTL ? 'نقطة التسرب المحتملة' : 'Drop-off Vulnerability'}</th>
-                                            <th className="py-3 px-4 text-end">{isRTL ? 'التحليل' : 'Deep Dive'}</th>
+                                            <th className="py-3 px-4">{t('tracking.cc.course', 'Course')}</th>
+                                            <th className="py-3 px-4 text-center">{t('tracking.cc.status', 'Status')}</th>
+                                            <th className="py-3 px-4 text-center">{t('tracking.cc.enrolled', 'Enrolled')}</th>
+                                            <th className="py-3 px-4 text-center">{t('tracking.cc.completionRate', 'Completed')}</th>
+                                            <th className="py-3 px-4 text-center">{t('tracking.cc.avgScore', 'Avg score')}</th>
+                                            <th className="py-3 px-4 text-center">{t('tracking.cc.dropOff', 'Most people stop at')}</th>
+                                            <th className="py-3 px-4 text-end">{t('tracking.cc.details', 'Details')}</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-ds-border/60">
                                         {displayedModules.length === 0 ? (
                                             <tr>
                                                 <td colSpan={7} className="py-8 text-center text-ds-muted">
-                                                    {isRTL ? 'لم يتم العثور على مقررات مطابقة' : 'No matching courses found.'}
+                                                    {t('tracking.cc.noCourses', 'No courses match.')}
                                                 </td>
                                             </tr>
                                         ) : (
@@ -1168,10 +968,10 @@ export function TrainingTrackCommandCenter({
                                                     <td className="py-3 px-4 text-center">
                                                         {mod.worstDropBlock ? (
                                                             <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-ds-warning-soft text-ds-warning border border-ds-warning/30">
-                                                                {isRTL ? `تسرب في الخطوة ${mod.worstDropBlock.order}` : `Drop-off at Step ${mod.worstDropBlock.order}`}
+                                                                {t('tracking.cc.dropStep', 'Step {{step}}', { step: mod.worstDropBlock.order })}
                                                             </span>
                                                         ) : (
-                                                            <span className="text-[11px] text-ds-success font-medium">{isRTL ? 'سلس ومتواصل' : 'Smooth Flow'}</span>
+                                                            <span className="text-[11px] text-ds-success font-medium">{t('tracking.cc.noDropOff', 'No clear drop-off')}</span>
                                                         )}
                                                     </td>
                                                     <td className="py-3 px-4 text-end">
@@ -1182,7 +982,7 @@ export function TrainingTrackCommandCenter({
                                                             className="h-7 text-xs font-medium border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle"
                                                         >
                                                             <Eye className="me-1 h-3.5 w-3.5 text-ds-muted" />
-                                                            {isRTL ? 'تحليل تفصيلي' : 'Analyze'}
+                                                            {t('tracking.cc.open', 'Open')}
                                                         </Button>
                                                     </td>
                                                 </tr>
@@ -1195,224 +995,6 @@ export function TrainingTrackCommandCenter({
                     </Card>
                 </TabsContent>
 
-                {/* ─── TAB 4: CERTIFICATIONS & AUDIT READINESS ─── */}
-                <TabsContent value="certifications" className="space-y-6 animate-in fade-in duration-300">
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-                        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 space-y-2 shadow-none transition-colors hover:border-ds-border-strong">
-                            <div className="flex items-center justify-between">
-                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'إجمالي الشهادات المعتمدة' : 'Issued Credentials'}</span>
-                                <Award className="h-5 w-5 text-ds-accent" />
-                            </div>
-                            <div className="text-2xl font-bold font-mono text-ds-ink tracking-tight">
-                                {rawData?.certificates.length || 0}
-                            </div>
-                            <p className="text-[11px] text-ds-muted">
-                                {isRTL ? 'شهادات مهنية مشفرة وموثقة' : 'Verified QR-encoded credentials'}
-                            </p>
-                        </div>
-
-                        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 space-y-2 shadow-none transition-colors hover:border-ds-border-strong">
-                            <div className="flex items-center justify-between">
-                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'شهادات سارية المفعول' : 'Active & Compliant'}</span>
-                                <ShieldCheck className="h-5 w-5 text-ds-success" />
-                            </div>
-                            <div className="text-2xl font-bold font-mono text-ds-success tracking-tight">
-                                {(rawData?.certificates || []).filter((c: any) => c.status === 'active' && (!c.expiry_date || new Date(c.expiry_date).getTime() > Date.now())).length}
-                            </div>
-                            <p className="text-[11px] text-ds-muted">
-                                {isRTL ? '100% صالحة للتدقيق والتفتيش' : 'Audit-compliant for inspections'}
-                            </p>
-                        </div>
-
-                        <div className={cn(
-                            "rounded-[8px] border p-4 space-y-2 shadow-none transition-colors",
-                            metrics.expiringCertificatesCount > 0 ? "border-ds-warning/40 bg-ds-warning-soft/20 hover:border-ds-warning" : "border-ds-border bg-ds-surface hover:border-ds-border-strong"
-                        )}>
-                            <div className="flex items-center justify-between">
-                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'تنتهي خلال 30 يوماً' : 'Expiring in 30 Days'}</span>
-                                <AlertCircle className="h-5 w-5 text-ds-warning" />
-                            </div>
-                            <div className="text-2xl font-bold font-mono text-ds-warning tracking-tight">
-                                {metrics.expiringCertificatesCount}
-                            </div>
-                            <p className="text-[11px] text-ds-muted">
-                                {isRTL ? 'تتطلب إعادة تكليف المتدربين' : 'Require recertification re-assignment'}
-                            </p>
-                        </div>
-
-                        <div className="rounded-[8px] border border-ds-border bg-ds-surface p-4 space-y-2 shadow-none transition-colors hover:border-ds-border-strong">
-                            <div className="flex items-center justify-between">
-                                <span className="text-xs font-semibold uppercase tracking-wider text-ds-muted">{isRTL ? 'جاهزية وزارة السياحة' : 'Ministry Audit Ready'}</span>
-                                <CheckCircle2 className="h-5 w-5 text-ds-accent" />
-                            </div>
-                            <div className="text-2xl font-bold font-mono text-ds-ink tracking-tight">
-                                98.8%
-                            </div>
-                            <p className="text-[11px] text-ds-muted">
-                                {isRTL ? 'مطابق للوائح الضيافة السعودية' : 'KSA Hospitality Standards'}
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* Certificate Search & Action Bar */}
-                    <Card className="shadow-none border border-ds-border bg-ds-surface rounded-[8px]">
-                        <CardHeader className="flex flex-col gap-3 pb-3 sm:flex-row sm:items-center sm:justify-between">
-                            <div>
-                                <CardTitle className="text-base font-semibold text-ds-ink">
-                                    {isRTL ? 'سجل الشهادات المهنية المعتمدة' : 'Official Certificate Registry & Recertification'}
-                                </CardTitle>
-                                <CardDescription className="text-xs text-ds-muted">
-                                    {isRTL ? 'إمكانية تنزيل نسخة PDF الرسمية، معاينة الشهادة، أو إعادة تأهيل الموظف بضغطة زر' : 'Download official PDF certificates, view digital verification, or trigger recertifications with 1 click'}
-                                </CardDescription>
-                            </div>
-                            <div className="flex flex-wrap items-center gap-2">
-                                <Select value={certStatusFilter} onValueChange={(v: any) => setCertStatusFilter(v)}>
-                                    <SelectTrigger className="h-8 w-[140px] text-xs font-medium bg-ds-surface border-ds-border text-ds-ink">
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="all">{isRTL ? 'جميع الحالات' : 'All Statuses'}</SelectItem>
-                                        <SelectItem value="active">{isRTL ? 'سارية فقط' : 'Active Only'}</SelectItem>
-                                        <SelectItem value="expiring">{isRTL ? 'تنتهي قريباً (30 يوم)' : 'Expiring Soon'}</SelectItem>
-                                        <SelectItem value="expired">{isRTL ? 'منتهية الصلاحية' : 'Expired'}</SelectItem>
-                                        <SelectItem value="revoked">{isRTL ? 'ملغاة' : 'Revoked'}</SelectItem>
-                                    </SelectContent>
-                                </Select>
-
-                                <div className="relative w-52">
-                                    <Search className="absolute start-2.5 top-2.5 h-3.5 w-3.5 text-ds-muted" />
-                                    <Input
-                                        value={certSearch}
-                                        onChange={(e) => setCertSearch(e.target.value)}
-                                        placeholder={isRTL ? 'رقم الشهادة / اسم الموظف...' : 'Search by name, number...'}
-                                        className="h-8 text-xs ps-8 bg-ds-surface border-ds-border text-ds-ink"
-                                    />
-                                </div>
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-start text-xs">
-                                    <thead className="bg-ds-surface-subtle text-ds-muted uppercase tracking-wider font-semibold border-y border-ds-border">
-                                        <tr>
-                                            <th className="py-3 px-4">{isRTL ? 'رقم الشهادة' : 'Certificate No.'}</th>
-                                            <th className="py-3 px-4">{isRTL ? 'اسم الموظف' : 'Recipient'}</th>
-                                            <th className="py-3 px-4">{isRTL ? 'المقرر / الموضوع' : 'Course / Topic'}</th>
-                                            <th className="py-3 px-4 text-center">{isRTL ? 'الدرجة' : 'Score'}</th>
-                                            <th className="py-3 px-4 text-center">{isRTL ? 'تاريخ الإصدار' : 'Issued Date'}</th>
-                                            <th className="py-3 px-4 text-center">{isRTL ? 'تاريخ الانتهاء' : 'Expiry Date'}</th>
-                                            <th className="py-3 px-4 text-center">{isRTL ? 'الحالة' : 'Status'}</th>
-                                            <th className="py-3 px-4 text-end">{isRTL ? 'إجراءات' : 'Actions'}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-ds-border/60">
-                                        {metrics.filteredCertificates.length === 0 ? (
-                                            <tr>
-                                                <td colSpan={8} className="py-8 text-center text-ds-muted">
-                                                    {isRTL ? 'لا توجد شهادات مطابقة للمعايير المحددة' : 'No certificates found matching filters.'}
-                                                </td>
-                                            </tr>
-                                        ) : (
-                                            metrics.filteredCertificates.map((cert: any) => {
-                                                const exp = cert.expiry_date ? new Date(cert.expiry_date).getTime() : null
-                                                const isExpiring = exp && exp > Date.now() && exp <= (Date.now() + 30 * 24 * 60 * 60 * 1000)
-                                                const isExpired = exp && exp <= Date.now()
-
-                                                return (
-                                                    <tr key={cert.id} className="hover:bg-ds-surface-subtle/80 transition-colors">
-                                                        <td className="py-3 px-4 font-mono font-semibold text-ds-ink">
-                                                            {cert.certificate_number}
-                                                        </td>
-                                                        <td className="py-3 px-4 font-medium text-ds-ink">
-                                                            <div>{cert.recipient_name || 'Staff Member'}</div>
-                                                            <div className="text-[10px] text-ds-muted">{cert.recipient_email}</div>
-                                                        </td>
-                                                        <td className="py-3 px-4 font-normal text-ds-ink max-w-xs truncate">
-                                                            {cert.title}
-                                                        </td>
-                                                        <td className="py-3 px-4 text-center">
-                                                            {cert.score !== null ? (
-                                                                <span className="px-1.5 py-0.5 rounded bg-ds-surface-subtle text-ds-ink border border-ds-border text-[10px] font-mono font-medium">
-                                                                    {cert.score}%
-                                                                </span>
-                                                            ) : (
-                                                                <span className="text-ds-muted">—</span>
-                                                            )}
-                                                        </td>
-                                                        <td className="py-3 px-4 text-center text-ds-muted">
-                                                            {cert.completion_date ? new Date(cert.completion_date).toLocaleDateString() : '—'}
-                                                        </td>
-                                                        <td className="py-3 px-4 text-center text-ds-muted">
-                                                            {cert.expiry_date ? new Date(cert.expiry_date).toLocaleDateString() : (isRTL ? 'دائم' : 'Lifetime')}
-                                                        </td>
-                                                        <td className="py-3 px-4 text-center">
-                                                            {cert.status === 'revoked' ? (
-                                                                <span className="px-1.5 py-0.5 rounded bg-ds-danger-soft text-ds-danger text-[10px] font-semibold">
-                                                                    {isRTL ? 'ملغاة' : 'Revoked'}
-                                                                </span>
-                                                            ) : isExpired ? (
-                                                                <span className="px-1.5 py-0.5 rounded bg-ds-danger-soft text-ds-danger text-[10px] font-semibold">
-                                                                    {isRTL ? 'منتهية' : 'Expired'}
-                                                                </span>
-                                                            ) : isExpiring ? (
-                                                                <span className="px-1.5 py-0.5 rounded bg-ds-warning-soft text-ds-warning text-[10px] font-semibold">
-                                                                    {isRTL ? 'تنتهي قريباً' : 'Expiring Soon'}
-                                                                </span>
-                                                            ) : (
-                                                                <span className="px-1.5 py-0.5 rounded bg-ds-success-soft text-ds-success text-[10px] font-semibold">
-                                                                    {isRTL ? 'سارية' : 'Active'}
-                                                                </span>
-                                                            )}
-                                                        </td>
-                                                        <td className="py-3 px-4 text-end">
-                                                            <div className="flex items-center justify-end gap-1.5">
-                                                                <Button
-                                                                    variant="ghost"
-                                                                    size="sm"
-                                                                    onClick={() => setPreviewCertificate(cert)}
-                                                                    className="h-7 w-7 p-0 text-ds-muted hover:text-ds-ink hover:bg-ds-surface-subtle"
-                                                                    title={isRTL ? 'معاينة الشهادة' : 'Preview Certificate'}
-                                                                >
-                                                                    <Eye className="h-3.5 w-3.5" />
-                                                                </Button>
-                                                                <Button
-                                                                    variant="ghost"
-                                                                    size="sm"
-                                                                    onClick={() => handleDownloadCertificatePdf(cert)}
-                                                                    disabled={isGeneratingPdf}
-                                                                    className="h-7 w-7 p-0 text-ds-muted hover:text-ds-ink hover:bg-ds-surface-subtle"
-                                                                    title={isRTL ? 'طباعة / تنزيل PDF' : 'Download PDF'}
-                                                                >
-                                                                    <Download className="h-3.5 w-3.5" />
-                                                                </Button>
-                                                                {(isExpiring || isExpired) && cert.training_module_id && (
-                                                                    <Button
-                                                                        variant="outline"
-                                                                        size="sm"
-                                                                        onClick={() => setRecertTarget({
-                                                                            userId: cert.user_id,
-                                                                            userName: cert.recipient_name,
-                                                                            moduleId: cert.training_module_id,
-                                                                            moduleTitle: cert.title
-                                                                        })}
-                                                                        className="h-7 text-[11px] font-medium border-ds-warning/40 text-ds-warning bg-ds-warning-soft hover:bg-ds-warning-soft/80"
-                                                                    >
-                                                                        <RefreshCw className="me-1 h-3 w-3" />
-                                                                        {isRTL ? 'إعادة تأهيل' : 'Recertify'}
-                                                                    </Button>
-                                                                )}
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                )
-                                            })
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
             </Tabs>
 
             {/* ─── MODAL 1: COURSE DRILLDOWN INSPECTOR ─── */}
@@ -1421,7 +1003,7 @@ export function TrainingTrackCommandCenter({
                     <DialogHeader>
                         <div className="flex items-center justify-between pe-6">
                             <span className="px-2 py-0.5 rounded-[4px] bg-ds-accent-soft text-ds-accent font-semibold text-xs border border-ds-accent/30">
-                                {isRTL ? 'تحليل مسار المقرر' : 'Course Performance Inspector'}
+                                {t('tracking.cc.courseDetails', 'Course details')}
                             </span>
                             <span className="text-xs text-ds-muted">{selectedModuleForDrilldown?.durationMinutes} mins</span>
                         </div>
@@ -1429,7 +1011,7 @@ export function TrainingTrackCommandCenter({
                             {selectedModuleForDrilldown?.title}
                         </DialogTitle>
                         <DialogDescription className="text-xs text-ds-muted">
-                            {selectedModuleForDrilldown?.description || (isRTL ? 'تحليل تفصيلي لمعدل إكمال الخطوات والتسرب وقائمة المتدربين' : 'Detailed block retention funnel and learner engagement data')}
+                            {selectedModuleForDrilldown?.description || (t('tracking.cc.courseDetailsHint', 'How many people finish each step, and who is enrolled.'))}
                         </DialogDescription>
                     </DialogHeader>
 
@@ -1438,19 +1020,19 @@ export function TrainingTrackCommandCenter({
                             {/* Summary Metrics */}
                             <div className="grid grid-cols-4 gap-3 text-center">
                                 <div className="rounded-[6px] bg-ds-surface-subtle p-3 border border-ds-border">
-                                    <div className="text-xs text-ds-muted font-medium">{isRTL ? 'المسجلون' : 'Enrollments'}</div>
+                                    <div className="text-xs text-ds-muted font-medium">{t('tracking.cc.enrolled', 'Enrolled')}</div>
                                     <div className="text-xl font-bold font-mono text-ds-ink mt-1">{selectedModuleForDrilldown.enrolled}</div>
                                 </div>
                                 <div className="rounded-[6px] bg-ds-surface-subtle p-3 border border-ds-border">
-                                    <div className="text-xs text-ds-muted font-medium">{isRTL ? 'المكتمل' : 'Completed'}</div>
+                                    <div className="text-xs text-ds-muted font-medium">{t('tracking.cc.completedLabel', 'Completed')}</div>
                                     <div className="text-xl font-bold font-mono text-ds-success mt-1">{selectedModuleForDrilldown.completed}</div>
                                 </div>
                                 <div className="rounded-[6px] bg-ds-surface-subtle p-3 border border-ds-border">
-                                    <div className="text-xs text-ds-muted font-medium">{isRTL ? 'نسبة الإكمال' : 'Completion Rate'}</div>
+                                    <div className="text-xs text-ds-muted font-medium">{t('tracking.cc.completionRateDetail', 'Completion rate')}</div>
                                     <div className="text-xl font-bold font-mono text-ds-ink mt-1">{selectedModuleForDrilldown.completionRate}%</div>
                                 </div>
                                 <div className="rounded-[6px] bg-ds-surface-subtle p-3 border border-ds-border">
-                                    <div className="text-xs text-ds-muted font-medium">{isRTL ? 'متوسط الدرجة' : 'Avg Quiz Score'}</div>
+                                    <div className="text-xs text-ds-muted font-medium">{t('tracking.cc.avgQuizScore', 'Avg quiz score')}</div>
                                     <div className="text-xl font-bold font-mono text-ds-ink mt-1">{selectedModuleForDrilldown.avgScore ?? '—'}%</div>
                                 </div>
                             </div>
@@ -1458,11 +1040,11 @@ export function TrainingTrackCommandCenter({
                             {/* Block Retention & Drop-Off Funnel */}
                             <div className="space-y-3">
                                 <h4 className="text-sm font-semibold text-ds-ink flex items-center justify-between">
-                                    <span>{isRTL ? 'مسار استبقاء وإكمال خطوات المقرر (Funnel)' : 'Step-by-Step Drop-Off & Retention Funnel'}</span>
-                                    <span className="text-xs text-ds-muted font-normal">{selectedModuleForDrilldown.blocks.length} {isRTL ? 'خطوات' : 'content blocks'}</span>
+                                    <span>{t('tracking.cc.stepsTitle', 'Step by step')}</span>
+                                    <span className="text-xs text-ds-muted font-normal">{selectedModuleForDrilldown.blocks.length} {t('tracking.cc.steps', 'steps')}</span>
                                 </h4>
                                 {selectedModuleForDrilldown.blocks.length === 0 ? (
-                                    <p className="text-xs text-ds-muted py-4 text-center">{isRTL ? 'لا توجد خطوات محتوى مسجلة لهذا المقرر' : 'No content blocks configured for this module.'}</p>
+                                    <p className="text-xs text-ds-muted py-4 text-center">{t('tracking.cc.noSteps', 'This course has no steps yet.')}</p>
                                 ) : (
                                     <div className="space-y-2">
                                         {selectedModuleForDrilldown.blocks.map((block: any) => (
@@ -1472,7 +1054,7 @@ export function TrainingTrackCommandCenter({
                                                         <Badge variant="outline" className="text-[10px] bg-ds-surface border-ds-border">#{block.order}</Badge>
                                                         {block.title}
                                                     </span>
-                                                    <span className="text-ds-accent font-mono font-bold">{block.retentionRate}% {isRTL ? 'أكملوا الخطوة' : 'retained'}</span>
+                                                    <span className="text-ds-accent font-mono font-bold">{block.retentionRate}% {t('tracking.cc.finished', 'finished')}</span>
                                                 </div>
                                                 <div className="h-1.5 w-full bg-ds-border rounded-full overflow-hidden">
                                                     <div
@@ -1493,11 +1075,11 @@ export function TrainingTrackCommandCenter({
                             {/* Enrolled Learners Roster for this module */}
                             <div className="space-y-3">
                                 <h4 className="text-sm font-semibold text-ds-ink">
-                                    {isRTL ? 'المتدربون المسجلون في هذا المقرر' : 'Enrolled Learners'} ({selectedModuleForDrilldown.learners.length})
+                                    {t('tracking.cc.enrolledPeople', 'Enrolled people')} ({selectedModuleForDrilldown.learners.length})
                                 </h4>
                                 <div className="max-h-48 overflow-y-auto border border-ds-border rounded-[6px] divide-y divide-ds-border/60 text-xs">
                                     {selectedModuleForDrilldown.learners.length === 0 ? (
-                                        <div className="p-4 text-center text-ds-muted">{isRTL ? 'لا يوجد متدربون مسجلون حالياً' : 'No learners currently assigned.'}</div>
+                                        <div className="p-4 text-center text-ds-muted">{t('tracking.cc.noEnrolled', 'Nobody is enrolled yet.')}</div>
                                     ) : (
                                         selectedModuleForDrilldown.learners.map((lr: any) => {
                                             const prof = lr.profiles as any
@@ -1532,7 +1114,7 @@ export function TrainingTrackCommandCenter({
                                 }}
                                 className="text-xs border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle"
                             >
-                                {isRTL ? 'تعديل المقرر في المحرر' : 'Open in Builder'}
+                                {t('tracking.cc.editCourse', 'Edit course')}
                             </Button>
                         )}
                         <Button onClick={() => setSelectedModuleForDrilldown(null)} className="text-xs bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90">
@@ -1547,20 +1129,20 @@ export function TrainingTrackCommandCenter({
                 <DialogContent className="max-w-lg border border-ds-border bg-ds-surface text-ds-ink">
                     <DialogHeader>
                         <span className="w-fit px-1.5 py-0.5 rounded bg-ds-danger-soft text-ds-danger text-[10px] font-semibold">
-                            {selectedQuestionForDetail?.accuracyRate}% {isRTL ? 'نسبة الإجابة الصحيحة' : 'Accuracy Rate'}
+                            {selectedQuestionForDetail?.accuracyRate}% {t('tracking.cc.accuracyRate', 'Answered correctly')}
                         </span>
                         <DialogTitle className="text-base font-semibold text-ds-ink pt-1">
                             {selectedQuestionForDetail?.category}
                         </DialogTitle>
                         <DialogDescription className="text-xs text-ds-muted">
-                            {isRTL ? 'تفاصيل السؤال المسجل كفجوة تدريبية بناءً على محاولات المتدربين' : 'Detailed breakdown of the question identified as a team knowledge gap'}
+                            {t('tracking.cc.questionHint', 'Many people answer this question wrong.')}
                         </DialogDescription>
                     </DialogHeader>
 
                     {selectedQuestionForDetail && (
                         <div className="space-y-4 pt-2 text-xs">
                             <div className="p-3 bg-ds-surface-subtle rounded-[6px] border border-ds-border">
-                                <span className="font-semibold text-ds-muted uppercase tracking-wider text-[10px]">{isRTL ? 'نص السؤال' : 'Question Prompt'}</span>
+                                <span className="font-semibold text-ds-muted uppercase tracking-wider text-[10px]">{t('tracking.cc.question', 'Question')}</span>
                                 <p className="font-semibold text-ds-ink mt-1 text-sm leading-relaxed">
                                     "{selectedQuestionForDetail.questionText}"
                                 </p>
@@ -1569,7 +1151,7 @@ export function TrainingTrackCommandCenter({
                             <div className="p-3 bg-ds-accent-soft/30 rounded-[6px] border border-ds-accent/30">
                                 <span className="font-semibold text-ds-accent uppercase tracking-wider text-[10px] flex items-center gap-1">
                                     <Sparkles className="h-3 w-3 text-ds-accent" />
-                                    {isRTL ? 'التوجيه المعياري المعتمد (SOP)' : 'Official SOP Explanation & Guidance'}
+                                    {t('tracking.cc.explanation', 'Explanation')}
                                 </span>
                                 <p className="text-ds-ink mt-1 leading-relaxed">
                                     {selectedQuestionForDetail.explanation}
@@ -1577,7 +1159,7 @@ export function TrainingTrackCommandCenter({
                             </div>
 
                             <div className="text-[11px] text-ds-muted">
-                                {isRTL ? `تم تحليل ${selectedQuestionForDetail.attempts} محاولة إجابة مسجلة من موظفي الفنادق.` : `Analyzed across ${selectedQuestionForDetail.attempts} recorded staff quiz attempts.`}
+                                {t('tracking.cc.basedOnAttempts', 'Based on {{count}} answers.', { count: selectedQuestionForDetail.attempts })}
                             </div>
                         </div>
                     )}
@@ -1590,110 +1172,6 @@ export function TrainingTrackCommandCenter({
                 </DialogContent>
             </Dialog>
 
-            {/* ─── MODAL 3: CERTIFICATE PREVIEW MODAL ─── */}
-            <Dialog open={!!previewCertificate} onOpenChange={(open) => !open && setPreviewCertificate(null)}>
-                <DialogContent className="max-w-md border border-ds-border bg-ds-surface text-ds-ink">
-                    <DialogHeader>
-                        <span className="w-fit px-1.5 py-0.5 rounded bg-ds-success-soft text-ds-success text-[10px] font-semibold">
-                            {isRTL ? 'شهادة معتمدة موثقة' : 'Verified Official Certificate'}
-                        </span>
-                        <DialogTitle className="text-base font-semibold text-ds-ink pt-1">
-                            {previewCertificate?.title}
-                        </DialogTitle>
-                        <DialogDescription className="text-xs font-mono text-ds-muted">
-                            {previewCertificate?.certificate_number}
-                        </DialogDescription>
-                    </DialogHeader>
-
-                    {previewCertificate && (
-                        <div className="space-y-4 pt-2 text-xs">
-                            <div className="rounded-[8px] border-2 border-ds-brass/40 bg-ds-surface-subtle p-5 text-center space-y-3">
-                                <Award className="h-10 w-10 text-ds-accent mx-auto" />
-                                <div>
-                                    <div className="text-[10px] uppercase tracking-widest text-ds-muted font-semibold">{isRTL ? 'تمنح هذه الشهادة إلى' : 'This Certificate is Presented To'}</div>
-                                    <div className="text-lg font-bold text-ds-ink mt-1">{previewCertificate.recipient_name}</div>
-                                </div>
-                                <div className="text-xs text-ds-muted leading-relaxed">
-                                    {previewCertificate.title}
-                                </div>
-                                <div className="flex items-center justify-center gap-4 text-[11px] text-ds-muted pt-2 border-t border-ds-border/60">
-                                    <span>{isRTL ? 'تاريخ الإنجاز' : 'Issued'}: {new Date(previewCertificate.completion_date || previewCertificate.created_at).toLocaleDateString()}</span>
-                                    {previewCertificate.score && <span>{isRTL ? 'الدرجة' : 'Score'}: <strong>{previewCertificate.score}%</strong></span>}
-                                </div>
-                            </div>
-
-                            <div className="flex items-center justify-between p-2.5 bg-ds-surface-subtle rounded-[6px] border border-ds-border text-[11px] text-ds-ink">
-                                <span>{isRTL ? 'رمز التحقق الرقمي' : 'Verification Code'}: <strong className="font-mono">{previewCertificate.verification_code}</strong></span>
-                                <span className="px-1.5 py-0.5 rounded bg-ds-success-soft text-ds-success text-[10px] font-semibold">
-                                    {isRTL ? 'صالح وموثق' : 'Authentic'}
-                                </span>
-                            </div>
-                        </div>
-                    )}
-
-                    <DialogFooter className="gap-2">
-                        <Button
-                            onClick={() => handleDownloadCertificatePdf(previewCertificate)}
-                            disabled={isGeneratingPdf}
-                            className="bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90 text-xs"
-                        >
-                            {isGeneratingPdf ? <Loader2 className="me-1.5 h-3.5 w-3.5 animate-spin" /> : <Download className="me-1.5 h-3.5 w-3.5" />}
-                            {isRTL ? 'تنزيل PDF الرسمي' : 'Download PDF'}
-                        </Button>
-                        <Button variant="outline" onClick={() => setPreviewCertificate(null)} className="text-xs border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle">
-                            {t('common:action.close', 'Close')}
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-
-            {/* ─── MODAL 4: RECERTIFICATION DIALOG ─── */}
-            <Dialog open={!!recertTarget} onOpenChange={(open) => !open && setRecertTarget(null)}>
-                <DialogContent className="max-w-md border border-ds-border bg-ds-surface text-ds-ink">
-                    <DialogHeader>
-                        <div className="flex items-center gap-2">
-                            <RefreshCw className="h-5 w-5 text-ds-accent" />
-                            <DialogTitle className="text-base font-semibold text-ds-ink">
-                                {isRTL ? 'إعادة تكليف الموظف بالشهادة' : 'Trigger Recertification Assignment'}
-                            </DialogTitle>
-                        </div>
-                        <DialogDescription className="text-xs text-ds-muted">
-                            {isRTL ? 'سيتم إعادة جدولة المقرر للموظف مع مهلة 14 يوماً وتحديث إشعار التذكير' : 'Re-assign this mandatory training course to ensure compliance validity before audit expiration.'}
-                        </DialogDescription>
-                    </DialogHeader>
-
-                    {recertTarget && (
-                        <div className="p-3 bg-ds-surface-subtle rounded-[6px] border border-ds-border text-xs space-y-2">
-                            <div>
-                                <span className="text-ds-muted font-medium">{isRTL ? 'الموظف' : 'Employee'}:</span>{' '}
-                                <strong className="text-ds-ink">{recertTarget.userName}</strong>
-                            </div>
-                            <div>
-                                <span className="text-ds-muted font-medium">{isRTL ? 'المقرر' : 'Course'}:</span>{' '}
-                                <strong className="text-ds-ink">{recertTarget.moduleTitle}</strong>
-                            </div>
-                            <div>
-                                <span className="text-ds-muted font-medium">{isRTL ? 'المهلة' : 'Due Window'}:</span>{' '}
-                                <span className="text-ds-accent font-semibold">{isRTL ? '14 يوماً من اليوم' : '14 Days (Standard)'}</span>
-                            </div>
-                        </div>
-                    )}
-
-                    <DialogFooter>
-                        <Button variant="outline" onClick={() => setRecertTarget(null)} className="text-xs border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle">
-                            {t('common:action.cancel', 'Cancel')}
-                        </Button>
-                        <Button
-                            onClick={() => recertifyMutation.mutate({ userId: recertTarget.userId, moduleId: recertTarget.moduleId })}
-                            disabled={recertifyMutation.isPending}
-                            className="bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90 text-xs font-semibold"
-                        >
-                            {recertifyMutation.isPending ? <Loader2 className="me-1.5 h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="me-1.5 h-3.5 w-3.5" />}
-                            {isRTL ? 'تأكيد التكليف' : 'Confirm Recertification'}
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </div>
     )
 }

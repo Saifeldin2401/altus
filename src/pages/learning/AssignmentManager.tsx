@@ -714,7 +714,7 @@ export default function AssignmentManager() {
                 </DialogContent>
             </Dialog>
 
-            <div className="border rounded-lg bg-white overflow-hidden shadow-sm">
+            <div className="border rounded-lg bg-ds-surface overflow-hidden shadow-sm">
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm text-start">
                         <thead className="bg-ds-surface-subtle border-b">
