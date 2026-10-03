@@ -8,13 +8,12 @@ import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { useAuth } from '@/hooks/useAuth'
 import { aiService } from '@/lib/gemini'
-import { cn } from '@/lib/utils'
 import {
   generateAndLinkCheckpointQuestions,
   createCheckpointQuiz,
   deleteQuiz
 } from '@/services/checkpointQuizGenerator'
-import { CheckCircle2, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
+import { CheckCircle2, ChevronLeft, ChevronRight, Info, Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { AIQuizDialog } from './components/builder/AIQuizDialog'
@@ -76,11 +75,18 @@ function TrainingBuilderInner() {
         })
       )
       toast({
-        title: '✨ Deep SOP Expanded',
-        description: `Generated comprehensive 5-star operational procedure for: ${block.title || 'lesson'}`,
+        title: t('builder.editor.lesson.expanded', 'Lesson expanded'),
+        description: t('builder.editor.lesson.expandedDesc', {
+          name: block.title || sec.title,
+          defaultValue: 'AI rewrote “{{name}}” as a full procedure. Review it before publishing.',
+        }),
       })
     } catch (e) {
       console.error('Failed to deep expand lesson:', e)
+      toast({
+        title: t('builder.editor.lesson.expandFailed', 'Could not expand this lesson. Try again in a moment.'),
+        variant: 'destructive',
+      })
     }
   }
 
@@ -228,17 +234,17 @@ function TrainingBuilderInner() {
 
       {/* Draft restore banner */}
       {ctx.showRestorePrompt && (
-        <div className="bg-ds-surface border-b border-ds-border p-3 text-ds-ink shadow-2xs">
-          <div className="container mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Loader2 className="w-4 h-4 text-ds-accent animate-spin" />
+        <div className="shrink-0 border-b border-ds-info/30 bg-ds-info-soft px-3 py-2 text-ds-ink lg:px-5">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex min-w-0 items-center gap-2">
+              <Info className="h-4 w-4 shrink-0 text-ds-info" />
               <span className="text-xs font-medium text-ds-ink">
-                {t('builder.draftRestoredBanner', 'Draft training module restored from previous session')}
+                {t('builder.draftRestoredBanner', 'We restored a draft from your last session on this device.')}
               </span>
             </div>
             <div className="flex gap-2">
-              <Button variant="ghost" size="sm" className="h-7 text-xs text-ds-muted hover:text-ds-ink hover:bg-ds-surface-subtle" onClick={() => ctx.setShowRestorePrompt(false)}>{t('builder.keepDraft', 'Keep')}</Button>
-              <Button variant="outline" size="sm" className="h-7 text-xs border-ds-border text-ds-ink hover:bg-ds-surface-subtle" onClick={() => {
+              <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => ctx.setShowRestorePrompt(false)}>{t('builder.keepDraft', 'Keep draft')}</Button>
+              <Button variant="outline" size="sm" className="h-7 text-xs" onClick={() => {
                 ctx.clearDraft()
                 // Only blank the form for a brand new, never-saved module -- for an
                 // existing module this banner means "we recovered a newer local
@@ -248,7 +254,7 @@ function TrainingBuilderInner() {
                   ctx.setTitle(''); ctx.setDescription(''); ctx.setSections([])
                 }
                 ctx.setShowRestorePrompt(false)
-              }}>{t('builder.clearDraftBtn', 'Clear Draft')}</Button>
+              }}>{t('builder.clearDraftBtn', 'Discard draft')}</Button>
             </div>
           </div>
         </div>
@@ -259,6 +265,8 @@ function TrainingBuilderInner() {
         title={ctx.title}
         isSaving={ctx.builderBusy}
         hasUnsavedChanges={ctx.hasUnsavedChanges}
+        isPersisted={!!ctx.moduleId}
+        status={ctx.moduleStatus}
         onSave={ctx.handleSave}
         onPreview={() => ctx.handleStepChange('preview')}
         onMagic={() => ctx.setShowSmartWizard(true)}
@@ -283,59 +291,58 @@ function TrainingBuilderInner() {
         <main className="flex-1 min-w-0 overflow-y-auto flex flex-col justify-between">
           <div className="flex-1">{renderStepContent()}</div>
 
-          {/* Sticky Step Navigation Footer Bar */}
-          <footer className="sticky bottom-0 z-30 border-t border-ds-border bg-ds-surface/95 supports-[backdrop-filter]:bg-ds-surface/80 py-3 px-4 md:px-8 shadow-xs">
-            <div className={cn("max-w-4xl mx-auto flex items-center justify-between gap-4")}>
-              <div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={ctx.goPrevStep}
-                  disabled={ctx.currentStepIndex <= 0}
-                  className="h-8 text-xs font-semibold border-ds-border text-ds-ink hover:bg-ds-surface-subtle"
-                >
-                  <ChevronLeft className={cn("h-3.5 w-3.5", "me-1.5 rtl:rotate-180")} />
-                  <span>{t('builder.back', 'Back')}</span>
+          {/* Step navigation */}
+          <footer className="sticky bottom-0 z-30 border-t border-ds-border bg-ds-surface px-3 py-2.5 md:px-6">
+            <div className="mx-auto flex max-w-3xl items-center justify-between gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={ctx.goPrevStep}
+                disabled={ctx.currentStepIndex <= 0}
+                className="h-9"
+              >
+                <ChevronLeft className="h-3.5 w-3.5 rtl:rotate-180" />
+                <span>{t('builder.editor.backStep', 'Back')}</span>
+              </Button>
+
+              <p className="hidden min-w-0 truncate text-center text-xs text-ds-muted sm:block">
+                <span className="font-semibold text-ds-ink-secondary">
+                  {t('builder.editor.stepOf', {
+                    current: ctx.currentStepIndex + 1,
+                    total: ctx.steps.length,
+                    defaultValue: 'Step {{current}} of {{total}}',
+                  })}
+                </span>
+                {ctx.steps[ctx.currentStepIndex]?.description && <> · {ctx.steps[ctx.currentStepIndex]?.description}</>}
+              </p>
+
+              {ctx.currentStepIndex < ctx.steps.length - 1 ? (
+                <Button size="sm" onClick={ctx.goNextStep} className="h-9">
+                  <span>
+                    {t('builder.editor.next', {
+                      step: ctx.steps[ctx.currentStepIndex + 1]?.label,
+                      defaultValue: 'Next: {{step}}',
+                    })}
+                  </span>
+                  <ChevronRight className="h-3.5 w-3.5 rtl:rotate-180" />
                 </Button>
-              </div>
-
-              <div className="text-xs text-ds-muted text-center hidden sm:block">
-                <span>{ctx.steps[ctx.currentStepIndex]?.description}</span>
-              </div>
-
-              <div className={cn("flex items-center gap-2")}>
-                {ctx.currentStepIndex < ctx.steps.length - 1 ? (
-                  <Button
-                    size="sm"
-                    onClick={ctx.goNextStep}
-                    className="h-8 px-4 text-xs font-semibold bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90 shadow-2xs"
-                  >
-                    <span>
-                      {t('builder.nextStep', {
-                        defaultValue: `Next: ${ctx.steps[ctx.currentStepIndex + 1]?.label || 'Next'}`,
-                        step: ctx.steps[ctx.currentStepIndex + 1]?.label,
-                      })}
-                    </span>
-                    <ChevronRight className={cn("h-3.5 w-3.5", "ms-1.5 rtl:rotate-180")} />
-                  </Button>
-                ) : (
-                  <Button
-                    size="sm"
-                    onClick={ctx.publishTraining}
-                    disabled={!ctx.publishReady || ctx.builderBusy}
-                    className="h-8 px-4 text-xs font-semibold bg-ds-accent text-white dark:text-ds-on-ink hover:bg-ds-accent-hover shadow-2xs disabled:opacity-50"
-                  >
-                    <CheckCircle2 className={cn("h-3.5 w-3.5", "me-1.5")} />
-                    <span>{t('builder.publish', 'Publish Course')}</span>
-                  </Button>
-                )}
-              </div>
+              ) : (
+                <Button
+                  size="sm"
+                  onClick={ctx.publishTraining}
+                  disabled={!ctx.publishReady || ctx.builderBusy}
+                  className="h-9"
+                >
+                  {ctx.builderBusy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <CheckCircle2 className="h-3.5 w-3.5" />}
+                  <span>{t('builder.editor.publish', 'Publish course')}</span>
+                </Button>
+              )}
             </div>
           </footer>
         </main>
 
         {/* Right sidebar */}
-        <BuilderSidebar className="hidden lg:flex w-[260px] xl:w-[280px] shrink-0 border-s border-ds-border bg-ds-surface">
+        <BuilderSidebar className="hidden lg:flex w-[280px] xl:w-[300px] shrink-0 border-s border-ds-border bg-ds-surface">
           <RightPanel
             builderStep={ctx.builderStep} sections={ctx.sections} totalItems={ctx.totalItems}
             totalPoints={ctx.totalPoints} displayDuration={ctx.displayDuration}

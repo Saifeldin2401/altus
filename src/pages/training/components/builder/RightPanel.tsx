@@ -1,31 +1,6 @@
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { ModuleSkillsEditor } from '@/components/training/ModuleSkillsEditor'
 import { cn } from '@/lib/utils'
-import {
-  AlertTriangle,
-  Award,
-  BookOpen,
-  CheckCircle2,
-  Clock,
-  Eye,
-  FileCheck,
-  FileQuestion,
-  FileText,
-  Headphones,
-  HelpCircle,
-  Layers,
-  ListChecks,
-  MessageSquare,
-  ShieldCheck,
-  Sparkles,
-  Target,
-  Video,
-  Zap
-} from 'lucide-react'
+import { Award, BookOpen, Check, ChevronRight, RotateCcw, Target } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { BuilderStep, TrainingSection } from './trainingBuilderTypes'
 import { VersionHistoryCard } from './VersionHistoryCard'
@@ -51,13 +26,69 @@ interface RightPanelProps {
   activeSection?: string | null
 }
 
+function RailSection({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) {
+  return (
+    <section className={cn('space-y-3 border-b border-ds-border px-4 py-4 last:border-b-0', className)}>
+      <h2 className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ds-muted">{title}</h2>
+      {children}
+    </section>
+  )
+}
+
+function Readiness({ checklist }: { checklist: RightPanelProps['validationChecklist'] }) {
+  const { t } = useTranslation('training')
+  const done = checklist.filter((c) => c.ok).length
+  const total = checklist.length
+  const pct = Math.round((done / (total || 1)) * 100)
+  const complete = done === total
+
+  return (
+    <RailSection title={t('builder.editor.rail.readiness', 'Ready to publish?')}>
+      <div className="space-y-1.5">
+        <div className="flex items-baseline justify-between gap-2 text-xs">
+          <span className="font-semibold text-ds-ink">
+            {complete
+              ? t('builder.editor.rail.allDone', 'Everything is in place.')
+              : t('builder.editor.rail.progress', { done, total, defaultValue: '{{done}} of {{total}} done' })}
+          </span>
+          <span className="tabular-nums text-ds-muted">{pct}%</span>
+        </div>
+        <div
+          className="h-1.5 overflow-hidden rounded-full bg-ds-surface-subtle"
+          role="progressbar"
+          aria-valuenow={pct}
+          aria-valuemin={0}
+          aria-valuemax={100}
+        >
+          <div
+            className={cn('h-full rounded-full transition-[width]', complete ? 'bg-ds-success' : 'bg-ds-ink')}
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+      </div>
+      <ul className="space-y-2">
+        {checklist.map((item) => (
+          <li key={item.key} className="flex items-center gap-2 text-xs">
+            {item.ok ? (
+              <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-ds-success-soft text-ds-success">
+                <Check className="h-2.5 w-2.5" strokeWidth={3} />
+              </span>
+            ) : (
+              <span className="h-4 w-4 shrink-0 rounded-full border border-dashed border-ds-border-strong" aria-hidden />
+            )}
+            <span className={item.ok ? 'text-ds-muted' : 'font-medium text-ds-ink'}>{item.label}</span>
+          </li>
+        ))}
+      </ul>
+    </RailSection>
+  )
+}
+
 export function RightPanel({
   builderStep,
   sections,
   totalItems,
-  totalPoints,
   displayDuration,
-  overrideDuration,
   calculatedDuration,
   certificateEnabled,
   passingScore,
@@ -65,278 +96,108 @@ export function RightPanel({
   maxAttempts,
   validationChecklist,
   moduleId,
-  openAIGeneratorForModule,
-  setShowSmartWizard,
   setShowKBSidebar,
   isRTL,
-  activeSection,
 }: RightPanelProps) {
   const { t } = useTranslation('training')
 
-  const totalQuizzes = sections.reduce(
-    (acc, s) => acc + s.items.filter((i) => i.type === 'quiz').length,
-    0
-  )
+  const totalQuizzes = sections.reduce((acc, s) => acc + s.items.filter((i) => i.type === 'quiz').length, 0)
+  const minutes = displayDuration || calculatedDuration || 0
 
-  const passedChecksCount = validationChecklist.filter((c) => c.ok).length
-  const totalChecksCount = validationChecklist.length
-  const remainingChecksCount = Math.max(0, totalChecksCount - passedChecksCount)
-  const healthPercentage = Math.round((passedChecksCount / (totalChecksCount || 1)) * 100)
-
-  // -------------------------------------------------------------------------
-  // Content Step (Course Editor) Sidebar
-  // -------------------------------------------------------------------------
   if (builderStep === 'content') {
     return (
-      <div className={cn("p-3 space-y-3 w-full max-w-full box-border", "text-start")}>
-        {/* Course Health & Readiness Card */}
-        <Card className="w-full shadow-xs border-ds-border bg-ds-surface overflow-hidden">
-          <CardHeader className="pb-2 pt-3 px-3">
-            <div className={cn("flex items-center justify-between gap-1.5")}>
-              <CardTitle className="text-xs font-bold uppercase tracking-wider text-ds-ink-secondary flex items-center gap-1.5 shrink-0">
-                <Target className="w-3.5 h-3.5 text-ds-warning shrink-0" />
-                <span>{t('builder.courseReadiness', 'Course Health')}</span>
-              </CardTitle>
-              <Badge variant="outline" className="text-[11px] font-bold text-ds-ink shrink-0 px-1.5 py-0.5">
-                {passedChecksCount}/{totalChecksCount}
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent className="px-3 pb-3 space-y-1.5">
-            <Progress value={healthPercentage} className="h-1.5 bg-ds-surface-subtle" />
-            <p className="text-[11px] text-muted-foreground">
-              {healthPercentage === 100
-                ? t('builder.readyToPublish', 'Ready for review & publishing')
-                : t('builder.incompleteReadiness', {
-                    count: remainingChecksCount,
-                    defaultValue: `${remainingChecksCount} required items remaining`,
-                  })}
-            </p>
-          </CardContent>
-        </Card>
+      <div className="w-full text-start">
+        <Readiness checklist={validationChecklist} />
 
-        {/* Course Curriculum Snapshot */}
-        <Card className="w-full shadow-xs border-ds-border bg-ds-surface overflow-hidden">
-          <CardHeader className="pb-2 pt-3 px-3">
-            <CardTitle className={cn("text-xs font-bold uppercase tracking-wider text-ds-ink-secondary flex items-center gap-1.5")}>
-              <Layers className="w-3.5 h-3.5 text-ds-muted shrink-0" />
-              <span>{t('builder.courseSnapshot', 'Curriculum Stats')}</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-3 pb-3 space-y-2 text-xs">
-            <div className={cn("flex items-center justify-between gap-1.5")}>
-              <span className="text-muted-foreground text-[11px]">{t('builder.sectionsCount', 'Sections')}</span>
-              <Badge variant="secondary" className="font-semibold text-[11px] px-2 py-0.5 shrink-0 whitespace-nowrap bg-ds-surface-subtle">
-                {sections.length}
-              </Badge>
-            </div>
-            <div className={cn("flex items-center justify-between gap-1.5")}>
-              <span className="text-muted-foreground text-[11px]">{t('builder.lessonsCount', 'Lesson Items')}</span>
-              <Badge variant="secondary" className="font-semibold text-[11px] px-2 py-0.5 shrink-0 whitespace-nowrap bg-ds-surface-subtle">
-                {totalItems}
-              </Badge>
-            </div>
-            <div className={cn("flex items-center justify-between gap-1.5")}>
-              <span className="text-muted-foreground text-[11px]">{t('builder.quizzesCount', 'Quiz Checkpoints')}</span>
-              <Badge variant="outline" className="font-semibold text-[11px] px-2 py-0.5 shrink-0 whitespace-nowrap text-ds-accent bg-ds-accent-soft border-ds-accent/30">
-                {totalQuizzes}
-              </Badge>
-            </div>
-            <div className={cn("flex items-center justify-between gap-1.5")}>
-              <span className="text-muted-foreground text-[11px]">{t('builder.estimatedTime', 'Est. Duration')}</span>
-              <Badge variant="secondary" className="font-semibold text-[11px] px-2 py-0.5 shrink-0 whitespace-nowrap flex items-center gap-1 bg-ds-surface-subtle">
-                <Clock className="w-3 h-3 text-ds-muted shrink-0" />
-                <span>{displayDuration || calculatedDuration || 0}m</span>
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* AI Quick Actions Card */}
-        <Card className="w-full shadow-xs border-ds-warning/30 bg-ds-warning-soft/50 overflow-hidden">
-          <CardHeader className="pb-2 pt-3 px-3">
-            <CardTitle className={cn("text-xs font-bold uppercase tracking-wider text-ds-warning flex items-center gap-1.5")}>
-              <Sparkles className="w-3.5 h-3.5 text-ds-warning shrink-0" />
-              <span>{t('builder.smartAiAssistant', 'Smart AI Assistant')}</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-3 pb-3 space-y-2">
-            <Button
-              className={cn("w-full bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink font-bold text-xs shadow-xs border-none h-8 px-2 flex items-center justify-center gap-1.5")}
-              onClick={() => setShowSmartWizard(true)}
-            >
-              <Sparkles className="w-3.5 h-3.5 shrink-0 text-ds-ink" />
-              <span className="truncate">{t('builder.openSmartAiModal', 'AI Course Generator')}</span>
-            </Button>
-            {setShowKBSidebar && (
-              <Button
-                variant="outline"
-                className={cn("w-full border-ds-success/30 text-ds-success hover:bg-ds-success-soft text-xs font-semibold h-8 px-2 flex items-center justify-center gap-1.5")}
-                onClick={() => setShowKBSidebar(true)}
-              >
-                <BookOpen className="w-3.5 h-3.5 shrink-0 text-ds-success" />
-                <span className="truncate">{t('builder.browseKnowledgeBase', 'Knowledge Base Bank')}</span>
-              </Button>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Live Section Preview Card */}
-        {(() => {
-          const currentSection = sections.find((s) => s.id === activeSection) || sections[0]
-          if (!currentSection || currentSection.items.length === 0) return null
-
-          return (
-            <Card className="w-full shadow-xs border-ds-border bg-ds-surface overflow-hidden">
-              <CardHeader className="pb-2 pt-3 px-3">
-                <CardTitle className={cn(
-                  'text-xs font-bold uppercase tracking-wider text-ds-ink-secondary flex items-center gap-1.5'
-                )}>
-                  <Eye className="w-3.5 h-3.5 text-ds-muted shrink-0" />
-                  <span className="truncate">{t('builder.inlinePreview.livePreview', 'Active Section Preview')}</span>
-                </CardTitle>
-                <p className="text-[11px] text-muted-foreground truncate">
-                  {currentSection.title}
-                </p>
-              </CardHeader>
-              <CardContent className="p-0">
-                <ScrollArea className="max-h-[220px] px-2.5 pb-2.5">
-                  <div className="space-y-1.5">
-                    {currentSection.items.slice(0, 5).map((item) => {
-                      const iconMap: Record<string, React.ReactNode> = {
-                        text: <FileText className="w-3 h-3 text-ds-info" />,
-                        video: <Video className="w-3 h-3 text-ds-danger" />,
-                        quiz: <FileQuestion className="w-3 h-3 text-ds-accent" />,
-                        audio: <Headphones className="w-3 h-3 text-ds-info" />,
-                        sop_reference: <BookOpen className="w-3 h-3 text-ds-success" />,
-                        assignment: <FileCheck className="w-3 h-3 text-ds-warning" />,
-                        practical: <FileCheck className="w-3 h-3 text-ds-warning" />,
-                        roleplay: <MessageSquare className="w-3 h-3 text-ds-warning" />,
-                      }
-
-                      return (
-                        <div key={item.id} className="flex items-start gap-1.5 p-1.5 rounded-lg bg-ds-surface-subtle border border-ds-border">
-                          <div className="w-5 h-5 rounded bg-ds-surface flex items-center justify-center shrink-0 border border-ds-border mt-0.5">
-                            {iconMap[item.type] || <FileText className="w-3 h-3 text-ds-muted" />}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-[11px] font-semibold text-ds-ink truncate">
-                              {item.title || t('builder.untitledBlock', 'Untitled')}
-                            </p>
-                            {item.type === 'text' && item.content && (
-                              <p className="text-[11px] text-muted-foreground line-clamp-1 mt-0.5">
-                                {item.content.replace(/<[^>]*>/g, '').slice(0, 60)}
-                              </p>
-                            )}
-                            {item.type === 'quiz' && (
-                              <p className="text-[11px] text-ds-accent mt-0.5">
-                                {t('builder.inlinePreview.quizCheckpoint', 'Quiz checkpoint')}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      )
-                    })}
-                    {currentSection.items.length > 5 && (
-                      <p className="text-[11px] text-center text-muted-foreground pt-1">
-                        +{currentSection.items.length - 5} {t('builder.inlinePreview.moreItems', 'more items')}
-                      </p>
-                    )}
-                  </div>
-                </ScrollArea>
-              </CardContent>
-            </Card>
-          )
-        })()}
-
-        {/* Hotel Skills Mapping */}
-        <Card className="w-full shadow-xs border-ds-border bg-ds-surface overflow-hidden">
-          <CardContent className="p-3">
-            <ModuleSkillsEditor moduleId={moduleId || ''} />
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
-  // -------------------------------------------------------------------------
-  // Rules Step Sidebar
-  // -------------------------------------------------------------------------
-  if (builderStep === 'rules') {
-    return (
-      <div className={cn("p-3 space-y-3 w-full max-w-full box-border", "text-start")}>
-        <Card className="w-full shadow-xs border-ds-border bg-ds-surface overflow-hidden">
-          <CardHeader className="pb-2 pt-3 px-3">
-            <CardTitle className={cn("text-xs font-bold uppercase tracking-wider text-ds-ink-secondary flex items-center gap-1.5")}>
-              <ShieldCheck className="w-3.5 h-3.5 text-ds-warning shrink-0" />
-              <span>{t('builder.rulesSummary', 'Configured Rules Summary')}</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-3 pb-3 space-y-2.5 text-xs text-ds-ink-secondary">
-            <div className="flex items-center gap-2">
-              <Award className={cn("w-4 h-4 shrink-0", certificateEnabled ? "text-ds-warning" : "text-ds-muted")} />
-              <span>{certificateEnabled ? t('builder.certEnabled', 'Official Certificate Enabled') : t('builder.certDisabled', 'Certificate Disabled')}</span>
-            </div>
-            {certificateEnabled && (
-              <div className="flex items-center gap-2">
-                <Target className="w-4 h-4 shrink-0 text-ds-success" />
-                <span>{t('builder.passScoreSummary', { score: passingScore || '80' })}</span>
-              </div>
-            )}
-            <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4 shrink-0 text-ds-info" />
-              <span>{t('builder.retakeSummary', { count: allowRetake ? Number(maxAttempts || 3) : 0 })}</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* 5-Star Hotel Training Recommendations */}
-        <Card className="w-full shadow-xs border-ds-border bg-ds-surface-subtle/50 overflow-hidden">
-          <CardHeader className="pb-2 pt-3 px-3">
-            <CardTitle className={cn("text-xs font-bold uppercase tracking-wider text-ds-ink-secondary flex items-center gap-1.5")}>
-              <HelpCircle className="w-3.5 h-3.5 text-ds-muted shrink-0" />
-              <span>{t('builder.bestPractices', 'ALTUS Guidelines')}</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-3 pb-3 space-y-2 text-[11px] text-muted-foreground leading-relaxed">
-            <p>• Mandatory compliance courses require an 80%+ passing score.</p>
-            <p>• Department SOPs should provide at least 3 retry attempts for optimal retention.</p>
-            <p>• Annual validity (365 days) is recommended for safety & hygiene.</p>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
-  // -------------------------------------------------------------------------
-  // Publish Step Sidebar
-  // -------------------------------------------------------------------------
-  if (builderStep === 'preview' || builderStep === 'publish') {
-    return (
-      <div className={cn("p-3 space-y-3 w-full max-w-full box-border", "text-start")}>
-        <Card className="w-full shadow-xs border-ds-border bg-ds-surface overflow-hidden">
-          <CardHeader className="pb-2 pt-3 px-3">
-            <CardTitle className={cn("text-xs font-bold uppercase tracking-wider text-ds-ink-secondary flex items-center gap-1.5")}>
-              <ListChecks className="w-3.5 h-3.5 text-ds-warning shrink-0" />
-              <span>{t('builder.publishChecklist', 'Pre-Flight Checklist')}</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="px-3 pb-3 space-y-2 text-xs">
-            {validationChecklist.map((item) => (
-              <div key={item.key} className={cn("flex items-center gap-2")}>
-                {item.ok ? (
-                  <CheckCircle2 className="h-4 w-4 text-ds-success shrink-0" />
-                ) : (
-                  <AlertTriangle className="h-4 w-4 text-ds-warning shrink-0" />
-                )}
-                <span className={item.ok ? 'text-ds-ink-secondary font-medium' : 'text-ds-warning font-medium'}>
-                  {item.label}
-                </span>
+        <RailSection title={t('builder.editor.rail.glance', 'At a glance')}>
+          <dl className="grid grid-cols-2 gap-x-3 gap-y-3">
+            {[
+              [t('builder.editor.stat.sections', 'Sections'), sections.length],
+              [t('builder.editor.stat.lessons', 'Lessons'), totalItems],
+              [t('builder.editor.stat.quizzes', 'Quizzes'), totalQuizzes],
+              [t('builder.editor.stat.length', 'Length'), t('builder.editor.stat.minutes', { count: minutes, defaultValue: '{{count}} min' })],
+            ].map(([label, value]) => (
+              <div key={String(label)}>
+                <dt className="text-[11px] text-ds-muted">{label}</dt>
+                <dd className="text-sm font-semibold tabular-nums text-ds-ink">{value}</dd>
               </div>
             ))}
-          </CardContent>
-        </Card>
-        <VersionHistoryCard moduleId={moduleId} isRTL={isRTL} />
+          </dl>
+        </RailSection>
+
+        {setShowKBSidebar && (
+          <RailSection title={t('builder.editor.rail.tools', 'Reuse content')}>
+            <button
+              type="button"
+              onClick={() => setShowKBSidebar(true)}
+              className="group flex w-full items-center gap-3 rounded-[6px] border border-ds-border bg-ds-surface p-2.5 text-start transition-colors hover:border-ds-border-strong hover:bg-ds-surface-subtle"
+            >
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[6px] bg-ds-surface-subtle">
+                <BookOpen className="h-4 w-4 text-ds-ink-secondary" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-xs font-semibold text-ds-ink">{t('builder.editor.rail.kb', 'Add from Knowledge')}</span>
+                <span className="block text-[11px] leading-snug text-ds-muted">
+                  {t('builder.editor.rail.kbDesc', 'Policies, documents and quizzes you already have')}
+                </span>
+              </span>
+              <ChevronRight className="h-3.5 w-3.5 shrink-0 text-ds-muted rtl:rotate-180" />
+            </button>
+          </RailSection>
+        )}
+
+        {moduleId && (
+          <section className="px-4 py-4">
+            <ModuleSkillsEditor moduleId={moduleId} />
+          </section>
+        )}
+      </div>
+    )
+  }
+
+  if (builderStep === 'rules') {
+    const attempts = allowRetake ? Number(maxAttempts || 3) : 1
+    return (
+      <div className="w-full text-start">
+        <RailSection title={t('builder.editor.rail.rulesTitle', 'Rules in effect')}>
+          <ul className="space-y-2.5 text-xs text-ds-ink">
+            <li className="flex items-center gap-2">
+              <Award className="h-4 w-4 shrink-0 text-ds-ink-secondary" />
+              {certificateEnabled
+                ? t('builder.editor.rail.certOn', 'Certificate on completion')
+                : t('builder.editor.rail.certOff', 'No certificate')}
+            </li>
+            <li className="flex items-center gap-2">
+              <Target className="h-4 w-4 shrink-0 text-ds-ink-secondary" />
+              {t('builder.editor.rail.passScore', { score: passingScore || '80', defaultValue: 'Pass mark {{score}}%' })}
+            </li>
+            <li className="flex items-center gap-2">
+              <RotateCcw className="h-4 w-4 shrink-0 text-ds-ink-secondary" />
+              {attempts > 1
+                ? t('builder.editor.rail.attempts', { count: attempts, defaultValue: 'Up to {{count}} attempts' })
+                : t('builder.editor.rail.oneAttempt', 'One attempt only')}
+            </li>
+          </ul>
+        </RailSection>
+
+        <RailSection title={t('builder.editor.rail.tipsTitle', 'Tips')}>
+          <ul className="list-disc space-y-2 ps-4 text-xs leading-relaxed text-ds-muted marker:text-ds-border-strong">
+            <li>{t('builder.editor.rail.tip1', 'Compliance courses usually need a pass mark of 80% or more.')}</li>
+            <li>{t('builder.editor.rail.tip2', 'Allow at least 3 attempts for department procedures.')}</li>
+            <li>{t('builder.editor.rail.tip3', 'Renew safety and hygiene certificates every year.')}</li>
+          </ul>
+        </RailSection>
+      </div>
+    )
+  }
+
+  if (builderStep === 'preview' || builderStep === 'publish') {
+    return (
+      <div className="w-full text-start">
+        <Readiness checklist={validationChecklist} />
+        <div className="p-3">
+          <VersionHistoryCard moduleId={moduleId} isRTL={isRTL} />
+        </div>
       </div>
     )
   }

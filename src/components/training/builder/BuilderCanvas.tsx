@@ -1,40 +1,52 @@
-import { Badge } from '@/components/ui/badge'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { sanitizeHtml } from '@/lib/sanitize'
 import { cn } from '@/lib/utils'
 import { InlineBlockPreview } from './InlineBlockPreview'
 import {
-  AlertCircle,
   ArrowDown,
   ArrowUp,
   BookOpen,
   ChevronDown,
-  ChevronUp,
-  Edit3,
   Eye,
+  EyeOff,
   FileCheck,
   FileQuestion,
   FileText,
   Gamepad2,
-  GraduationCap,
   GripVertical,
   Headphones,
-  Layers,
+  Image as ImageIcon,
+  LayoutTemplate,
   Link,
   Loader2,
   MessageSquare,
+  MoreHorizontal,
+  Pencil,
   Plus,
-  SlidersHorizontal,
   Sparkles,
   Trash2,
-  Video
+  Video,
+  type LucideIcon,
 } from 'lucide-react'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -80,7 +92,7 @@ interface BuilderCanvasProps {
   onDuplicateSection?: (sectionId: string) => void
   onDeepExpandLesson?: (sectionId: string, contentId: string) => Promise<void>
 
-  // Course Metadata fields
+  // Course details
   title?: string
   setTitle?: (v: string) => void
   description?: string
@@ -95,15 +107,48 @@ interface BuilderCanvasProps {
   setContentLanguage?: (v: string) => void
 }
 
-const CONTENT_TYPES_CONFIG: Array<{ type: ContentType; label: string; icon: any; color: string; desc: string }> = [
-  { type: 'text', label: 'Rich Text / SOP', icon: FileText, color: 'text-ds-info bg-ds-info-soft border-ds-info/30', desc: 'Standard operating procedures, guidebooks, and written modules' },
-  { type: 'video', label: 'Video Lesson', icon: Video, color: 'text-ds-danger bg-ds-danger-soft border-ds-danger/30', desc: 'Embed video walk-throughs, hospitality demos, and streams' },
-  { type: 'quiz', label: 'Interactive Quiz', icon: FileQuestion, color: 'text-ds-accent bg-ds-accent-soft border-ds-accent/30', desc: 'Single & multiple-choice knowledge checkpoints with pass requirements' },
-  { type: 'roleplay', label: 'AI Guest Roleplay', icon: MessageSquare, color: 'text-ds-warning bg-ds-warning-soft border-ds-warning/30', desc: 'Interactive 5-star guest simulation with live Forbes & Saudi Karam rubric scoring' },
-  { type: 'assignment', label: 'Practical Assignment', icon: FileCheck, color: 'text-ds-warning bg-ds-warning-soft border-ds-warning/30', desc: 'Open-ended written task, case study, or file submission with trainer grading' },
-  { type: 'document_link', label: 'Document / Policy', icon: Link, color: 'text-ds-warning bg-ds-warning-soft border-ds-warning/30', desc: 'Attach PDF manuals, forms, and compliance documents' },
-  { type: 'sop_reference', label: 'Knowledge Base SOP', icon: BookOpen, color: 'text-ds-success bg-ds-success-soft border-ds-success/30', desc: 'Link live hotel standard operating procedures from the intranet' }
-]
+const TYPE_ICONS: Record<ContentType, LucideIcon> = {
+  text: FileText,
+  video: Video,
+  quiz: FileQuestion,
+  roleplay: MessageSquare,
+  assignment: FileCheck,
+  practical: FileCheck,
+  document_link: Link,
+  sop_reference: BookOpen,
+  image: ImageIcon,
+  audio: Headphones,
+  interactive: Gamepad2,
+}
+
+/** Lesson types offered when adding a lesson, in the order people reach for them. */
+const ADDABLE_TYPES: ContentType[] = ['text', 'video', 'quiz', 'sop_reference', 'document_link', 'assignment', 'roleplay']
+
+const HINT_KEYS: Partial<Record<ContentType, string>> = {
+  text: 'text',
+  video: 'video',
+  quiz: 'quiz',
+  roleplay: 'roleplay',
+  assignment: 'assignment',
+  document_link: 'document',
+  sop_reference: 'policy',
+}
+
+const CATEGORY_KEYS = [
+  'front_office',
+  'housekeeping',
+  'food_beverage',
+  'culinary',
+  'operations',
+  'safety_security',
+  'maintenance',
+  'compliance',
+  'onboarding',
+  'skills',
+] as const
+const AUDIENCE_KEYS = ['all', 'new_hires', 'frontline', 'supervisors', 'management'] as const
+const LEVEL_KEYS = ['beginner', 'intermediate', 'advanced'] as const
+const LANGUAGE_KEYS = ['english', 'arabic', 'bilingual'] as const
 
 export const BuilderCanvas = ({
   sections,
@@ -120,13 +165,12 @@ export const BuilderCanvas = ({
   onOpenAICreator,
   onOpenTemplateSelector,
   onRenameSection,
-  onDuplicateSection,
   onDeepExpandLesson,
   title = '',
   setTitle,
   description = '',
   setDescription,
-  category = 'operations',
+  category = '',
   setCategory,
   audience = 'all',
   setAudience,
@@ -139,74 +183,43 @@ export const BuilderCanvas = ({
   const isRTL = i18n.dir() === 'rtl'
   const [editingSectionId, setEditingSectionId] = useState<string | null>(null)
   const [editingTitle, setEditingTitle] = useState('')
-  const [previewingBlock, setPreviewingBlock] = useState<ContentBlockForm | null>(null)
   const [expandingLessonId, setExpandingLessonId] = useState<string | null>(null)
-  const [filterType, setFilterType] = useState<string>('all')
   const [expandedBlocks, setExpandedBlocks] = useState<Set<string>>(new Set())
-  const [isMetadataExpanded, setIsMetadataExpanded] = useState<boolean>(!title.trim() || !category)
+  const [detailsOpen, setDetailsOpen] = useState<boolean>(!title.trim())
+  const [pendingDelete, setPendingDelete] = useState<TrainingSection | null>(null)
+
+  const typeLabel = (type: ContentType) =>
+    t(`builder.editor.types.${type}`, { defaultValue: type.replace(/_/g, ' ') })
+  const typeHint = (type: ContentType) =>
+    HINT_KEYS[type] ? t(`builder.blockHints.${HINT_KEYS[type]}`, { defaultValue: '' }) : ''
+  const minutes = (count: number) => t('builder.editor.stat.minutes', { count, defaultValue: '{{count}} min' })
 
   const toggleBlockPreview = useCallback((blockId: string) => {
-    setExpandedBlocks(prev => {
+    setExpandedBlocks((prev) => {
       const next = new Set(prev)
-      if (next.has(blockId)) {
-        next.delete(blockId)
-      } else {
-        next.add(blockId)
-      }
+      if (next.has(blockId)) next.delete(blockId)
+      else next.add(blockId)
       return next
     })
   }, [])
 
-  const expandAllInSection = useCallback((section: TrainingSection) => {
-    setExpandedBlocks(prev => {
+  const setSectionPreviews = useCallback((section: TrainingSection, open: boolean) => {
+    setExpandedBlocks((prev) => {
       const next = new Set(prev)
-      section.items.forEach(item => next.add(item.id))
+      section.items.forEach((item) => (open ? next.add(item.id) : next.delete(item.id)))
       return next
     })
   }, [])
 
-  const collapseAllInSection = useCallback((section: TrainingSection) => {
-    setExpandedBlocks(prev => {
-      const next = new Set(prev)
-      section.items.forEach(item => next.delete(item.id))
-      return next
-    })
-  }, [])
-
-  const isSectionFullyExpanded = useCallback((section: TrainingSection) => {
-    return section.items.length > 0 && section.items.every(item => expandedBlocks.has(item.id))
-  }, [expandedBlocks])
+  const allPreviewsOpen = (section: TrainingSection) =>
+    section.items.length > 0 && section.items.every((item) => expandedBlocks.has(item.id))
 
   const totalLessons = sections.reduce((acc, s) => acc + s.items.length, 0)
   const totalQuizzes = sections.reduce((acc, s) => acc + s.items.filter((i) => i.type === 'quiz').length, 0)
-  const estimatedTotalMins = sections.reduce((acc, s) => acc + s.items.reduce((sum, item) => sum + (item.duration || 5), 0), 0)
+  const sectionMinutes = (s: TrainingSection) => s.items.reduce((sum, item) => sum + (item.duration || 5), 0)
+  const totalMinutes = sections.reduce((acc, s) => acc + sectionMinutes(s), 0)
 
-  const getContentIcon = (type: ContentType) => {
-    switch (type) {
-      case 'text':
-        return <FileText className="w-4 h-4 text-ds-info" />
-      case 'video':
-        return <Video className="w-4 h-4 text-ds-danger" />
-      case 'audio':
-        return <Headphones className="w-4 h-4 text-ds-info" />
-      case 'interactive':
-        return <Gamepad2 className="w-4 h-4 text-ds-info" />
-      case 'document_link':
-        return <Link className="w-4 h-4 text-ds-warning" />
-      case 'quiz':
-        return <FileQuestion className="w-4 h-4 text-ds-accent" />
-      case 'assignment':
-      case 'practical':
-        return <FileCheck className="w-4 h-4 text-ds-warning" />
-      case 'sop_reference':
-        return <BookOpen className="w-4 h-4 text-ds-success" />
-      case 'roleplay':
-        return <MessageSquare className="w-4 h-4 text-ds-warning" />
-      default:
-        return <FileText className="w-4 h-4 text-ds-ink-secondary" />
-    }
-  }
-
+  // Drag and drop (sections and lessons within a section)
   const handleDragStartSection = (e: React.DragEvent, index: number) => {
     e.dataTransfer.setData('type', 'section')
     e.dataTransfer.setData('index', index.toString())
@@ -223,8 +236,7 @@ export const BuilderCanvas = ({
 
   const handleDropSection = (e: React.DragEvent, dropIndex: number) => {
     e.preventDefault()
-    const type = e.dataTransfer.getData('type')
-    if (type !== 'section') return
+    if (e.dataTransfer.getData('type') !== 'section') return
     const dragIndex = parseInt(e.dataTransfer.getData('index'))
     if (isNaN(dragIndex) || dragIndex === dropIndex) return
     onReorderSection(dragIndex, dropIndex)
@@ -233,771 +245,611 @@ export const BuilderCanvas = ({
   const handleDropContent = (e: React.DragEvent, dropSectionId: string, dropIndex: number) => {
     e.preventDefault()
     e.stopPropagation()
-    const type = e.dataTransfer.getData('type')
-    if (type !== 'content') return
+    if (e.dataTransfer.getData('type') !== 'content') return
     const dragSectionId = e.dataTransfer.getData('sectionId')
     const dragIndex = parseInt(e.dataTransfer.getData('index'))
     if (isNaN(dragIndex) || dragSectionId !== dropSectionId) return
     onReorderContent(dropSectionId, dragIndex, dropIndex)
   }
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-  }
+  const handleDragOver = (e: React.DragEvent) => e.preventDefault()
 
-  const startRenaming = (sectionId: string, currentTitle: string) => {
-    setEditingSectionId(sectionId)
-    setEditingTitle(currentTitle)
+  const startRenaming = (section: TrainingSection) => {
+    setEditingSectionId(section.id)
+    setEditingTitle(section.title)
   }
 
   const saveRenaming = (sectionId: string) => {
-    if (editingTitle.trim() && onRenameSection) {
-      onRenameSection(sectionId, editingTitle.trim())
-    }
+    if (editingTitle.trim() && onRenameSection) onRenameSection(sectionId, editingTitle.trim())
     setEditingSectionId(null)
   }
 
-  const categoryLabels: Record<string, string> = {
-    front_office: 'Front Office',
-    housekeeping: 'Housekeeping',
-    food_beverage: 'Food & Beverage',
-    culinary: 'Culinary & Kitchen',
-    operations: 'Hotel Operations',
-    safety_security: 'Safety & Security',
-    maintenance: 'Engineering & Maintenance',
-    compliance: 'Compliance',
-    onboarding: 'Onboarding',
-    skills: 'Hospitality Skills',
+  const requestDeleteSection = (section: TrainingSection) => {
+    if (section.items.length === 0) onDeleteSection(section.id)
+    else setPendingDelete(section)
   }
 
-  const audienceLabels: Record<string, string> = {
-    all: 'All Staff',
-    new_hires: 'New Hires',
-    frontline: 'Frontline Staff',
-    supervisors: 'Supervisors',
-    management: 'Management',
-  }
+  const detailsSummary = [
+    category ? t(`builder.editor.categories.${category}`, { defaultValue: category }) : null,
+    t(`builder.editor.audiences.${audience}`, { defaultValue: audience }),
+    t(`builder.editor.levels.${difficultyLevel}`, { defaultValue: difficultyLevel }),
+    t(`builder.editor.languages.${contentLanguage}`, { defaultValue: contentLanguage }),
+  ].filter(Boolean).join(' · ')
+  const detailsMissing = !title.trim() || !category
 
   return (
-    <div className="flex-1 p-3 md:p-5 lg:p-6 bg-ds-surface-subtle w-full overflow-x-hidden">
-      <div className="w-full max-w-3xl xl:max-w-4xl mx-auto space-y-5">
+    <div className="w-full flex-1 overflow-x-hidden bg-ds-surface-subtle p-3 md:p-6">
+      <div className="mx-auto w-full max-w-3xl space-y-6">
 
-        {/* Collapsible Course Metadata & Classification Card */}
-        <Card className={cn(
-          "overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface text-ds-ink shadow-2xs transition-all duration-200",
-          isMetadataExpanded && "border-ds-border-strong shadow-xs"
-        )}>
-          {/* Collapsed Header / Summary Bar */}
-          <div
-            className="px-4 py-3 flex items-center justify-between gap-3 cursor-pointer select-none"
-            onClick={() => setIsMetadataExpanded(!isMetadataExpanded)}
+        {/* Course details */}
+        <section className="rounded-[8px] border border-ds-border bg-ds-surface">
+          <button
+            type="button"
+            onClick={() => setDetailsOpen((v) => !v)}
+            aria-expanded={detailsOpen}
+            className="flex w-full items-center gap-3 px-4 py-3 text-start rounded-[8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent/40"
           >
-            <div className="flex items-center gap-2.5 flex-1 min-w-0">
-              <div className="w-7 h-7 rounded-md bg-ds-accent-soft text-ds-accent flex items-center justify-center shrink-0">
-                <SlidersHorizontal className="w-3.5 h-3.5" />
-              </div>
-              <div className="flex items-center gap-2 flex-wrap min-w-0">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <span className="text-xs font-semibold text-ds-ink">
-                    {title.trim() || t('builder.untitledModule', 'Untitled Course')}
+            <div className="min-w-0 flex-1">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-ds-muted">
+                {t('builder.editor.details.title', 'Course details')}
+              </p>
+              <p className={cn('mt-0.5 truncate text-sm font-semibold', title.trim() ? 'text-ds-ink' : 'text-ds-muted')}>
+                <bdi>{title.trim() || t('builder.editor.titlePlaceholder', 'Untitled course')}</bdi>
+              </p>
+              <p className="mt-0.5 truncate text-xs text-ds-muted">
+                {detailsMissing ? (
+                  <span className="inline-flex items-center gap-1.5 text-ds-warning-text">
+                    <span className="h-1.5 w-1.5 rounded-full bg-ds-warning" aria-hidden />
+                    {t('builder.editor.details.missing', 'Add a name and department')}
                   </span>
-                  {(!title.trim() || title === 'Untitled Module' || title === 'Untitled Course') && (
-                    <Badge variant="outline" className="text-[11px] bg-ds-accent-soft text-ds-accent border-ds-accent/40 font-semibold flex items-center gap-1">
-                      <Edit3 className="w-3 h-3 text-ds-accent" />
-                      <span>{t('builder.nameCoursePrompt', 'Click to set course name')}</span>
-                    </Badge>
-                  )}
-                </div>
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <Badge variant="outline" className="text-[11px] font-semibold border-ds-border bg-ds-surface-subtle text-ds-muted">
-                    {categoryLabels[category] || category || 'Operations'}
-                  </Badge>
-                  <Badge variant="outline" className="text-[11px] font-medium border-ds-border bg-ds-surface-subtle text-ds-muted">
-                    {audienceLabels[audience] || audience || 'All Staff'}
-                  </Badge>
-                  <Badge variant="outline" className="text-[11px] font-medium border-ds-border bg-ds-surface-subtle text-ds-muted capitalize">
-                    {difficultyLevel}
-                  </Badge>
-                </div>
-              </div>
+                ) : (
+                  detailsSummary
+                )}
+              </p>
             </div>
+            <span className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-ds-ink-secondary">
+              {detailsOpen ? t('builder.editor.details.done', 'Done') : t('builder.editor.details.edit', 'Edit')}
+              <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', detailsOpen && 'rotate-180')} />
+            </span>
+          </button>
 
-            <div className="flex items-center gap-2 shrink-0">
-              {(!title.trim() || !category) && (
-                <Badge variant="outline" className="text-[11px] border-ds-warning/40 bg-ds-warning-soft text-ds-warning-text font-medium">
-                  <AlertCircle className="w-3 h-3 me-1 text-ds-warning" />
-                  {t('builder.incompleteClassification', 'Setup needed')}
-                </Badge>
-              )}
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 px-2 text-xs font-semibold text-ds-muted hover:text-ds-ink hover:bg-ds-surface-subtle"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setIsMetadataExpanded(!isMetadataExpanded)
-                }}
-              >
-                <Edit3 className="w-3 h-3 me-1 text-ds-muted" />
-                <span>{isMetadataExpanded ? t('builder.collapse', 'Done') : t('builder.editDetails', 'Edit Details')}</span>
-                {isMetadataExpanded ? <ChevronUp className="w-3.5 h-3.5 ms-1" /> : <ChevronDown className="w-3.5 h-3.5 ms-1" />}
-              </Button>
-            </div>
-          </div>
-
-          {/* Expanded Metadata Form */}
-          {isMetadataExpanded && (
-            <CardContent className="p-4 md:p-5 pt-3 border-t border-ds-border space-y-4 bg-ds-surface-subtle/50">
-              {/* Course Title Input (Prominent & First) */}
-              <div className="space-y-1.5 p-3.5 rounded-[8px] bg-ds-surface border border-ds-border shadow-2xs">
-                <div className="flex items-center justify-between gap-2">
-                  <Label className="text-xs font-semibold text-ds-ink flex items-center gap-1.5">
-                    <GraduationCap className="w-4 h-4 text-ds-accent shrink-0" />
-                    <span>{t('builder.courseTitleLabel', 'Training Course Name')}</span>
-                    <span className="text-ds-danger font-bold">*</span>
-                  </Label>
-                  <span className="text-[11px] font-semibold text-ds-accent bg-ds-accent-soft px-2 py-0.5 rounded-full border border-ds-accent/30">
-                    {t('builder.requiredField', 'Required')}
-                  </span>
-                </div>
+          {detailsOpen && (
+            <div className="space-y-4 border-t border-ds-border px-4 py-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="course-name" className="text-xs font-semibold text-ds-ink">
+                  {t('builder.editor.titleLabel', 'Course name')} <span className="text-ds-danger" aria-hidden>*</span>
+                </Label>
                 <Input
+                  id="course-name"
                   value={title}
                   onChange={(e) => setTitle?.(e.target.value)}
-                  placeholder={t('builder.courseTitlePlaceholder', 'e.g., Front Desk Guest Check-In & Service Standards SOP')}
-                  className="text-sm font-semibold bg-ds-surface border-ds-border text-ds-ink focus-visible:ring-ds-accent h-9 text-start"
+                  placeholder={t('builder.editor.details.namePlaceholder', 'e.g. Guest check-in standards')}
+                  className="h-10 text-sm font-medium"
+                  aria-required
                 />
                 <p className="text-[11px] text-ds-muted">
-                  {t('builder.courseTitleHelper', 'Give this training a clear, descriptive name that employees will see across the LMS and on their completion certificates.')}
+                  {t('builder.editor.details.nameHelp', 'Learners see this name in their training list and on certificates.')}
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Department / Category */}
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold text-ds-ink">
-                    {t('category', 'Department / Category')} <span className="text-ds-danger">*</span>
-                  </Label>
-                  {setCategory && (
-                    <Select value={category || 'operations'} onValueChange={setCategory}>
-                      <SelectTrigger className="bg-ds-surface text-xs font-medium border-ds-border text-ds-ink">
-                        <SelectValue placeholder={t('builder.selectCategory', 'Select department')} />
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {setCategory && (
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-semibold text-ds-ink">
+                      {t('builder.editor.details.department', 'Department')} <span className="text-ds-danger" aria-hidden>*</span>
+                    </Label>
+                    <Select value={category} onValueChange={setCategory}>
+                      <SelectTrigger className="h-10 text-sm">
+                        <SelectValue placeholder={t('builder.editor.details.department', 'Department')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="front_office">Front Office & Reception</SelectItem>
-                        <SelectItem value="housekeeping">Housekeeping & Laundry</SelectItem>
-                        <SelectItem value="food_beverage">Food & Beverage (F&B)</SelectItem>
-                        <SelectItem value="culinary">Culinary & Kitchen</SelectItem>
-                        <SelectItem value="operations">{t('operations', 'Hotel Operations')}</SelectItem>
-                        <SelectItem value="safety_security">Safety & Security</SelectItem>
-                        <SelectItem value="maintenance">Engineering & Maintenance</SelectItem>
-                        <SelectItem value="compliance">{t('builder.compliance', 'Compliance & Regulations')}</SelectItem>
-                        <SelectItem value="onboarding">{t('builder.onboarding', 'New Hire Onboarding')}</SelectItem>
-                        <SelectItem value="skills">{t('builder.skills', 'Hospitality Skills')}</SelectItem>
+                        {CATEGORY_KEYS.map((key) => (
+                          <SelectItem key={key} value={key}>{t(`builder.editor.categories.${key}`)}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
-                  )}
-                </div>
-
-                {/* Target Audience */}
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold text-ds-ink">
-                    {t('builder.audience', 'Target Audience')}
-                  </Label>
-                  {setAudience && (
+                  </div>
+                )}
+                {setAudience && (
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-semibold text-ds-ink">{t('builder.editor.details.audience', "Who it's for")}</Label>
                     <Select value={audience || 'all'} onValueChange={setAudience}>
-                      <SelectTrigger className="bg-ds-surface text-xs font-medium border-ds-border text-ds-ink">
-                        <SelectValue />
-                      </SelectTrigger>
+                      <SelectTrigger className="h-10 text-sm"><SelectValue /></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="all">All Hotel Associates</SelectItem>
-                        <SelectItem value="new_hires">New Hires Onboarding</SelectItem>
-                        <SelectItem value="frontline">Frontline Associates</SelectItem>
-                        <SelectItem value="supervisors">Supervisors & Team Leads</SelectItem>
-                        <SelectItem value="management">Department Managers</SelectItem>
+                        {AUDIENCE_KEYS.map((key) => (
+                          <SelectItem key={key} value={key}>{t(`builder.editor.audiences.${key}`)}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
-                  )}
-                </div>
-
-                {/* Difficulty & Language */}
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold text-ds-ink">
-                      {t('builder.difficulty', 'Difficulty')}
-                    </Label>
-                    {setDifficultyLevel && (
-                      <Select value={difficultyLevel || 'beginner'} onValueChange={setDifficultyLevel}>
-                        <SelectTrigger className="bg-ds-surface text-xs font-medium border-ds-border text-ds-ink">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="beginner">{t('beginner', 'Beginner')}</SelectItem>
-                          <SelectItem value="intermediate">{t('intermediate', 'Intermediate')}</SelectItem>
-                          <SelectItem value="advanced">{t('advanced', 'Advanced')}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    )}
                   </div>
-
+                )}
+                {setDifficultyLevel && (
                   <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold text-ds-ink">
-                      {t('builder.contentLanguage', 'Language')}
-                    </Label>
-                    {setContentLanguage && (
-                      <Select value={contentLanguage || 'english'} onValueChange={setContentLanguage}>
-                        <SelectTrigger className="bg-ds-surface text-xs font-medium border-ds-border text-ds-ink">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="english">English</SelectItem>
-                          <SelectItem value="arabic">العربية (Arabic)</SelectItem>
-                          <SelectItem value="bilingual">Bilingual</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    )}
+                    <Label className="text-xs font-semibold text-ds-ink">{t('builder.editor.details.level', 'Level')}</Label>
+                    <Select value={difficultyLevel || 'beginner'} onValueChange={setDifficultyLevel}>
+                      <SelectTrigger className="h-10 text-sm"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        {LEVEL_KEYS.map((key) => (
+                          <SelectItem key={key} value={key}>{t(`builder.editor.levels.${key}`)}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
-                </div>
+                )}
+                {setContentLanguage && (
+                  <div className="space-y-1.5">
+                    <Label className="text-xs font-semibold text-ds-ink">{t('builder.editor.details.language', 'Course language')}</Label>
+                    <Select value={contentLanguage || 'english'} onValueChange={setContentLanguage}>
+                      <SelectTrigger className="h-10 text-sm"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        {LANGUAGE_KEYS.map((key) => (
+                          <SelectItem key={key} value={key}>{t(`builder.editor.languages.${key}`)}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
               </div>
 
-              {/* Course Description */}
               {setDescription && (
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold text-ds-ink">
-                    {t('description', 'Course Description & Learning Outcomes')}
+                  <Label htmlFor="course-description" className="text-xs font-semibold text-ds-ink">
+                    {t('builder.editor.details.description', 'Description')}
                   </Label>
                   <Textarea
-                    rows={2}
+                    id="course-description"
+                    rows={3}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    placeholder={t('builder.descriptionHint', 'Describe key learning objectives, target standards, and procedures covered...')}
-                    className="text-xs bg-ds-surface border-ds-border text-ds-ink focus-visible:ring-ds-accent resize-none"
+                    placeholder={t('builder.editor.details.descriptionPlaceholder', 'What will people learn? Which standards does it cover?')}
+                    className="resize-y text-sm"
                   />
                 </div>
               )}
-            </CardContent>
+            </div>
           )}
-        </Card>
+        </section>
 
-        {/* Top Action & Metrics Bar */}
-        <div className={cn('flex flex-col md:flex-row md:items-center justify-between gap-4')}>
-          <div className="space-y-1">
-            <h2 className="text-lg md:text-xl font-bold text-ds-ink tracking-tight flex items-center gap-2.5">
-              <span>{t('builder.courseStructure', 'Course Curriculum & Lessons')}</span>
-              {sections.length > 0 && (
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <Badge variant="secondary" className="font-bold text-xs bg-ds-warning-soft text-ds-warning">
-                    {sections.length} {sections.length === 1 ? 'Section' : 'Sections'}
-                  </Badge>
-                  <Badge variant="outline" className="font-semibold text-xs bg-ds-surface">
-                    {totalLessons} Lessons
-                  </Badge>
-                  {totalQuizzes > 0 && (
-                    <Badge variant="outline" className="font-semibold text-xs text-ds-accent bg-ds-accent-soft border-ds-accent/30">
-                      {totalQuizzes} Quizzes
-                    </Badge>
-                  )}
-                  <Badge variant="secondary" className="font-semibold text-xs text-ds-ink-secondary bg-ds-border/60">
-                    ~{estimatedTotalMins} mins
-                  </Badge>
-                </div>
+        {/* Sections and lessons */}
+        <section className="space-y-3">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div className="min-w-0">
+              <h2 className="text-base font-semibold text-ds-ink">
+                {t('builder.editor.curriculum.title', 'Sections and lessons')}
+              </h2>
+              {sections.length > 0 ? (
+                <dl className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ds-muted">
+                  {[
+                    [t('builder.editor.stat.sections', 'Sections'), sections.length],
+                    [t('builder.editor.stat.lessons', 'Lessons'), totalLessons],
+                    [t('builder.editor.stat.quizzes', 'Quizzes'), totalQuizzes],
+                    [t('builder.editor.stat.length', 'Length'), minutes(totalMinutes)],
+                  ].map(([label, value]) => (
+                    <div key={String(label)} className="flex items-baseline gap-1">
+                      <dt>{label}</dt>
+                      <dd className="font-semibold tabular-nums text-ds-ink">{value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : (
+                <p className="mt-1 text-xs text-ds-muted">
+                  {t('builder.editor.curriculum.hint', 'Learners go through sections in this order. Drag to reorder.')}
+                </p>
               )}
-            </h2>
-            <p className="text-xs text-muted-foreground">
-              {t('builder.curriculumSub', 'Organize learning modules, rich lesson blocks, and interactive knowledge checkpoints.')}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 shrink-0">
-            {onOpenAICreator && (
-              <Button
-                onClick={onOpenAICreator}
-                size="sm"
-                className="bg-ds-ink text-ds-on-ink hover:bg-ds-ink/90 font-semibold shadow-2xs text-xs h-8"
-              >
-                <Sparkles className="w-3.5 h-3.5 me-1.5 text-ds-accent" />
-                {t('builder.aiDraft', 'Draft with AI')}
+            </div>
+            {sections.length > 0 && (
+              <Button onClick={onAddSection} size="sm" variant="outline" className="h-8">
+                <Plus className="h-3.5 w-3.5" />
+                {t('builder.editor.addSection', 'Add section')}
               </Button>
             )}
-            <Button
-              onClick={onAddSection}
-              size="sm"
-              variant="outline"
-              className="font-semibold border-ds-border text-ds-ink hover:bg-ds-surface-subtle shadow-2xs text-xs h-8"
-            >
-              <Plus className="w-3.5 h-3.5 me-1.5 text-ds-accent" />
-              {t('builder.addSection', 'Add Section')}
-            </Button>
           </div>
-        </div>
 
-        {/* Empty State: 3 Fast Action Launchers */}
-        {sections.length === 0 ? (
-          <div className="space-y-6 pt-4">
-            <div className="text-center space-y-2 py-6">
-              <div className="w-14 h-14 rounded-full bg-ds-accent-soft text-ds-accent flex items-center justify-center mx-auto mb-2">
-                <Layers className="w-7 h-7" />
-              </div>
-              <h3 className="text-base font-semibold text-ds-ink">
-                {t('builder.startCreating', 'How would you like to build your course?')}
-              </h3>
-              <p className="text-xs text-ds-muted max-w-md mx-auto">
-                {t('builder.chooseMethod', 'Choose a fast creation method to get started in seconds.')}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Option 1: AI Creator */}
-              <div
-                onClick={onOpenAICreator}
-                className="group relative p-6 rounded-[8px] bg-ds-surface border border-ds-border hover:border-ds-border-strong hover:shadow-xs transition-all cursor-pointer flex flex-col justify-between"
-              >
-                <div className="space-y-3">
-                  <div className="w-11 h-11 rounded-[8px] bg-ds-accent-soft text-ds-accent flex items-center justify-center">
-                    <Sparkles className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-sm text-ds-ink">
-                      Smart AI Creator
-                    </h4>
-                    <p className="text-xs text-ds-muted mt-1 leading-relaxed">
-                      Generate full curriculum, rich lesson text, and verified quizzes from any topic or hotel SOP in 10 seconds.
-                    </p>
-                  </div>
-                </div>
-                <div className="pt-4 flex items-center gap-1 text-xs font-semibold text-ds-accent group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform">
-                  <span>Generate with AI</span>
-                  <span>&rarr;</span>
-                </div>
-              </div>
-
-              {/* Option 2: Template Selector */}
-              <div
-                onClick={onOpenTemplateSelector}
-                className="group p-6 rounded-[8px] bg-ds-surface border border-ds-border hover:border-ds-border-strong hover:shadow-xs transition-all cursor-pointer flex flex-col justify-between"
-              >
-                <div className="space-y-3">
-                  <div className="w-11 h-11 rounded-[8px] bg-ds-surface-subtle text-ds-ink border border-ds-border flex items-center justify-center">
-                    <Layers className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-sm text-ds-ink">
-                      Hotel SOP Templates
-                    </h4>
-                    <p className="text-xs text-ds-muted mt-1 leading-relaxed">
-                      Start from pre-built 5-star hotel operational courses (Front Desk, Housekeeping, Food & Beverage, Safety).
-                    </p>
-                  </div>
-                </div>
-                <div className="pt-4 flex items-center gap-1 text-xs font-semibold text-ds-ink group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform">
-                  <span>Browse Templates</span>
-                  <span>&rarr;</span>
-                </div>
-              </div>
-
-              {/* Option 3: Start from Scratch */}
-              <div
-                onClick={onAddSection}
-                className="group p-6 rounded-[8px] bg-ds-surface border border-ds-border hover:border-ds-border-strong hover:shadow-xs transition-all cursor-pointer flex flex-col justify-between"
-              >
-                <div className="space-y-3">
-                  <div className="w-11 h-11 rounded-[8px] bg-ds-surface-subtle text-ds-ink border border-ds-border flex items-center justify-center">
-                    <Plus className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-sm text-ds-ink">
-                      Blank Canvas
-                    </h4>
-                    <p className="text-xs text-ds-muted mt-1 leading-relaxed">
-                      Create a custom course structure from scratch with full manual control over every section and block.
-                    </p>
-                  </div>
-                </div>
-                <div className="pt-4 flex items-center gap-1 text-xs font-semibold text-ds-ink group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform">
-                  <span>Add First Section</span>
-                  <span>&rarr;</span>
-                </div>
+          {sections.length === 0 ? (
+            <div className="rounded-[8px] border border-ds-border bg-ds-surface p-5 md:p-6">
+              <h3 className="text-sm font-semibold text-ds-ink">{t('builder.editor.empty.title', 'How do you want to start?')}</h3>
+              <p className="mt-1 text-xs text-ds-muted">{t('builder.editor.empty.desc', 'You can change everything afterwards.')}</p>
+              <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
+                {[
+                  onOpenAICreator && {
+                    key: 'ai',
+                    icon: Sparkles,
+                    iconClass: 'text-ds-accent',
+                    onClick: onOpenAICreator,
+                  },
+                  onOpenTemplateSelector && {
+                    key: 'template',
+                    icon: LayoutTemplate,
+                    iconClass: 'text-ds-ink-secondary',
+                    onClick: onOpenTemplateSelector,
+                  },
+                  { key: 'blank', icon: Plus, iconClass: 'text-ds-ink-secondary', onClick: onAddSection },
+                ]
+                  .filter((o): o is { key: string; icon: LucideIcon; iconClass: string; onClick: () => void } => Boolean(o))
+                  .map((option) => (
+                    <button
+                      key={option.key}
+                      type="button"
+                      onClick={option.onClick}
+                      className="group flex flex-col items-start gap-3 rounded-[8px] border border-ds-border bg-ds-surface p-4 text-start transition-colors hover:border-ds-border-strong hover:bg-ds-surface-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent/40"
+                    >
+                      <span className="flex h-9 w-9 items-center justify-center rounded-[6px] border border-ds-border bg-ds-surface-subtle">
+                        <option.icon className={cn('h-4 w-4', option.iconClass)} />
+                      </span>
+                      <span>
+                        <span className="block text-sm font-semibold text-ds-ink">{t(`builder.editor.empty.${option.key}.title`)}</span>
+                        <span className="mt-1 block text-xs leading-relaxed text-ds-muted">{t(`builder.editor.empty.${option.key}.desc`)}</span>
+                      </span>
+                    </button>
+                  ))}
               </div>
             </div>
-          </div>
-        ) : (
-          /* Active Sections List */
-          <div className="space-y-4">
-            {sections.map((section, sectionIndex) => {
-              const isExpanded = activeSection === null || activeSection === section.id
-              const filteredItems = section.items.filter((item) => {
-                if (filterType === 'all') return true
-                if (filterType === 'quiz') return item.type === 'quiz'
-                if (filterType === 'text') return item.type === 'text' || item.type === 'sop_reference'
-                if (filterType === 'video') return item.type === 'video'
-                return true
-              })
+          ) : (
+            <ol className="space-y-3">
+              {sections.map((section, sectionIndex) => {
+                const isExpanded = activeSection === null || activeSection === section.id
+                const isEditing = editingSectionId === section.id
+                const previewsOpen = allPreviewsOpen(section)
 
-              return (
-                <Card
-                  key={section.id}
-                  draggable
-                  onDragStart={(e) => handleDragStartSection(e, sectionIndex)}
-                  onDragOver={handleDragOver}
-                  onDrop={(e) => handleDropSection(e, sectionIndex)}
-                  className={cn(
-                    'overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface text-ds-ink shadow-2xs transition-all duration-200',
-                    isExpanded ? 'border-ds-border-strong shadow-xs' : 'opacity-95'
-                  )}
-                >
-                  {/* Section Header */}
-                  <CardHeader
-                    className="py-3 px-4 md:px-5 bg-ds-surface-subtle border-b border-ds-border cursor-pointer select-none"
-                    onClick={() => onSectionClick(activeSection === section.id ? null : section.id)}
+                return (
+                  <li
+                    key={section.id}
+                    draggable={!isEditing}
+                    onDragStart={(e) => handleDragStartSection(e, sectionIndex)}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDropSection(e, sectionIndex)}
+                    className="overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface"
                   >
-                    <div className="flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-3 flex-1 min-w-0">
-                        <div className="cursor-grab active:cursor-grabbing p-1 text-ds-muted hover:text-ds-ink rounded shrink-0">
-                          <GripVertical className="w-4 h-4" />
-                        </div>
+                    {/* Section header */}
+                    <div className={cn('flex items-center gap-2 px-2 py-2 sm:px-3', isExpanded && 'border-b border-ds-border')}>
+                      <span className="hidden cursor-grab text-ds-muted/60 hover:text-ds-muted active:cursor-grabbing sm:block" aria-hidden>
+                        <GripVertical className="h-4 w-4" />
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => onSectionClick(activeSection === section.id ? null : section.id)}
+                        aria-expanded={isExpanded}
+                        aria-label={isExpanded ? t('builder.editor.section.collapse', 'Hide lessons') : t('builder.editor.section.expand', 'Show lessons')}
+                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[6px] text-ds-muted hover:bg-ds-surface-subtle hover:text-ds-ink"
+                      >
+                        <ChevronDown className={cn('h-4 w-4 transition-transform', !isExpanded && '-rotate-90 rtl:rotate-90')} />
+                      </button>
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ds-surface-subtle text-[11px] font-semibold tabular-nums text-ds-ink-secondary">
+                        {sectionIndex + 1}
+                      </span>
 
-                        <span className="w-6 h-6 rounded-full bg-ds-accent-soft text-ds-accent font-semibold text-xs flex items-center justify-center shrink-0">
-                          {sectionIndex + 1}
-                        </span>
-
-                        {editingSectionId === section.id ? (
-                          <div className="flex items-center gap-2 flex-1 max-w-sm" onClick={(e) => e.stopPropagation()}>
-                            <Input
-                              value={editingTitle}
-                              autoFocus
-                              onChange={(e) => setEditingTitle(e.target.value)}
-                              onBlur={() => saveRenaming(section.id)}
-                              onKeyDown={(e) => e.key === 'Enter' && saveRenaming(section.id)}
-                              className="h-8 text-sm font-semibold bg-ds-surface border-ds-border text-ds-ink"
-                            />
-                          </div>
+                      <div className="min-w-0 flex-1">
+                        {isEditing ? (
+                          <Input
+                            value={editingTitle}
+                            autoFocus
+                            onChange={(e) => setEditingTitle(e.target.value)}
+                            onBlur={() => saveRenaming(section.id)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') saveRenaming(section.id)
+                              if (e.key === 'Escape') setEditingSectionId(null)
+                            }}
+                            aria-label={t('builder.editor.section.rename', 'Rename')}
+                            className="h-8 text-sm font-semibold"
+                          />
                         ) : (
-                          <div
-                            className="flex items-center gap-2 group/title cursor-text flex-1 min-w-0"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              startRenaming(section.id, section.title)
-                            }}
+                          <button
+                            type="button"
+                            onClick={() => startRenaming(section)}
+                            className="group/title flex max-w-full items-center gap-1.5 rounded-[6px] px-1 text-start"
+                            title={t('builder.editor.section.rename', 'Rename')}
                           >
-                            <h3 className="font-semibold text-sm text-ds-ink truncate">
-                              {section.title}
-                            </h3>
-                            <span className="text-[11px] text-ds-muted opacity-0 group-hover/title:opacity-100 transition-opacity">
-                              (Click to rename)
+                            <span className="truncate text-sm font-semibold text-ds-ink">
+                              <bdi>{section.title || t('builder.editor.section.untitled', 'Untitled section')}</bdi>
                             </span>
-                          </div>
+                            <Pencil className="h-3 w-3 shrink-0 text-ds-muted opacity-0 transition-opacity group-hover/title:opacity-100 group-focus-visible/title:opacity-100" />
+                          </button>
                         )}
-
-                        <Badge variant="outline" className="text-[11px] font-medium border-ds-border bg-ds-surface text-ds-muted shrink-0">
-                          {section.items.length} {section.items.length === 1 ? 'Lesson' : 'Lessons'}
-                        </Badge>
+                        <p className="px-1 text-[11px] text-ds-muted">
+                          {t('builder.editor.stat.lessons', 'Lessons')} <span className="tabular-nums">{section.items.length}</span>
+                          {section.items.length > 0 && <> · {minutes(sectionMinutes(section))}</>}
+                        </p>
                       </div>
 
-                      <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
-                        {/* Move Up/Down Controls */}
-                        <div className="flex items-center">
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-7 w-7 text-ds-muted hover:text-ds-ink"
-                            disabled={sectionIndex === 0}
-                            onClick={() => onReorderSection(sectionIndex, sectionIndex - 1)}
-                            title="Move section up"
-                          >
-                            <ArrowUp className="w-3.5 h-3.5" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-7 w-7 text-ds-muted hover:text-ds-ink"
-                            disabled={sectionIndex === sections.length - 1}
-                            onClick={() => onReorderSection(sectionIndex, sectionIndex + 1)}
-                            title="Move section down"
-                          >
-                            <ArrowDown className="w-3.5 h-3.5" />
-                          </Button>
-                        </div>
-
-                        {/* Expand All / Collapse All toggle */}
-                        {section.items.length > 0 && (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="h-7 px-2 text-xs font-medium text-ds-muted hover:text-ds-ink hover:bg-ds-surface"
-                            onClick={() => {
-                              if (isSectionFullyExpanded(section)) {
-                                collapseAllInSection(section)
-                              } else {
-                                expandAllInSection(section)
-                              }
-                            }}
-                          >
-                            {isSectionFullyExpanded(section) ? (
-                              <><ChevronUp className="w-3.5 h-3.5 me-1" /><span>{t('builder.inlinePreview.collapseAll', 'Collapse All')}</span></>
-                            ) : (
-                              <><Eye className="w-3.5 h-3.5 me-1 text-ds-muted" /><span>{t('builder.inlinePreview.expandAll', 'Expand All')}</span></>
-                            )}
-                          </Button>
-                        )}
-
-                        {onGenerateQuizFromSection && (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="h-7 px-2 text-xs font-semibold text-ds-accent hover:bg-ds-accent-soft"
-                            onClick={() => onGenerateQuizFromSection(section.id)}
-                          >
-                            <Sparkles className="w-3.5 h-3.5 me-1 text-ds-accent" />
-                            <span>AI Quiz</span>
-                          </Button>
-                        )}
-
+                      {onGenerateQuizFromSection && section.items.length > 0 && (
                         <Button
-                          size="icon"
+                          size="sm"
                           variant="ghost"
-                          className="h-7 w-7 text-ds-muted hover:text-ds-danger hover:bg-ds-danger/10"
-                          onClick={() => onDeleteSection(section.id)}
-                          title="Delete section"
+                          className="hidden h-8 px-2 text-xs sm:inline-flex"
+                          onClick={() => onGenerateQuizFromSection(section.id)}
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
+                          <Sparkles className="h-3.5 w-3.5 text-ds-accent" />
+                          {t('builder.editor.section.quizWithAi', 'Quiz with AI')}
                         </Button>
+                      )}
 
-                        <div className="h-7 w-7 flex items-center justify-center text-ds-muted">
-                          {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                        </div>
-                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            size="icon-sm"
+                            variant="ghost"
+                            className="h-8 w-8 text-ds-muted hover:text-ds-ink"
+                            aria-label={t('builder.editor.section.more', 'Section actions')}
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-52">
+                          <DropdownMenuItem className="gap-2" onSelect={() => startRenaming(section)}>
+                            <Pencil className="h-3.5 w-3.5" />
+                            {t('builder.editor.section.rename', 'Rename')}
+                          </DropdownMenuItem>
+                          {onGenerateQuizFromSection && section.items.length > 0 && (
+                            <DropdownMenuItem className="gap-2 sm:hidden" onSelect={() => onGenerateQuizFromSection(section.id)}>
+                              <Sparkles className="h-3.5 w-3.5" />
+                              {t('builder.editor.section.quizWithAi', 'Quiz with AI')}
+                            </DropdownMenuItem>
+                          )}
+                          {section.items.length > 0 && (
+                            <DropdownMenuItem className="gap-2" onSelect={() => setSectionPreviews(section, !previewsOpen)}>
+                              {previewsOpen ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                              {previewsOpen
+                                ? t('builder.editor.section.hidePreviews', 'Hide all previews')
+                                : t('builder.editor.section.showPreviews', 'Show all previews')}
+                            </DropdownMenuItem>
+                          )}
+                          <DropdownMenuItem className="gap-2"
+                            disabled={sectionIndex === 0}
+                            onSelect={() => onReorderSection(sectionIndex, sectionIndex - 1)}
+                          >
+                            <ArrowUp className="h-3.5 w-3.5" />
+                            {t('builder.editor.section.moveUp', 'Move up')}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="gap-2"
+                            disabled={sectionIndex === sections.length - 1}
+                            onSelect={() => onReorderSection(sectionIndex, sectionIndex + 1)}
+                          >
+                            <ArrowDown className="h-3.5 w-3.5" />
+                            {t('builder.editor.section.moveDown', 'Move down')}
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            className="gap-2 text-ds-danger focus:text-ds-danger"
+                            onSelect={() => requestDeleteSection(section)}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                            {t('builder.editor.section.delete', 'Delete section')}
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
-                  </CardHeader>
 
-                  {/* Section Content & Lesson Blocks */}
-                  {isExpanded && (
-                    <CardContent className="p-4 md:p-5 space-y-4 bg-ds-surface">
-                      {/* Lesson Items */}
-                      {section.items.length === 0 ? (
-                        <div className="p-6 text-center border border-dashed border-ds-border rounded-[8px] bg-ds-surface-subtle/50">
-                          <p className="text-xs font-medium text-ds-muted mb-3">
-                            This section has no lessons yet. Choose a content type below to add your first lesson:
-                          </p>
-                          <div className="flex flex-wrap gap-2 justify-center">
-                            {CONTENT_TYPES_CONFIG.map((config) => {
-                              const IconComponent = config.icon
-                              return (
-                                <Button
-                                  key={config.type}
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => onAddContent(config.type, section.id)}
-                                  className="h-8 text-xs font-medium border-ds-border text-ds-ink hover:bg-ds-surface"
-                                >
-                                  <IconComponent className="w-3.5 h-3.5 me-1.5 text-ds-accent" />
-                                  {config.label}
-                                </Button>
-                              )
-                            })}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="space-y-2">
-                          {filteredItems.map((item, itemIndex) => {
-                            const isBlockExpanded = expandedBlocks.has(item.id)
-                            const hasPreviewableContent = item.content || item.content_url || item.type === 'quiz'
-
-                            return (
-                              <div
-                                key={item.id}
-                                draggable={!isBlockExpanded}
-                                onDragStart={(e) => handleDragStartContent(e, section.id, itemIndex)}
-                                onDragOver={handleDragOver}
-                                onDrop={(e) => handleDropContent(e, section.id, itemIndex)}
-                                className={cn(
-                                  'group rounded-[8px] border bg-ds-surface text-ds-ink transition-all overflow-hidden shadow-2xs',
-                                  isBlockExpanded
-                                    ? 'border-ds-warning/50 shadow-xs'
-                                    : 'border-ds-border hover:border-ds-warning/40 hover:shadow-xs'
-                                )}
-                              >
-                                {/* Compact header row (always visible) */}
-                                <div
-                                  className={cn(
-                                    'flex items-center gap-3 p-3 cursor-pointer'
-                                  )}
-                                  onClick={() => onEditContent(section.id, item.id)}
-                                >
-                                  <div className="cursor-grab active:cursor-grabbing text-ds-muted/50 group-hover:text-ds-muted">
-                                    <GripVertical className="w-4 h-4" />
-                                  </div>
-
-                                  <div className="w-8 h-8 rounded-[6px] bg-ds-surface-subtle border border-ds-border/60 flex items-center justify-center shrink-0 text-ds-ink">
-                                    {getContentIcon(item.type)}
-                                  </div>
-
-                                  <div className={cn('flex-1 min-w-0', 'text-start')}>
-                                    <p className="font-semibold text-xs text-ds-ink truncate">
-                                      {item.title || 'Untitled Lesson Block'}
-                                    </p>
-                                    <p className="text-[11px] text-ds-muted truncate capitalize">
-                                      {item.type.replace('_', ' ')} • {item.is_mandatory ? 'Mandatory' : 'Optional'}
-                                      {item.duration ? ` • ${item.duration} min` : ''}
-                                    </p>
-                                  </div>
-
-                                  {/* Ergonomic Action Toolbar: Primary Actions Always Visible */}
-                                  <div
-                                    className={cn('flex items-center gap-1.5')}
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    {/* Inline Preview Toggle - ALWAYS VISIBLE if content exists */}
-                                    {hasPreviewableContent && (
-                                      <Button
-                                        size="sm"
-                                        variant={isBlockExpanded ? "secondary" : "ghost"}
-                                        className={cn(
-                                          'h-7 px-2 text-xs font-medium transition-colors',
-                                          isBlockExpanded
-                                            ? 'text-ds-warning bg-ds-warning/15 hover:bg-ds-warning/25 border border-ds-warning/20'
-                                            : 'text-ds-muted hover:text-ds-ink hover:bg-ds-surface-subtle'
-                                        )}
-                                        onClick={() => toggleBlockPreview(item.id)}
-                                        title={isBlockExpanded ? t('builder.inlinePreview.collapse', 'Collapse preview') : t('builder.inlinePreview.expand', 'Expand preview')}
-                                      >
-                                        {isBlockExpanded ? (
-                                          <><ChevronUp className="w-3.5 h-3.5 me-1" /><span>{t('builder.inlinePreview.hide', 'Hide')}</span></>
-                                        ) : (
-                                          <><Eye className="w-3.5 h-3.5 me-1 text-ds-muted" /><span>{t('builder.inlinePreview.preview', 'Preview')}</span></>
-                                        )}
-                                      </Button>
-                                    )}
-
-                                    {/* Deep Expand with AI */}
-                                    {item.type === 'text' && onDeepExpandLesson && (
-                                      <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        disabled={expandingLessonId === item.id}
-                                        className="h-7 px-2 text-xs font-medium text-ds-info hover:text-ds-info hover:bg-ds-info/10"
-                                        onClick={async () => {
-                                          setExpandingLessonId(item.id)
-                                          try {
-                                            await onDeepExpandLesson(section.id, item.id)
-                                          } finally {
-                                            setExpandingLessonId(null)
-                                          }
-                                        }}
-                                        title="Deep Expand into 5-Star Operational SOP with AI"
-                                      >
-                                        {expandingLessonId === item.id ? (
-                                          <>
-                                            <Loader2 className="w-3.5 h-3.5 me-1 animate-spin" />
-                                            <span>Expanding...</span>
-                                          </>
-                                        ) : (
-                                          <>
-                                            <Sparkles className="w-3.5 h-3.5 me-1 text-ds-info" />
-                                            <span className="hidden sm:inline">Deep Expand</span>
-                                          </>
-                                        )}
-                                      </Button>
-                                    )}
-
-                                    {/* Edit Button - ALWAYS VISIBLE */}
-                                    <Button
-                                      size="sm"
-                                      variant="outline"
-                                      className="h-7 px-2.5 text-xs font-medium border-ds-border bg-ds-surface text-ds-ink hover:bg-ds-surface-subtle hover:border-ds-warning/40"
-                                      onClick={() => onEditContent(section.id, item.id)}
-                                    >
-                                      <Edit3 className="w-3 h-3 me-1 text-ds-muted" />
-                                      <span>Edit</span>
-                                    </Button>
-
-                                    {/* Delete Button (Subtle hover action) */}
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      className="h-7 w-7 p-0 text-ds-muted hover:text-ds-danger hover:bg-ds-danger/10 opacity-60 group-hover:opacity-100 transition-opacity"
-                                      onClick={() => onDeleteContent(section.id, item.id)}
-                                      title="Delete lesson"
-                                    >
-                                      <Trash2 className="w-3.5 h-3.5" />
-                                    </Button>
-                                  </div>
-                                </div>
-
-                                {/* Inline Content Preview (expanded state) */}
-                                {isBlockExpanded && (
-                                  <div className="border-t border-ds-border bg-ds-surface-subtle/50">
-                                    <InlineBlockPreview
-                                      block={item}
-                                      isRTL={isRTL}
-                                      onRegenerateQuiz={onGenerateQuizFromSection ? () => onGenerateQuizFromSection(section.id) : undefined}
-                                    />
-                                  </div>
-                                )}
-                              </div>
-                            )
-                          })}
-
-                          {/* Fast Add Inline Toolbar */}
-                          <div className="pt-3 flex items-center justify-between border-t border-ds-border flex-wrap gap-2">
-                            <span className="text-[11px] font-medium text-ds-muted">Add Lesson:</span>
-                            <div className="flex flex-wrap gap-1.5">
-                              {CONTENT_TYPES_CONFIG.map((config) => {
-                                const IconComponent = config.icon
+                    {/* Lessons */}
+                    {isExpanded && (
+                      <div className="space-y-2 p-3">
+                        {section.items.length === 0 ? (
+                          <div className="rounded-[8px] border border-dashed border-ds-border p-4">
+                            <p className="text-xs text-ds-muted">
+                              {t('builder.editor.section.empty', 'No lessons in this section yet. Add the first one:')}
+                            </p>
+                            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                              {ADDABLE_TYPES.map((type) => {
+                                const Icon = TYPE_ICONS[type]
                                 return (
-                                  <Button
-                                    key={config.type}
-                                    size="sm"
-                                    variant="ghost"
-                                    onClick={() => onAddContent(config.type, section.id)}
-                                    className="h-7 px-2 text-[11px] font-medium text-ds-muted hover:text-ds-ink hover:bg-ds-surface-subtle"
+                                  <button
+                                    key={type}
+                                    type="button"
+                                    onClick={() => onAddContent(type, section.id)}
+                                    title={typeHint(type)}
+                                    className="flex items-center gap-2 rounded-[6px] border border-ds-border bg-ds-surface px-2.5 py-2 text-start text-xs font-medium text-ds-ink transition-colors hover:border-ds-border-strong hover:bg-ds-surface-subtle"
                                   >
-                                    <IconComponent className="w-3 h-3 me-1 text-ds-muted" />
-                                    {config.label.split(' ')[0]}
-                                  </Button>
+                                    <Icon className="h-3.5 w-3.5 shrink-0 text-ds-ink-secondary" />
+                                    <span className="truncate">{typeLabel(type)}</span>
+                                  </button>
                                 )
                               })}
                             </div>
                           </div>
-                        </div>
-                      )}
-                    </CardContent>
-                  )}
-                </Card>
-              )
-            })}
+                        ) : (
+                          <ul className="space-y-2">
+                            {section.items.map((item, itemIndex) => {
+                              const Icon = TYPE_ICONS[item.type] ?? FileText
+                              const isBlockExpanded = expandedBlocks.has(item.id)
+                              const hasPreviewableContent = Boolean(item.content || item.content_url || item.type === 'quiz')
+                              const isExpanding = expandingLessonId === item.id
 
-            {/* Bottom Add Section Card */}
-            <div
+                              return (
+                                <li
+                                  key={item.id}
+                                  draggable={!isBlockExpanded}
+                                  onDragStart={(e) => handleDragStartContent(e, section.id, itemIndex)}
+                                  onDragOver={handleDragOver}
+                                  onDrop={(e) => handleDropContent(e, section.id, itemIndex)}
+                                  className={cn(
+                                    'group overflow-hidden rounded-[6px] border bg-ds-surface transition-colors',
+                                    isBlockExpanded ? 'border-ds-border-strong' : 'border-ds-border hover:border-ds-border-strong'
+                                  )}
+                                >
+                                  <div className="flex items-center gap-2.5 px-2.5 py-2">
+                                    <span className="hidden cursor-grab text-ds-muted/50 group-hover:text-ds-muted active:cursor-grabbing sm:block" aria-hidden>
+                                      <GripVertical className="h-4 w-4" />
+                                    </span>
+                                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[6px] bg-ds-surface-subtle">
+                                      <Icon className="h-4 w-4 text-ds-ink-secondary" />
+                                    </span>
+                                    <button
+                                      type="button"
+                                      onClick={() => onEditContent(section.id, item.id)}
+                                      className="min-w-0 flex-1 text-start"
+                                    >
+                                      <span className="block truncate text-sm font-medium text-ds-ink">
+                                        <bdi>{item.title || t('builder.editor.lesson.untitled', 'Untitled lesson')}</bdi>
+                                      </span>
+                                      <span className="block truncate text-[11px] text-ds-muted">
+                                        {typeLabel(item.type)}
+                                        {' · '}
+                                        {item.is_mandatory
+                                          ? t('builder.editor.lesson.required', 'Required')
+                                          : t('builder.editor.lesson.optional', 'Optional')}
+                                        {item.duration ? <> · {minutes(item.duration)}</> : null}
+                                      </span>
+                                    </button>
+
+                                    <div className="flex shrink-0 items-center gap-1">
+                                      {hasPreviewableContent && (
+                                        <Button
+                                          size="sm"
+                                          variant="ghost"
+                                          className={cn('hidden h-8 px-2 text-xs sm:inline-flex', isBlockExpanded && 'bg-ds-surface-subtle')}
+                                          onClick={() => toggleBlockPreview(item.id)}
+                                          aria-expanded={isBlockExpanded}
+                                        >
+                                          {isBlockExpanded ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                                          {isBlockExpanded
+                                            ? t('builder.editor.lesson.hide', 'Hide')
+                                            : t('builder.editor.lesson.preview', 'Preview')}
+                                        </Button>
+                                      )}
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        className="h-8 px-2.5 text-xs"
+                                        onClick={() => onEditContent(section.id, item.id)}
+                                      >
+                                        {t('builder.editor.lesson.edit', 'Edit')}
+                                      </Button>
+                                      <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                          <Button
+                                            size="icon-sm"
+                                            variant="ghost"
+                                            className="h-8 w-8 text-ds-muted hover:text-ds-ink"
+                                            aria-label={t('builder.editor.lesson.more', 'Lesson actions')}
+                                          >
+                                            {isExpanding ? <Loader2 className="h-4 w-4 animate-spin" /> : <MoreHorizontal className="h-4 w-4" />}
+                                          </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end" className="w-52">
+                                          {hasPreviewableContent && (
+                                            <DropdownMenuItem className="gap-2 sm:hidden" onSelect={() => toggleBlockPreview(item.id)}>
+                                              {isBlockExpanded ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                                              {isBlockExpanded
+                                                ? t('builder.editor.lesson.hide', 'Hide')
+                                                : t('builder.editor.lesson.preview', 'Preview')}
+                                            </DropdownMenuItem>
+                                          )}
+                                          {item.type === 'text' && onDeepExpandLesson && (
+                                            <DropdownMenuItem className="gap-2"
+                                              disabled={isExpanding}
+                                              onSelect={async () => {
+                                                setExpandingLessonId(item.id)
+                                                try {
+                                                  await onDeepExpandLesson(section.id, item.id)
+                                                } finally {
+                                                  setExpandingLessonId(null)
+                                                }
+                                              }}
+                                            >
+                                              <Sparkles className="h-3.5 w-3.5" />
+                                              {isExpanding
+                                                ? t('builder.editor.lesson.expanding', 'Expanding…')
+                                                : t('builder.editor.lesson.expandWithAi', 'Expand with AI')}
+                                            </DropdownMenuItem>
+                                          )}
+                                          {(hasPreviewableContent || (item.type === 'text' && onDeepExpandLesson)) && <DropdownMenuSeparator />}
+                                          <DropdownMenuItem
+                                            className="gap-2 text-ds-danger focus:text-ds-danger"
+                                            onSelect={() => onDeleteContent(section.id, item.id)}
+                                          >
+                                            <Trash2 className="h-3.5 w-3.5" />
+                                            {t('builder.editor.lesson.delete', 'Delete lesson')}
+                                          </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                      </DropdownMenu>
+                                    </div>
+                                  </div>
+
+                                  {isBlockExpanded && (
+                                    <div className="border-t border-ds-border bg-ds-surface-subtle/50">
+                                      <InlineBlockPreview
+                                        block={item}
+                                        isRTL={isRTL}
+                                        onRegenerateQuiz={onGenerateQuizFromSection ? () => onGenerateQuizFromSection(section.id) : undefined}
+                                      />
+                                    </div>
+                                  )}
+                                </li>
+                              )
+                            })}
+                          </ul>
+                        )}
+
+                        {section.items.length > 0 && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button size="sm" variant="ghost" className="h-8 px-2 text-xs text-ds-ink-secondary">
+                                <Plus className="h-3.5 w-3.5" />
+                                {t('builder.editor.section.addLesson', 'Add lesson')}
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start" className="w-64">
+                              {ADDABLE_TYPES.map((type) => {
+                                const Icon = TYPE_ICONS[type]
+                                const hint = typeHint(type)
+                                return (
+                                  <DropdownMenuItem key={type} onSelect={() => onAddContent(type, section.id)} className="gap-2 items-start">
+                                    <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                                    <span className="min-w-0">
+                                      <span className="block text-sm font-medium">{typeLabel(type)}</span>
+                                      {hint && <span className="block text-[11px] text-ds-muted">{hint}</span>}
+                                    </span>
+                                  </DropdownMenuItem>
+                                )
+                              })}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+                      </div>
+                    )}
+                  </li>
+                )
+              })}
+            </ol>
+          )}
+
+          {sections.length > 0 && (
+            <button
+              type="button"
               onClick={onAddSection}
-              className="p-4 rounded-[8px] border-2 border-dashed border-ds-border hover:border-ds-warning/40 hover:bg-ds-warning/5 transition-all text-center cursor-pointer flex items-center justify-center gap-2 text-xs font-semibold text-ds-muted hover:text-ds-ink"
+              className="flex w-full items-center justify-center gap-2 rounded-[8px] border border-dashed border-ds-border p-3 text-xs font-semibold text-ds-muted transition-colors hover:border-ds-border-strong hover:bg-ds-surface hover:text-ds-ink"
             >
-              <Plus className="w-4 h-4 text-ds-warning" />
-              <span>Add Another Section to Course</span>
-            </div>
-          </div>
-        )}
+              <Plus className="h-4 w-4" />
+              {t('builder.editor.addAnotherSection', 'Add another section')}
+            </button>
+          )}
+        </section>
       </div>
 
-      {/* Quick Lesson SOP Preview Dialog */}
-      <Dialog open={!!previewingBlock} onOpenChange={(open) => !open && setPreviewingBlock(null)}>
-        <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-6 bg-ds-surface border-ds-border text-ds-ink">
-          <DialogHeader className="pb-3 border-b border-ds-border">
-            <DialogTitle className="text-base font-bold flex items-center gap-2 text-ds-ink">
-              <FileText className="w-4 h-4 text-ds-warning" />
-              <span>{previewingBlock?.title || 'Lesson SOP Preview'}</span>
-            </DialogTitle>
-          </DialogHeader>
-          <ScrollArea className="flex-1 max-h-[60vh] pe-4 py-4">
-            {previewingBlock?.content ? (
-              <div
-                className="prose prose-sm dark:prose-invert max-w-none text-ds-ink leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: sanitizeHtml(previewingBlock.content) }}
-              />
-            ) : (
-              <p className="text-xs text-ds-muted italic">No SOP text content available for this lesson block.</p>
-            )}
-          </ScrollArea>
-        </DialogContent>
-      </Dialog>
+      <AlertDialog open={!!pendingDelete} onOpenChange={(open) => !open && setPendingDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('builder.editor.section.deleteTitle', 'Delete this section?')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('builder.editor.section.deleteDesc', {
+                count: pendingDelete?.items.length ?? 0,
+                defaultValue: 'The section and its {{count}} lessons will be removed from this course. You can bring them back with Undo.',
+              })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('common:cancel', 'Cancel')}</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-ds-danger text-white hover:bg-ds-danger/90"
+              onClick={() => {
+                if (pendingDelete) onDeleteSection(pendingDelete.id)
+                setPendingDelete(null)
+              }}
+            >
+              {t('builder.editor.section.deleteConfirm', 'Delete section')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
