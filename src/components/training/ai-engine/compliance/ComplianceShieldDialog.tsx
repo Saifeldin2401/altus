@@ -108,19 +108,16 @@ export function ComplianceShieldDialog({
               </div>
               <div>
                 <DialogTitle className="text-lg font-bold flex items-center gap-2">
-                  <span>{t('complianceShield.title', 'KSA Hospitality & Regulatory Compliance Shield')}</span>
-                  <Badge variant="outline" className="text-xs bg-ds-success-soft text-ds-success border-ds-success/30">
-                    KSA Vision 2030 Ready
-                  </Badge>
+                  <span>{t('complianceShield.titlePlain', 'Compliance checklist')}</span>
                 </DialogTitle>
                 <DialogDescription className="text-xs text-muted-foreground mt-0.5">
-                  {t('complianceShield.desc', 'Audits training SOPs against Ministry of Tourism (MT), Balady Municipal HACCP, and Civil Defense fire safety standards.')}
+                  {t('complianceShield.descPlain', 'Looks for topics that Saudi hospitality training usually covers (tourism, food safety, fire safety, labour and invoicing rules). It is a keyword check, not a legal review.')}
                 </DialogDescription>
               </div>
             </div>
 
             <Button size="sm" variant="outline" onClick={runAudit} className="text-xs h-8">
-              {t('complianceShield.recheck', 'Re-Audit')}
+              {t('complianceShield.recheckPlain', 'Check again')}
             </Button>
           </div>
         </DialogHeader>

@@ -156,7 +156,6 @@ export function StudioStageBasics({
       desc: 'Complete multi-module course with lessons, interactive procedures, activities, and quizzes.',
       desc_ar: 'دورة تدريبية متكاملة متعددة الوحدات مع دروس تفاعلية واختبارات تقييمية.',
       icon: Layers,
-      badge: 'Popular',
       color: 'border-ds-accent bg-ds-accent-soft/50 text-ds-accent',
     },
     {
@@ -166,7 +165,6 @@ export function StudioStageBasics({
       desc: 'Transform company SOPs, manuals, or policies into high-retention instructional modules.',
       desc_ar: 'تحويل السياسات وإجراءات العمل إلى وحدات تدريبية واضحة.',
       icon: FileText,
-      badge: 'Grounded',
       color: 'border-ds-info bg-ds-info-soft/50 text-ds-info',
     },
     {
@@ -551,7 +549,7 @@ export function StudioStageBasics({
                   <Input
                     value={docSearchQuery}
                     onChange={(e) => setDocSearchQuery(e.target.value)}
-                    placeholder={t('builder.searchSOPs', 'Search 100+ hotel SOP articles by title, policy, department, or procedure...')}
+                    placeholder={t('builder.searchSOPsPlain', 'Search your knowledge articles by title or department')}
                     className="ps-9 text-xs h-9 bg-card focus-visible:ring-ds-accent"
                   />
                   {docSearchQuery && (
@@ -613,7 +611,7 @@ export function StudioStageBasics({
                 {!docSearchQuery && (
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-                      <span>{t('builder.popularSOPs', '⚡ Popular SOP Grounding Presets:')}</span>
+                      <span>{t('builder.exampleTopics', 'Example topics')}</span>
                     </div>
                     <div className="flex flex-wrap gap-1.5">
                       {[

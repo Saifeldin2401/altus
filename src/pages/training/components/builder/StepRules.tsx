@@ -43,16 +43,6 @@ interface StepRulesProps {
   setAllowRetake: (v: boolean) => void
   maxAttempts: string
   setMaxAttempts: (v: string) => void
-  autoAdvance: boolean
-  setAutoAdvance: (v: boolean) => void
-  showFeedback: boolean
-  setShowFeedback: (v: boolean) => void
-  randomizeQuestions: boolean
-  setRandomizeQuestions: (v: boolean) => void
-  showAnswers: boolean
-  setShowAnswers: (v: boolean) => void
-  timeLimit: number | null
-  setTimeLimit: (v: number | null) => void
   isRTL: boolean
 }
 
@@ -76,16 +66,6 @@ export function StepRules({
   setAllowRetake,
   maxAttempts,
   setMaxAttempts,
-  autoAdvance,
-  setAutoAdvance,
-  showFeedback,
-  setShowFeedback,
-  randomizeQuestions,
-  setRandomizeQuestions,
-  showAnswers,
-  setShowAnswers,
-  timeLimit,
-  setTimeLimit,
 }: StepRulesProps) {
   const { t } = useTranslation('training')
   const scorePresets = ['70', '80', '85', '90']
@@ -290,46 +270,6 @@ export function StepRules({
                   </div>
                 </div>
 
-                {/* Question Randomization & Feedback */}
-                <div className="grid md:grid-cols-2 gap-4 pt-4 border-t border-ds-border">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label className="text-sm font-semibold text-ds-ink">{t('builder.randomizeQuestions', 'Randomize Question Order')}</Label>
-                      <p className="text-xs text-ds-muted">{t('builder.randomizeQuestionsHint', 'Shuffle questions for each learner')}</p>
-                    </div>
-                    <Switch checked={randomizeQuestions} onCheckedChange={setRandomizeQuestions} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label className="text-sm font-semibold text-ds-ink">{t('builder.showAnswers', 'Show Answer Explanations')}</Label>
-                      <p className="text-xs text-ds-muted">{t('builder.showAnswersHint', 'Display remedial rationale after submission')}</p>
-                    </div>
-                    <Switch checked={showAnswers} onCheckedChange={setShowAnswers} />
-                  </div>
-                </div>
-
-                {/* Time Limit & Auto Advance */}
-                <div className="grid md:grid-cols-2 gap-4 pt-4 border-t border-ds-border">
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold text-ds-ink">
-                      {t('builder.timeLimit', 'Quiz Time Limit (Minutes)')}
-                    </Label>
-                    <Input
-                      type="number"
-                      value={timeLimit ?? ''}
-                      onChange={(e) => setTimeLimit(e.target.value ? Number(e.target.value) : null)}
-                      placeholder={t('builder.timeLimitPlaceholder', 'e.g. 10 (Optional)')}
-                      className="bg-ds-surface border-ds-border text-ds-ink focus-visible:ring-ds-accent"
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <Label className="text-sm font-semibold text-ds-ink">{t('builder.autoAdvance', 'Auto-Advance on Passing')}</Label>
-                      <p className="text-xs text-ds-muted">{t('builder.autoAdvanceHint', 'Automatically unlock and route to next lesson')}</p>
-                    </div>
-                    <Switch checked={autoAdvance} onCheckedChange={setAutoAdvance} />
-                  </div>
-                </div>
               </>
             )}
           </CardContent>
@@ -362,7 +302,7 @@ export function StepRules({
                 </div>
                 <div className="p-3 bg-ds-surface-subtle rounded-[6px] text-xs text-ds-muted flex items-center gap-2 border border-ds-border">
                   <CheckCircle2 className="w-4 h-4 text-ds-success shrink-0" />
-                  <span>{t('builder.certAutoIssue', 'Certificates are cryptographically verified and issued upon 100% verified completion.')}</span>
+                  <span>{t('builder.certAutoIssuePlain', 'A certificate is issued automatically when a learner completes the course.')}</span>
                 </div>
               </div>
             </CardContent>
@@ -386,12 +326,12 @@ export function StepRules({
             <CardContent>
               <div className="text-xs text-ds-muted space-y-1">
                 <p className="font-semibold text-ds-ink">
-                  {t('builder.mediaGateActive', 'Media Completion Gate is Active')}
+                  {t('builder.mediaGatePlain', 'How videos and audio count as done')}
                 </p>
                 <p>
                   {t(
-                    'builder.mediaGateActiveDesc',
-                    'Learners must watch/listen to mandatory video and audio content to at least 90% before subsequent lesson blocks are unlocked in sequential mode.'
+                    'builder.mediaGatePlainDesc',
+                    'A required video or audio lesson counts as done once the learner has played 90% of it, or presses Mark as watched.'
                   )}
                 </p>
               </div>

@@ -3,36 +3,27 @@ import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
-import { Progress } from '@/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import {
   CheckCircle2,
   ChevronDown,
   ChevronUp,
-  Cpu,
   Image as ImageIcon,
-  Sparkles
+  Sparkles,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { cloudflareProvider } from '@/lib/ai/imageProviders/cloudflareProvider'
-import type { ImageDensity, VisualStyle } from '@/types/aiCourseEngine'
+import type { VisualStyle } from '@/types/aiCourseEngine'
 
 interface StudioStageVisualsProps {
   enableAIImages: boolean
   onChangeEnableAIImages: (enable: boolean) => void
   imageModel: string
   onChangeImageModel: (model: string) => void
-  imageDensity: ImageDensity
-  onChangeImageDensity: (density: ImageDensity) => void
-  imageSelectionStrategy: 'auto_intelligent' | 'all_suitable_lessons' | 'high_benefit_only'
-  onChangeImageSelectionStrategy: (strat: 'auto_intelligent' | 'all_suitable_lessons' | 'high_benefit_only') => void
   preferredVisualStyle: VisualStyle
   onChangePreferredVisualStyle: (style: VisualStyle) => void
   preferredAspectRatio: '16:9' | '4:3' | '1:1' | '3:2'
   onChangePreferredAspectRatio: (ratio: '16:9' | '4:3' | '1:1' | '3:2') => void
-  maxImagesPerLesson: number
-  onChangeMaxImagesPerLesson: (count: number) => void
   maxImagesPerCourse: number
   onChangeMaxImagesPerCourse: (count: number) => void
 }
@@ -42,16 +33,10 @@ export function StudioStageVisuals({
   onChangeEnableAIImages,
   imageModel,
   onChangeImageModel,
-  imageDensity,
-  onChangeImageDensity,
-  imageSelectionStrategy,
-  onChangeImageSelectionStrategy,
   preferredVisualStyle,
   onChangePreferredVisualStyle,
   preferredAspectRatio,
   onChangePreferredAspectRatio,
-  maxImagesPerLesson,
-  onChangeMaxImagesPerLesson,
   maxImagesPerCourse,
   onChangeMaxImagesPerCourse,
 }: StudioStageVisualsProps) {
@@ -117,7 +102,6 @@ export function StudioStageVisuals({
     },
   ]
 
-  const isFlux = imageModel.includes('flux')
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto py-2">
@@ -130,13 +114,10 @@ export function StudioStageVisuals({
             </div>
             <div>
               <Label className="text-sm font-bold text-foreground flex items-center gap-2">
-                <span>{t('builder.generateAIImages', 'AI Visual Assets & Infographics')}</span>
-                <Badge className={cn('text-[11px]', isFlux ? 'bg-ds-accent text-white dark:text-ds-on-ink' : 'bg-ds-success text-white dark:text-ds-on-ink')}>
-                  {isFlux ? '✨ FLUX.1 Ultra-HD' : '⚡ Cloudflare Free Tier'}
-                </Badge>
+                <span>{t('builder.generateAIImagesPlain', 'Add AI images')}</span>
               </Label>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {t('builder.aiImagesDesc', 'Automatically synthesizes contextual diagrams, infographics, and SOP visuals directly to Supabase storage.')}
+                {t('builder.aiImagesDescPlain', 'Adds diagrams and illustrations to lessons that benefit from them. Images are saved with the course.')}
               </p>
             </div>
           </div>
@@ -144,40 +125,6 @@ export function StudioStageVisuals({
           <Switch checked={enableAIImages} onCheckedChange={onChangeEnableAIImages} />
         </div>
 
-        {/* Cloudflare Neurons Usage Meter */}
-        {enableAIImages && (() => {
-          const usageStats = cloudflareProvider.getUsageStats()
-          const estimatedCourseNeurons = isFlux
-            ? maxImagesPerCourse * 300
-            : imageModel.includes('dreamshaper')
-            ? maxImagesPerCourse * 160
-            : imageModel.includes('base-1.0')
-            ? maxImagesPerCourse * 400
-            : 0
-
-          return (
-            <div className="p-3.5 rounded-[8px] border bg-ds-warning-soft/70 space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Cpu className="w-4 h-4 text-ds-warning" />
-                  <span className="text-xs font-bold text-foreground">Cloudflare Workers AI Image Engine</span>
-                </div>
-                <span className="text-xs font-mono font-semibold text-ds-warning">
-                  {usageStats.usedNeurons.toLocaleString()} / {usageStats.totalDailyNeurons.toLocaleString()} Neurons ({usageStats.percentageUsed}% Used)
-                </span>
-              </div>
-              <Progress value={Math.max(2, usageStats.percentageUsed)} className="h-1.5 bg-ds-warning-soft" />
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-muted-foreground gap-1">
-                <span>
-                  Forecast for this course ({maxImagesPerCourse} images): <strong className="text-foreground">{estimatedCourseNeurons === 0 ? '0 Neurons ($0.00 / Step Free Tier)' : `~${estimatedCourseNeurons.toLocaleString()} Neurons`}</strong>
-                </span>
-                <span className={cn('font-semibold', usageStats.isRateLimited ? 'text-ds-danger' : 'text-ds-success')}>
-                  {usageStats.isRateLimited ? '● Quota Rate Limited' : '● Status: Healthy (Online)'}
-                </span>
-              </div>
-            </div>
-          )
-        })()}
       </div>
 
       {enableAIImages && (
@@ -230,23 +177,7 @@ export function StudioStageVisuals({
           </div>
 
           {/* 3. Visual Density & Primary Model */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-[8px] border bg-card/80 shadow-sm">
-            {/* Visual Density */}
-            <div className="space-y-1.5">
-              <Label className="text-xs font-semibold">{t('builder.imageDensity', 'Image Density Strategy')}</Label>
-              <Select value={imageDensity} onValueChange={(v: any) => onChangeImageDensity(v)}>
-                <SelectTrigger className="text-xs">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="minimal">Minimal (Only key SOP procedures)</SelectItem>
-                  <SelectItem value="balanced">Balanced (Materially improves learning • Recommended)</SelectItem>
-                  <SelectItem value="visual">Visual-Rich (Frequent visual illustrations)</SelectItem>
-                  <SelectItem value="maximum">Maximum (Every lesson receives a tailored visual)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
+          <div className="p-4 rounded-[8px] border bg-card/80 shadow-sm">
             {/* Image Model Engine */}
             <div className="space-y-1.5">
               <Label className="text-xs font-semibold">{t('builder.imageModelEngine', 'AI Visual Generation Engine')}</Label>
@@ -323,21 +254,6 @@ export function StudioStageVisuals({
                         <SelectItem value="4:3">4:3 Standard Frame</SelectItem>
                         <SelectItem value="1:1">1:1 Square (Cards / Modules)</SelectItem>
                         <SelectItem value="3:2">3:2 Classic Photo</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {/* Max Per Lesson */}
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold">Max Images Per Lesson</Label>
-                    <Select value={String(maxImagesPerLesson)} onValueChange={(v) => onChangeMaxImagesPerLesson(parseInt(v, 10))}>
-                      <SelectTrigger className="text-xs">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1">1 Image Per Lesson</SelectItem>
-                        <SelectItem value="2">2 Images Per Lesson</SelectItem>
-                        <SelectItem value="3">3 Images Per Lesson</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

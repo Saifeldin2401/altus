@@ -710,17 +710,17 @@ export function ContentBlockSlideOver({
                     "text-start"
                   )}
                 >
-                  <span>{t('builder.optionalSettings', 'Duration & Scoring Settings')}</span>
+                  <span>{t('builder.editor.moreOptions', 'More options')}</span>
                   <span className="text-[11px] font-semibold text-ds-brass">
-                    {showAdvancedBlockOptions ? t('builder.hideOptionalSettings', 'Hide') : t('builder.showOptionalSettings', 'Configure')}
+                    {showAdvancedBlockOptions ? t('builder.editor.hide', 'Hide') : t('builder.editor.show', 'Show')}
                   </span>
                 </button>
 
                 {showAdvancedBlockOptions && (
                   <div className={cn("p-4 space-y-4 border-t border-ds-border bg-ds-surface")}>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <div className={''}>
-                        <Label className="text-xs font-semibold">{t('duration', 'Duration')}</Label>
+                        <Label className="text-xs font-semibold">{t('builder.editor.lessonTime', 'Estimated time')}</Label>
                         <div className="relative mt-1">
                           <Input
                             type="number"
@@ -730,19 +730,6 @@ export function ContentBlockSlideOver({
                             className={cn("pe-8")}
                           />
                           <span className={cn("absolute top-2.5 text-ds-muted text-xs", "end-3")}>{t('min', 'min')}</span>
-                        </div>
-                      </div>
-                      <div className={''}>
-                        <Label className="text-xs font-semibold">{t('points', 'Points')}</Label>
-                        <div className="relative mt-1">
-                          <Input
-                            type="number"
-                            value={currentBlock.points || ''}
-                            onChange={(e) => setCurrentBlock({ ...currentBlock, points: parseInt(e.target.value) || 0 })}
-                            placeholder="1"
-                            className={cn("pe-8")}
-                          />
-                          <span className={cn("absolute top-2.5 text-ds-muted text-xs", "end-3")}>{t('pts', 'pts')}</span>
                         </div>
                       </div>
                     </div>
@@ -766,8 +753,8 @@ export function ContentBlockSlideOver({
               {/* Mandatory Switch */}
               <div className={cn("flex items-center justify-between rounded-[8px] border border-ds-border bg-ds-surface px-4 py-3")}>
                 <div>
-                  <div className="text-xs font-bold text-ds-ink">{t('builder.mandatory', 'Mandatory Lesson')}</div>
-                  <div className="text-[11px] text-muted-foreground">{t('builder.mandatoryHint', 'Require completion before proceeding.')}</div>
+                  <div className="text-xs font-bold text-ds-ink">{t('builder.editor.requiredLesson', 'Required lesson')}</div>
+                  <div className="text-[11px] text-muted-foreground">{t('builder.editor.requiredLessonHint', 'The course only counts as complete when learners finish this lesson. Turn off for optional extra reading.')}</div>
                 </div>
                 <Switch checked={currentBlock.is_mandatory} onCheckedChange={(checked) => setCurrentBlock({ ...currentBlock, is_mandatory: checked })} />
               </div>
@@ -783,7 +770,7 @@ export function ContentBlockSlideOver({
               <Button variant="outline" size="sm" onClick={() => onOpenChange(false)} className="text-xs font-semibold">
                 {t('cancel', 'Cancel')}
               </Button>
-              <Button onClick={saveContent} size="sm" className="text-xs font-bold bg-ds-brass hover:bg-ds-accent-hover text-white dark:text-ds-on-ink">
+              <Button onClick={saveContent} size="sm" className="text-xs font-semibold">
                 {selectedContent ? t('save', 'Save Changes') : t('builder.addContent', 'Add to Section')}
               </Button>
             </div>

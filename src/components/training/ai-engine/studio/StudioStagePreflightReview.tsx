@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import {
@@ -8,15 +7,13 @@ import {
   FileText,
   Image as ImageIcon,
   Layers,
-  Rocket,
-  Save,
-  Sparkles,
-  Target
+  Target,
 } from 'lucide-react'
 import type { StudioStageId } from './StudioWorkflowStepper'
 import type { FullCourseGenerationConfig } from '@/types/aiCourseEngine'
 import { StudioIntelligentAdvisor, type IntelligentRecommendation } from './StudioIntelligentAdvisor'
 import type { ConsistencyReport } from '@/lib/ai/courseHarmonizer'
+import { cn } from '@/lib/utils'
 
 interface StudioStagePreflightReviewProps {
   config: FullCourseGenerationConfig
@@ -52,41 +49,30 @@ export function StudioStagePreflightReview({
   const durationString = hours > 0 ? `${hours}h ${minutes > 0 ? `${minutes}m` : ''}` : `${minutes}m`
 
   const hasIssues = consistencyReport && consistencyReport.issues.length > 0
-  const qualityScore = hasIssues ? Math.max(75, 100 - consistencyReport.issues.length * 5) : 98
+  const issueCount = consistencyReport?.issues.length ?? 0
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto py-2">
-      {/* 1. Header & Quality Score Gauge */}
-      <div className="p-5 rounded-[8px] border border-ds-accent/80 bg-ds-accent-soft/90 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm">
+      {/* 1. Header: what was actually checked, no invented score */}
+      <div className="p-4 rounded-[8px] border border-ds-border bg-ds-surface flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-ds-accent" />
-            <h2 className="text-base font-bold text-foreground">
-              {t('builder.preflightAudit', 'Pre-Flight Course Quality Audit')}
-            </h2>
-            <Badge className="bg-ds-accent text-white dark:text-ds-on-ink text-[11px]">
-              Ready to Author
-            </Badge>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            {t('builder.preflightAuditDesc', 'Review pedagogical parameters, structure consistency, and assessment alignments before launching generation.')}
+          <h2 className="text-sm font-semibold text-ds-ink">
+            {t('builder.reviewTitle', 'Review before you generate')}
+          </h2>
+          <p className="text-xs text-ds-muted">
+            {t('builder.reviewDesc', 'Check the settings below. Nothing is generated until you press Create course.')}
           </p>
         </div>
-
-        {/* Quality Score Badge */}
-        <div className="flex items-center gap-3 bg-card/80 p-3 rounded-[8px] border self-start md:self-auto shadow-xs">
-          <div className="w-10 h-10 rounded-lg bg-ds-accent/15 text-ds-accent flex items-center justify-center font-extrabold text-sm">
-            {qualityScore}%
-          </div>
-          <div>
-            <p className="text-[11px] font-bold uppercase text-muted-foreground tracking-wider">
-              {t('builder.qualityForecast', 'Pedagogical Quality')}
-            </p>
-            <p className="text-xs font-bold text-foreground">
-              {qualityScore >= 90 ? '⭐⭐⭐⭐⭐ 5-Star Benchmark' : '⭐⭐⭐⭐ Good Alignment'}
-            </p>
-          </div>
-        </div>
+        <span
+          className={cn(
+            'inline-flex items-center gap-1.5 self-start rounded-full px-2.5 py-1 text-xs font-semibold md:self-auto',
+            hasIssues ? 'bg-ds-warning-soft text-ds-warning-text' : 'bg-ds-success-soft text-ds-success'
+          )}
+        >
+          {hasIssues
+            ? t('builder.settingsIssues', { count: issueCount, defaultValue: '{{count}} settings to look at' })
+            : t('builder.settingsConsistent', 'Settings are consistent')}
+        </span>
       </div>
 
       {/* 2. Intelligent Pedagogical Advisor Banner */}
@@ -221,7 +207,6 @@ export function StudioStagePreflightReview({
               <p className="font-semibold text-foreground">
                 {config.imageConfig?.enableAIImages ? (config.imageConfig?.imageModel?.includes('flux') ? '✨ FLUX.1 Schnell Ultra-HD' : '⚡ SDXL-Lightning Free') : 'Visuals Disabled'}
               </p>
-              <p className="text-muted-foreground">Density: <span className="capitalize">{config.imageConfig?.density || 'balanced'}</span></p>
               <p className="text-muted-foreground">Style: <span className="capitalize">{config.imageConfig?.preferredStyle?.replace('_', ' ') || 'Educational Illustration'}</span></p>
             </div>
           </CardContent>
@@ -247,50 +232,11 @@ export function StudioStagePreflightReview({
             <div className="text-xs space-y-1">
               <p className="font-semibold text-foreground">Auto Intelligent Router</p>
               <p className="text-muted-foreground">Language: {config.aiControls?.targetLanguage || 'English'}</p>
-              <p className="text-muted-foreground">five-star & KSA Labor Guidelines Enforced</p>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* 4. Pre-Flight Actions Bar */}
-      <div className="p-4 rounded-[8px] border bg-card flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm">
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={onSavePresetClick}
-            className="text-xs font-semibold"
-          >
-            <Save className="w-3.5 h-3.5 me-1.5" />
-            {t('builder.saveAsPreset', 'Save as Custom Preset')}
-          </Button>
-
-          {hasIssues && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={onHarmonize}
-              className="text-xs font-bold text-ds-warning border-ds-warning/30 hover:bg-ds-warning-soft"
-            >
-              ⚡ {t('builder.harmonizeAll', 'Harmonize Settings')}
-            </Button>
-          )}
-        </div>
-
-        <Button
-          type="button"
-          size="lg"
-          onClick={onGenerateClick}
-          disabled={isGenerating}
-          className="w-full sm:w-auto h-11 px-8 text-sm font-extrabold bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink hover:shadow-lg transition-all"
-        >
-          <Rocket className="w-4 h-4 me-2" />
-          {t('builder.launchGeneration', 'Generate Full Course Curriculum')}
-        </Button>
-      </div>
     </div>
   )
 }

@@ -70,7 +70,13 @@ Do NOT output markdown fences or conversational wrappers. Output HTML only.`
             : 'Comprehensive — thorough coverage with concrete examples and timing benchmarks.'
     const difficulty = config?.difficulty || 'intermediate'
     const strategy = config?.instructionalStrategy || 'explain_example_practice'
-    const settingsDirective = `AUTHOR SETTINGS (follow these — do not substitute your own): depth "${depth}" (${depthDirective}); difficulty "${difficulty}"; teaching style "${strategy}". Output ONLY the sections implied by the mandatory components list — do not invent extra sections.`
+    const learnerContext = [
+      config?.experienceLevel ? `learners' experience level "${config.experienceLevel}"` : '',
+      config?.priorKnowledge?.trim()
+        ? `learners already know: "${config.priorKnowledge.trim().slice(0, 600)}" (build on this; do not re-teach it)`
+        : '',
+    ].filter(Boolean).join('; ')
+    const settingsDirective = `AUTHOR SETTINGS (follow these — do not substitute your own): depth "${depth}" (${depthDirective}); difficulty "${difficulty}"; teaching style "${strategy}"${learnerContext ? `; ${learnerContext}` : ''}. Output ONLY the sections implied by the mandatory components list — do not invent extra sections.`
     const maxTokensForDepth = depth === 'quick' ? 2200 : depth === 'expert' ? 6000 : 4000
 
     const dialogueSectionAr = hasDialogue

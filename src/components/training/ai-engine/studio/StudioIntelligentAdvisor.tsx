@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { CheckCircle, Sparkles, Wand2 } from 'lucide-react'
+import { Sparkles, Wand2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { ConsistencyReport } from '@/lib/ai/courseHarmonizer'
 
@@ -34,17 +34,8 @@ export function StudioIntelligentAdvisor({
   const { t } = useTranslation('training')
 
   if (recommendations.length === 0 && (!consistencyReport || consistencyReport.issues.length === 0)) {
-    return (
-      <div className={cn('p-3 rounded-[8px] border border-ds-success/30 bg-ds-success-soft/40 flex items-center justify-between', className)}>
-        <div className="flex items-center gap-2 text-xs font-semibold text-ds-success">
-          <CheckCircle className="w-4 h-4 text-ds-success shrink-0" />
-          <span>{t('builder.pedagogicalExcellence', 'Pedagogical & Structural Configuration Harmonized (100% Quality Alignment)')}</span>
-        </div>
-        <Badge variant="outline" className="text-[11px] bg-ds-success-soft/50 text-ds-success border-ds-success/30">
-          5-Star Standard
-        </Badge>
-      </div>
-    )
+    // The review header already says the settings are consistent; no extra banner.
+    return null
   }
 
   const primaryRec = recommendations[0]

@@ -186,11 +186,7 @@ function TrainingBuilderInner() {
           validityPeriod={ctx.validityPeriod} setValidityPeriod={ctx.setValidityPeriod}
           allowRetake={ctx.allowRetake} setAllowRetake={ctx.setAllowRetake}
           maxAttempts={ctx.maxAttempts} setMaxAttempts={ctx.setMaxAttempts}
-          autoAdvance={ctx.autoAdvance} setAutoAdvance={ctx.setAutoAdvance}
-          showFeedback={ctx.showFeedback} setShowFeedback={ctx.setShowFeedback}
-          randomizeQuestions={ctx.randomizeQuestions} setRandomizeQuestions={ctx.setRandomizeQuestions}
-          showAnswers={ctx.showAnswers} setShowAnswers={ctx.setShowAnswers}
-          timeLimit={ctx.timeLimit} setTimeLimit={ctx.setTimeLimit} isRTL={ctx.isRTL}
+          isRTL={ctx.isRTL}
         />
       )
     }

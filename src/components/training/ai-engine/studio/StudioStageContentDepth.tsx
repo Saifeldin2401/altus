@@ -1,15 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
-import { Slider } from '@/components/ui/slider'
 import {
   BookOpen,
-  ChevronDown,
-  ChevronUp,
   FileCheck,
   FileCode,
   FileQuestion,
@@ -32,16 +29,6 @@ interface StudioStageContentDepthProps {
   onToggleComponent: (key: LessonComponentKey) => void
   onSelectAllComponents: () => void
   onSelectStandardComponents: () => void
-  theoryDepth: number
-  onChangeTheoryDepth: (val: number) => void
-  examplesDepth: number
-  onChangeExamplesDepth: (val: number) => void
-  practicalDepth: number
-  onChangePracticalDepth: (val: number) => void
-  caseStudiesDepth: number
-  onChangeCaseStudiesDepth: (val: number) => void
-  assessmentsDepth: number
-  onChangeAssessmentsDepth: (val: number) => void
 }
 
 export function StudioStageContentDepth({
@@ -51,20 +38,9 @@ export function StudioStageContentDepth({
   onToggleComponent,
   onSelectAllComponents,
   onSelectStandardComponents,
-  theoryDepth,
-  onChangeTheoryDepth,
-  examplesDepth,
-  onChangeExamplesDepth,
-  practicalDepth,
-  onChangePracticalDepth,
-  caseStudiesDepth,
-  onChangeCaseStudiesDepth,
-  assessmentsDepth,
-  onChangeAssessmentsDepth,
 }: StudioStageContentDepthProps) {
   const { t, i18n } = useTranslation('training')
   const isRTL = i18n.dir() === 'rtl'
-  const [showAdvanced, setShowAdvanced] = useState(false)
 
   const DEPTH_PRESETS: Array<{
     id: OverallContentDepth
@@ -351,87 +327,6 @@ export function StudioStageContentDepth({
         </div>
       </div>
 
-      {/* 3. Progressive Disclosure: Advanced Depth Sliders */}
-      <div className="border rounded-[8px] bg-muted/10 overflow-hidden">
-        <button
-          type="button"
-          onClick={() => setShowAdvanced(!showAdvanced)}
-          className="w-full px-4 py-3 flex items-center justify-between text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-ds-accent" />
-            <span>{t('builder.advancedDepth', 'Advanced Granular Dimension Weights')}</span>
-            <Badge variant="outline" className="text-[11px]">Optional</Badge>
-          </div>
-          {showAdvanced ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </button>
-
-        {showAdvanced && (
-          <div className="p-4 pt-1 border-t space-y-4 text-xs">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Theory Depth */}
-              <div className="space-y-1.5 p-3 rounded-lg border bg-card">
-                <div className="flex justify-between text-xs font-semibold">
-                  <span>{t('builder.theoryDepth', 'Conceptual & Theory Depth')}</span>
-                  <span className="font-mono text-ds-accent font-bold">{theoryDepth} / 5</span>
-                </div>
-                <Slider
-                  value={[theoryDepth]}
-                  onValueChange={([v]) => onChangeTheoryDepth(v)}
-                  min={1}
-                  max={5}
-                  step={1}
-                />
-              </div>
-
-              {/* Examples Depth */}
-              <div className="space-y-1.5 p-3 rounded-lg border bg-card">
-                <div className="flex justify-between text-xs font-semibold">
-                  <span>{t('builder.examplesDepth', 'Hospitality Scenario Examples')}</span>
-                  <span className="font-mono text-ds-accent font-bold">{examplesDepth} / 5</span>
-                </div>
-                <Slider
-                  value={[examplesDepth]}
-                  onValueChange={([v]) => onChangeExamplesDepth(v)}
-                  min={1}
-                  max={5}
-                  step={1}
-                />
-              </div>
-
-              {/* Practical Depth */}
-              <div className="space-y-1.5 p-3 rounded-lg border bg-card">
-                <div className="flex justify-between text-xs font-semibold">
-                  <span>{t('builder.practicalDepth', 'Practical Step Procedures & Checklists')}</span>
-                  <span className="font-mono text-ds-accent font-bold">{practicalDepth} / 5</span>
-                </div>
-                <Slider
-                  value={[practicalDepth]}
-                  onValueChange={([v]) => onChangePracticalDepth(v)}
-                  min={1}
-                  max={5}
-                  step={1}
-                />
-              </div>
-
-              {/* Case Studies Depth */}
-              <div className="space-y-1.5 p-3 rounded-lg border bg-card">
-                <div className="flex justify-between text-xs font-semibold">
-                  <span>{t('builder.caseStudiesDepth', 'Guest Interaction Dilemmas & Case Studies')}</span>
-                  <span className="font-mono text-ds-accent font-bold">{caseStudiesDepth} / 5</span>
-                </div>
-                <Slider
-                  value={[caseStudiesDepth]}
-                  onValueChange={([v]) => onChangeCaseStudiesDepth(v)}
-                  min={1}
-                  max={5}
-                  step={1}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
     </div>
   )
 }

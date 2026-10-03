@@ -17,14 +17,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useToast } from '@/components/ui/use-toast'
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import {
   ArrowLeft,
   ArrowRight,
   Award,
-  BrainCircuit,
   Code,
   History,
   Image as ImageIcon,
-  Layers,
+  Loader2,
+  MoreHorizontal,
   PanelRightClose,
   PanelRightOpen,
   Rocket,
@@ -33,7 +39,6 @@ import {
   Sparkles,
   UploadCloud,
   Wand2,
-  Zap,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -689,6 +694,7 @@ export function AICourseEngineStudioModal({
       instructionalStrategy,
       targetAudience,
       experienceLevel,
+      priorKnowledge: priorKnowledge.trim() || undefined,
       difficulty,
       difficultyProgression,
       overallDepth,
@@ -773,7 +779,7 @@ export function AICourseEngineStudioModal({
         title: t('builder.generationComplete', 'Course Generation Complete'),
         description: t('builder.generationCompleteDesc', {
           count: result.blueprint.modules.reduce((s, m) => s + m.lessons.length, 0),
-          defaultValue: `Successfully generated curriculum with QA Score ${result.blueprint.qualityScore || 92}%.`,
+          defaultValue: '{{count}} lessons are ready to review.',
         }),
       })
     } catch (e: any) {
@@ -1068,6 +1074,8 @@ export function AICourseEngineStudioModal({
   }
 
   const currentSummaryStats = {
+    enableAutoRevision,
+    enableComplianceAudit,
     generationMode,
     courseTopic,
     targetAudience,
@@ -1127,118 +1135,121 @@ export function AICourseEngineStudioModal({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-7xl max-h-[94vh] flex flex-col p-0 overflow-hidden shadow-2xl">
+        <DialogContent
+          className="flex h-[92vh] max-h-[92vh] w-[calc(100vw-2rem)] max-w-6xl flex-col gap-0 overflow-hidden p-0 sm:w-[calc(100vw-2rem)]"
+          bodyClassName="flex min-h-0 flex-1 flex-col overflow-hidden p-0 sm:p-0 max-h-none"
+        >
           {/* Header */}
-          <DialogHeader className="p-4 border-b bg-card/90 shrink-0 select-none">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-[8px] bg-ds-accent text-white dark:text-ds-on-ink">
-                  <BrainCircuit className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <DialogTitle className="text-base font-bold">
-                      {t('builder.lcmsStudioTitle', 'AI Course Creator')}
-                    </DialogTitle>
-                  </div>
-                  <DialogDescription className="text-xs">
+          <DialogHeader className="shrink-0 select-none space-y-0 border-b border-ds-border bg-ds-surface px-5 py-3 pe-14 text-start">
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex min-w-0 flex-1 basis-64 items-center gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] bg-ds-surface-subtle">
+                  <Sparkles className="h-4 w-4 text-ds-accent" />
+                </span>
+                <div className="min-w-0">
+                  <DialogTitle className="text-base font-semibold text-ds-ink">
+                    {t('builder.lcmsStudioTitle', 'AI Course Creator')}
+                  </DialogTitle>
+                  <DialogDescription className="truncate text-xs text-ds-muted">
                     {studioMode === 'quick'
-                      ? t('builder.lcmsStudioDescQuick', 'Describe what you want to train staff on and the AI builds the full course — lessons, quizzes and images. You can edit it all afterwards.')
-                      : t('builder.lcmsStudioDesc', 'Full control over structure, teaching style, depth, assessments and visuals.')}
+                      ? t('builder.studioDescQuick', 'Answer a few questions and AI drafts the course for you to review.')
+                      : t('builder.studioDescAdvanced', 'Choose every setting yourself. You can create the course from any step.')}
                   </DialogDescription>
                 </div>
               </div>
 
-              {/* Mode toggle, Presets, History & Panel Toggle */}
-              <div className="flex items-center gap-2">
+              <div className="flex shrink-0 flex-wrap items-center gap-2">
                 {currentStep === 'configure' && (
-                  <div className="flex bg-muted p-0.5 rounded-lg border text-xs">
-                    <button
-                      type="button"
-                      onClick={() => setStudioMode('quick')}
-                      className={cn(
-                        'px-2.5 py-1 rounded-md font-semibold transition-all flex items-center gap-1',
-                        studioMode === 'quick' ? 'bg-background shadow-xs text-foreground' : 'text-muted-foreground hover:text-foreground'
-                      )}
-                    >
-                      <Zap className="w-3 h-3 text-ds-warning" /> {t('builder.modeQuick', 'Quick')}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setStudioMode('advanced')}
-                      className={cn(
-                        'px-2.5 py-1 rounded-md font-semibold transition-all flex items-center gap-1',
-                        studioMode === 'advanced' ? 'bg-background shadow-xs text-foreground' : 'text-muted-foreground hover:text-foreground'
-                      )}
-                    >
-                      <Layers className="w-3 h-3 text-ds-accent" /> {t('builder.modeAdvanced', 'Advanced')}
-                    </button>
+                  <div role="tablist" aria-label={t('builder.studioModeLabel', 'Mode')} className="flex rounded-[6px] border border-ds-border bg-ds-surface-subtle p-0.5 text-xs">
+                    {(['quick', 'advanced'] as const).map((mode) => (
+                      <button
+                        key={mode}
+                        type="button"
+                        role="tab"
+                        aria-selected={studioMode === mode}
+                        onClick={() => setStudioMode(mode)}
+                        className={cn(
+                          'rounded-[4px] px-3 py-1 font-semibold transition-colors',
+                          studioMode === mode ? 'bg-ds-surface text-ds-ink shadow-2xs' : 'text-ds-muted hover:text-ds-ink'
+                        )}
+                      >
+                        {mode === 'quick' ? t('builder.modeQuick', 'Quick') : t('builder.modeAdvanced', 'Advanced')}
+                      </button>
+                    ))}
                   </div>
                 )}
 
-                {studioMode === 'advanced' && (
-                  <>
-                    <Select
-                      onValueChange={(presetId) => {
-                        const found = presetsQuery.data?.find((p) => p.id === presetId)
-                        if (found) handleApplyPreset(found.preset_config)
-                      }}
-                    >
-                      <SelectTrigger className="text-xs h-8 w-40">
-                        <SelectValue placeholder={t('builder.selectPreset', 'Load Preset...')} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {presetsQuery.data?.map((p) => (
-                          <SelectItem key={p.id} value={p.id}>
-                            {p.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setDocIngestionModalOpen(true)}
-                      className="h-8 text-xs font-semibold gap-1.5 text-ds-accent border-ds-accent/30 bg-ds-accent-soft/50"
-                      title="Multimodal Document-to-Course Ingestion"
-                    >
-                      <UploadCloud className="w-3.5 h-3.5 text-ds-accent" />
-                      <span className="hidden md:inline">{t('docIngestion.title', 'Doc Ingestion')}</span>
-                    </Button>
-
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setComplianceDialogOpen(true)}
-                      className="h-8 text-xs font-semibold gap-1.5 text-ds-success border-ds-success/30 bg-ds-success-soft/50"
-                      title="KSA Regulatory & Brand Standard Compliance Shield"
-                    >
-                      <ShieldCheck className="w-3.5 h-3.5 text-ds-success" />
-                      <span className="hidden md:inline">{t('complianceShield.title', 'KSA Shield')}</span>
-                    </Button>
-                  </>
+                {studioMode === 'advanced' && currentStep === 'configure' && (presetsQuery.data?.length ?? 0) > 0 && (
+                  <Select
+                    onValueChange={(presetId) => {
+                      const found = presetsQuery.data?.find((p) => p.id === presetId)
+                      if (found) handleApplyPreset(found.preset_config)
+                    }}
+                  >
+                    <SelectTrigger className="h-8 w-40 text-xs">
+                      <SelectValue placeholder={t('builder.loadPreset', 'Use a saved preset')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {presetsQuery.data?.map((p) => (
+                        <SelectItem key={p.id} value={p.id}>
+                          {p.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 )}
 
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setHistoryOpen(true)}
-                  className="h-8 text-xs font-semibold gap-1.5"
-                >
-                  <History className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">{t('builder.history', 'History')}</span>
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
+                      <MoreHorizontal className="h-3.5 w-3.5" />
+                      <span className="hidden sm:inline">{t('builder.studioTools', 'More')}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-64">
+                    <DropdownMenuItem className="gap-2 items-start" onSelect={() => setDocIngestionModalOpen(true)}>
+                      <UploadCloud className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                      <span>
+                        <span className="block text-sm">{t('builder.toolFromDocument', 'Build from a document')}</span>
+                        <span className="block text-[11px] text-ds-muted">{t('builder.toolFromDocumentDesc', 'Upload a PDF or Word file and turn it into lessons.')}</span>
+                      </span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="gap-2 items-start" onSelect={() => setComplianceDialogOpen(true)}>
+                      <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                      <span>
+                        <span className="block text-sm">{t('builder.toolCompliance', 'Compliance checklist')}</span>
+                        <span className="block text-[11px] text-ds-muted">{t('builder.toolComplianceDesc', 'Keyword check for topics Saudi hospitality training usually covers.')}</span>
+                      </span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="gap-2 items-start" onSelect={() => setHistoryOpen(true)}>
+                      <History className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                      <span>
+                        <span className="block text-sm">{t('builder.toolHistory', 'Past generations')}</span>
+                        <span className="block text-[11px] text-ds-muted">{t('builder.toolHistoryDesc', 'Reopen or resume an earlier run.')}</span>
+                      </span>
+                    </DropdownMenuItem>
+                    {studioMode === 'advanced' && currentStep === 'configure' && (
+                      <DropdownMenuItem className="gap-2 items-start" onSelect={() => setSavePresetDialogOpen(true)}>
+                        <Save className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                        <span>
+                          <span className="block text-sm">{t('builder.toolSavePreset', 'Save settings as preset')}</span>
+                          <span className="block text-[11px] text-ds-muted">{t('builder.toolSavePresetDesc', 'Reuse these settings next time.')}</span>
+                        </span>
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
 
                 {currentStep === 'configure' && studioMode === 'advanced' && (
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setSummaryPanelOpen(!summaryPanelOpen)}
-                    className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
-                    title={summaryPanelOpen ? 'Collapse Blueprint Summary' : 'Expand Blueprint Summary'}
+                    className="hidden h-8 w-8 p-0 text-ds-muted hover:text-ds-ink lg:inline-flex"
+                    aria-label={summaryPanelOpen ? t('builder.hideSummary', 'Hide summary') : t('builder.showSummary', 'Show summary')}
+                    title={summaryPanelOpen ? t('builder.hideSummary', 'Hide summary') : t('builder.showSummary', 'Show summary')}
                   >
-                    {summaryPanelOpen ? <PanelRightClose className="w-4 h-4" /> : <PanelRightOpen className="w-4 h-4" />}
+                    {summaryPanelOpen ? <PanelRightClose className="h-4 w-4 rtl:-scale-x-100" /> : <PanelRightOpen className="h-4 w-4 rtl:-scale-x-100" />}
                   </Button>
                 )}
               </div>
@@ -1402,16 +1413,6 @@ export function AICourseEngineStudioModal({
                           'knowledge_check',
                         ])
                       }
-                      theoryDepth={theoryDepth}
-                      onChangeTheoryDepth={setTheoryDepth}
-                      examplesDepth={examplesDepth}
-                      onChangeExamplesDepth={setExamplesDepth}
-                      practicalDepth={practicalDepth}
-                      onChangePracticalDepth={setPracticalDepth}
-                      caseStudiesDepth={caseStudiesDepth}
-                      onChangeCaseStudiesDepth={setCaseStudiesDepth}
-                      assessmentsDepth={assessmentsDepth}
-                      onChangeAssessmentsDepth={setAssessmentsDepth}
                     />
                   )}
 
@@ -1431,20 +1432,6 @@ export function AICourseEngineStudioModal({
                           prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
                         )
                       }}
-                      bloomPreset={bloomPreset}
-                      onSelectBloomPreset={setBloomPreset}
-                      bloomDistribution={bloomDistribution}
-                      onChangeBloomDistribution={setBloomDistribution}
-                      randomizeQuestions={randomizeQuestions}
-                      onChangeRandomizeQuestions={setRandomizeQuestions}
-                      randomizeAnswers={randomizeAnswers}
-                      onChangeRandomizeAnswers={setRandomizeAnswers}
-                      distractorQuality={distractorQuality}
-                      onChangeDistractorQuality={setDistractorQuality}
-                      includeHints={includeHints}
-                      onChangeIncludeHints={setIncludeHints}
-                      includeExplanations={includeExplanations}
-                      onChangeIncludeExplanations={setIncludeExplanations}
                     />
                   )}
 
@@ -1454,16 +1441,10 @@ export function AICourseEngineStudioModal({
                       onChangeEnableAIImages={setEnableAIImages}
                       imageModel={imageModel}
                       onChangeImageModel={setImageModel}
-                      imageDensity={imageDensity}
-                      onChangeImageDensity={setImageDensity}
-                      imageSelectionStrategy={imageSelectionStrategy}
-                      onChangeImageSelectionStrategy={setImageSelectionStrategy}
                       preferredVisualStyle={preferredVisualStyle}
                       onChangePreferredVisualStyle={setPreferredVisualStyle}
                       preferredAspectRatio={preferredAspectRatio}
                       onChangePreferredAspectRatio={setPreferredAspectRatio}
-                      maxImagesPerLesson={maxImagesPerLesson}
-                      onChangeMaxImagesPerLesson={setMaxImagesPerLesson}
                       maxImagesPerCourse={maxImagesPerCourse}
                       onChangeMaxImagesPerCourse={setMaxImagesPerCourse}
                     />
@@ -1514,34 +1495,8 @@ export function AICourseEngineStudioModal({
                 )}
               </div>
 
-              {/* Sticky Bottom Action Bar */}
-              <div className="p-3.5 border-t bg-card/90 flex items-center justify-between gap-3 shrink-0">
-                <div className="flex items-center gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setSavePresetDialogOpen(true)}
-                    className="h-9 text-xs font-semibold gap-1.5"
-                  >
-                    <Save className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">{t('builder.savePreset', 'Save Draft Preset')}</span>
-                  </Button>
-
-                  {consistencyReport?.issues.length > 0 && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={handleAutoHarmonize}
-                      className="h-9 text-xs font-bold text-ds-warning border-ds-warning/30 hover:bg-ds-warning-soft gap-1.5"
-                    >
-                      <Sparkles className="w-3.5 h-3.5" />
-                      <span>{t('builder.autoHarmonize', 'Harmonize')}</span>
-                    </Button>
-                  )}
-                </div>
-
+              {/* Footer: step navigation, and creation is possible from any step */}
+              <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-t border-ds-border bg-ds-surface px-4 py-3">
                 <div className="flex items-center gap-2">
                   <Button
                     type="button"
@@ -1549,35 +1504,36 @@ export function AICourseEngineStudioModal({
                     size="sm"
                     disabled={!canGoPrev}
                     onClick={handlePrevStage}
-                    className="h-9 text-xs font-semibold"
+                    className="h-9 text-xs"
                   >
-                    <ArrowLeft className="w-3.5 h-3.5 me-1" />
-                    {t('common.prev', 'Previous Stage')}
+                    <ArrowLeft className="h-3.5 w-3.5 rtl:rotate-180" />
+                    {t('builder.stageBack', 'Back')}
                   </Button>
-
-                  {canGoNext ? (
-                    <Button
-                      type="button"
-                      size="sm"
-                      onClick={handleNextStage}
-                      className="h-9 px-5 text-xs font-bold bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink shadow-sm"
-                    >
-                      {t('common.next', 'Next Stage')}
-                      <ArrowRight className="w-3.5 h-3.5 ms-1" />
+                  {canGoNext && (
+                    <Button type="button" variant="outline" size="sm" onClick={handleNextStage} className="h-9 text-xs">
+                      {t('builder.stageNext', 'Next')}
+                      <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" />
                     </Button>
-                  ) : (
-                    <Button
-                      type="button"
-                      size="sm"
-                      onClick={() => handleStartGeneration()}
-                      disabled={executePipeline.isPending}
-                      className="h-9 px-6 text-xs font-extrabold bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink"
-                    >
-                      <Rocket className="w-3.5 h-3.5 me-1.5" />
-                      {t('builder.generateCourseCTA', 'Create course')}
+                  )}
+                  {consistencyReport?.issues.length > 0 && (
+                    <Button type="button" variant="ghost" size="sm" onClick={handleAutoHarmonize} className="h-9 text-xs text-ds-warning-text">
+                      <Sparkles className="h-3.5 w-3.5" />
+                      {t('builder.fixSettings', 'Fix conflicting settings')}
                     </Button>
                   )}
                 </div>
+
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={() => handleStartGeneration()}
+                  disabled={executePipeline.isPending || (!courseTopic.trim() && !rawSourceContent.trim() && !selectedDocumentId)}
+                  title={!courseTopic.trim() && !rawSourceContent.trim() && !selectedDocumentId ? t('builder.needTopic', 'Add a topic or pick a source document first') : undefined}
+                  className="h-9 px-5 text-xs"
+                >
+                  {executePipeline.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Rocket className="h-3.5 w-3.5" />}
+                  {t('builder.generateCourseCTA', 'Create course')}
+                </Button>
               </div>
             </div>
           )}
@@ -1623,9 +1579,9 @@ export function AICourseEngineStudioModal({
                     className="h-8 text-xs font-bold text-ds-accent border-ds-accent/30 hover:bg-ds-accent-soft gap-1.5"
                   >
                     <Award className="w-3.5 h-3.5 text-ds-accent" />
-                    {t('builder.inspectQA', 'Inspect QA & Standards (Score: {{score}}%)', {
-                      score: generatedBlueprint.qualityScore || 92,
-                    })}
+                    {typeof generatedBlueprint.qualityScore === 'number'
+                      ? t('builder.inspectQAScore', { score: generatedBlueprint.qualityScore, defaultValue: 'Quality review ({{score}}%)' })
+                      : t('builder.inspectQANoScore', 'Quality review')}
                   </Button>
                 </div>
 

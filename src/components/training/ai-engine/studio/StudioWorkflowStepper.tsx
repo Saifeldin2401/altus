@@ -1,6 +1,5 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import {
   BookOpen,
@@ -9,7 +8,7 @@ import {
   FileQuestion,
   Image as ImageIcon,
   Cpu,
-  CheckCircle2
+  CheckCircle2,
 } from 'lucide-react'
 
 export type StudioStageId =
@@ -78,7 +77,6 @@ export const STUDIO_STAGES: StudioStageConfig[] = [
     descKey: 'builder.stages.visualsDesc',
     defaultDesc: 'Cloudflare AI Images',
     icon: ImageIcon,
-    defaultBadge: 'Ultra HD',
   },
   {
     id: 'ai_settings',
@@ -110,116 +108,50 @@ interface StudioWorkflowStepperProps {
 export function StudioWorkflowStepper({
   currentStage,
   onSelectStage,
-  completedStages = new Set(),
   issuesCount = 0,
 }: StudioWorkflowStepperProps) {
-  const { t, i18n } = useTranslation('training')
-  const isRTL = i18n.dir() === 'rtl'
-
-  const currentIndex = STUDIO_STAGES.findIndex((s) => s.id === currentStage)
-  const progressPercent = Math.round(((currentIndex + 1) / STUDIO_STAGES.length) * 100)
+  const { t } = useTranslation('training')
 
   return (
-    <div className="w-full bg-card/90 border-b px-4 py-2.5 select-none transition-all">
-      {/* Top progress line */}
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <div className="flex items-center gap-2">
-          <div className="flex items-center justify-center w-5 h-5 rounded-full bg-ds-accent/15 text-ds-accent font-bold text-[11px]">
-            {currentIndex + 1}
-          </div>
-          <span className="text-xs font-semibold text-foreground">
-            {t('builder.stageStep', 'Stage {{current}} of {{total}}', {
-              current: currentIndex + 1,
-              total: STUDIO_STAGES.length,
-            })}
-            : <span className="text-ds-accent font-bold">{t(STUDIO_STAGES[currentIndex]?.titleKey || '', STUDIO_STAGES[currentIndex]?.defaultTitle || '')}</span>
-          </span>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {issuesCount > 0 && (
-            <Badge variant="outline" className="text-[11px] bg-ds-warning-soft text-ds-warning border-ds-warning/30">
-              ⚡ {issuesCount} {t('builder.suggestionsAvailable', 'Suggestions')}
-            </Badge>
-          )}
-          <span className="text-[11px] font-mono text-muted-foreground">
-            {progressPercent}% {t('builder.configured', 'Complete')}
-          </span>
-        </div>
-      </div>
-
-      {/* Responsive Horizontal Stepper Track */}
-      <div className="grid grid-cols-7 gap-1.5 overflow-x-auto scrollbar-none">
-        {STUDIO_STAGES.map((stage, idx) => {
-          const Icon = stage.icon
+    <div className="w-full shrink-0 border-b border-ds-border bg-ds-surface select-none">
+      <nav
+        aria-label={t('builder.stagesLabel', 'Course creator steps')}
+        className="flex items-stretch gap-1 overflow-x-auto px-4 [scrollbar-width:none]"
+      >
+        {STUDIO_STAGES.map((stage) => {
           const isActive = stage.id === currentStage
-          const isCompleted = completedStages.has(stage.id) || idx < currentIndex
-
           return (
             <button
               key={stage.id}
+              type="button"
               onClick={() => onSelectStage(stage.id)}
+              aria-current={isActive ? 'step' : undefined}
+              title={t(stage.descKey, stage.defaultDesc)}
               className={cn(
-                'group relative flex items-center gap-2 p-2 rounded-lg border text-start transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ds-accent/30',
-                isActive
-                  ? 'bg-ds-accent/10 border-ds-accent shadow-sm'
-                  : isCompleted
-                  ? 'bg-card hover:bg-muted/60 border-border/80 hover:border-ds-accent/30'
-                  : 'bg-card/40 opacity-75 hover:opacity-100 hover:bg-muted/40 border-border/50'
+                'relative flex h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-[6px] px-2.5 text-xs transition-colors',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent/40',
+                isActive ? 'font-semibold text-ds-ink' : 'font-medium text-ds-muted hover:text-ds-ink'
               )}
             >
-              {/* Step indicator circle */}
-              <div
+              <span
                 className={cn(
-                  'w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold shrink-0 transition-transform group-hover:scale-105',
-                  isActive
-                    ? 'bg-ds-accent text-white dark:text-ds-on-ink shadow-sm'
-                    : isCompleted
-                    ? 'bg-ds-success text-white dark:text-ds-on-ink'
-                    : 'bg-muted text-muted-foreground'
+                  'flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-[11px] font-semibold tabular-nums',
+                  isActive ? 'border-ds-ink bg-ds-ink text-ds-on-ink' : 'border-ds-border bg-ds-surface text-ds-muted'
                 )}
               >
-                {isCompleted && !isActive ? (
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                ) : (
-                  <Icon className="w-3.5 h-3.5" />
-                )}
-              </div>
-
-              {/* Title & subtitle */}
-              <div className="min-w-0 flex-1 hidden md:block">
-                <div className="flex items-center gap-1">
-                  <p
-                    className={cn(
-                      'text-xs font-bold truncate leading-tight',
-                      isActive
-                        ? 'text-ds-accent'
-                        : isCompleted
-                        ? 'text-foreground'
-                        : 'text-muted-foreground'
-                    )}
-                  >
-                    {t(stage.titleKey, stage.defaultTitle)}
-                  </p>
-                  {stage.defaultBadge && (
-                    <span className="text-[11px] px-1 py-0.2 bg-ds-warning-soft text-ds-warning rounded font-bold">
-                      {stage.defaultBadge}
-                    </span>
-                  )}
-                </div>
-                <p className="text-[11px] text-muted-foreground truncate leading-tight mt-0.5">
-                  {t(stage.descKey, stage.defaultDesc)}
-                </p>
-              </div>
-
-              {/* Active Bottom Glow Indicator */}
-              {isActive && (
-                <div className="absolute inset-x-2 -bottom-1 h-0.5 bg-ds-accent rounded-full" />
+                {stage.number}
+              </span>
+              <span>{t(`builder.stagesShort.${stage.id}`, stage.defaultTitle)}</span>
+              {stage.id === 'review' && issuesCount > 0 && (
+                <span className="rounded-full bg-ds-warning-soft px-1.5 text-[11px] font-semibold text-ds-warning-text tabular-nums">
+                  {issuesCount}
+                </span>
               )}
+              {isActive && <span aria-hidden className="absolute inset-x-1 bottom-0 h-0.5 rounded-full bg-ds-ink" />}
             </button>
           )
         })}
-      </div>
+      </nav>
     </div>
   )
 }
