@@ -100,7 +100,7 @@ export function HeroPreview() {
                   <span className="min-w-0 flex-1">
                     <span className="flex items-baseline justify-between gap-2">
                       <span className="truncate text-[13px] font-semibold text-ds-ink">{title}</span>
-                      <span className={cn('shrink-0 text-[10px] font-medium', tone === 'success' ? 'text-ds-success' : 'text-ds-muted')}>
+                      <span className={cn('shrink-0 text-[11px] font-medium', tone === 'success' ? 'text-ds-success' : 'text-ds-muted')}>
                         {meta}
                       </span>
                     </span>
@@ -154,7 +154,7 @@ export function HeroPreview() {
           <div className="pointer-events-none absolute inset-1.5 rounded-lg border border-[rgb(var(--cert-gold)/0.35)]" />
           <div className="relative flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-[rgb(var(--cert-gold-deep))]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[rgb(var(--cert-gold-deep))]">
                 {t('home.preview.certificate')}
               </p>
               <p className="mt-1 font-editorial text-lg font-semibold leading-tight text-[rgb(var(--cert-navy))]">
@@ -166,7 +166,7 @@ export function HeroPreview() {
             </span>
           </div>
           <div className="relative mt-3 flex items-end justify-between">
-            <span className="inline-flex items-center gap-1 rounded-full bg-[rgb(var(--cert-navy))] px-2 py-0.5 text-[10px] font-semibold text-[rgb(var(--cert-gold-light))]">
+            <span className="inline-flex items-center gap-1 rounded-full bg-[rgb(var(--cert-navy))] px-2 py-0.5 text-[11px] font-semibold text-[rgb(var(--cert-gold-light))]">
               <CheckCircle2 className="h-3 w-3" />
               {t('home.preview.verifiable')}
             </span>

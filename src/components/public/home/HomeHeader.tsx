@@ -12,7 +12,7 @@ export function BrandMark({ className, inverted = false }: { className?: string;
         <span className={cn('block whitespace-nowrap text-[15px] font-semibold tracking-tight', inverted ? 'text-white' : 'text-ds-ink')}>
           Altus Connect
         </span>
-        <span className={cn('mt-1 hidden whitespace-nowrap text-[10px] font-medium uppercase tracking-[0.16em] sm:block', inverted ? 'text-ds-chrome-accent' : 'text-ds-brass')}>
+        <span className={cn('mt-1 hidden whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.14em] sm:block', inverted ? 'text-ds-chrome-accent' : 'text-ds-brass')}>
           {t('home.brandTagline')}
         </span>
       </span>

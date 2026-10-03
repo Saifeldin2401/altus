@@ -216,7 +216,7 @@ function KnowledgePreview() {
               </span>
               <span
                 className={cn(
-                  'shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
+                  'shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide',
                   i === 0 ? 'bg-ds-accent-soft text-ds-brass' : i === 1 ? 'bg-ds-info-soft text-ds-info' : 'bg-ds-success-soft text-ds-success',
                 )}
               >
