@@ -154,7 +154,7 @@ Deno.serve(async (req: Request) => {
 
     // Check if caller is a platform operator
     const { data: isOp } = await adminClient.rpc("is_platform_operator", {
-      p_user_id: user.id,
+      _user_id: user.id,
     });
 
     let isAuthorizedTenantAdmin = !!isOp;

@@ -259,8 +259,8 @@ async function generateInviteLink(
   const { data, error } = await adminClient.auth.admin.generateLink({
     type: "invite",
     email,
-    data: authMetadata,
     options: {
+      data: authMetadata,
       redirectTo,
     },
   });
@@ -627,7 +627,7 @@ Deno.serve(async (req: Request) => {
         : null;
 
     // 1. Create Auth User
-    let authData: { user?: { id?: string } } | null = null;
+    let authData: { user?: { id?: string } | null } | null = null;
     let authError: any = null;
     let inviteTokenHash: string | null = null;
     let inviteActionLink: string | null = null;
@@ -935,10 +935,12 @@ Deno.serve(async (req: Request) => {
     }
 
     let emailSent = false;
+    // Declared here, not inside the invite branch: the final response reads it too.
+    let inviteUrl: string | undefined;
 
     // 7. Send invite email via Resend (all environments).
     if (provisioningMethod === "invite") {
-      const inviteUrl = inviteTokenHash
+      inviteUrl = inviteTokenHash
         ? buildInviteCompletionUrl(inviteRedirectTo, inviteTokenHash)
         : inviteActionLink || inviteRedirectTo;
 
