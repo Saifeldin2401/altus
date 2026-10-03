@@ -386,7 +386,7 @@ function resolveReminderWindow(
 }
 
 async function resolveUsersByIds(
-  supabase: ReturnType<typeof createClient>,
+  supabase: ReturnType<typeof createClient<any>>,
   userIds: string[],
 ): Promise<TargetUser[]> {
   const { data } = await supabase
@@ -398,7 +398,7 @@ async function resolveUsersByIds(
 }
 
 async function resolveAssignmentTargets(
-  supabase: ReturnType<typeof createClient>,
+  supabase: ReturnType<typeof createClient<any>>,
   targetType: string,
   targetId: string | null,
   orgId?: string | null,

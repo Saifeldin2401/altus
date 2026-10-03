@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { resolveServiceRoleToken } from "../_shared/auth.ts";
 
 export const DEFAULT_ALLOWED_ORIGINS = [
   "http://localhost:3000",
@@ -61,7 +62,7 @@ export function isAuthorizedServiceRoleRequest(authHeader: string | null, servic
   return Boolean(serviceRoleKey) && isAuthorizedServiceRole(authHeader, serviceRoleKey);
 }
 
-type SupportedAiTask = "chat" | "summarization" | "generation" | "translation" | "triage";
+type SupportedAiTask = "chat" | "summarization" | "generation" | "translation" | "triage" | "image_generation";
 type PreferredProvider = "gemini" | "groq" | "openrouter" | "huggingface" | "cloudflare" | "together" | "openai";
 
 interface ParsedAiRequest {
@@ -321,8 +322,11 @@ serve(async (req) => {
     const authClaims = decodeJwt(rawToken);
     const apiKeyClaims = apiKeyHeader ? decodeJwt(apiKeyHeader) : null;
     const jwtRole = (authClaims?.role as string) || "anon";
+    // A decoded role claim proves nothing until the signature is checked; the
+    // gateway's verify_jwt does that today, but this must not depend on it.
     const isServiceRoleCall =
-      isAuthorizedServiceRoleRequest(authHeader, serviceRoleKey) || jwtRole === "service_role";
+      isAuthorizedServiceRoleRequest(authHeader, serviceRoleKey) ||
+      (jwtRole === "service_role" && (await resolveServiceRoleToken(authHeader)) !== null);
 
     const projectRef = supabaseUrl.split("//")[1]?.split(".")[0] ?? "";
     const looksLikeSupabaseKey = (claims: Record<string, unknown> | null, raw: string) =>
@@ -373,7 +377,7 @@ serve(async (req) => {
       try {
         const adminClient = createClient(supabaseUrl, serviceRoleKey);
         const { data: isOp } = await adminClient.rpc("is_platform_operator", {
-          p_user_id: authUserId,
+          _user_id: authUserId,
         });
 
         if (!isOp) {
@@ -1125,7 +1129,7 @@ serve(async (req) => {
         if (grRes.ok) {
           const data = await grRes.json();
           result = data?.choices?.[0]?.message?.content || "";
-          if (result) { providerUsed = "groq"; modelUsed = model; executionSuccess = true; recordUsage("groq", data); }
+          if (result) { providerUsed = "groq"; modelUsed = model ?? modelUsed; executionSuccess = true; recordUsage("groq", data); }
         } else {
           diagnosticErrors.push(`Preferred Groq ${model} (${grRes.status}): ${(await grRes.text().catch(() => "")).slice(0, 160)}`);
         }

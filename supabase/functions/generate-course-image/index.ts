@@ -49,6 +49,7 @@ interface ImageGenerationRequest {
   visual_style?: string;
   visual_type?: string;
   aspect_ratio?: string;
+  placement?: string;
   course_id: string;
   module_id: string;
   lesson_id: string;

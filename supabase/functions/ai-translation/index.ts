@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { buildCorsHeaders } from "./_shared/cors.ts";
+import { buildCorsHeaders } from "../_shared/cors.ts";
+import { resolveServiceRoleToken } from "../_shared/auth.ts";
 
 const SUPPORTED_LANGUAGES = [
   "en",
@@ -235,7 +236,9 @@ serve(async (req) => {
       }
     };
     const claims = decodeJwt(token);
-    const isServiceRole = claims?.role === "service_role";
+    // A decoded role claim proves nothing until the signature is checked.
+    const isServiceRole =
+      claims?.role === "service_role" && (await resolveServiceRoleToken(authHeader)) !== null;
 
     if (!isServiceRole) {
       const {
@@ -270,7 +273,8 @@ serve(async (req) => {
     const target_lang = normalizeLangInput(rawTargetLang) as SupportedLanguage | undefined;
     const providedSourceLang = normalizeLangInput(rawSourceLang);
 
-    if (!target_lang || target_lang === "auto") {
+    // normalizeLangInput can return "auto", which is never a valid target.
+    if (!target_lang || (target_lang as string) === "auto") {
       return new Response(
         JSON.stringify({
           success: false,

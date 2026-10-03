@@ -381,7 +381,7 @@ Deno.serve(async (req: Request) => {
 
     // Verify organization operational status before processing
     const { data: isOp } = await adminClient.rpc("is_platform_operator", {
-      p_user_id: privileged.userId,
+      _user_id: privileged.userId,
     });
 
     if (!isOp) {

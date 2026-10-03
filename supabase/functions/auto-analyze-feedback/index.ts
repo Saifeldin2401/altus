@@ -181,12 +181,20 @@ Deno.serve(async (req) => {
       );
     }
 
+    // PostgREST returns a many-to-one embed as an object; the untyped client
+    // infers an array, so accept either shape.
+    const embeddedDocs = scopedFeedback.documents as unknown;
+    const feedbackDocument = (Array.isArray(embeddedDocs) ? embeddedDocs[0] : embeddedDocs) as
+      | { title?: string | null }
+      | null
+      | undefined;
+
     const systemPrompt =
       "You are an AI assistant for a hotel intranet system analyzing Knowledge Base document feedback. Return valid JSON only.";
 
     const prompt = `You are an AI assistant for a hotel intranet system. Analyze the following feedback left by an employee on a Knowledge Base document (SOP/Policy).
 
-    DOCUMENT TITLE: ${scopedFeedback.documents?.title || "Unknown"}
+    DOCUMENT TITLE: ${feedbackDocument?.title || "Unknown"}
     HELPFUL: ${scopedFeedback.helpful ? "Yes" : "No"}
     FEEDBACK TEXT: "${scopedFeedback.feedback_text}"
 
@@ -264,8 +272,9 @@ Deno.serve(async (req) => {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
-    console.error("Critical error in auto-analyze-feedback:", err.message);
-    return new Response(JSON.stringify({ error: err.message }), {
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("Critical error in auto-analyze-feedback:", message);
+    return new Response(JSON.stringify({ error: message }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

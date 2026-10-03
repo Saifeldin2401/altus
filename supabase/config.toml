@@ -179,3 +179,37 @@ enabled = true
 verify_jwt = true
 entrypoint = "./functions/weather-proxy/index.ts"
 
+# Declared to match the live deployment (all run with verify_jwt = true), so a
+# repo-driven deploy cannot silently change their platform JWT gate.
+
+[functions.bulk-create-users]
+enabled = true
+verify_jwt = true
+entrypoint = "./functions/bulk-create-users/index.ts"
+
+[functions.generate-course-image]
+enabled = true
+verify_jwt = true
+entrypoint = "./functions/generate-course-image/index.ts"
+
+[functions.password-reminders-job]
+enabled = true
+# Called by cron with the service-role key.
+verify_jwt = true
+entrypoint = "./functions/password-reminders-job/index.ts"
+
+[functions.resend-fetch-inbound-email]
+enabled = true
+verify_jwt = true
+entrypoint = "./functions/resend-fetch-inbound-email/index.ts"
+
+[functions.resend-inbound-email]
+enabled = true
+verify_jwt = true
+entrypoint = "./functions/resend-inbound-email/index.ts"
+
+[functions.training-notifications]
+enabled = true
+# Called daily by the training-notifications-job cron with the service-role key.
+verify_jwt = true
+entrypoint = "./functions/training-notifications/index.ts"

@@ -75,23 +75,24 @@ function resolveClientIp(req: Request): string {
   return "unknown";
 }
 
-function resolveAppUrl(req: Request, requestedRedirectTo?: unknown): ResolvedAppUrl {
+// The reset link carries a live recovery token, so its host must never come from
+// the request: this endpoint is unauthenticated and anyone can set Origin or
+// redirectTo. A requested redirectTo is honoured only when its origin is on the
+// exact allowlist, and the path is always /reset-password. Otherwise the link is
+// built from server configuration.
+function resolveAppUrl(requestedRedirectTo?: unknown): ResolvedAppUrl {
   if (typeof requestedRedirectTo === "string" && requestedRedirectTo.trim()) {
     try {
       const parsed = new URL(requestedRedirectTo.trim());
       const cleanOrigin = parsed.origin.trim().replace(/\/$/, "");
-      const allowedOrigins = getAllowedOrigins();
-      const isAllowed =
-        allowedOrigins.some((ao) => ao.trim().replace(/\/$/, "") === cleanOrigin) ||
-        /^https:\/\/[a-z0-9-]+(\.preview)?\.vercel\.app$/i.test(cleanOrigin) ||
-        cleanOrigin === "http://localhost:3000" ||
-        cleanOrigin === "http://localhost:5173" ||
-        cleanOrigin === "http://127.0.0.1:5173";
+      const isAllowed = getAllowedOrigins().some(
+        (ao) => ao.trim().replace(/\/$/, "") === cleanOrigin,
+      );
 
       if (isAllowed) {
         return {
           appUrl: parsed.origin,
-          redirectTo: parsed.toString(),
+          redirectTo: `${parsed.origin}/reset-password`,
           source: "body_redirectTo",
           usedFallback: false,
         };
@@ -101,9 +102,7 @@ function resolveAppUrl(req: Request, requestedRedirectTo?: unknown): ResolvedApp
     }
   }
 
-  const reqOrigin = (req.headers.get("origin") || "").trim();
   const candidates = [
-    { value: reqOrigin, source: "origin" },
     { value: (Deno.env.get("APP_URL") || "").trim(), source: "APP_URL" },
     {
       value: (Deno.env.get("APP_BASE_URL") || "").trim(),
@@ -137,7 +136,7 @@ function resolveAppUrl(req: Request, requestedRedirectTo?: unknown): ResolvedApp
 }
 
 async function enforceRateLimit(
-  adminClient: ReturnType<typeof createClient>,
+  adminClient: ReturnType<typeof createClient<any>>,
   email: string,
   ip: string,
 ): Promise<{ allowed: boolean; retryAfterSeconds?: number }> {
@@ -247,10 +246,9 @@ Deno.serve(async (req: Request) => {
     await adminClient
       .from("password_reset_requests")
       .insert({ email, ip_address: ip })
-      .then(() => undefined)
-      .catch(() => undefined);
+      .then(() => undefined, () => undefined);
 
-    const resolvedAppUrl = resolveAppUrl(req, body?.redirectTo);
+    const resolvedAppUrl = resolveAppUrl(body?.redirectTo);
     const resetRedirectTo = resolvedAppUrl.redirectTo || `${resolvedAppUrl.appUrl}/reset-password`;
 
     if (resolvedAppUrl.usedFallback) {
@@ -399,8 +397,7 @@ Deno.serve(async (req: Request) => {
             },
           },
         })
-        .then(() => undefined)
-        .catch(() => undefined);
+        .then(() => undefined, () => undefined);
     }
 
     return jsonResponse({ success: true }, 200, corsHeaders, requestId);

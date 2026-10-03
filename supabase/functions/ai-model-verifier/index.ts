@@ -1,5 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { resolveServiceRoleToken } from "../_shared/auth.ts";
+import { buildCorsHeaders } from "../_shared/cors.ts";
 
 // ============================================================================
 // ai-model-verifier  (Gap C — model discovery / verification pipeline)
@@ -20,63 +22,10 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 // This function NEVER sets enabled=true. Verification only moves `availability`;
 // an admin still flips `enabled` in the Model Catalog tab.
 //
-// Auth preamble mirrors process-ai-request: verify_jwt is false at the platform
-// edge, so the handler enforces its own service-role / admin-JWT check.
+// verify_jwt is false at the platform edge, so the handler authenticates every
+// call itself: a service-role token whose signature the platform verifies
+// (resolveServiceRoleToken), or a platform operator with config.manage.
 // ============================================================================
-
-export const DEFAULT_ALLOWED_ORIGINS = [
-  "http://localhost:3000",
-  "http://localhost:5173",
-  "http://127.0.0.1:5173",
-  "https://altus-hospitality-erp.vercel.app",
-  "https://www.phg-connect.com",
-  "https://phg-connect.com",
-  "https://altus-connect.com",
-  "https://www.altus-connect.com",
-] as const;
-
-function getAllowedOrigins(): string[] {
-  const raw = (Deno.env.get("ALLOWED_ORIGINS") || "").trim();
-  if (!raw) return [...DEFAULT_ALLOWED_ORIGINS];
-  const parsed = raw.split(",").map((o: string) => o.trim()).filter(Boolean);
-  return parsed.length > 0 ? parsed : [...DEFAULT_ALLOWED_ORIGINS];
-}
-
-function resolveCorsOrigin(req: Request): string {
-  const origin = req.headers.get("origin") || "";
-  const allowedOrigins = getAllowedOrigins();
-  if (!origin) return allowedOrigins[0] || "https://altus-hospitality-erp.vercel.app";
-  const cleanOrigin = origin.trim().replace(/\/$/, "");
-  const isLocalDevOrigin = /^http:\/\/(localhost|127\.0\.0\.1|192\.168\.\d{1,3}\.\d{1,3})(:\d{2,5})?$/.test(cleanOrigin);
-  if (isLocalDevOrigin) return origin;
-  const isVercelOrNetlify =
-    /^https:\/\/([a-z0-9-]+)\.vercel\.app$/i.test(cleanOrigin) ||
-    /^https:\/\/([a-z0-9-]+)\.netlify\.app$/i.test(cleanOrigin);
-  if (isVercelOrNetlify) return origin;
-  const isAllowed = allowedOrigins.some((ao) => ao.trim().replace(/\/$/, "") === cleanOrigin);
-  return isAllowed ? origin : allowedOrigins[0] || "https://altus-hospitality-erp.vercel.app";
-}
-
-function buildCorsHeaders(req: Request): Record<string, string> {
-  return {
-    "Access-Control-Allow-Origin": resolveCorsOrigin(req),
-    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-csrf-token, x-requested-with",
-    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-    Vary: "Origin",
-  };
-}
-
-function isAuthorizedServiceRole(authHeader: string | null, serviceRoleKey: string): boolean {
-  const expected = `Bearer ${serviceRoleKey}`;
-  const actual = authHeader ?? "";
-  if (actual.length !== expected.length) return false;
-  const encoder = new TextEncoder();
-  const a = encoder.encode(actual);
-  const b = encoder.encode(expected);
-  let result = 0;
-  for (let i = 0; i < a.length; i++) result |= a[i] ^ b[i];
-  return result === 0;
-}
 
 // ── Types ──────────────────────────────────────────────────────────────────
 type ProbeType = "api" | "capability";
@@ -141,25 +90,11 @@ serve(async (req) => {
     const admin = createClient(supabaseUrl, serviceRoleKey);
     const rawToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : authHeader.trim();
 
-    const decodeJwt = (t: string): Record<string, unknown> | null => {
-      try {
-        const parts = t.split(".");
-        if (parts.length !== 3) return null;
-        return JSON.parse(atob(parts[1].replace(/-/g, "+").replace(/_/g, "/")));
-      } catch {
-        return null;
-      }
-    };
+    // Never trust a token's claims without its signature: anyone can mint an
+    // unsigned token whose payload says role=service_role.
+    const isServiceRoleCall = (await resolveServiceRoleToken(authHeader)) !== null;
 
-    // Accept either an exact service-role-key bearer (timing-safe) OR any token
-    // that decodes to a service_role JWT — the ai-model-verifier-nightly cron and
-    // run_model_verification() both authenticate with the vault `service_role_key`,
-    // which may be a differently-signed-but-valid service_role JWT.
-    const claims = decodeJwt(rawToken);
-    const isServiceRoleCall =
-      isAuthorizedServiceRole(authHeader, serviceRoleKey) || claims?.role === "service_role";
-
-    // Non-service-role callers must be an authenticated super/corporate admin.
+    // Everyone else must be a signed-in platform operator with config.manage.
     if (!isServiceRoleCall) {
       let userId: string | null = null;
       try {
@@ -172,13 +107,14 @@ serve(async (req) => {
 
       if (!userId) return json({ error: "Unauthorized", success: false }, 401);
 
-      const { data: roles } = await admin
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", userId);
-      const isAdmin = (roles ?? []).some((r: { role: string }) =>
-        r.role === "super_admin" || r.role === "corporate_admin");
-      if (!isAdmin) return json({ error: "Forbidden: admin role required", success: false }, 403);
+      // Same permission the Platform > AI settings page requires.
+      const { data: canManage } = await admin.rpc("platform_operator_can", {
+        _permission: "config.manage",
+        _user_id: userId,
+      });
+      if (canManage !== true) {
+        return json({ error: "Forbidden: config.manage permission required", success: false }, 403);
+      }
     }
 
     const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;

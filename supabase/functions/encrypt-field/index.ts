@@ -8,7 +8,7 @@ function uint8ArrayToBase64(bytes: Uint8Array): string {
   return btoa(binary);
 }
 
-function base64ToUint8Array(base64: string): Uint8Array {
+function base64ToUint8Array(base64: string): Uint8Array<ArrayBuffer> {
   const binaryString = atob(base64);
   const bytes = new Uint8Array(binaryString.length);
   for (let i = 0; i < binaryString.length; i++) {
@@ -149,7 +149,7 @@ serve(async (req) => {
       });
     }
   } catch (error) {
-    console.error('Encryption function error:', error.message);
+    console.error('Encryption function error:', error instanceof Error ? error.message : String(error));
     return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

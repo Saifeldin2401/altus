@@ -349,7 +349,7 @@ Deno.serve(async (req: Request) => {
 
     // Check if caller is a platform operator
     const { data: isOp } = await adminClient.rpc("is_platform_operator", {
-      p_user_id: caller.id,
+      _user_id: caller.id,
     });
 
     let sharesActiveOrgWithAuth = !!isOp;
