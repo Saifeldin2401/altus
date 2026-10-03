@@ -248,7 +248,10 @@ Deno.serve(async (req: Request) => {
         .from("organization_memberships")
         .select("id, organization_id")
         .eq("user_id", userIdRaw)
-        .eq("is_active", true);
+        .eq("is_active", true)
+        // Same preference as the database's primary-organization logic.
+        .order("is_primary", { ascending: false })
+        .order("created_at", { ascending: true });
 
       if (remainingMemberships && remainingMemberships.length > 0) {
         // User is still active in other tenants; re-home their profile to an existing tenant
@@ -330,7 +333,10 @@ Deno.serve(async (req: Request) => {
         .from("organization_memberships")
         .select("id, organization_id")
         .eq("user_id", userIdRaw)
-        .eq("is_active", true);
+        .eq("is_active", true)
+        // Same preference as the database's primary-organization logic.
+        .order("is_primary", { ascending: false })
+        .order("created_at", { ascending: true });
 
       if (remainingMemberships && remainingMemberships.length > 0) {
         await adminClient
