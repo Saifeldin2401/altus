@@ -261,26 +261,160 @@
     },
     "home": {
         "meta": {
-            "title": "Altus Connect | Training, knowledge and certification for hospitality groups"
+            "title": "Altus Connect | Hospitality training and certification for Saudi Arabia and the Gulf"
         },
         "skip": "Skip to content",
-        "brandTagline": "Hospitality learning platform",
+        "brandTagline": "By Altus Advisory",
         "nav": {
             "label": "Main",
-            "how": "How it works",
-            "roles": "Who it's for",
-            "knowledge": "Knowledge",
+            "why": "Why Altus",
+            "platform": "Platform",
+            "approach": "Our approach",
+            "contact": "Contact",
             "verify": "Verify a certificate",
-            "signIn": "Sign in"
+            "signIn": "Sign in",
+            "demo": "Book a demo"
         },
         "hero": {
-            "eyebrow": "Training, knowledge and certification for hospitality groups",
-            "titleLead": "Training your hotels",
-            "titleAccent": "can prove.",
-            "body": "Altus Connect assigns the right courses to every team, checks what they learned, issues certificates anyone can verify, and shows compliance hotel by hotel.",
-            "primary": "Sign in",
-            "secondary": "Verify a certificate",
-            "note": "Accounts are created by your organization's administrator."
+            "eyebrow": "Hospitality learning and certification",
+            "titleLead": "Hospitality teams, trained to",
+            "titleAccent": "world standard.",
+            "body": "Altus Connect gives hotel groups one place to train every team, prove every certification and deliver the same service in every hotel.",
+            "primary": "Book a demo",
+            "secondary": "Explore the platform"
+        },
+        "pillars": {
+            "arabic": "Arabic and English, built in",
+            "audit": "Audit-ready records",
+            "ai": "AI-assisted course design",
+            "ksa": "Built for Saudi hospitality"
+        },
+        "why": {
+            "eyebrow": "Why Altus",
+            "title": "Built by hospitality advisors, not a generic LMS",
+            "body": "Altus brings hospitality operations know-how to the way your teams learn. Every part of Altus Connect is shaped around how hotels actually run: shifts, departments, brand standards and audits.",
+            "imageAlt": "A hotel lobby with guests at the concierge desk",
+            "badgeTitle": "Service is learned.",
+            "badgeBody": "We help you teach it, measure it and prove it.",
+            "points": {
+                "expertise": {
+                    "title": "Hospitality first",
+                    "body": "Courses, SOPs and quizzes organized around front office, housekeeping, F&B and every other department."
+                },
+                "region": {
+                    "title": "Made for the Kingdom",
+                    "body": "Arabic-first, right-to-left by design, and aligned with the workforce ambitions of Vision 2030."
+                },
+                "partner": {
+                    "title": "A partner, not just software",
+                    "body": "Our team sets up your organization, brings your existing material across and stays with you after launch."
+                }
+            }
+        },
+        "outcomes": {
+            "eyebrow": "What changes",
+            "title": "Outcomes your owners and auditors will notice",
+            "onboard": {
+                "title": "New hires ready sooner",
+                "body": "Assign a clear learning path on day one, so new staff know exactly what to complete and by when."
+            },
+            "comply": {
+                "title": "Compliance you can prove",
+                "body": "Every course, quiz and certificate is recorded per person, hotel and department, ready to export."
+            },
+            "consistent": {
+                "title": "One standard, every hotel",
+                "body": "Publish brand standards and SOPs once, and keep every hotel in the group working from the same approved version."
+            }
+        },
+        "platform": {
+            "eyebrow": "The platform",
+            "title": "Everything a training team needs, in one place",
+            "body": "Assign courses, test understanding, issue verifiable certificates and keep your SOPs current, all in Arabic and English.",
+            "features": {
+                "assign": {
+                    "title": "Smart assignments",
+                    "body": "Target a hotel, a department or one person, with due dates and reminders."
+                },
+                "certify": {
+                    "title": "Verifiable certificates",
+                    "body": "Each certificate carries a code and QR that anyone can check online."
+                },
+                "knowledge": {
+                    "title": "Knowledge library",
+                    "body": "SOPs, guides and policies with owners, reviews and search."
+                },
+                "report": {
+                    "title": "Live reporting",
+                    "body": "See completion and overdue work by hotel and department."
+                }
+            }
+        },
+        "approach": {
+            "eyebrow": "Our approach",
+            "title": "From first call to a trained workforce",
+            "body": "We do not hand you a login and walk away. Altus works alongside your team from discovery to results.",
+            "imageAlt": "Hospitality executives reviewing portfolio performance",
+            "step": "Step {{n}}",
+            "steps": {
+                "discover": {
+                    "title": "Discover",
+                    "body": "We learn your brands, hotels, departments and the standards that matter most to you."
+                },
+                "configure": {
+                    "title": "Configure",
+                    "body": "We set up your organization and turn your existing SOPs and documents into courses and quizzes."
+                },
+                "launch": {
+                    "title": "Launch",
+                    "body": "Your people are invited, training is assigned and managers see progress from the first week."
+                },
+                "grow": {
+                    "title": "Improve",
+                    "body": "We review results with you and refine the programme as your teams and hotels grow."
+                }
+            }
+        },
+        "customers": {
+            "title": "Already an Altus Connect customer?",
+            "body": "Sign in to your organization's workspace."
+        },
+        "verify": {
+            "eyebrow": "Certificate verification",
+            "title": "Received a certificate? Check it here.",
+            "body": "Enter the code printed on an Altus Connect certificate to confirm it is genuine and still valid. No account needed.",
+            "label": "Verification code",
+            "placeholder": "Certificate code",
+            "submit": "Verify"
+        },
+        "contact": {
+            "eyebrow": "Book a demo",
+            "title": "See Altus Connect with your own hotels in mind",
+            "body": "Tell us a little about your group. We will arrange a walkthrough shaped around your hotels and standards.",
+            "promise": {
+                "one": "A tailored walkthrough, not a generic sales deck",
+                "two": "Advice on bringing your existing training across",
+                "three": "A clear proposal for your group"
+            },
+            "location": "Serving hotel groups across Saudi Arabia and the Gulf",
+            "name": "Full name",
+            "email": "Work email",
+            "company": "Company or hotel group",
+            "hotels": "Number of hotels",
+            "hotelsPlaceholder": "Select",
+            "message": "What would you like to achieve?",
+            "messagePlaceholder": "For example: onboarding for a new opening, or certifying food safety across our hotels",
+            "submit": "Request a demo",
+            "note": "This opens your email app with the details filled in.",
+            "mailSubject": "Altus Connect demo request: {{company}}"
+        },
+        "footer": {
+            "about": "Altus Connect is the hospitality training, knowledge and certification platform from Altus Advisory.",
+            "platform": "Platform",
+            "company": "Company",
+            "customers": "Customers",
+            "forgot": "Reset password",
+            "rights": "© {{year}} Altus Advisory. All rights reserved."
         },
         "preview": {
             "workspace": "My learning",
@@ -296,110 +430,6 @@
             "passed": "Passed",
             "certificate": "Certificate of completion",
             "verifiable": "Verifiable"
-        },
-        "loop": {
-            "eyebrow": "How it works",
-            "title": "One loop, from assignment to evidence",
-            "body": "Every part of Altus Connect serves the same cycle, so a team's training never lives in scattered spreadsheets.",
-            "steps": {
-                "assign": {
-                    "title": "Assign",
-                    "body": "Give courses to a hotel, a department or one person, each with a due date."
-                },
-                "learn": {
-                    "title": "Learn",
-                    "body": "Staff work through short lessons on any device, in Arabic or English."
-                },
-                "assess": {
-                    "title": "Assess",
-                    "body": "A scored quiz confirms the course was understood, not just opened."
-                },
-                "certify": {
-                    "title": "Certify",
-                    "body": "A pass issues a certificate with a code and QR that anyone can check."
-                },
-                "prove": {
-                    "title": "Prove",
-                    "body": "See who is complete or overdue by hotel and department, and export the evidence."
-                }
-            }
-        },
-        "roles": {
-            "eyebrow": "Who it's for",
-            "title": "A clear job for every role in the group",
-            "learner": {
-                "title": "Learners",
-                "body": "See what is due and when, pick up where you left off, and keep every certificate in one place."
-            },
-            "author": {
-                "title": "Authors",
-                "body": "Turn the SOPs and documents you already have into draft courses and quizzes with AI, then refine and submit them for review."
-            },
-            "manager": {
-                "title": "Training managers",
-                "body": "Assign training, follow up on overdue work, and answer audits with real records."
-            },
-            "admin": {
-                "title": "Administrators",
-                "body": "Invite people, set roles, and keep brands, hotels and departments in order."
-            }
-        },
-        "knowledge": {
-            "eyebrow": "Knowledge",
-            "title": "The right SOP, found in seconds",
-            "body": "Standard operating procedures, guides and policies sit next to the training that teaches them. Staff search in plain words and read the approved version.",
-            "points": {
-                "types": "SOPs, guides and policies, each with a named owner",
-                "review": "Every draft is reviewed before it is published",
-                "current": "Owners publish updates and retire outdated versions"
-            },
-            "query": "How do I handle a late check-out?",
-            "resultA": "Late check-out requests",
-            "resultB": "Front desk shift handover",
-            "resultC": "Guest privacy",
-            "typeSop": "SOP",
-            "typeGuide": "Guide",
-            "typePolicy": "Policy"
-        },
-        "capabilities": {
-            "eyebrow": "Built for hospitality groups",
-            "title": "Made for the way hotel groups work",
-            "body": "From a single hotel to a portfolio of brands, each organization gets a workspace shaped like its business.",
-            "ai": {
-                "title": "AI-assisted authoring",
-                "body": "Start a course from a document you already have. People review every draft before learners see it."
-            },
-            "language": {
-                "title": "Arabic and English",
-                "body": "Every screen works in both languages, with a full right-to-left layout."
-            },
-            "structure": {
-                "title": "A workspace per organization",
-                "body": "Brands, hotels, departments and people, with each organization kept separate from the next."
-            },
-            "evidence": {
-                "title": "Evidence on demand",
-                "body": "Completion and certificate records by hotel and department, ready to export."
-            }
-        },
-        "verify": {
-            "eyebrow": "Certificate verification",
-            "title": "Received a certificate? Check it here.",
-            "body": "Enter the code printed on an Altus Connect certificate to confirm it is genuine and still valid. No account needed.",
-            "label": "Verification code",
-            "placeholder": "Certificate code",
-            "submit": "Verify"
-        },
-        "cta": {
-            "title": "Bring training, knowledge and certificates together.",
-            "body": "Our team sets up Altus Connect for each organization. Tell us about your hotels and we will be in touch.",
-            "contact": "Talk to us",
-            "subject": "Altus Connect for our hotels",
-            "signIn": "Sign in"
-        },
-        "footer": {
-            "label": "Footer",
-            "rights": "© {{year}} Altus Connect. All rights reserved."
         }
     }
 }

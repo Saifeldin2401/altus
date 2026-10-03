@@ -1,13 +1,14 @@
 /**
- * Public homepage - shown at / to signed-out visitors. Signed-in users never
- * see it: RootIndex sends them to their workspace first.
+ * Public homepage - the Altus Connect marketing page, shown at / to signed-out
+ * visitors. Signed-in users never see it: RootIndex sends them to their
+ * workspace first.
  */
 import { LazyMotion, domAnimation } from 'framer-motion'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { HomeCta, HomeFooter, HomeVerify } from '@/components/public/home/HomeClosing'
+import { HomeContact, HomeFooter, HomeVerify } from '@/components/public/home/HomeClosing'
 import { HomeHeader } from '@/components/public/home/HomeHeader'
-import { HomeCapabilities, HomeHero, HomeKnowledge, HomeLoop, HomeRoles } from '@/components/public/home/HomeSections'
+import { HomeApproach, HomeCustomers, HomeHero, HomeOutcomes, HomePlatform, HomeWhy } from '@/components/public/home/HomeSections'
 
 export default function Home() {
   const { t, i18n } = useTranslation('public')
@@ -37,12 +38,13 @@ export default function Home() {
         <HomeHeader />
         <main id="main">
           <HomeHero />
-          <HomeLoop />
-          <HomeRoles />
-          <HomeKnowledge />
-          <HomeCapabilities />
+          <HomeWhy />
+          <HomeOutcomes />
+          <HomePlatform />
+          <HomeApproach />
+          <HomeCustomers />
           <HomeVerify />
-          <HomeCta />
+          <HomeContact />
         </main>
         <HomeFooter />
       </div>

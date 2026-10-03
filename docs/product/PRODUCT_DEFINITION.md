@@ -37,10 +37,11 @@ nor search has to justify its existence before it is built.
 2. **Marketing pages leave the app.** `/about`, `/vision-2030`, `/methodology`,
    `/case-studies`, `/leadership`, `/digital` move to a separate marketing
    site. The app's public surface is sign-in and certificate verification.
-   *Amended 2026-10-03:* `/` shows signed-out visitors a single product
-   homepage (`src/pages/public/Home.tsx`) describing the platform above, with
-   sign-in, certificate verification and a sales contact. It is not a return
-   of the consulting pages; those routes still redirect to sign-in.
+   *Amended 2026-10-03:* `/` shows signed-out visitors a marketing homepage
+   for Altus Connect (`src/pages/public/Home.tsx`): brand story, outcomes,
+   platform overview, onboarding approach, certificate verification and a
+   demo request that opens an email to sales. The old consulting routes still
+   redirect to sign-in.
 3. **Rename in the database, not just the UI.** `training_modules` →
    `courses`, `learning_quizzes` → `quizzes`, `training_assignment_rules` →
    `assignments`, lesson content out of `documents` into `lessons` /
