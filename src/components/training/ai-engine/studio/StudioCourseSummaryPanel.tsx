@@ -53,6 +53,8 @@ interface CourseSummaryStats {
   preferredVisualStyle: VisualStyle
   preferredModel: string
   qualityScoreForecast?: number
+  enableAutoRevision?: boolean
+  enableComplianceAudit?: boolean
 }
 
 interface StudioCourseSummaryPanelProps {
@@ -118,7 +120,7 @@ export function StudioCourseSummaryPanel({
         </p>
       </div>
 
-      <ScrollArea className="flex-1 p-4 space-y-4">
+      <ScrollArea className="flex-1 p-4 space-y-4 [&_[data-radix-scroll-area-viewport]>div]:!block">
         {/* Quick Highlights Grid */}
         <div className="grid grid-cols-2 gap-2 mb-3">
           <div
@@ -239,7 +241,7 @@ export function StudioCourseSummaryPanel({
                 </Badge>
               </div>
               <p className="text-[11px] text-muted-foreground">
-                Density: <span className="capitalize font-medium">{stats.imageDensity}</span> • Style: <span className="capitalize font-medium">{stats.preferredVisualStyle.replace('_', ' ')}</span>
+                Style: <span className="capitalize font-medium">{stats.preferredVisualStyle.replace('_', ' ')}</span>
               </p>
             </div>
           ) : (
@@ -265,12 +267,18 @@ export function StudioCourseSummaryPanel({
             <div className="flex items-center justify-between text-xs">
               <span className="text-foreground font-semibold truncate pe-2">{modelDisplayName}</span>
               <Badge className={cn('text-[11px] shrink-0', isModelFree ? 'bg-ds-success text-white dark:text-ds-on-ink' : 'bg-ds-accent text-white dark:text-ds-on-ink')}>
-                {isModelFree ? '⚡ Free Router' : '👑 Premier Tier'}
+                {isModelFree ? t('builder.modelFree', 'Free') : t('builder.modelPaid', 'Paid')}
               </Badge>
             </div>
             <p className="text-[11px] text-muted-foreground flex items-center gap-1">
               <ShieldCheck className="w-3 h-3 text-ds-success inline" />
-              <span>KSA Safeguards • five-star QA Critic • Auto-Revision</span>
+              <span>
+                {[
+                  t('builder.summaryQualityReview', 'Quality review'),
+                  stats.enableAutoRevision !== false ? t('builder.summaryAutoFix', 'auto-fix on') : t('builder.summaryAutoFixOff', 'auto-fix off'),
+                  stats.enableComplianceAudit !== false ? t('builder.stepCompliance', 'Compliance checklist') : null,
+                ].filter(Boolean).join(' · ')}
+              </span>
             </p>
           </div>
         </div>

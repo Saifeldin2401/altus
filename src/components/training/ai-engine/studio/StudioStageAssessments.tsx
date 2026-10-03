@@ -1,27 +1,20 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Slider } from '@/components/ui/slider'
-import { Switch } from '@/components/ui/switch'
 import {
   Award,
-  ChevronDown,
-  ChevronUp,
   FileQuestion,
   Layers,
-  Sparkles
+  Sparkles,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { BLOOM_PRESETS } from '@/lib/ai/courseEngine'
 import { type QuestionType } from '@/types/questions'
 import type {
-  BloomDistribution,
-  BloomPreset,
   QuizPlacement,
 } from '@/types/aiCourseEngine'
 
@@ -36,20 +29,6 @@ interface StudioStageAssessmentsProps {
   onChangeQuizMaxAttempts: (attempts: number | null) => void
   selectedQuestionTypes: QuestionType[]
   onToggleQuestionType: (type: QuestionType) => void
-  bloomPreset: BloomPreset
-  onSelectBloomPreset: (preset: BloomPreset) => void
-  bloomDistribution: BloomDistribution
-  onChangeBloomDistribution: (dist: BloomDistribution) => void
-  randomizeQuestions: boolean
-  onChangeRandomizeQuestions: (val: boolean) => void
-  randomizeAnswers: boolean
-  onChangeRandomizeAnswers: (val: boolean) => void
-  distractorQuality: 'standard' | 'high' | 'expert_plausible'
-  onChangeDistractorQuality: (q: 'standard' | 'high' | 'expert_plausible') => void
-  includeHints: boolean
-  onChangeIncludeHints: (val: boolean) => void
-  includeExplanations: boolean
-  onChangeIncludeExplanations: (val: boolean) => void
 }
 
 export function StudioStageAssessments({
@@ -63,24 +42,9 @@ export function StudioStageAssessments({
   onChangeQuizMaxAttempts,
   selectedQuestionTypes,
   onToggleQuestionType,
-  bloomPreset,
-  onSelectBloomPreset,
-  bloomDistribution,
-  onChangeBloomDistribution,
-  randomizeQuestions,
-  onChangeRandomizeQuestions,
-  randomizeAnswers,
-  onChangeRandomizeAnswers,
-  distractorQuality,
-  onChangeDistractorQuality,
-  includeHints,
-  onChangeIncludeHints,
-  includeExplanations,
-  onChangeIncludeExplanations,
 }: StudioStageAssessmentsProps) {
   const { t, i18n } = useTranslation('training')
   const isRTL = i18n.dir() === 'rtl'
-  const [showAdvanced, setShowAdvanced] = useState(false)
 
   const PLACEMENT_OPTIONS: Array<{
     id: QuizPlacement
@@ -368,105 +332,6 @@ export function StudioStageAssessments({
         </div>
       </div>
 
-      {/* 4. Progressive Disclosure: Advanced Bloom Distribution & Distractor Quality */}
-      <div className="border rounded-[8px] bg-muted/10 overflow-hidden">
-        <button
-          type="button"
-          onClick={() => setShowAdvanced(!showAdvanced)}
-          className="w-full px-4 py-3 flex items-center justify-between text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-ds-accent" />
-            <span>{t('builder.advancedAssessments', 'Advanced Bloom Cognitive Distribution & Pedagogical Safeguards')}</span>
-            <Badge variant="outline" className="text-[11px]">Optional</Badge>
-          </div>
-          {showAdvanced ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </button>
-
-        {showAdvanced && (
-          <div className="p-4 pt-1 border-t space-y-4 text-xs">
-            {/* Bloom Preset Selection */}
-            <div className="space-y-2">
-              <Label className="text-xs font-semibold">{t('builder.bloomPreset', 'Bloom Cognitive Focus Preset')}</Label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {(['foundational', 'intermediate', 'advanced', 'expert'] as BloomPreset[]).map((bp) => (
-                  <Button
-                    key={bp}
-                    type="button"
-                    variant={bloomPreset === bp ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => {
-                      onSelectBloomPreset(bp)
-                      onChangeBloomDistribution(BLOOM_PRESETS[bp])
-                    }}
-                    className={cn('text-xs capitalize font-bold', bloomPreset === bp && 'bg-ds-accent text-white dark:text-ds-on-ink')}
-                  >
-                    {bp} Focus
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {/* Bloom Sliders */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 rounded-lg border bg-card">
-              <div className="space-y-1">
-                <div className="flex justify-between text-[11px] font-semibold">
-                  <span>Remember / Recall</span>
-                  <span className="font-mono">{bloomDistribution.remember}%</span>
-                </div>
-                <Slider
-                  value={[bloomDistribution.remember]}
-                  onValueChange={([v]) => onChangeBloomDistribution({ ...bloomDistribution, remember: v })}
-                  max={100}
-                />
-              </div>
-
-              <div className="space-y-1">
-                <div className="flex justify-between text-[11px] font-semibold">
-                  <span>Understand / Explain</span>
-                  <span className="font-mono">{bloomDistribution.understand}%</span>
-                </div>
-                <Slider
-                  value={[bloomDistribution.understand]}
-                  onValueChange={([v]) => onChangeBloomDistribution({ ...bloomDistribution, understand: v })}
-                  max={100}
-                />
-              </div>
-
-              <div className="space-y-1">
-                <div className="flex justify-between text-[11px] font-semibold">
-                  <span>Apply / Execute</span>
-                  <span className="font-mono text-ds-accent font-bold">{bloomDistribution.apply}%</span>
-                </div>
-                <Slider
-                  value={[bloomDistribution.apply]}
-                  onValueChange={([v]) => onChangeBloomDistribution({ ...bloomDistribution, apply: v })}
-                  max={100}
-                />
-              </div>
-            </div>
-
-            {/* Toggles */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-              <div className="flex items-center justify-between p-3 rounded-lg border bg-card">
-                <div>
-                  <p className="text-xs font-bold text-foreground">Include Hints & Remediation</p>
-                  <p className="text-[11px] text-muted-foreground">Provides progressive guidance for incorrect responses.</p>
-                </div>
-                <Switch checked={includeHints} onCheckedChange={onChangeIncludeHints} />
-              </div>
-
-              <div className="flex items-center justify-between p-3 rounded-lg border bg-card">
-                <div>
-                  <p className="text-xs font-bold text-foreground">Include Explanations</p>
-                  <p className="text-[11px] text-muted-foreground">Explains *why* the correct answer is standard policy.</p>
-                </div>
-                <Switch checked={includeExplanations} onCheckedChange={onChangeIncludeExplanations} />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
     </div>
   )
 }

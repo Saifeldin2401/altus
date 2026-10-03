@@ -3,25 +3,14 @@ import { useTranslation } from 'react-i18next'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
 import {
   BrainCircuit,
-  ChevronDown,
-  ChevronUp,
   Cpu,
-  FileCheck,
-  ImageIcon,
-  ListOrdered,
-  MessageSquare,
   Mic,
   RotateCcw,
-  ShieldAlert,
   ShieldCheck,
-  Sparkles,
   Users,
-  Workflow
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { AVAILABLE_COURSE_AI_MODELS } from '@/lib/gemini'
@@ -61,16 +50,7 @@ export function StudioStageAISettings({
   // Model & Routing Categories
   const [modelCategoryFilter, setModelCategoryFilter] = useState<'all' | 'free' | 'openrouter'>('all')
 
-  // Multi-Agent Pipeline Controls
-  const [enableRAGDiscovery, setEnableRAGDiscovery] = useState(true)
-  const [enableScenarioAgent, setEnableScenarioAgent] = useState(true)
-  const [enablePsychometricAssessments, setEnablePsychometricAssessments] = useState(true)
-  const [enableRecraftVisuals, setEnableRecraftVisuals] = useState(true)
 
-  // QA Thresholds
-  const [qaThresholdPreset, setQaThresholdPreset] = useState<'strict' | 'standard' | 'lenient'>('strict')
-  const [showAdvanced, setShowAdvanced] = useState(false)
-  const [creativityLevel, setCreativityLevel] = useState<number>(3)
 
   const filteredModels = AVAILABLE_COURSE_AI_MODELS.filter((m) => {
     if (modelCategoryFilter === 'free') {
@@ -90,11 +70,10 @@ export function StudioStageAISettings({
           <div>
             <Label className="text-sm font-bold text-foreground flex items-center gap-2">
               <Cpu className="w-4 h-4 text-ds-accent" />
-              <span>{t('builder.aiModelOrchestration', 'Dynamic AI Model Intelligence Router')}</span>
-              <Badge className="bg-ds-success text-white dark:text-ds-on-ink text-[11px]">Free-First Cascade</Badge>
+              <span>{t('builder.aiModelPlain', 'AI model')}</span>
             </Label>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Automatically routes each agent task to the optimal model: Free Gemini 2.5 Flash & Groq LPU first, escalating to Claude 3.7 & GPT-4o only when necessary.
+              {t('builder.aiModelPlainDesc', 'Auto picks a model for each step. Choose a model to use it for every step.')}
             </p>
           </div>
 
@@ -195,213 +174,66 @@ export function StudioStageAISettings({
         </div>
       </div>
 
-      {/* 2. Specialized Multi-Agent Engine Architecture */}
-      <div className="p-4 rounded-[8px] border bg-card/80 space-y-4 shadow-sm">
+      {/* 2. Pipeline steps the author can switch off (each one is honoured by the generator) */}
+      <div className="p-4 rounded-[8px] border bg-card/80 space-y-3">
         <div className="space-y-1 border-b pb-2">
-          <Label className="text-xs font-bold text-foreground flex items-center gap-1.5">
-            <Workflow className="w-4 h-4 text-ds-accent" />
-            <span>Multi-Agent Engine Subsystems (Active Pipeline)</span>
-            <Badge variant="outline" className="text-[11px]">10 Specialized Agents</Badge>
+          <Label className="text-xs font-bold text-foreground">
+            {t('builder.pipelineSteps', 'Extra steps')}
           </Label>
           <p className="text-[11px] text-muted-foreground">
-            Configure which autonomous specialist agents collaborate on curriculum generation, workplace scenarios, and QA.
+            {t('builder.pipelineStepsDesc', 'Turn off steps you do not need to make generation faster.')}
           </p>
         </div>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {/* RAG Discovery Agent */}
-          <div className="flex items-center justify-between p-3 rounded-lg border bg-card text-xs">
-            <div className="space-y-0.5 pe-2">
-              <p className="font-bold text-foreground flex items-center gap-1.5">
-                <FileCheck className="w-3.5 h-3.5 text-ds-info" />
-                Research & RAG Grounding Agent
-              </p>
-              <p className="text-[11px] text-muted-foreground">
-                Searches hotel SOP repository in PostgreSQL + five-star hospitality benchmarks.
-              </p>
-            </div>
-            <Switch checked={enableRAGDiscovery} onCheckedChange={setEnableRAGDiscovery} />
-          </div>
-
-          {/* Interactive Activities Agent */}
-          <div className="flex items-center justify-between p-3 rounded-lg border bg-card text-xs">
-            <div className="space-y-0.5 pe-2">
-              <p className="font-bold text-foreground flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-ds-info" />
-                Interactive Activities Agent
-              </p>
-              <p className="text-[11px] text-muted-foreground">
-                Synthesizes shift observation guides, workplace practice drills, and physical checklists.
-              </p>
-            </div>
-            <Switch
-              checked={enableActivitiesAgent}
-              onCheckedChange={(val) => onChangeEnableActivitiesAgent?.(val)}
-            />
-          </div>
-
-          {/* Scenario & Guest Dilemma Agent */}
-          <div className="flex items-center justify-between p-3 rounded-lg border bg-card text-xs">
-            <div className="space-y-0.5 pe-2">
-              <p className="font-bold text-foreground flex items-center gap-1.5">
-                <MessageSquare className="w-3.5 h-3.5 text-ds-warning" />
-                Scenario & Roleplay Agent
-              </p>
-              <p className="text-[11px] text-muted-foreground">
-                Builds branching guest dilemmas using LAST protocol and Saudi hospitality etiquette.
-              </p>
-            </div>
-            <Switch checked={enableScenarioAgent} onCheckedChange={setEnableScenarioAgent} />
-          </div>
-
-          {/* Psychometric Assessment Agent */}
-          <div className="flex items-center justify-between p-3 rounded-lg border bg-card text-xs">
-            <div className="space-y-0.5 pe-2">
-              <p className="font-bold text-foreground flex items-center gap-1.5">
-                <ListOrdered className="w-3.5 h-3.5 text-ds-danger" />
-                Psychometric Assessment Agent
-              </p>
-              <p className="text-[11px] text-muted-foreground">
-                Generates 16+ Bloom's Taxonomy question types with plausible distractor analysis.
-              </p>
-            </div>
-            <Switch checked={enablePsychometricAssessments} onCheckedChange={setEnablePsychometricAssessments} />
-          </div>
-
-          {/* Recraft Free Visuals Agent */}
-          <div className="flex items-center justify-between p-3 rounded-lg border bg-card text-xs">
-            <div className="space-y-0.5 pe-2">
-              <p className="font-bold text-foreground flex items-center gap-1.5">
-                <ImageIcon className="w-3.5 h-3.5 text-ds-warning" />
-                Recraft & Cloudflare Visual Agent
-              </p>
-              <p className="text-[11px] text-muted-foreground">
-                Generates SVG vector diagrams & educational illustrations ($0.00 / Free tier first).
-              </p>
-            </div>
-            <Switch checked={enableRecraftVisuals} onCheckedChange={setEnableRecraftVisuals} />
-          </div>
-
-          {/* Bilingual Audio Briefing Agent */}
-          <div className="flex items-center justify-between p-3 rounded-lg border bg-card text-xs">
-            <div className="space-y-0.5 pe-2">
-              <p className="font-bold text-foreground flex items-center gap-1.5">
-                <Mic className="w-3.5 h-3.5 text-ds-info" />
-                Audio Shift Briefing Agent
-              </p>
-              <p className="text-[11px] text-muted-foreground">
-                Synthesizes spoken audio briefings in Saudi Arabic (ar-SA) and English (en-US). (Disabled by default)
-              </p>
-            </div>
-            <Switch
-              checked={enableAudioBriefings}
-              onCheckedChange={(val) => onChangeEnableAudioBriefings?.(val)}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* 3. Pedagogical QA Critic, Surgical Revision & KSA Compliance */}
-      <div className="p-4 rounded-[8px] border bg-card/80 space-y-4 shadow-sm">
-        <div className="space-y-1 border-b pb-2">
-          <Label className="text-xs font-bold text-foreground flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4 text-ds-success" />
-            <span>Pedagogical QA Critic & KSA Regulatory Safeguards</span>
-          </Label>
-          <p className="text-[11px] text-muted-foreground">
-            Enforces 7-dimensional pedagogical audit, surgical gap remediation, and Saudi labor compliance.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="p-3 rounded-lg border bg-card space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-foreground">QA Target Score</span>
-              <Badge className="bg-ds-accent text-white dark:text-ds-on-ink text-[11px]">
-                {qaThresholdPreset === 'strict' ? '95+ Production' : qaThresholdPreset === 'standard' ? '85+ Polish' : '70+ Pass'}
-              </Badge>
-            </div>
-            <Select value={qaThresholdPreset} onValueChange={(val: any) => setQaThresholdPreset(val)}>
-              <SelectTrigger className="h-8 text-xs">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="strict">Strict (95+ Production Ready)</SelectItem>
-                <SelectItem value="standard">Standard (85+ High Quality)</SelectItem>
-                <SelectItem value="lenient">Rapid (70+ Minimum Pass)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="flex items-center justify-between p-3 rounded-lg border bg-card">
-            <div className="space-y-0.5 pe-2">
-              <p className="text-xs font-bold text-foreground flex items-center gap-1">
-                <RotateCcw className="w-3.5 h-3.5 text-ds-accent" />
-                Surgical Auto-Revision
-              </p>
-              <p className="text-[11px] text-muted-foreground">Auto-repairs QA gaps without rebuilding full modules.</p>
-            </div>
-            <Switch
-              checked={enableAutoRevision}
-              onCheckedChange={(val) => onChangeEnableAutoRevision?.(val)}
-            />
-          </div>
-
-          <div className="flex items-center justify-between p-3 rounded-lg border bg-card">
-            <div className="space-y-0.5 pe-2">
-              <p className="text-xs font-bold text-foreground flex items-center gap-1">
-                <ShieldAlert className="w-3.5 h-3.5 text-ds-success" />
-                KSA Regulatory Shield
-              </p>
-              <p className="text-[11px] text-muted-foreground">Audits against Saudi Ministry of Tourism & Balady.</p>
-            </div>
-            <Switch
-              checked={enableComplianceAudit}
-              onCheckedChange={(val) => onChangeEnableComplianceAudit?.(val)}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* 4. Progressive Disclosure: Advanced Prompt Strictness & Creativity Tuning */}
-      <div className="border rounded-[8px] bg-muted/10 overflow-hidden">
-        <button
-          type="button"
-          onClick={() => setShowAdvanced(!showAdvanced)}
-          className="w-full px-4 py-3 flex items-center justify-between text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-ds-accent" />
-            <span>{t('builder.advancedAI', 'Advanced Prompt Strictness & Creativity Tuning')}</span>
-            <Badge variant="outline" className="text-[11px]">Optional</Badge>
-          </div>
-          {showAdvanced ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-        </button>
-
-        {showAdvanced && (
-          <div className="p-4 pt-1 border-t space-y-4 text-xs">
-            <div className="space-y-2 p-3 rounded-lg border bg-card">
-              <div className="flex justify-between items-center text-xs font-semibold">
-                <span>{t('builder.creativityLevel', 'Pedagogical Strictness vs Creative Scenarios')}</span>
-                <span className="font-mono text-ds-accent font-bold">
-                  {creativityLevel === 1 ? 'Strict Procedural' : creativityLevel === 3 ? 'Balanced five-star Standard' : 'Highly Creative Scenarios'}
+          {([
+            {
+              key: 'activities',
+              icon: Users,
+              title: t('builder.stepActivities', 'Practice activities'),
+              desc: t('builder.stepActivitiesDesc', 'Adds short on-the-job exercises to lessons.'),
+              checked: enableActivitiesAgent,
+              onChange: onChangeEnableActivitiesAgent,
+            },
+            {
+              key: 'audio',
+              icon: Mic,
+              title: t('builder.stepAudio', 'Audio narration'),
+              desc: t('builder.stepAudioDesc', 'Records a spoken summary for each lesson.'),
+              checked: enableAudioBriefings,
+              onChange: onChangeEnableAudioBriefings,
+            },
+            {
+              key: 'revision',
+              icon: RotateCcw,
+              title: t('builder.stepRevision', 'Fix quality issues automatically'),
+              desc: t('builder.stepRevisionDesc', 'After a quality review, the AI rewrites the weak parts once.'),
+              checked: enableAutoRevision,
+              onChange: onChangeEnableAutoRevision,
+            },
+            {
+              key: 'compliance',
+              icon: ShieldCheck,
+              title: t('builder.stepCompliance', 'Compliance checklist'),
+              desc: t('builder.stepComplianceDesc', 'Checks the text for topics Saudi hospitality training usually needs (keyword check, not legal advice).'),
+              checked: enableComplianceAudit,
+              onChange: onChangeEnableComplianceAudit,
+            },
+          ] as const).map((row) => (
+            <label
+              key={row.key}
+              className="flex items-start justify-between gap-3 p-3 rounded-[6px] border bg-card text-xs cursor-pointer"
+            >
+              <span className="flex items-start gap-2.5 min-w-0">
+                <row.icon className="w-4 h-4 mt-0.5 shrink-0 text-ds-ink-secondary" />
+                <span className="min-w-0">
+                  <span className="block font-semibold text-foreground">{row.title}</span>
+                  <span className="block text-[11px] text-muted-foreground">{row.desc}</span>
                 </span>
-              </div>
-              <Slider
-                value={[creativityLevel]}
-                onValueChange={([val]) => setCreativityLevel(val)}
-                min={1}
-                max={5}
-                step={1}
-              />
-              <div className="flex justify-between text-[11px] text-muted-foreground">
-                <span>Strict Fact-Only</span>
-                <span className="text-ds-accent font-bold">Balanced five-star Quality</span>
-                <span>Rich Novel Dilemmas</span>
-              </div>
-            </div>
-          </div>
-        )}
+              </span>
+              <Switch checked={row.checked} onCheckedChange={(v) => row.onChange?.(v)} disabled={!row.onChange} />
+            </label>
+          ))}
+        </div>
       </div>
     </div>
   )

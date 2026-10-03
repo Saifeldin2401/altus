@@ -499,11 +499,12 @@ export const aiCourseEngineService = {
         instructional_strategy: blueprint.instructionalStrategy,
         target_audience: blueprint.targetAudience,
         experience_level: blueprint.experienceLevel,
-        prior_knowledge: blueprint.priorKnowledge,
+        prior_knowledge: blueprint.priorKnowledge ?? config.priorKnowledge ?? null,
         generation_mode: config.generationMode,
         generation_job_id: jobId || null,
         blueprint: blueprint as any,
-        quality_score: blueprint.qualityScore || 90,
+        // Only a score the QA agent actually produced; never a made-up default.
+        quality_score: typeof blueprint.qualityScore === 'number' ? blueprint.qualityScore : undefined,
         qa_report: blueprint.qaReport as any,
         created_by: currentUserId,
         organization_id: userOrgId,
@@ -555,7 +556,7 @@ export const aiCourseEngineService = {
      */
     const persistQuiz = async (
       quiz: QuizBlueprint,
-      meta: { title: string; description: string; passingScore: number; timeLimitMinutes: number; maxAttempts: number },
+      meta: { title: string; description: string; passingScore: number; timeLimitMinutes: number; maxAttempts: number | null },
     ): Promise<{ id: string; linked: number } | null> => {
       const { data: createdQuiz, error: quizError } = await supabase
         .from('quizzes')
@@ -631,7 +632,8 @@ export const aiCourseEngineService = {
             : `Verification assessment for ${(cd.topic as string) || draft.title}`,
           passingScore: (cd.passing_score as number) || (cd.is_final_assessment ? 85 : 80),
           timeLimitMinutes: cd.is_final_assessment ? 30 : 10,
-          maxAttempts: cd.is_final_assessment ? 2 : 3,
+          // null = unlimited, as chosen in the AI Course Creator.
+          maxAttempts: config.quizConfig?.maxAttempts === undefined ? 3 : config.quizConfig.maxAttempts,
         })
         // A mandatory quiz block whose quiz has no linked questions would
         // permanently block module completion — skip the block entirely.

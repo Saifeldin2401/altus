@@ -91,7 +91,8 @@ interface OrchestratedCourseOutput {
   audioNarrations: Record<string, AudioNarrationResult>
   qaReport: ComprehensiveQAReport
   legacyQaReport: CourseQAQualityReport
-  complianceScore: number
+  /** null when the author switched the compliance check off. */
+  complianceScore: number | null
   totalDurationMs: number
   totalEstimatedCostUSD: number
   revisionCyclesRun: number
@@ -781,16 +782,19 @@ class AICourseOrchestrator {
         },
         { pipelineRunId, phase: 'quality_assurance', preferredModel: options.preferredModel, onProgress }
       ),
-      complianceAgent.process(
-        {
-          blueprint,
-        },
-        { pipelineRunId, phase: 'quality_assurance' }
-      ),
+      // The author can switch the compliance check off in the AI Course Creator.
+      config.subsystems?.compliance === false
+        ? Promise.resolve(null)
+        : complianceAgent.process(
+            {
+              blueprint,
+            },
+            { pipelineRunId, phase: 'quality_assurance' }
+          ),
     ])
 
     let qaReport: ComprehensiveQAReport = qaResult.data
-    const complianceReport = complianceResult.data
+    const complianceReport = complianceResult?.data ?? null
     let revisionCyclesRun = 0
 
     // ========================================================================
@@ -799,6 +803,7 @@ class AICourseOrchestrator {
     const thresholds = DEFAULT_QA_THRESHOLDS[config.courseType] || DEFAULT_QA_THRESHOLDS.professional
 
     if (
+      config.subsystems?.revision !== false &&
       (qaReport.scoreCategory === 'targeted_revision' || qaReport.scoreCategory === 'major_revision') &&
       revisionCyclesRun < thresholds.maxRevisionCycles
     ) {
@@ -887,7 +892,7 @@ class AICourseOrchestrator {
       audioNarrations,
       qaReport,
       legacyQaReport,
-      complianceScore: complianceReport.score,
+      complianceScore: complianceReport?.score ?? null,
       totalDurationMs,
       totalEstimatedCostUSD,
       revisionCyclesRun,

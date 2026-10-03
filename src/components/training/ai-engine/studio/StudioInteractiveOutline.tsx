@@ -147,9 +147,11 @@ export function StudioInteractiveOutline({
           </div>
         </div>
 
-        <Badge variant="outline" className="text-[11px] bg-ds-accent-soft text-ds-accent border-ds-accent/30">
-          QA Score: {blueprint.qualityScore || 92}%
-        </Badge>
+        {typeof blueprint.qualityScore === 'number' && (
+          <Badge variant="outline" className="text-[11px] bg-ds-surface-subtle text-ds-ink-secondary border-ds-border">
+            QA {blueprint.qualityScore}%
+          </Badge>
+        )}
       </div>
 
       {/* Modules List */}
