@@ -437,7 +437,7 @@ function ReportingLinesTable({
                             </TableCell>
                             <TableCell className="text-sm text-ds-ink-secondary">{emp.dept_name}</TableCell>
                             <TableCell className="text-sm text-ds-ink-secondary">
-                                {t(`nav:shell.roles.${emp.role}`, emp.role.replace(/_/g, ' '))}
+                                {String(t(`nav:shell.roles.${emp.role}`, { defaultValue: emp.role.replace(/_/g, ' ') }))}
                             </TableCell>
                             <TableCell className="text-end">
                                 <Button

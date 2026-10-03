@@ -32,7 +32,7 @@ import {
 } from '@/components/ui/sheet'
 import { AlertTriangle, CheckSquare, Edit, KeyRound, Loader2, MailPlus, MoreVertical, Plus, Search, ShieldCheck, ShieldOff, Square, Trash2, Unlock, Upload, UserX, Users, XCircle, Building, Shield } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
-import { EmptyState, WorkspaceHeader, headerActionClass } from '@/ui'
+import { WorkspaceHeader, headerActionClass } from '@/ui'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
@@ -1065,7 +1065,7 @@ export default function UserManagement() {
                     {t('drawer.contact', 'Contact and account')}
                   </h3>
                   <dl className="divide-y divide-ds-border rounded-[6px] border border-ds-border bg-ds-surface text-sm">
-                    {[
+                    {([
                       { label: t('drawer.email', 'Email'), value: detailUser.email, mono: true },
                       detailUser.phone ? { label: t('drawer.phone', 'Phone'), value: detailUser.phone, mono: true } : null,
                       { label: t('drawer.staff_id', 'Staff ID'), value: detailUser.staff_id || '—', mono: true },
@@ -1073,7 +1073,7 @@ export default function UserManagement() {
                       detailUser.last_login_at
                         ? { label: t('drawer.last_sign_in', 'Last signed in'), value: new Date(detailUser.last_login_at).toLocaleString(i18n.language) }
                         : { label: t('drawer.last_sign_in', 'Last signed in'), value: t('drawer.never', 'Never') },
-                    ].filter((row): row is { label: string; value: string; mono?: boolean } => !!row).map((row) => (
+                    ] as ({ label: string; value: string; mono?: boolean } | null)[]).filter((row): row is { label: string; value: string; mono?: boolean } => !!row).map((row) => (
                       <div key={row.label} className="flex items-center justify-between gap-4 px-4 py-2.5">
                         <dt className="text-ds-muted">{row.label}</dt>
                         <dd className={`min-w-0 truncate text-end text-ds-ink ${row.mono ? 'font-mono text-xs' : ''}`}>{row.value}</dd>
