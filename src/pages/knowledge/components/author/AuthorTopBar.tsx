@@ -91,7 +91,7 @@ export function AuthorTopBar({
             </div>
           ) : (
             <Badge variant="outline" className="text-[11px] font-medium text-muted-foreground shrink-0 hidden sm:inline-flex bg-muted/40">
-              {t('editor.property_studio', 'Property Studio')}
+              {t('editor.property_studio', 'Hotel Studio')}
             </Badge>
           )}
 

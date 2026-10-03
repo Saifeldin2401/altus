@@ -21,7 +21,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/components/ui/use-toast'
 import { useAccountActions } from '@/hooks/useAccountActions'
@@ -33,6 +32,7 @@ import {
 import { AlertTriangle, CheckSquare, Edit, KeyRound, Loader2, MailPlus, MoreVertical, Plus, Search, ShieldCheck, ShieldOff, Square, Trash2, Unlock, Upload, UserX, Users, XCircle, Building, Shield } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { WorkspaceHeader, headerActionClass } from '@/ui'
+import { InvitePersonDialog } from '@/components/admin/InvitePersonDialog'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
@@ -43,7 +43,7 @@ import { useTenant } from '@/contexts/TenantContext'
 import { useAccountContext } from '@/contexts/auth/AccountContext'
 import { platformService } from '@/services/platformService'
 import type { Profile, AppRole } from '@/lib/types'
-import { ROLE_HIERARCHY, ROLES } from '@/lib/constants'
+import { ROLES } from '@/lib/constants'
 
 type AccountStatusFilter = 'all' | 'active' | 'suspended' | 'locked' | 'inactive' | 'pending_approval'
 type RoleCategoryFilter = 'all' | 'learners' | 'instructors' | 'admins'
@@ -90,9 +90,6 @@ export default function UserManagement() {
   const [statusFilter, setStatusFilter] = useState<AccountStatusFilter>('all')
   const [inviteDialogOpen, setInviteDialogOpen] = useState(false)
 
-  const [inviteEmail, setInviteEmail] = useState('')
-  const [inviteRole, setInviteRole] = useState<AppRole | ''>('staff')
-  const [inviteDepartmentId, setInviteDepartmentId] = useState('')
 
   // Account action dialog state
   const [actionDialogOpen, setActionDialogOpen] = useState(false)
@@ -174,24 +171,6 @@ export default function UserManagement() {
           } as Profile
         })
     },
-  })
-
-  const { data: departments } = useQuery({
-    queryKey: ['departments', 'invite', currentOrganization?.id],
-    queryFn: async () => {
-      if (!currentOrganization?.id) return []
-      const query = supabase
-        .from('departments')
-        .select('id, name, name_ar, organization_id')
-        .eq('is_active', true)
-        .eq('organization_id', currentOrganization.id)
-        .order('name', { ascending: true })
-
-      const { data, error } = await query
-      if (error) throw error
-      return (data || []) as Array<{ id: string; name: string; name_ar?: string | null }>
-    },
-    enabled: !!currentOrganization?.id,
   })
 
   useEffect(() => {
@@ -362,97 +341,6 @@ export default function UserManagement() {
       })
     },
   })
-
-  const inviteUserMutation = useMutation({
-    mutationFn: async (params: { email: string; role: AppRole | '' }) => {
-      if (isSeatLimitReached) {
-        throw new Error('User seat limit reached for this subscription plan. Contact your platform administrator to upgrade.')
-      }
-
-      const { email, role } = params
-      const trimmedEmail = email.trim().toLowerCase()
-      if (!trimmedEmail || !trimmedEmail.includes('@')) {
-        throw new Error('Please enter a valid email address.')
-      }
-      if (!role) {
-        throw new Error('Please select a role for the invited user.')
-      }
-
-      if (!currentOrganization?.id) {
-        throw new Error(t('form.error.select_org', 'Tenant context required.'))
-      }
-
-      const appUrl = (import.meta.env.VITE_APP_URL || window.location.origin).replace(/\/$/, '')
-      const { data, error: fnError } = await supabase.functions.invoke('create-user', {
-        body: {
-          email: trimmedEmail,
-          role,
-          provisioningMethod: 'invite',
-          appUrl,
-          organizationId: currentOrganization.id,
-          departmentIds: inviteDepartmentId ? [inviteDepartmentId] : [],
-        },
-      })
-
-      if (fnError) {
-        const maybeContext = fnError as unknown as { context?: Response | { response?: Response } }
-        const response = maybeContext?.context instanceof Response
-          ? maybeContext.context
-          : maybeContext?.context?.response
-        if (response) {
-          const text = await response.text().catch(() => '')
-          let parsedError: string | undefined
-          if (text) {
-            try {
-              const parsed = JSON.parse(text) as { error?: string }
-              parsedError = parsed?.error
-            } catch {
-              parsedError = text
-            }
-          }
-          throw new Error(parsedError || fnError.message || 'Failed to send invitation')
-        }
-        throw new Error(fnError.message || 'Failed to send invitation')
-      }
-
-      if (data?.error) {
-        throw new Error(data.error)
-      }
-
-      return data as { userId?: string; invitationSent?: boolean }
-    },
-    onSuccess: () => {
-      toast({
-        title: t('form.success.invite_sent_title', 'Invitation Sent'),
-        description: t(
-          'form.success.invite_sent_message',
-          'An invite email was sent. The user should open the link, set a password, and complete their profile.'
-        ),
-      })
-      setInviteDialogOpen(false)
-      setInviteEmail('')
-      setInviteRole('staff')
-      setInviteDepartmentId('')
-      refetch()
-      refetchEntitlements()
-    },
-    onError: (error: Error) => {
-      toast({
-        title: t('form.error.create_failed'),
-        description: error.message,
-        variant: 'destructive',
-      })
-    },
-  })
-
-  const handleInviteDialogOpenChange = (open: boolean) => {
-    setInviteDialogOpen(open)
-    if (!open) {
-      setInviteEmail('')
-      setInviteRole('staff')
-      setInviteDepartmentId('')
-    }
-  }
 
   // Filter users by search + role category + status
   const filteredUsers = useMemo(() => {
@@ -1158,112 +1046,14 @@ export default function UserManagement() {
 
 
       {/* Email Invite Dialog */}
-      <Dialog open={inviteDialogOpen} onOpenChange={handleInviteDialogOpenChange}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <MailPlus className="w-5 h-5 text-ds-brass" />
-              {t('form.invite_user', 'Invite User')}
-            </DialogTitle>
-            <DialogDescription>
-              {t(
-                'form.invite_description',
-                'Send an invitation email. The user will set a password and complete their profile from the link.'
-              )}
-            </DialogDescription>
-          </DialogHeader>
-
-          {/* Target Organization Badge */}
-          {currentOrganization && (
-            <p className="flex items-center gap-1.5 rounded-[6px] border border-ds-border bg-ds-surface-subtle px-3 py-2 text-sm text-ds-ink-secondary">
-              <Building aria-hidden="true" className="h-4 w-4 text-ds-muted" />
-              {t('invite.joins', 'Joins {{org}}', { org: isRTL && (currentOrganization as any).name_ar ? (currentOrganization as any).name_ar : currentOrganization.name })}
-            </p>
-          )}
-
-          <div className="space-y-2 py-2">
-            <Label htmlFor="invite-email">{t('form.email')}</Label>
-            <Input
-              id="invite-email"
-              type="email"
-              placeholder="name@example.com"
-              value={inviteEmail}
-              onChange={(e) => setInviteEmail(e.target.value)}
-              disabled={inviteUserMutation.isPending}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault()
-                  if (inviteEmail.trim()) {
-                    inviteUserMutation.mutate({ email: inviteEmail, role: inviteRole })
-                  }
-                }
-              }}
-            />
-          </div>
-
-          <div className="space-y-2 py-2">
-            <Label htmlFor="invite-role">{t('form.permission_level', 'Permission Level')}</Label>
-            <select
-              id="invite-role"
-              value={inviteRole}
-              onChange={(e) => setInviteRole(e.target.value as AppRole)}
-              disabled={inviteUserMutation.isPending}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              required
-            >
-              <option value="">{t('form.select_role', 'Select role')}</option>
-              {ROLE_HIERARCHY.map((roleKey) => (
-                <option key={roleKey} value={roleKey}>
-                  {ROLES[roleKey].label}
-                </option>
-              ))}
-            </select>
-            <p className="text-xs text-muted-foreground">
-              {t(
-                'form.invite_role_description',
-                'This role is enforced before the account is created.'
-              )}
-            </p>
-          </div>
-
-          <div className="space-y-2 py-2">
-            <Label htmlFor="invite-department">{t('form.departments', 'Department')}</Label>
-            <select
-              id="invite-department"
-              value={inviteDepartmentId}
-              onChange={(e) => setInviteDepartmentId(e.target.value)}
-              disabled={inviteUserMutation.isPending}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-            >
-              <option value="">
-                {t('form.select_department', 'Select department (optional)')}
-              </option>
-              {(departments || []).map((department) => (
-                <option key={department.id} value={department.id}>
-                  {isRTL && (department as any).name_ar ? (department as any).name_ar : department.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => handleInviteDialogOpenChange(false)}
-              disabled={inviteUserMutation.isPending}
-            >
-              {t('form.cancel', 'Cancel')}
-            </Button>
-            <Button
-              onClick={() => inviteUserMutation.mutate({ email: inviteEmail, role: inviteRole })}
-              disabled={inviteUserMutation.isPending || !inviteEmail.trim() || !inviteRole}
-            >
-              {inviteUserMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin me-2" /> : null}
-              {t('form.send_invite', 'Send Invite')}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <InvitePersonDialog
+        open={inviteDialogOpen}
+        onOpenChange={setInviteDialogOpen}
+        onInvited={() => {
+          refetch()
+          refetchEntitlements()
+        }}
+      />
 
       {/* Delete/Deactivate Confirmation */}
       <DeleteConfirmation

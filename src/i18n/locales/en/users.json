@@ -224,6 +224,42 @@
         "reset_password": "Reset password"
     },
     "invite": {
-        "joins": "Joins {{org}}"
+        "joins": "Joins {{org}}",
+        "title": "Invite someone",
+        "description": "They get an email with a link, choose their own password and join straight away.",
+        "email": "Email",
+        "email_invalid": "Enter a valid email address.",
+        "role": "Role",
+        "role_hint": {
+            "administrator": "Manages people, structure and settings for the organization.",
+            "training_manager": "Assigns training and follows up on progress and compliance.",
+            "knowledge_manager": "Reviews and publishes articles and courses.",
+            "author": "Writes courses, quizzes and articles for review.",
+            "learner": "Takes assigned training and reads articles."
+        },
+        "department": "Department (optional)",
+        "no_department": "Decide later",
+        "department_hint": "Training assigned to a department reaches them automatically.",
+        "send": "Send invitation",
+        "toast": {
+            "error": "Something went wrong",
+            "load_failed": "Invitations could not be loaded.",
+            "org_required": "Choose an organization first",
+            "org_required_body": "Invitations are sent from inside an organization.",
+            "exists": "Already invited",
+            "exists_body": "This email already has an invitation waiting. You can resend it from Invitations.",
+            "member": "Already a member",
+            "member_body": "Someone with this email is already in this organization.",
+            "sent": "Invitation sent",
+            "sent_body": "We emailed {{email}} a link to join.",
+            "send_failed": "The invitation was not sent",
+            "try_again": "Please try again.",
+            "resent": "Invitation resent",
+            "resent_body": "A new link is on its way.",
+            "resend_failed": "The invitation could not be resent.",
+            "cancelled": "Invitation cancelled",
+            "cancelled_body": "The link in their email no longer works.",
+            "cancel_failed": "The invitation could not be cancelled."
+        }
     }
 }
