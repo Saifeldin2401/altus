@@ -32,6 +32,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Guardrails
+        run: npm run check:guardrails
+
       - name: Typecheck
         run: npm run typecheck
 
@@ -43,6 +46,26 @@ jobs:
 
       - name: Security Audit
         run: npm run audit:ci
+
+  # Edge Functions run on Deno and are deployed separately from the web build,
+  # so nothing else type-checks them. An undeclared variable in a shared helper
+  # once reached main this way.
+  edge-functions:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Type-check Edge Functions
+        run: deno check --config supabase/functions/deno.jsonc supabase/functions/*/index.ts supabase/functions/_shared/*.ts
 
   # Tenant-isolation and learning-integrity suites. Each builds its own
   # fixtures, impersonates users the way PostgREST does and rolls back, so they
