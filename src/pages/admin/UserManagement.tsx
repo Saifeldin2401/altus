@@ -227,7 +227,7 @@ export default function UserManagement() {
   const deleteUserMutation = useMutation({
     mutationFn: async (id: string) => {
       if (!currentOrganization?.id) {
-        throw new Error(t('form.error.select_org', 'Tenant context required.'))
+        throw new Error(t('form.error.select_org', 'Organization context required.'))
       }
       const { data, error } = await supabase.rpc('remove_tenant_member', {
         p_org_id: currentOrganization.id,
@@ -256,7 +256,7 @@ export default function UserManagement() {
   const activateUserMutation = useMutation({
     mutationFn: async (id: string) => {
       if (!currentOrganization?.id) {
-        throw new Error(t('form.error.select_org', 'Tenant context required.'))
+        throw new Error(t('form.error.select_org', 'Organization context required.'))
       }
       const { data, error } = await supabase.rpc('activate_tenant_member', {
         p_org_id: currentOrganization.id,

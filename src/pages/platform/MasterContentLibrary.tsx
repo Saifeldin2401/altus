@@ -810,7 +810,7 @@ export default function MasterContentLibrary() {
                                 variant="outline"
                                 onClick={() => handleOpenDeploy('course', course)}
                                 className="h-8 px-3 text-xs gap-1.5 text-ds-accent hover:bg-ds-accent-soft font-semibold"
-                                title={t('admin:deploy_content_only', 'Copy master content into tenant(s)')}
+                                title={t('admin:deploy_content_only', 'Copy master content into organization(s)')}
                               >
                                 <Send className="h-3.5 w-3.5" />
                                 {t('admin:deploy_to_tenants', 'Deploy')}
@@ -820,7 +820,7 @@ export default function MasterContentLibrary() {
                                 size="sm"
                                 onClick={() => openAssign(course)}
                                 className="h-8 px-3 text-xs gap-1.5 bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink font-semibold shadow-sm"
-                                title={t('admin:assign_to_tenants_title', 'Assign to tenant users & track progress')}
+                                title={t('admin:assign_to_tenants_title', 'Assign to organization users & track progress')}
                               >
                                 <GraduationCap className="h-3.5 w-3.5" />
                                 {t('admin:assign_and_track', 'Assign & Track')}
@@ -863,7 +863,7 @@ export default function MasterContentLibrary() {
                         <h4 className="text-2xl font-bold text-foreground mt-1">{alignmentRate}%</h4>
                         <Progress value={alignmentRate} className="h-1.5 mt-2 w-36" />
                       </div>
-                      <div className="h-10 w-10 rounded-xl bg-ds-success-soft text-ds-success flex items-center justify-center">
+                      <div className="h-10 w-10 rounded-[8px] bg-ds-success-soft text-ds-success flex items-center justify-center">
                         <ShieldCheck className="h-5 w-5" />
                       </div>
                     </CardContent>
@@ -876,7 +876,7 @@ export default function MasterContentLibrary() {
                         <h4 className="text-2xl font-bold text-ds-success mt-1">{inSync}</h4>
                         <p className="text-[11px] text-muted-foreground mt-1">Properties running current standards</p>
                       </div>
-                      <div className="h-10 w-10 rounded-xl bg-ds-success-soft text-ds-success flex items-center justify-center">
+                      <div className="h-10 w-10 rounded-[8px] bg-ds-success-soft text-ds-success flex items-center justify-center">
                         <CheckCircle2 className="h-5 w-5" />
                       </div>
                     </CardContent>
@@ -889,7 +889,7 @@ export default function MasterContentLibrary() {
                         <h4 className="text-2xl font-bold text-ds-warning mt-1">{pending}</h4>
                         <p className="text-[11px] text-muted-foreground mt-1">Properties with unapplied revisions</p>
                       </div>
-                      <div className="h-10 w-10 rounded-xl bg-ds-warning-soft text-ds-warning flex items-center justify-center">
+                      <div className="h-10 w-10 rounded-[8px] bg-ds-warning-soft text-ds-warning flex items-center justify-center">
                         <BellRing className="h-5 w-5" />
                       </div>
                     </CardContent>
@@ -1005,7 +1005,7 @@ export default function MasterContentLibrary() {
                                 </TableCell>
                                 <TableCell className="whitespace-nowrap">
                                   {hasUpdate ? (
-                                    <Badge className="bg-ds-warning hover:bg-ds-warning text-ds-ink font-bold text-xs gap-1 whitespace-nowrap shrink-0">
+                                    <Badge className="bg-ds-warning hover:bg-ds-warning/90 text-ds-ink font-bold text-xs gap-1 whitespace-nowrap shrink-0">
                                       <BellRing className="h-3 w-3 animate-bounce" />
                                       Update Available
                                     </Badge>
@@ -1069,16 +1069,16 @@ export default function MasterContentLibrary() {
       {selectedItemToDeploy && (
         <Dialog open={!!selectedItemToDeploy} onOpenChange={(open) => !isDeploying && setSelectedItemToDeploy(null)}>
           <DialogContent className="sm:max-w-[620px] max-h-[90vh] flex flex-col p-0 overflow-hidden">
-            <div className="text-ds-on-ink p-6 pb-4 bg-ds-ink">
+            <div className="border-b border-ds-border p-6 pb-4 pe-14">
               <DialogHeader>
-                <div className="flex items-center gap-2 text-ds-accent text-xs font-semibold uppercase tracking-wider mb-1">
-                  <Send className="h-4 w-4" />
+                <div className="mb-1 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-ds-accent">
+                  <Send aria-hidden="true" className="h-4 w-4" />
                   <span>{t('admin:batch_deployment', 'Batch Master Deployment')}</span>
                 </div>
-                <DialogTitle className="text-lg font-bold text-white">
+                <DialogTitle>
                   Deploying: {selectedItemToDeploy.item.title}
                 </DialogTitle>
-                <DialogDescription className="text-ds-muted text-xs mt-0.5">
+                <DialogDescription className="mt-0.5 text-xs">
                   Select customer tenant organizations to deploy dedicated local copies tracked by platform version sync.
                 </DialogDescription>
               </DialogHeader>
@@ -1091,7 +1091,7 @@ export default function MasterContentLibrary() {
                     <div className="relative flex-1">
                       <Search className={cn("absolute top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground", "start-2.5")} />
                       <Input
-                        placeholder={t('admin:filter_tenants', 'Search customer tenants...')}
+                        placeholder={t('admin:filter_tenants', 'Search customer organizations...')}
                         value={orgSearchQuery}
                         onChange={(e) => setOrgSearchQuery(e.target.value)}
                         className={cn("h-8 text-xs", "ps-8")}
@@ -1119,7 +1119,7 @@ export default function MasterContentLibrary() {
                             className={`flex items-center justify-between p-2.5 rounded-lg border cursor-pointer transition-all ${
                               isChecked
                                 ? 'bg-primary/10 border-primary/50 shadow-sm'
-                                : 'bg-white hover:bg-muted/40 border-border/70'
+                                : 'bg-ds-surface hover:bg-muted/40 border-border/70'
                             }`}
                           >
                             <div className="flex items-center gap-3">
@@ -1206,7 +1206,7 @@ export default function MasterContentLibrary() {
                     size="sm"
                     onClick={handleConfirmDeploy}
                     disabled={isDeploying || selectedOrgIds.length === 0}
-                    className="bg-primary hover:bg-primary/90 text-white gap-2 font-semibold text-xs"
+                    className="bg-primary hover:bg-primary/90 text-ds-on-ink gap-2 font-semibold text-xs"
                   >
                     <Send className="h-3.5 w-3.5" />
                     Deploy to {selectedOrgIds.length} Organization(s)
@@ -1217,7 +1217,7 @@ export default function MasterContentLibrary() {
                   size="sm"
                   onClick={() => setSelectedItemToDeploy(null)}
                   disabled={isDeploying}
-                  className="w-full bg-ds-ink hover:bg-ds-ink text-white text-xs font-semibold"
+                  className="w-full bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink text-xs font-semibold"
                 >
                   {isDeploying ? 'Deploying...' : 'Done'}
                 </Button>
@@ -1233,14 +1233,14 @@ export default function MasterContentLibrary() {
       {assignItem && (
         <Dialog open={!!assignItem} onOpenChange={(open) => !isAssigning && !open && setAssignItem(null)}>
           <DialogContent className="sm:max-w-[640px] max-h-[90vh] flex flex-col p-0 overflow-hidden">
-            <div className="p-4">
+            <div className="border-b border-ds-border p-4 pe-14">
               <DialogHeader>
-                <DialogTitle className="text-base font-bold text-white flex items-center gap-2">
+                <DialogTitle className="flex items-center gap-2 text-base">
                   <GraduationCap className="h-4 w-4" />
-                  {t('admin:assign_master_course', 'Assign Master Course to Tenants')}
+                  {t('admin:assign_master_course', 'Assign Master Course to Organizations')}
                 </DialogTitle>
-                <DialogDescription className="text-ds-accent text-xs mt-0.5">
-                  {assignItem.title} — {t('admin:assign_master_course_desc', 'deploys the course into each tenant if needed, then assigns it to their learners. Audited.')}
+                <DialogDescription className="mt-0.5 text-xs">
+                  {assignItem.title} — {t('admin:assign_master_course_desc', 'deploys the course into each organization if needed, then assigns it to their learners. Audited.')}
                 </DialogDescription>
               </DialogHeader>
             </div>
@@ -1248,8 +1248,8 @@ export default function MasterContentLibrary() {
             <div className="flex-1 overflow-y-auto p-4 space-y-4 text-sm">
               {/* Target tenants */}
               <div className="space-y-1.5">
-                <Label className="text-xs font-bold">{t('admin:target_tenants', 'Target tenants')}</Label>
-                <div className="max-h-40 overflow-y-auto rounded-xl border border-border/60 divide-y divide-border/50">
+                <Label className="text-xs font-bold">{t('admin:target_tenants', 'Target organizations')}</Label>
+                <div className="max-h-40 overflow-y-auto rounded-[8px] border border-border/60 divide-y divide-border/50">
                   {organizations.map((org) => (
                     // A plain <label> only auto-forwards clicks to a real native <input> —
                     // Radix's Checkbox renders a <button role="checkbox">, so despite the
@@ -1274,9 +1274,9 @@ export default function MasterContentLibrary() {
                 <div className="space-y-1.5">
                   <Label className="text-xs font-bold">{t('admin:assign_to', 'Assign to')}</Label>
                   <Select value={assignScope} onValueChange={(v) => setAssignScope(v as any)}>
-                    <SelectTrigger className="h-9 text-xs rounded-xl"><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="h-9 text-xs rounded-[8px]"><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="organization">{t('admin:all_learners_in_tenant', 'Everyone in the tenant')}</SelectItem>
+                      <SelectItem value="organization">{t('admin:all_learners_in_tenant', 'Everyone in the organization')}</SelectItem>
                       <SelectItem value="role">{t('admin:learners_with_role', 'Only a specific role')}</SelectItem>
                     </SelectContent>
                   </Select>
@@ -1285,7 +1285,7 @@ export default function MasterContentLibrary() {
                   <div className="space-y-1.5">
                     <Label className="text-xs font-bold">{t('admin:role', 'Role')}</Label>
                     <Select value={assignRole} onValueChange={setAssignRole}>
-                      <SelectTrigger className="h-9 text-xs rounded-xl"><SelectValue /></SelectTrigger>
+                      <SelectTrigger className="h-9 text-xs rounded-[8px]"><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="learner">Learner</SelectItem>
                         <SelectItem value="instructor">Instructor</SelectItem>
@@ -1297,17 +1297,17 @@ export default function MasterContentLibrary() {
                 )}
                 <div className="space-y-1.5">
                   <Label className="text-xs font-bold">{t('admin:due_date', 'Due date (optional)')}</Label>
-                  <Input type="date" value={assignDueDate} onChange={(e) => setAssignDueDate(e.target.value)} className="h-9 text-xs rounded-xl" />
+                  <Input type="date" value={assignDueDate} onChange={(e) => setAssignDueDate(e.target.value)} className="h-9 text-xs rounded-[8px]" />
                 </div>
               </div>
 
               <div className="space-y-1.5">
                 <Label className="text-xs font-bold">{t('admin:instructions_optional', 'Instructions (optional)')}</Label>
-                <Textarea value={assignInstructions} onChange={(e) => setAssignInstructions(e.target.value)} rows={2} className="text-xs rounded-xl" />
+                <Textarea value={assignInstructions} onChange={(e) => setAssignInstructions(e.target.value)} rows={2} className="text-xs rounded-[8px]" />
               </div>
 
               {assignResults && (
-                <div className="rounded-xl border border-border/60 divide-y divide-border/50 text-xs">
+                <div className="rounded-[8px] border border-border/60 divide-y divide-border/50 text-xs">
                   {assignResults.map((r) => (
                     <div key={r.org_id} className="flex items-center justify-between p-2.5">
                       <span className="font-medium">{r.org_name}</span>
@@ -1324,14 +1324,14 @@ export default function MasterContentLibrary() {
               {/* Adoption / tracking */}
               <div className="space-y-1.5 pt-2 border-t border-border/50">
                 <Label className="text-xs font-bold flex items-center gap-1.5">
-                  <Layers className="h-3.5 w-3.5" /> {t('admin:cross_tenant_adoption', 'Cross-tenant adoption & progress')}
+                  <Layers className="h-3.5 w-3.5" /> {t('admin:cross_tenant_adoption', 'Cross-organization adoption & progress')}
                 </Label>
                 {isLoadingAdoption ? (
                   <p className="text-[11px] text-muted-foreground">{t('common:loading', 'Loading…')}</p>
                 ) : !adoption || adoption.length === 0 ? (
-                  <p className="text-[11px] text-muted-foreground italic">{t('admin:not_deployed_anywhere', 'Not deployed to any tenant yet.')}</p>
+                  <p className="text-[11px] text-muted-foreground italic">{t('admin:not_deployed_anywhere', 'Not deployed to any organization yet.')}</p>
                 ) : (
-                  <div className="overflow-x-auto rounded-xl border border-border/60">
+                  <div className="overflow-x-auto rounded-[8px] border border-border/60">
                     <table className="w-full text-[11px]">
                       <thead className="bg-muted/40 text-muted-foreground">
                         <tr>
@@ -1362,17 +1362,17 @@ export default function MasterContentLibrary() {
             </div>
 
             <DialogFooter className="p-4 bg-muted/20 border-t">
-              <Button variant="ghost" size="sm" onClick={() => setAssignItem(null)} disabled={isAssigning} className="text-xs rounded-xl">
+              <Button variant="ghost" size="sm" onClick={() => setAssignItem(null)} disabled={isAssigning} className="text-xs rounded-[8px]">
                 {t('common:close', 'Close')}
               </Button>
               <Button
                 size="sm"
                 onClick={handleConfirmAssign}
                 disabled={isAssigning || assignOrgIds.length === 0}
-                className="text-xs rounded-xl bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink font-bold gap-1.5"
+                className="text-xs bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink font-bold gap-1.5"
               >
                 {isAssigning ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
-                {t('admin:assign_now', 'Assign to')} {assignOrgIds.length || ''} {t('admin:tenants_lc', 'tenant(s)')}
+                {t('admin:assign_now', 'Assign to')} {assignOrgIds.length || ''} {t('admin:tenants_lc', 'organization(s)')}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -1462,7 +1462,7 @@ export default function MasterContentLibrary() {
               size="sm"
               onClick={handleCreateSop}
               disabled={isCreatingSop || !newSop.title.trim()}
-              className="bg-primary hover:bg-primary/90 text-white font-semibold text-xs gap-1.5"
+              className="bg-primary hover:bg-primary/90 text-ds-on-ink font-semibold text-xs gap-1.5"
             >
               {isCreatingSop ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
               Publish Master SOP
@@ -1565,7 +1565,7 @@ export default function MasterContentLibrary() {
               size="sm"
               onClick={handleCreateCourse}
               disabled={isCreatingCourse || !newCourse.title.trim()}
-              className="bg-primary hover:bg-primary/90 text-white font-semibold text-xs gap-1.5"
+              className="bg-primary hover:bg-primary/90 text-ds-on-ink font-semibold text-xs gap-1.5"
             >
               {isCreatingCourse ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />}
               Publish Master Course
@@ -1666,7 +1666,7 @@ export default function MasterContentLibrary() {
                 size="sm"
                 onClick={handleConfirmVersionBump}
                 disabled={isBumpingVersion}
-                className="bg-ds-warning hover:bg-ds-warning text-white font-semibold text-xs gap-1.5"
+                className="bg-ds-warning hover:bg-ds-warning/90 text-white dark:text-ds-on-ink font-semibold text-xs gap-1.5"
               >
                 {isBumpingVersion ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
                 Publish Revision & Flag Tenants

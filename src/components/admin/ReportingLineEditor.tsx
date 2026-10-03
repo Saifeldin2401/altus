@@ -72,7 +72,7 @@ export function ReportingLineEditor({
                     {/* Employee Info */}
                     <div className="bg-ds-surface-subtle rounded-lg p-4">
                         <div className="flex items-center gap-3">
-                            <div className="h-12 w-12 rounded-full bg-primary text-white flex items-center justify-center font-semibold">
+                            <div className="h-12 w-12 rounded-full bg-ds-ink text-ds-on-ink flex items-center justify-center font-semibold">
                                 {employee.full_name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
                             </div>
                             <div>

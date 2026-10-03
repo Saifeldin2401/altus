@@ -107,7 +107,7 @@ export default function AuditRetentionPolicies() {
                             </Card>
                         ) : (
                             policies?.map(policy => (
-                                <Card key={policy.id} className={`overflow-hidden transition-all hover:border-ds-accent/30 ${policy.is_default ? 'border-2 border-ds-accent/30 shadow-md ring-1 ring-ds-accent/30' : ''}`}>
+                                <Card key={policy.id} className={`overflow-hidden transition-all hover:border-ds-accent/30 ${policy.is_default ? 'border-2 border-ds-accent/30 ring-1 ring-ds-accent/30' : ''}`}>
                                     {policy.is_default && (
                                         <div className="bg-ds-ink text-ds-on-ink text-xs font-bold text-center py-1 flex items-center justify-center gap-1">
                                             <CheckCircle2 className="h-3 w-3" /> PRIMARY DATA GOVERNANCE
@@ -155,7 +155,7 @@ export default function AuditRetentionPolicies() {
                 {/* Right Column: Editor */}
                 <div className={`lg:col-span-8 ${!isEditing ? 'hidden lg:block' : ''}`}>
                     {isEditing && selectedPolicy ? (
-                        <Card className="border-t-4 border-t-indigo-600 shadow-xl overflow-hidden">
+                        <Card className="overflow-hidden">
                             <CardHeader className="bg-ds-surface-subtle border-b pb-6">
                                 <CardTitle className="text-xl text-ds-ink">{selectedPolicy.id ? 'Edit Retention Policy' : 'New Retention Policy'}</CardTitle>
                                 <CardDescription>Set how long exported audit files are kept before being deleted.</CardDescription>
@@ -229,7 +229,7 @@ export default function AuditRetentionPolicies() {
                                         <Button variant="outline" onClick={() => { setIsEditing(false); setSelectedPolicy(null) }}>
                                             Discard Changes
                                         </Button>
-                                        <Button onClick={handleSave} disabled={createPolicy.isPending || updatePolicy.isPending || !selectedPolicy.name} className="bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink shadow-md">
+                                        <Button onClick={handleSave} disabled={createPolicy.isPending || updatePolicy.isPending || !selectedPolicy.name} className="bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink">
                                             {createPolicy.isPending || updatePolicy.isPending ? 'Saving...' : 'Save Policy'}
                                         </Button>
                                     </div>
@@ -237,7 +237,7 @@ export default function AuditRetentionPolicies() {
                             </CardContent>
                         </Card>
                     ) : (
-                        <div className="h-full min-h-[500px] flex flex-col items-center justify-center border-2 border-dashed rounded-xl bg-ds-surface-subtle text-muted-foreground p-8">
+                        <div className="h-full min-h-[500px] flex flex-col items-center justify-center border-2 border-dashed rounded-[8px] bg-ds-surface-subtle text-muted-foreground p-8">
                             <ShieldCheck className="w-16 h-16 mb-4 opacity-10 text-ds-accent" />
                             <h3 className="text-xl font-medium text-ds-ink">Retention Policies</h3>
                             <p className="text-sm text-center max-w-sm mt-3 leading-relaxed">Select a policy from the list to edit it, or draft a new one.</p>

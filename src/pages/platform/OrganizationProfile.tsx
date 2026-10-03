@@ -573,14 +573,14 @@ export default function OrganizationProfile() {
             </CardHeader>
             <CardContent className="p-5 pt-0 space-y-2.5">
               {(profile?.primary_contacts || []).length === 0 ? (
-                <div className="p-4 text-center border rounded-xl bg-muted/20 text-xs text-muted-foreground">
+                <div className="p-4 text-center border rounded-[8px] bg-muted/20 text-xs text-muted-foreground">
                   No tenant administrators designated yet. Use "Designate Administrator" to assign an organization owner or administrator.
                 </div>
               ) : (
                 profile.primary_contacts.map((c: any) => {
                   const isOwner = c.role === 'organization_owner'
                   return (
-                    <div key={c.user_id} className="text-xs flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-xl bg-muted/30 border gap-2">
+                    <div key={c.user_id} className="text-xs flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-[8px] bg-muted/30 border gap-2">
                       <div className="flex items-center gap-2.5">
                         <div className={`p-2 rounded-lg ${isOwner ? 'bg-ds-warning-soft text-ds-warning ' : 'bg-ds-accent-soft text-ds-accent '}`}>
                           {isOwner ? <Crown className="h-4 w-4" /> : <ShieldCheck className="h-4 w-4" />}
@@ -689,7 +689,7 @@ export default function OrganizationProfile() {
               No feature flags catalogued in the platform.
             </div>
           ) : (
-            <div className="divide-y rounded-xl border overflow-hidden">
+            <div className="divide-y rounded-[8px] border overflow-hidden">
               {featureMatrix.flags.map((flag) => {
                 const orgFeature = orgFeatureData?.features?.[flag.key]
                 const isEffective = orgFeature?.effective ?? flag.default_enabled
@@ -1099,7 +1099,7 @@ export default function OrganizationProfile() {
               <div className="rounded-lg border p-3 space-y-2" style={{ backgroundColor: `${primaryColor}0d` }}>
                 <div className="text-[10px] font-semibold text-muted-foreground">Preview</div>
                 <div className="flex items-center justify-between rounded-md px-3 py-2" style={{ backgroundColor: readablePrimaryColor }}>
-                  <span className="text-xs font-bold text-white">{editName || 'Tenant'} Portal</span>
+                  <span className="text-xs font-bold text-white">{editName || 'Organization'} Portal</span>
                   <span className="h-2 w-2 rounded-full" style={{ backgroundColor: accentColor }} />
                 </div>
                 {readablePrimaryColor !== primaryColor && (

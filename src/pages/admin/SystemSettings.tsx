@@ -46,6 +46,7 @@ function SettingRow({
     onUpdate: (key: string, value: unknown) => void
     onReset?: (key: string) => void
 }) {
+    const { t } = useTranslation('admin')
     const isBool = typeof setting.value === 'boolean'
     const isNumber = typeof setting.value === 'number'
     const isObject = typeof setting.value === 'object' && setting.value !== null
@@ -75,7 +76,7 @@ function SettingRow({
                 parsed = JSON.parse(localValue)
                 setParseError(null)
             } catch (err: any) {
-                setParseError(err?.message || 'Invalid JSON format')
+                setParseError(err?.message || t('settingsPage.invalid_json', 'This value is not valid JSON.'))
                 return
             }
         }
@@ -93,7 +94,7 @@ function SettingRow({
                     {setting.is_override ? (
                         <div className="flex items-center gap-1.5">
                             <Badge variant="outline" className="text-[10px] text-ds-warning bg-ds-warning-soft border-ds-warning/30">
-                                Changed from the default
+                                {t('settingsPage.changed', 'Changed from the default')}
                             </Badge>
                             {onReset && (
                                 <Button
@@ -101,14 +102,14 @@ function SettingRow({
                                     variant="ghost"
                                     className="h-5 text-[10px] text-muted-foreground hover:text-foreground gap-1 px-1.5"
                                     onClick={() => onReset(setting.key)}
-                                    title="Revert to system default"
+                                    title={t('settingsPage.use_default_hint', 'Go back to the default value')}
                                 >
-                                    <RotateCcw className="w-3 h-3" /> Use default
+                                    <RotateCcw aria-hidden="true" className="w-3 h-3" /> {t('settingsPage.use_default', 'Use default')}
                                 </Button>
                             )}
                         </div>
                     ) : (
-                        <span className="text-[11px] text-ds-muted">Default</span>
+                        <span className="text-[11px] text-ds-muted">{t('settingsPage.default', 'Default')}</span>
                     )}
                 </div>
                 {setting.description && (
@@ -126,7 +127,7 @@ function SettingRow({
                             onCheckedChange={(checked) => onUpdate(setting.key, checked)}
                             aria-label={formatKey(setting.key)}
                         />
-                        {setting.value ? 'On' : 'Off'}
+                        {setting.value ? t('settingsPage.on', 'On') : t('settingsPage.off', 'Off')}
                     </label>
                 ) : isObject ? (
                     <div className="flex flex-col gap-2 w-full sm:w-80">
@@ -141,9 +142,9 @@ function SettingRow({
                             className="w-full text-xs font-mono p-2 border rounded-md bg-ds-surface-subtle border-ds-border focus:outline-none focus:ring-1 focus:ring-ds-brass resize-y"
                         />
                         {isDirty && (
-                            <Button size="sm" variant="default" className="h-7 text-xs gap-1 self-end bg-ds-ink hover:bg-ds-ink-secondary text-white" onClick={handleSave}>
+                            <Button size="sm" className="self-end" onClick={handleSave}>
                                 <Save className="w-3.5 h-3.5" />
-                                Save Changes
+                                {t('settingsPage.save', 'Save')}
                             </Button>
                         )}
                     </div>
@@ -159,9 +160,9 @@ function SettingRow({
                             className="w-full sm:w-48 text-sm h-9"
                         />
                         {isDirty && (
-                            <Button size="sm" variant="default" className="h-9 gap-1 bg-ds-ink hover:bg-ds-ink-secondary text-white" onClick={handleSave}>
+                            <Button size="sm" onClick={handleSave}>
                                 <Save className="w-3.5 h-3.5" />
-                                Save
+                                {t('settingsPage.save', 'Save')}
                             </Button>
                         )}
                     </div>

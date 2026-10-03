@@ -23,7 +23,7 @@ describe('Editor & Author Inspector Translations', () => {
     expect(enKnowledge.editor.master_studio).toBe('Master Studio')
     expect(arKnowledge.editor.master_studio).toBe('استوديو المعايير الرئيسية')
 
-    expect(enKnowledge.editor.property_studio).toBe('Property Studio')
+    expect(enKnowledge.editor.property_studio).toBe('Hotel Studio')
     expect(arKnowledge.editor.property_studio).toBe('استوديو إجراءات الفندق')
 
     expect(enKnowledge.editor.master_studio_mode).toBe('Master Studio Mode')
@@ -38,7 +38,7 @@ describe('Editor & Author Inspector Translations', () => {
     expect(enKnowledge.editor.all_departments_brand).toBe('All Departments (General Brand Standard)')
     expect(arKnowledge.editor.all_departments_brand).toBe('جميع الأقسام (معيار عام للعلامة التجارية)')
 
-    expect(enKnowledge.editor.visibility.master_all_properties).toBe('All Hotel Properties (Chain-Wide)')
+    expect(enKnowledge.editor.visibility.master_all_properties).toBe('All hotels (chain-wide)')
     expect(arKnowledge.editor.visibility.master_all_properties).toBe('كافة فنادق السلسلة (معيار موحد)')
   })
 })

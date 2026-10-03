@@ -140,7 +140,7 @@ export default function PlatformControlCenter() {
 
         {/* Global Search Results Overlay */}
         {searchQuery.trim().length >= 2 && searchResults && !searchOverlayDismissed && (
-          <Card className="absolute top-14 start-0 end-0 z-50 shadow-2xl border bg-card/95 backdrop-blur-lg max-h-[32rem] overflow-y-auto">
+          <Card className="absolute top-14 start-0 end-0 z-50 max-h-[32rem] overflow-y-auto shadow-lg shadow-black/10 dark:shadow-black/40">
             <CardContent className="p-4 space-y-4 text-xs">
               {/* Organizations */}
               {searchResults.organizations?.length > 0 && (
@@ -283,7 +283,7 @@ export default function PlatformControlCenter() {
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-2xl font-black text-ds-ink dark:text-white">
+              <span className="text-2xl font-black text-ds-ink">
                 {isLoadingStats ? <Skeleton className="h-8 w-12" /> : stats?.totalOrganizations || 0}
               </span>
               <span className="text-xs text-ds-success font-bold">
@@ -308,7 +308,7 @@ export default function PlatformControlCenter() {
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-2xl font-black text-ds-ink dark:text-white">
+              <span className="text-2xl font-black text-ds-ink">
                 {isLoadingStats ? <Skeleton className="h-8 w-12" /> : stats?.totalLearners || 0}
               </span>
               <span className="text-xs text-ds-accent font-bold">Platform-wide</span>
@@ -331,7 +331,7 @@ export default function PlatformControlCenter() {
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-2xl font-black text-ds-ink dark:text-white">
+              <span className="text-2xl font-black text-ds-ink">
                 {isLoadingStats ? <Skeleton className="h-8 w-12" /> : (stats?.totalMasterCourses || 0) + (stats?.totalMasterSops || 0)}
               </span>
               <span className="text-xs text-ds-success font-bold">
@@ -356,7 +356,7 @@ export default function PlatformControlCenter() {
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-2xl font-black text-ds-ink dark:text-white">
+              <span className="text-2xl font-black text-ds-ink">
                 {isLoadingOps ? <Skeleton className="h-8 w-12" /> : operations?.active_jobs || 0}
               </span>
               <span className="text-xs text-ds-accent font-bold">Processing</span>
@@ -404,7 +404,7 @@ export default function PlatformControlCenter() {
                   {operations.recent_jobs.slice(0, 5).map((job) => (
                     <div
                       key={job.id}
-                      className="p-3 rounded-xl border border-ds-border bg-ds-surface-subtle flex items-center justify-between text-xs gap-3"
+                      className="p-3 rounded-[8px] border border-ds-border bg-ds-surface-subtle flex items-center justify-between text-xs gap-3"
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <div className={`w-2 h-2 rounded-full shrink-0 ${
@@ -415,7 +415,7 @@ export default function PlatformControlCenter() {
                             : 'bg-ds-warning animate-pulse'
                         }`} />
                         <div className="truncate">
-                          <div className="font-bold text-ds-ink dark:text-white capitalize truncate">
+                          <div className="font-bold text-ds-ink capitalize truncate">
                             {job.mode || 'Course Generation'} Job
                           </div>
                           <div className="text-[10px] text-muted-foreground">
@@ -466,7 +466,7 @@ export default function PlatformControlCenter() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             <Card
               onClick={() => navigate('/platform/organizations')}
-              className="p-4 rounded-xl border hover:border-ds-warning/30 hover:bg-ds-warning-soft cursor-pointer transition-all flex flex-col justify-between"
+              className="p-4 rounded-[8px] border hover:border-ds-warning/30 hover:bg-ds-warning-soft cursor-pointer transition-all flex flex-col justify-between"
             >
               <div>
                 <Building2 className="h-5 w-5 text-ds-warning mb-2" />
@@ -482,7 +482,7 @@ export default function PlatformControlCenter() {
 
             <Card
               onClick={() => navigate('/platform/users')}
-              className="p-4 rounded-xl border hover:border-ds-accent/30 hover:bg-ds-accent-soft cursor-pointer transition-all flex flex-col justify-between"
+              className="p-4 rounded-[8px] border hover:border-ds-accent/30 hover:bg-ds-accent-soft cursor-pointer transition-all flex flex-col justify-between"
             >
               <div>
                 <Users className="h-5 w-5 text-ds-accent mb-2" />
@@ -498,7 +498,7 @@ export default function PlatformControlCenter() {
 
             <Card
               onClick={() => navigate('/platform/master-library')}
-              className="p-4 rounded-xl border hover:border-ds-success/30 hover:bg-ds-success-soft cursor-pointer transition-all flex flex-col justify-between"
+              className="p-4 rounded-[8px] border hover:border-ds-success/30 hover:bg-ds-success-soft cursor-pointer transition-all flex flex-col justify-between"
             >
               <div>
                 <BookOpen className="h-5 w-5 text-ds-success mb-2" />
@@ -514,7 +514,7 @@ export default function PlatformControlCenter() {
 
             <Card
               onClick={() => navigate('/platform/ai-settings')}
-              className="p-4 rounded-xl border hover:border-ds-accent/30 hover:bg-ds-accent-soft cursor-pointer transition-all flex flex-col justify-between"
+              className="p-4 rounded-[8px] border hover:border-ds-accent/30 hover:bg-ds-accent-soft cursor-pointer transition-all flex flex-col justify-between"
             >
               <div>
                 <Bot className="h-5 w-5 text-ds-accent mb-2" />
@@ -530,7 +530,7 @@ export default function PlatformControlCenter() {
 
             <Card
               onClick={() => navigate('/platform/email-templates')}
-              className="p-4 rounded-xl border hover:border-ds-accent/30 hover:bg-ds-accent-soft cursor-pointer transition-all flex flex-col justify-between"
+              className="p-4 rounded-[8px] border hover:border-ds-accent/30 hover:bg-ds-accent-soft cursor-pointer transition-all flex flex-col justify-between"
             >
               <div>
                 <Mail className="h-5 w-5 text-ds-accent mb-2" />
@@ -546,7 +546,7 @@ export default function PlatformControlCenter() {
 
             <Card
               onClick={() => navigate('/platform/operations')}
-              className="p-4 rounded-xl border hover:border-ds-accent/30 hover:bg-ds-accent-soft cursor-pointer transition-all flex flex-col justify-between"
+              className="p-4 rounded-[8px] border hover:border-ds-accent/30 hover:bg-ds-accent-soft cursor-pointer transition-all flex flex-col justify-between"
             >
               <div>
                 <Cpu className="h-5 w-5 text-ds-accent mb-2" />
@@ -583,7 +583,7 @@ export default function PlatformControlCenter() {
                 {recentAudit.map((log) => (
                   <div key={log.id} className="p-2.5 rounded-lg border text-xs bg-card space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-ds-ink dark:text-white capitalize">
+                      <span className="font-bold text-ds-ink capitalize">
                         {log.action.replace(/_/g, ' ')}
                       </span>
                       <span className="text-[10px] text-muted-foreground">
@@ -615,7 +615,7 @@ export default function PlatformControlCenter() {
             <Button
               size="sm"
               onClick={() => navigate('/platform/settings')}
-              className="w-full bg-ds-ink hover:bg-ds-ink text-white border border-ds-border-strong text-xs font-semibold h-8"
+              className="w-full bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink border border-ds-border-strong text-xs font-semibold h-8"
             >
               Open Platform Settings &rarr;
             </Button>

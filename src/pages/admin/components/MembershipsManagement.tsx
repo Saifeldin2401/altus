@@ -562,7 +562,7 @@ export function MembershipsManagement() {
 
               {/* Tenant Role Selection */}
               <div className="space-y-2">
-                <Label htmlFor="role-select">{t('admin:tenant_role', 'Tenant Role')}</Label>
+                <Label htmlFor="role-select">{t('admin:tenant_role', 'Organization Role')}</Label>
                 <Select value={selectedRole} onValueChange={(val) => setSelectedRole(val as TenantRole)}>
                   <SelectTrigger id="role-select">
                     <SelectValue placeholder="Select role" />
@@ -633,7 +633,7 @@ export function MembershipsManagement() {
             <AlertDialogHeader>
               <AlertDialogTitle>{t('admin:confirm_remove_member', 'Remove Member from Organization?')}</AlertDialogTitle>
               <AlertDialogDescription>
-                {t('admin:confirm_remove_member_desc', 'This will remove the user from this organization and revoke their tenant role. Their global user profile remains active.')}
+                {t('admin:confirm_remove_member_desc', 'This will remove the user from this organization and revoke their organization role. Their global user profile remains active.')}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

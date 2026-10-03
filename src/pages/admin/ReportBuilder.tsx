@@ -165,7 +165,7 @@ export default function ReportBuilder() {
                 {/* Right Column: Editor */}
                 <div className={`xl:col-span-7 ${!isEditing ? 'hidden xl:block' : ''}`}>
                     {isEditing && selectedReport ? (
-                        <Card className="border-t-4 border-t-indigo-600 shadow-xl overflow-hidden">
+                        <Card className="overflow-hidden">
                             <CardHeader className="bg-ds-surface-subtle border-b pb-4">
                                 <CardTitle className="text-xl text-ds-ink">{selectedReport.id ? 'Edit System Query' : 'Draft Advanced Extract'}</CardTitle>
                                 <CardDescription>Architect complex Postgres data extractions through visual configurations and JSON injections.</CardDescription>
@@ -262,7 +262,7 @@ export default function ReportBuilder() {
                                         <Button variant="outline" onClick={() => { setIsEditing(false); setSelectedReport(null) }}>
                                             Discard Layout
                                         </Button>
-                                        <Button onClick={handleSave} disabled={createReport.isPending || updateReport.isPending || !selectedReport.name} className="bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink shadow-md">
+                                        <Button onClick={handleSave} disabled={createReport.isPending || updateReport.isPending || !selectedReport.name} className="bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink">
                                             {createReport.isPending || updateReport.isPending ? 'Syncing...' : 'Deploy Analytics Query'}
                                         </Button>
                                     </div>
@@ -271,7 +271,7 @@ export default function ReportBuilder() {
                             </CardContent>
                         </Card>
                     ) : (
-                        <div className="h-full min-h-[500px] flex flex-col items-center justify-center border-2 border-dashed rounded-xl bg-ds-surface-subtle text-muted-foreground p-8">
+                        <div className="h-full min-h-[500px] flex flex-col items-center justify-center border-2 border-dashed rounded-[8px] bg-ds-surface-subtle text-muted-foreground p-8">
                             <Database className="w-16 h-16 mb-4 opacity-10 text-ds-accent" />
                             <h3 className="text-xl font-medium text-ds-ink">Dynamic Queries Array</h3>
                             <p className="text-sm text-center max-w-sm mt-3 leading-relaxed">Establish automated extractions polling live datasets and outputting directly into secure file matrices.</p>

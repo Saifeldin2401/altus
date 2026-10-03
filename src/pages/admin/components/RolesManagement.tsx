@@ -158,7 +158,7 @@ export function RolesManagement() {
         <div>
           <div className="flex items-center gap-2">
             <Shield aria-hidden="true" className="h-5 w-5 text-ds-accent" />
-            <CardTitle>{t('admin:roles_and_permissions', 'Tenant Roles & Permission Matrix')}</CardTitle>
+            <CardTitle>{t('admin:roles_and_permissions', 'Organization Roles & Permission Matrix')}</CardTitle>
           </div>
           <CardDescription>
             {t('admin:roles_desc', 'Granular multi-tier role definitions governing system capabilities and scope across the enterprise.')}

@@ -54,7 +54,7 @@ export default function PlatformAnalytics() {
     <div className="space-y-6">
       <PageHeader
         title={t('admin:platform_analytics', 'Platform Executive & Operational Analytics')}
-        description={t('admin:platform_analytics_desc', 'Cross-tenant business intelligence, aggregate learner engagement, master curriculum distribution, and global platform usage metrics.')}
+        description={t('admin:platform_analytics_desc', 'Cross-organization business intelligence, aggregate learner engagement, master curriculum distribution, and global platform usage metrics.')}
         actions={
           <Button variant="outline" onClick={loadStats} disabled={isLoading}>
             <RefreshCw className={`h-4 w-4 me-2 ${isLoading ? 'animate-spin' : ''}`} />
@@ -66,7 +66,7 @@ export default function PlatformAnalytics() {
       {/* KPI Cards Grid */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Total Organizations */}
-        <Card className="border shadow-sm bg-card/60 backdrop-blur-sm">
+        <Card className="border shadow-sm bg-card/60">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('admin:customer_tenants', 'Customer Organizations')}
@@ -84,7 +84,7 @@ export default function PlatformAnalytics() {
         </Card>
 
         {/* Total Learners */}
-        <Card className="border shadow-sm bg-card/60 backdrop-blur-sm">
+        <Card className="border shadow-sm bg-card/60">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('admin:total_learners_across_tenants', 'Global Learners Trained')}
@@ -101,7 +101,7 @@ export default function PlatformAnalytics() {
         </Card>
 
         {/* Master Content */}
-        <Card className="border shadow-sm bg-card/60 backdrop-blur-sm">
+        <Card className="border shadow-sm bg-card/60">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('admin:master_content_assets', 'Master SOPs & Courses')}
@@ -120,7 +120,7 @@ export default function PlatformAnalytics() {
         </Card>
 
         {/* Total Deployments */}
-        <Card className="border shadow-sm bg-card/60 backdrop-blur-sm">
+        <Card className="border shadow-sm bg-card/60">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('admin:deployments_to_tenants', 'Master Deployments')}

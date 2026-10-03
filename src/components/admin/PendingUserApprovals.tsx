@@ -196,7 +196,7 @@ export function PendingUserApprovals({ onCountChange }: PendingUserApprovalProps
           <CardTitle className="flex items-center gap-2 text-ds-warning">
             <ShieldAlert className="w-5 h-5" />
             {t('approvals.pending_title', 'Pending User Approvals')}
-            <span className="ms-2 rounded-full bg-ds-warning px-2 py-0.5 text-xs font-semibold text-white">
+            <span className="ms-2 rounded-full bg-ds-warning px-2 py-0.5 text-xs font-semibold text-white dark:text-ds-on-ink">
               {pendingUsers.length}
             </span>
           </CardTitle>

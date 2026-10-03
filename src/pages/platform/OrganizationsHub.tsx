@@ -354,7 +354,7 @@ export default function OrganizationsHub() {
     <div className="space-y-6 pb-12">
       <PageHeader
         title={t('admin:organizations_hub', 'Platform Organizations Hub')}
-        description={t('admin:organizations_hub_desc', 'Manage customer organizations, subscription quotas, tenant provisioning, and authorized cross-tenant access.')}
+        description={t('admin:organizations_hub_desc', 'Manage customer organizations, subscription quotas, organization provisioning, and authorized cross-organization access.')}
         actions={
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={loadData} disabled={isLoading} className="text-xs h-9">
@@ -365,7 +365,7 @@ export default function OrganizationsHub() {
               <DialogTrigger asChild>
                 <Button 
                   data-tour="orgs-create-btn"
-                  className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-sm text-xs h-9 font-semibold"
+                  className="gap-2"
                 >
                   <Plus className="h-4 w-4" />
                   {t('admin:new_organization', 'New Organization')}
@@ -437,7 +437,7 @@ export default function OrganizationsHub() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
                         <Label htmlFor="org-slug" className="text-xs font-semibold">
-                          {t('admin:org_slug', 'Tenant Slug / Domain Key')} <span className="text-destructive">*</span>
+                          {t('admin:org_slug', 'Organization Slug / Domain Key')} <span className="text-destructive">*</span>
                         </Label>
                         <Input
                           id="org-slug"
@@ -501,8 +501,8 @@ export default function OrganizationsHub() {
                     </div>
 
                     {newOrgStatus === 'trial' && (
-                      <div className="space-y-1.5 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                        <Label htmlFor="trial-date" className="text-xs font-semibold text-amber-900 dark:text-amber-200">
+                      <div className="space-y-1.5 p-3 rounded-lg bg-ds-warning/10 border border-ds-warning/20">
+                        <Label htmlFor="trial-date" className="text-xs font-semibold text-ds-warning">
                           Trial Expiration Date
                         </Label>
                         <Input
@@ -564,7 +564,7 @@ export default function OrganizationsHub() {
                               key={p.id}
                               type="button"
                               onClick={() => handlePlanSelect(p)}
-                              className={`p-3 rounded-xl border text-start transition-all ${
+                              className={`p-3 rounded-[8px] border text-start transition-all ${
                                 isSelected
                                   ? 'border-primary bg-primary/5 ring-2 ring-primary/20 shadow-sm'
                                   : 'border-border hover:bg-muted/40'
@@ -572,7 +572,7 @@ export default function OrganizationsHub() {
                             >
                               <div className="flex items-center justify-between mb-1">
                                 <span className="font-bold text-xs capitalize">{p.name}</span>
-                                {p.code === 'enterprise' && <Crown className="h-3.5 w-3.5 text-amber-500" />}
+                                {p.code === 'enterprise' && <Crown className="h-3.5 w-3.5 text-ds-warning" />}
                               </div>
                               <div className="text-[11px] text-muted-foreground space-y-0.5">
                                 <div><strong>{p.max_users}</strong> seats</div>
@@ -591,9 +591,9 @@ export default function OrganizationsHub() {
                       </div>
 
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                        <div className="space-y-1.5 bg-muted/30 p-3 rounded-xl border">
+                        <div className="space-y-1.5 bg-muted/30 p-3 rounded-[8px] border">
                           <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
-                            <Users className="h-3.5 w-3.5 text-indigo-500" />
+                            <Users className="h-3.5 w-3.5 text-ds-info" />
                             Learner Seats
                           </div>
                           <Input
@@ -605,9 +605,9 @@ export default function OrganizationsHub() {
                           />
                         </div>
 
-                        <div className="space-y-1.5 bg-muted/30 p-3 rounded-xl border">
+                        <div className="space-y-1.5 bg-muted/30 p-3 rounded-[8px] border">
                           <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
-                            <HardDrive className="h-3.5 w-3.5 text-emerald-500" />
+                            <HardDrive className="h-3.5 w-3.5 text-ds-success" />
                             Storage (GB)
                           </div>
                           <Input
@@ -619,9 +619,9 @@ export default function OrganizationsHub() {
                           />
                         </div>
 
-                        <div className="space-y-1.5 bg-muted/30 p-3 rounded-xl border">
+                        <div className="space-y-1.5 bg-muted/30 p-3 rounded-[8px] border">
                           <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground">
-                            <Sparkles className="h-3.5 w-3.5 text-purple-500" />
+                            <Sparkles className="h-3.5 w-3.5 text-ds-accent" />
                             AI Credits / Mo
                           </div>
                           <Input
@@ -746,7 +746,7 @@ export default function OrganizationsHub() {
                     className="bg-primary hover:bg-primary/90 text-xs font-semibold"
                   >
                     {isCreating ? <RefreshCw className="h-4 w-4 animate-spin me-1.5" /> : <Check className="h-4 w-4 me-1.5" />}
-                    {t('admin:create_org', 'Provision Tenant')}
+                    {t('admin:create_org', 'Provision Organization')}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -1009,7 +1009,7 @@ export default function OrganizationsHub() {
                   placeholder="e.g. Master SOP deployment, Onboarding review, Support ticket #1042"
                   className="h-9 text-xs"
                 />
-                <div className={`text-[10px] ${enterReason.trim().length >= MIN_ACCESS_REASON_LENGTH ? 'text-muted-foreground' : 'text-amber-600 dark:text-amber-400'}`}>
+                <div className={`text-[10px] ${enterReason.trim().length >= MIN_ACCESS_REASON_LENGTH ? 'text-muted-foreground' : 'text-ds-warning'}`}>
                   {enterReason.trim().length}/{MIN_ACCESS_REASON_LENGTH} characters minimum
                 </div>
               </div>
@@ -1022,10 +1022,10 @@ export default function OrganizationsHub() {
                 size="sm"
                 onClick={handleEnterOrg}
                 disabled={isEntering || enterReason.trim().length < MIN_ACCESS_REASON_LENGTH}
-                className="bg-amber-600 hover:bg-amber-700 text-white gap-1.5 font-semibold text-xs"
+                className="bg-ds-warning hover:bg-ds-warning/90 text-white dark:text-ds-on-ink gap-1.5 font-semibold text-xs"
               >
                 {isEntering ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <LogIn className="h-3.5 w-3.5" />}
-                {t('admin:confirm_enter', 'Authorize & Enter Tenant')}
+                {t('admin:confirm_enter', 'Authorize & Enter Organization')}
               </Button>
             </DialogFooter>
           </DialogContent>

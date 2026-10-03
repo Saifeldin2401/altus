@@ -123,7 +123,7 @@ export function TenantEmailPreviewModal({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Sparkles aria-hidden="true" className="h-5 w-5 text-ds-accent" />
-              <DialogTitle>{t('admin:tenant_email_preview', 'Tenant Branded Email Preview')}</DialogTitle>
+              <DialogTitle>{t('admin:tenant_email_preview', 'Organization Branded Email Preview')}</DialogTitle>
             </div>
             <div className="flex items-center gap-2 me-6">
               <Button
