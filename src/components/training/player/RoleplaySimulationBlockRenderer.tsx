@@ -138,7 +138,7 @@ export function RoleplaySimulationBlockRenderer({
 
         if (hasPassed) {
           toast({
-            title: isArabic ? '🎉 تم اجتياز محاكاة خدمة النزيل بنجاح!' : '🎉 Simulation Passed Successfully!',
+            title: t('screens.RoleplaySimulationBlockRenderer.simulationPassedSuccessfully', '🎉 Simulation Passed Successfully!'),
             description: isArabic
               ? `أحرزت متوسط تقييم ${currentAvg}% (المطلوب: ${requiredPassingScore}%).`
               : `You achieved an average score of ${currentAvg}% (Passing: ${requiredPassingScore}%).`,
@@ -146,7 +146,7 @@ export function RoleplaySimulationBlockRenderer({
           onBlockComplete?.(block.id, currentAvg)
         } else {
           toast({
-            title: isArabic ? '⚠️ لم يتم اجتياز المحاكاة' : '⚠️ Passing Score Not Met',
+            title: t('screens.RoleplaySimulationBlockRenderer.passingScoreNotMet', '⚠️ Passing Score Not Met'),
             description: isArabic
               ? `متوسط درجتك هو ${currentAvg}%. يمكنك إعادة المحاولة للوصول إلى ${requiredPassingScore}%.`
               : `Your average score is ${currentAvg}%. Try again to reach ${requiredPassingScore}%.`,
@@ -177,7 +177,7 @@ export function RoleplaySimulationBlockRenderer({
     } catch (err) {
       console.error('Roleplay turn evaluation failure:', err)
       toast({
-        title: isArabic ? 'خطأ في معالجة المحاكاة' : 'Simulation Error',
+        title: t('screens.RoleplaySimulationBlockRenderer.simulationError', 'Simulation Error'),
         description: isArabic
           ? 'حدث خطأ في محرك الذكاء الاصطناعي. يرجى المحاولة مرة أخرى.'
           : 'AI evaluator encountered an issue. Please try again.',
@@ -219,20 +219,20 @@ export function RoleplaySimulationBlockRenderer({
       ]
 
   return (
-    <Card className="border-amber-200/80 dark:border-amber-800/60 shadow-md bg-gradient-to-b from-amber-50/20 via-background to-background overflow-hidden my-6">
+    <Card className="border-ds-warning/80 bg-gradient-to-b from-ds-warning-soft/20 via-background to-background overflow-hidden my-6">
       {/* Header Bar */}
-      <CardHeader className="pb-3 border-b bg-amber-500/5 dark:bg-amber-950/20">
+      <CardHeader className="pb-3 border-b bg-ds-warning/5">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <Badge className="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+              <Badge className="bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink text-[11px] font-bold uppercase tracking-wider flex items-center gap-1">
                 <MessageSquare className="w-3 h-3" />
                 {t('roleplay.badge', 'AI Guest Roleplay')}
               </Badge>
-              <Badge variant="outline" className="text-[10px] font-semibold">
+              <Badge variant="outline" className="text-[11px] font-semibold">
                 {selectedScenario.department.replace(/_/g, ' ')}
               </Badge>
-              <Badge variant="secondary" className="text-[10px] font-medium text-muted-foreground">
+              <Badge variant="secondary" className="text-[11px] font-medium text-muted-foreground">
                 Passing: {requiredPassingScore}%
               </Badge>
             </div>
@@ -244,10 +244,10 @@ export function RoleplaySimulationBlockRenderer({
           <div className="flex items-center gap-2 self-end sm:self-center">
             {cumulativeScores.length > 0 && (
               <div className="text-end">
-                <span className="text-[10px] text-muted-foreground block">Current Score</span>
+                <span className="text-[11px] text-muted-foreground block">Current Score</span>
                 <span className={cn(
                   'text-sm font-black',
-                  averageScore >= requiredPassingScore ? 'text-emerald-600' : 'text-amber-600'
+                  averageScore >= requiredPassingScore ? 'text-ds-success' : 'text-ds-warning'
                 )}>
                   {averageScore}%
                 </span>
@@ -267,7 +267,7 @@ export function RoleplaySimulationBlockRenderer({
         </div>
 
         {/* Scenario Objective Box */}
-        <p className="text-xs text-muted-foreground bg-background/80 p-2.5 rounded-lg border border-amber-200/50 dark:border-amber-900/30 mt-2">
+        <p className="text-xs text-muted-foreground bg-background/80 p-2.5 rounded-lg border border-ds-warning/50 mt-2">
           <strong>{t('roleplay.briefing', 'Guest Context')}: </strong>
           {isArabic ? selectedScenario.scenarioContextAr : selectedScenario.scenarioContext}
         </p>
@@ -277,7 +277,7 @@ export function RoleplaySimulationBlockRenderer({
         {/* Guest Profile & Temperament Bar */}
         <div className="flex items-center justify-between p-2.5 rounded-lg bg-muted/40 border text-xs">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center font-bold text-amber-700 dark:text-amber-300">
+            <div className="w-7 h-7 rounded-full bg-ds-warning-soft flex items-center justify-center font-bold text-ds-warning">
               {selectedScenario.guestName.charAt(0)}
             </div>
             <div>
@@ -293,10 +293,10 @@ export function RoleplaySimulationBlockRenderer({
             <Badge
               variant="outline"
               className={cn(
-                'text-[10px] font-bold uppercase',
-                guestTemperament === 'CALM' && 'text-emerald-600 border-emerald-300 bg-emerald-50 dark:bg-emerald-950/30',
-                guestTemperament === 'FRUSTRATED' && 'text-amber-600 border-amber-300 bg-amber-50 dark:bg-amber-950/30',
-                (guestTemperament === 'DISTRESSED' || guestTemperament === 'DEMANDING_VIP') && 'text-rose-600 border-rose-300 bg-rose-50 dark:bg-rose-950/30'
+                'text-[11px] font-bold uppercase',
+                guestTemperament === 'CALM' && 'text-ds-success border-ds-success/30 bg-ds-success-soft',
+                guestTemperament === 'FRUSTRATED' && 'text-ds-warning border-ds-warning/30 bg-ds-warning-soft',
+                (guestTemperament === 'DISTRESSED' || guestTemperament === 'DEMANDING_VIP') && 'text-ds-danger border-ds-danger/30 bg-ds-danger-soft'
               )}
             >
               {guestTemperament}
@@ -305,7 +305,7 @@ export function RoleplaySimulationBlockRenderer({
         </div>
 
         {/* Chat Thread */}
-        <ScrollArea className="h-72 rounded-xl border bg-card p-4">
+        <ScrollArea className="h-72 rounded-[8px] border bg-card p-4">
           <div className="space-y-3.5">
             {messages.map((msg, idx) => {
               const isGuest = msg.sender === 'guest'
@@ -320,22 +320,22 @@ export function RoleplaySimulationBlockRenderer({
                   <div className="flex items-center gap-1.5 mb-1 px-1">
                     {isGuest ? (
                       <>
-                        <User className="w-3 h-3 text-amber-600" />
-                        <span className="text-[10px] font-bold text-muted-foreground">{selectedScenario.guestName}</span>
+                        <User className="w-3 h-3 text-ds-warning" />
+                        <span className="text-[11px] font-bold text-muted-foreground">{selectedScenario.guestName}</span>
                       </>
                     ) : (
                       <>
-                        <span className="text-[10px] font-bold text-primary">You (Trainee)</span>
+                        <span className="text-[11px] font-bold text-primary">You (Trainee)</span>
                       </>
                     )}
-                    <span className="text-[9px] text-muted-foreground">{msg.timestamp}</span>
+                    <span className="text-[11px] text-muted-foreground">{msg.timestamp}</span>
                   </div>
 
                   <div
                     className={cn(
-                      'p-3 rounded-2xl text-xs max-w-[85%] leading-relaxed shadow-xs',
+                      'p-3 rounded-[8px] text-xs max-w-[85%] leading-relaxed shadow-xs',
                       isGuest
-                        ? 'bg-amber-50/80 dark:bg-amber-950/40 text-foreground border border-amber-200/60 dark:border-amber-800/40 rounded-ss-xs'
+                        ? 'bg-ds-warning-soft/80 text-foreground border border-ds-warning/60 rounded-ss-xs'
                         : 'bg-primary text-primary-foreground rounded-se-xs'
                     )}
                   >
@@ -347,8 +347,8 @@ export function RoleplaySimulationBlockRenderer({
 
             {isEvaluating && (
               <div className="flex items-center gap-2 p-2.5 rounded-lg bg-muted/40 text-xs text-muted-foreground animate-pulse">
-                <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-600" />
-                <span>{isArabic ? 'الذكاء الاصطناعي يحلل استجابتك وفق معايير فوربس والضيافة السعودية...' : 'AI evaluating response against Forbes 5-Star & Saudi Karam rubrics...'}</span>
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-ds-warning" />
+                <span>{t('screens.RoleplaySimulationBlockRenderer.aiEvaluatingResponseAgainstForbes', 'AI evaluating response against Forbes 5-Star & Saudi Karam rubrics...')}</span>
               </div>
             )}
 
@@ -358,13 +358,13 @@ export function RoleplaySimulationBlockRenderer({
 
         {/* Live Turn Feedback & Coaching Insights */}
         {latestEvaluation && (
-          <div className="p-3 rounded-xl border border-purple-200 dark:border-purple-900/50 bg-purple-50/40 dark:bg-purple-950/20 space-y-2">
+          <div className="p-3 rounded-[8px] border border-ds-accent/30 bg-ds-accent-soft/40 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-purple-900 dark:text-purple-300 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+              <span className="text-xs font-bold text-ds-accent flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-ds-accent" />
                 Turn Assessment: {latestEvaluation.overallScore}/100
               </span>
-              <div className="flex items-center gap-2 text-[10px]">
+              <div className="flex items-center gap-2 text-[11px]">
                 <span className="text-muted-foreground">Empathy: <strong>{latestEvaluation.empathyScore}%</strong></span>
                 <span className="text-muted-foreground">•</span>
                 <span className="text-muted-foreground">Saudi Karam: <strong>{latestEvaluation.saudiKaramScore}%</strong></span>
@@ -379,7 +379,7 @@ export function RoleplaySimulationBlockRenderer({
 
             {latestEvaluation.suggestedAlternativeResponse && (
               <div className="text-[11px] p-2 rounded bg-background/80 border text-muted-foreground flex items-start gap-1.5">
-                <Lightbulb className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+                <Lightbulb className="w-3.5 h-3.5 text-ds-warning shrink-0 mt-0.5" />
                 <div>
                   <strong className="text-foreground">Forbes 5-Star Phrasing Tip: </strong>
                   <span>{isArabic ? latestEvaluation.suggestedAlternativeResponseAr : latestEvaluation.suggestedAlternativeResponse}</span>
@@ -392,20 +392,20 @@ export function RoleplaySimulationBlockRenderer({
         {/* Completion Result Banner */}
         {isCompleted && (
           <div className={cn(
-            'p-4 rounded-xl border text-center space-y-2',
+            'p-4 rounded-[8px] border text-center space-y-2',
             passed
-              ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
-              : 'bg-rose-50 dark:bg-rose-950/30 border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200'
+              ? 'bg-ds-success-soft border-ds-success/30 text-ds-success'
+              : 'bg-ds-danger-soft border-ds-danger/30 text-ds-danger'
           )}>
             <div className="flex items-center justify-center gap-2">
               {passed ? (
                 <>
-                  <Trophy className="w-5 h-5 text-emerald-600" />
+                  <Trophy className="w-5 h-5 text-ds-success" />
                   <span className="text-sm font-bold">{t('roleplay.passedTitle', 'Simulation Completed & Passed!')}</span>
                 </>
               ) : (
                 <>
-                  <RotateCcw className="w-5 h-5 text-rose-600" />
+                  <RotateCcw className="w-5 h-5 text-ds-danger" />
                   <span className="text-sm font-bold">{t('roleplay.failedTitle', 'Passing Score Not Met')}</span>
                 </>
               )}
@@ -427,7 +427,7 @@ export function RoleplaySimulationBlockRenderer({
                   variant="outline"
                   size="sm"
                   onClick={() => setInputText(phrase)}
-                  className="h-6 text-[10px] px-2 text-muted-foreground hover:text-foreground border-dashed"
+                  className="h-6 text-[11px] px-2 text-muted-foreground hover:text-foreground border-dashed"
                 >
                   "{phrase.slice(0, 35)}..."
                 </Button>
@@ -455,7 +455,7 @@ export function RoleplaySimulationBlockRenderer({
               <Button
                 onClick={() => handleSendMessage()}
                 disabled={!inputText.trim() || isEvaluating}
-                className="gap-1.5 text-xs font-semibold bg-amber-600 hover:bg-amber-700 text-white shrink-0"
+                className="gap-1.5 text-xs font-semibold bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink shrink-0"
               >
                 {isEvaluating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
                 <span>{t('send', 'Send')}</span>

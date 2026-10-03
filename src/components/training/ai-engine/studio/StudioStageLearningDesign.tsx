@@ -79,14 +79,14 @@ export function StudioStageLearningDesign({
         <div className="flex items-center justify-between">
           <div>
             <Label className="text-sm font-bold text-foreground flex items-center gap-2">
-              <GraduationCap className="w-4 h-4 text-purple-600" />
+              <GraduationCap className="w-4 h-4 text-ds-accent" />
               <span>{t('builder.courseType', 'Course Archetype & Domain')}</span>
             </Label>
             <p className="text-xs text-muted-foreground mt-0.5">
               {t('builder.courseTypeDesc', 'Select the curriculum domain to automatically align tone and practical focus.')}
             </p>
           </div>
-          <Badge variant="outline" className="text-xs font-semibold bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 border-purple-200 capitalize">
+          <Badge variant="outline" className="text-xs font-semibold bg-ds-accent-soft text-ds-accent border-ds-accent/30 capitalize">
             {courseType}
           </Badge>
         </div>
@@ -102,19 +102,19 @@ export function StudioStageLearningDesign({
                 className={cn(
                   'cursor-pointer transition-all duration-200 border text-start group hover:shadow-sm',
                   isSelected
-                    ? 'border-purple-600 bg-purple-50/60 dark:bg-purple-950/40 ring-1 ring-purple-500 shadow-sm'
-                    : 'bg-card hover:border-purple-300'
+                    ? 'border-ds-accent bg-ds-accent-soft/60 ring-1 ring-ds-accent shadow-sm'
+                    : 'bg-card hover:border-ds-accent/30'
                 )}
               >
                 <CardContent className="p-3 space-y-1.5">
                   <div className="flex items-center justify-between">
                     <span className="text-lg">{ct.icon || '🎓'}</span>
-                    {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-purple-600" />}
+                    {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-ds-accent" />}
                   </div>
                   <p className="text-xs font-bold text-foreground leading-snug">
                     {isRTL ? ct.title_ar : ct.title}
                   </p>
-                  <p className="text-[10px] text-muted-foreground line-clamp-2 leading-tight">
+                  <p className="text-[11px] text-muted-foreground line-clamp-2 leading-tight">
                     {isRTL ? ct.description_ar : ct.description}
                   </p>
                 </CardContent>
@@ -129,7 +129,7 @@ export function StudioStageLearningDesign({
         <div className="flex items-center justify-between">
           <div>
             <Label className="text-sm font-bold text-foreground flex items-center gap-2">
-              <Compass className="w-4 h-4 text-purple-600" />
+              <Compass className="w-4 h-4 text-ds-accent" />
               <span>{t('builder.instructionalStrategy', 'Instructional Pedagogical Strategy')}</span>
             </Label>
             <p className="text-xs text-muted-foreground mt-0.5">
@@ -149,8 +149,8 @@ export function StudioStageLearningDesign({
                 className={cn(
                   'cursor-pointer transition-all duration-200 border text-start group hover:shadow-sm',
                   isSelected
-                    ? 'border-purple-600 bg-purple-50/60 dark:bg-purple-950/40 ring-1 ring-purple-500 shadow-sm'
-                    : 'bg-card hover:border-purple-300'
+                    ? 'border-ds-accent bg-ds-accent-soft/60 ring-1 ring-ds-accent shadow-sm'
+                    : 'bg-card hover:border-ds-accent/30'
                 )}
               >
                 <CardContent className="p-3.5 space-y-1.5">
@@ -158,7 +158,7 @@ export function StudioStageLearningDesign({
                     <p className="text-xs font-bold text-foreground">
                       {isRTL ? strat.title_ar : strat.title}
                     </p>
-                    {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-purple-600 shrink-0" />}
+                    {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-ds-accent shrink-0" />}
                   </div>
                   <p className="text-[11px] text-muted-foreground leading-relaxed">
                     {isRTL ? strat.description_ar : strat.description}
@@ -171,11 +171,11 @@ export function StudioStageLearningDesign({
       </div>
 
       {/* 3. Structure, Modules & Duration Granularity */}
-      <div className="p-4 rounded-xl border bg-card/80 backdrop-blur-sm space-y-4 shadow-sm">
+      <div className="p-4 rounded-[8px] border bg-card/80 space-y-4 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-3">
           <div>
             <Label className="text-xs font-bold text-foreground flex items-center gap-1.5">
-              <Layers className="w-4 h-4 text-purple-600" />
+              <Layers className="w-4 h-4 text-ds-accent" />
               <span>{t('builder.structureGranularity', 'Curriculum Size & Lesson Duration')}</span>
             </Label>
             <p className="text-[11px] text-muted-foreground">
@@ -184,11 +184,11 @@ export function StudioStageLearningDesign({
           </div>
 
           <div className="flex items-center gap-2 self-start sm:self-center">
-            <Badge variant="outline" className="text-xs font-bold bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 border-purple-300">
+            <Badge variant="outline" className="text-xs font-bold bg-ds-accent-soft text-ds-accent border-ds-accent/30">
               {resolvedModules} Modules • {totalLessons} Lessons
             </Badge>
-            <Badge variant="outline" className="text-xs font-bold bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border-amber-300 flex items-center gap-1">
-              <Clock className="w-3 h-3 text-amber-500" />
+            <Badge variant="outline" className="text-xs font-bold bg-ds-warning-soft text-ds-warning border-ds-warning/30 flex items-center gap-1">
+              <Clock className="w-3 h-3 text-ds-warning" />
               <span>{durationString}</span>
             </Badge>
           </div>
@@ -259,16 +259,16 @@ export function StudioStageLearningDesign({
       </div>
 
       {/* 4. Progressive Disclosure: Advanced Pedagogical Framework */}
-      <div className="border rounded-xl bg-muted/10 overflow-hidden">
+      <div className="border rounded-[8px] bg-muted/10 overflow-hidden">
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
           className="w-full px-4 py-3 flex items-center justify-between text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
         >
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-purple-600" />
+            <Sparkles className="w-4 h-4 text-ds-accent" />
             <span>{t('builder.advancedDesign', 'Advanced Pedagogical Framework & Difficulty Progression')}</span>
-            <Badge variant="outline" className="text-[9px]">Optional</Badge>
+            <Badge variant="outline" className="text-[11px]">Optional</Badge>
           </div>
           {showAdvanced ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>

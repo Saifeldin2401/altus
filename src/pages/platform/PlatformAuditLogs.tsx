@@ -92,8 +92,8 @@ export default function PlatformAuditLogs() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title={t('admin:cross_tenant_audit', 'Cross-Tenant Security Audit Trail')}
-        description={t('admin:cross_tenant_audit_desc', 'Immutable security log of all platform administrator actions, impersonation sessions, master content deployments, and tenant modifications.')}
+        title={t('admin:cross_tenant_audit', 'Cross-Organization Security Audit Trail')}
+        description={t('admin:cross_tenant_audit_desc', 'Immutable security log of all platform administrator actions, impersonation sessions, master content deployments, and organization modifications.')}
         actions={
           <Button variant="outline" onClick={() => loadLogs()} disabled={isLoading}>
             <RefreshCw className={`h-4 w-4 me-2 ${isLoading ? 'animate-spin' : ''}`} />

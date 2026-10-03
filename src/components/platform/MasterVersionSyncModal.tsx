@@ -134,45 +134,44 @@ export function MasterVersionSyncModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[620px] max-h-[90vh] flex flex-col p-0 overflow-hidden">
-        {/* Header with gradient banner */}
-        <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-6 pb-5">
+        <div className="border-b border-ds-border p-6 pb-5 pe-14">
           <DialogHeader>
-            <div className="flex items-center gap-2 text-amber-400 text-xs font-semibold uppercase tracking-wider mb-1">
-              <Crown className="h-4 w-4 text-amber-400" />
-              <span>{t('admin:platform_master_sync', 'Platform Master Synchronization')}</span>
+            <div className="mb-1 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-ds-accent">
+              <Crown aria-hidden="true" className="h-4 w-4" />
+              <span>{t('admin:platform_master_sync', 'Master version update')}</span>
             </div>
-            <DialogTitle className="text-xl font-bold text-white flex items-center gap-2">
+            <DialogTitle className="flex items-center gap-2">
               {contentType === 'sop' ? (
-                <BookOpen className="h-5 w-5 text-indigo-300" />
+                <BookOpen aria-hidden="true" className="h-5 w-5 text-ds-muted" />
               ) : (
-                <GraduationCap className="h-5 w-5 text-indigo-300" />
+                <GraduationCap aria-hidden="true" className="h-5 w-5 text-ds-muted" />
               )}
               <span className="truncate">{targetTitle}</span>
             </DialogTitle>
-            <DialogDescription className="text-slate-300 text-xs mt-1">
+            <DialogDescription className="mt-1 text-xs">
               {t(
                 'admin:master_sync_desc',
-                'Synchronize your local tenant copy with upstream standards published by the Platform Training & Standards team.'
+                'See what changed in the master version and update your copy.'
               )}
             </DialogDescription>
           </DialogHeader>
 
           {/* Version Transition Display */}
-          <div className="mt-4 flex items-center justify-between bg-white/10 backdrop-blur-md rounded-lg p-3 border border-white/10">
+          <div className="mt-4 flex items-center justify-between rounded-[6px] border border-ds-border bg-ds-surface-subtle p-3">
             <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-300">{t('admin:current_tenant_version', 'Your Version')}:</span>
-              <Badge variant="secondary" className="bg-white/20 text-white font-mono text-xs">
+              <span className="text-xs text-ds-muted">{t('admin:current_tenant_version', 'Your Version')}:</span>
+              <Badge variant="outline" className="font-mono">
                 v{deployedVer}.0
               </Badge>
             </div>
 
-            <div className="flex items-center gap-1 text-amber-300">
+            <div className="flex items-center gap-1 text-ds-warning">
               <ArrowRight className={cn("h-4 w-4", isRTL && "rotate-180")} />
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-300">{t('admin:upstream_master_version', 'Master Version')}:</span>
-              <Badge className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold font-mono text-xs">
+              <span className="text-xs text-ds-muted">{t('admin:upstream_master_version', 'Master Version')}:</span>
+              <Badge variant="gold" className="font-mono">
                 v{masterVer}.0
               </Badge>
             </div>
@@ -193,14 +192,14 @@ export function MasterVersionSyncModal({
                 className={cn(
                   "p-3.5 rounded-lg border flex items-start gap-3 text-xs",
                   hasUpdate
-                    ? "bg-amber-500/10 border-amber-500/30 text-amber-900 dark:text-amber-200"
-                    : "bg-emerald-500/10 border-emerald-500/30 text-emerald-900 dark:text-emerald-200"
+                    ? "bg-ds-warning/10 border-ds-warning/30 text-ds-warning"
+                    : "bg-ds-success/10 border-ds-success/30 text-ds-success"
                 )}
               >
                 {hasUpdate ? (
-                  <Sparkles className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+                  <Sparkles className="h-5 w-5 text-ds-warning shrink-0 mt-0.5" />
                 ) : (
-                  <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="h-5 w-5 text-ds-success shrink-0 mt-0.5" />
                 )}
                 <div>
                   <div className="font-bold text-sm">
@@ -216,7 +215,7 @@ export function MasterVersionSyncModal({
                         )
                       : t(
                           'admin:up_to_date_msg',
-                          'Your tenant copy is up to date with the latest platform master edition.'
+                          'Your organization copy is up to date with the latest platform master edition.'
                         )}
                   </p>
                 </div>
@@ -242,7 +241,7 @@ export function MasterVersionSyncModal({
                     <div className="p-3 bg-muted/40 rounded-lg border">
                       <span className="text-muted-foreground block mb-1">{t('admin:content_type', 'Content Type')}</span>
                       <span className="font-semibold capitalize flex items-center gap-1.5">
-                        {contentType === 'sop' ? <FileText className="h-3.5 w-3.5 text-blue-600" /> : <GraduationCap className="h-3.5 w-3.5 text-indigo-600" />}
+                        {contentType === 'sop' ? <FileText className="h-3.5 w-3.5 text-ds-info" /> : <GraduationCap className="h-3.5 w-3.5 text-ds-info" />}
                         {contentType === 'sop' ? 'Standard Operating Procedure (SOP)' : 'Training Curriculum & Course'}
                       </span>
                     </div>
@@ -263,9 +262,9 @@ export function MasterVersionSyncModal({
 
                   {/* Corporate Release Notes */}
                   {diffData?.releaseNotes && (
-                    <div className="p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-lg space-y-1.5">
-                      <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900 dark:text-amber-300">
-                        <Sparkles className="h-3.5 w-3.5 text-amber-600" />
+                    <div className="p-3.5 bg-ds-warning/10 border border-ds-warning/30 rounded-lg space-y-1.5">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-ds-warning">
+                        <Sparkles className="h-3.5 w-3.5 text-ds-warning" />
                         <span>Corporate Revision Release Notes (v{masterVer}.0)</span>
                       </div>
                       <p className="text-xs text-foreground/90 whitespace-pre-line leading-relaxed ps-5">
@@ -276,8 +275,8 @@ export function MasterVersionSyncModal({
 
                   {/* Local Property Addendum Reassurance */}
                   {diffData?.localAddendum && (
-                    <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg text-xs text-blue-900 dark:text-blue-200 flex items-start gap-2.5">
-                      <ShieldCheck className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
+                    <div className="p-3 bg-ds-info/10 border border-ds-info/20 rounded-lg text-xs text-ds-info flex items-start gap-2.5">
+                      <ShieldCheck className="h-4 w-4 text-ds-info shrink-0 mt-0.5" />
                       <div>
                         <span className="font-semibold block">Local Property Addendum Preserved</span>
                         <p className="text-[11px] opacity-85 mt-0.5">
@@ -288,27 +287,27 @@ export function MasterVersionSyncModal({
                   )}
 
                   {diffData?.blueprintDifferences && (
-                    <div className="p-3.5 bg-slate-50 dark:bg-slate-900 border rounded-lg space-y-2">
-                      <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                        <Layers className="h-3.5 w-3.5 text-indigo-600" />
+                    <div className="p-3.5 bg-ds-surface-subtle border rounded-lg space-y-2">
+                      <span className="text-xs font-semibold text-ds-ink-secondary flex items-center gap-1.5">
+                        <Layers className="h-3.5 w-3.5 text-ds-info" />
                         {t('admin:curriculum_structure', 'Curriculum Structure & Specs')}
                       </span>
                       <div className="grid grid-cols-3 gap-2 text-[11px] pt-1">
                         <div>
                           <span className="text-muted-foreground block">{t('admin:sections', 'Sections')}</span>
-                          <span className="font-bold text-slate-900 dark:text-slate-100">
+                          <span className="font-bold text-ds-ink">
                             {diffData.blueprintDifferences.masterSectionsCount || 0} {t('admin:sections_label', 'modules')}
                           </span>
                         </div>
                         <div>
                           <span className="text-muted-foreground block">{t('admin:duration', 'Duration')}</span>
-                          <span className="font-bold text-slate-900 dark:text-slate-100">
+                          <span className="font-bold text-ds-ink">
                             {diffData.blueprintDifferences.estimatedDurationMinutes || 45} {t('admin:minutes', 'min')}
                           </span>
                         </div>
                         <div>
                           <span className="text-muted-foreground block">{t('admin:level', 'Difficulty')}</span>
-                          <span className="font-bold capitalize text-slate-900 dark:text-slate-100">
+                          <span className="font-bold capitalize text-ds-ink">
                             {diffData.blueprintDifferences.difficultyLevel || 'Standard'}
                           </span>
                         </div>
@@ -350,14 +349,14 @@ export function MasterVersionSyncModal({
 
                   <div className="border rounded-lg overflow-hidden text-xs">
                     <div className="grid grid-cols-2 bg-muted/60 p-2 font-semibold border-b">
-                      <div>{t('admin:local_copy', 'Your Tenant Copy')} (v{deployedVer}.0)</div>
+                      <div>{t('admin:local_copy', 'Your Organization Copy')} (v{deployedVer}.0)</div>
                       <div className="text-primary">{t('admin:upstream_master', 'Platform Master')} (v{masterVer}.0)</div>
                     </div>
 
                     {/* Title comparison */}
                     <div className="grid grid-cols-2 p-3 border-b gap-3">
                       <div>
-                        <span className="text-[10px] text-muted-foreground uppercase font-bold block mb-0.5">
+                        <span className="text-[11px] text-muted-foreground uppercase font-bold block mb-0.5">
                           {t('admin:title', 'Title')}
                         </span>
                         <p className="font-medium text-foreground">
@@ -367,7 +366,7 @@ export function MasterVersionSyncModal({
                         </p>
                       </div>
                       <div className="bg-primary/5 p-2 rounded">
-                        <span className="text-[10px] text-primary uppercase font-bold block mb-0.5">
+                        <span className="text-[11px] text-primary uppercase font-bold block mb-0.5">
                           {t('admin:master_title', 'Master Title')}
                         </span>
                         <p className="font-medium text-primary">
@@ -381,7 +380,7 @@ export function MasterVersionSyncModal({
                     {/* Description comparison */}
                     <div className="grid grid-cols-2 p-3 border-b gap-3">
                       <div>
-                        <span className="text-[10px] text-muted-foreground uppercase font-bold block mb-0.5">
+                        <span className="text-[11px] text-muted-foreground uppercase font-bold block mb-0.5">
                           {t('admin:description', 'Description')}
                         </span>
                         <p className="text-muted-foreground line-clamp-3">
@@ -391,7 +390,7 @@ export function MasterVersionSyncModal({
                         </p>
                       </div>
                       <div className="bg-primary/5 p-2 rounded">
-                        <span className="text-[10px] text-primary uppercase font-bold block mb-0.5">
+                        <span className="text-[11px] text-primary uppercase font-bold block mb-0.5">
                           {t('admin:master_description', 'Master Description')}
                         </span>
                         <p className="text-foreground line-clamp-3">
@@ -406,7 +405,7 @@ export function MasterVersionSyncModal({
                     {contentType === 'sop' && (
                       <div className="grid grid-cols-2 p-3 gap-3">
                         <div>
-                          <span className="text-[10px] text-muted-foreground uppercase font-bold block mb-0.5">
+                          <span className="text-[11px] text-muted-foreground uppercase font-bold block mb-0.5">
                             Procedure Body (Local)
                           </span>
                           <p className="text-muted-foreground text-[11px] line-clamp-5 whitespace-pre-line leading-relaxed">
@@ -414,7 +413,7 @@ export function MasterVersionSyncModal({
                           </p>
                         </div>
                         <div className="bg-primary/5 p-2 rounded">
-                          <span className="text-[10px] text-primary uppercase font-bold block mb-0.5">
+                          <span className="text-[11px] text-primary uppercase font-bold block mb-0.5">
                             Procedure Body (Master Edition)
                           </span>
                           <p className="text-foreground text-[11px] line-clamp-5 whitespace-pre-line leading-relaxed">
@@ -431,7 +430,7 @@ export function MasterVersionSyncModal({
                   <div className="border rounded-lg p-3 bg-muted/20 space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-semibold flex items-center gap-1.5">
-                        <ListChecks className="h-4 w-4 text-emerald-600" />
+                        <ListChecks className="h-4 w-4 text-ds-success" />
                         <span>Interactive Operational Checklists ({diffData?.masterChecklistItems?.length || 0} Steps in Master)</span>
                       </span>
                     </div>
@@ -446,7 +445,7 @@ export function MasterVersionSyncModal({
                           const itemText = typeof item === 'string' ? item : item.text || item.title || `Verification Step ${idx + 1}`
                           return (
                             <div key={idx} className="p-2 rounded-md bg-background border flex items-start gap-2 text-xs">
-                              <span className="h-5 w-5 rounded-full bg-emerald-500/10 text-emerald-700 font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+                              <span className="h-5 w-5 rounded-full bg-ds-success/10 text-ds-success font-mono text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">
                                 {idx + 1}
                               </span>
                               <span className="text-foreground font-medium">{itemText}</span>
@@ -461,23 +460,23 @@ export function MasterVersionSyncModal({
 
               {/* Retraining Option for Courses */}
               {contentType === 'course' && (
-                <div className="mt-4 p-3.5 bg-amber-50/70 border border-amber-200/80 rounded-xl space-y-2">
+                <div className="mt-4 p-3.5 bg-ds-warning-soft/70 border border-ds-warning/80 rounded-[8px] space-y-2">
                   <div className="flex items-start gap-3">
                     <Checkbox
                       id="retraining-checkbox"
                       checked={triggerRetraining}
                       onCheckedChange={(checked) => setTriggerRetraining(Boolean(checked))}
-                      className="mt-0.5 data-[state=checked]:bg-amber-600 data-[state=checked]:border-amber-600"
+                      className="mt-0.5 data-[state=checked]:bg-ds-warning data-[state=checked]:border-ds-warning"
                     />
                     <div className="grid gap-1 leading-none">
                       <label
                         htmlFor="retraining-checkbox"
-                        className="text-xs font-bold text-amber-950 cursor-pointer flex items-center gap-1.5"
+                        className="text-xs font-bold text-ds-warning cursor-pointer flex items-center gap-1.5"
                       >
-                        <RotateCcw className="h-3.5 w-3.5 text-amber-700" />
+                        <RotateCcw className="h-3.5 w-3.5 text-ds-warning" />
                         {t('training:require_mandatory_retraining', 'Require Mandatory Retraining for Enrolled Learners')}
                       </label>
-                      <p className="text-[11px] text-amber-900/80">
+                      <p className="text-[11px] text-ds-warning/80">
                         {t(
                           'training:retraining_explanation',
                           'Resets course completion status for all enrolled employees and sends notifications prompting them to complete the updated master syllabus.'
@@ -490,23 +489,23 @@ export function MasterVersionSyncModal({
 
               {/* Mandatory Re-Acknowledgment Option for SOPs */}
               {contentType === 'sop' && (
-                <div className="mt-4 p-3.5 bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/50 rounded-xl space-y-2">
+                <div className="mt-4 p-3.5 bg-ds-warning-soft/70 border border-ds-warning/80 rounded-[8px] space-y-2">
                   <div className="flex items-start gap-3">
                     <Checkbox
                       id="reack-checkbox"
                       checked={triggerReacknowledgment}
                       onCheckedChange={(checked) => setTriggerReacknowledgment(Boolean(checked))}
-                      className="mt-0.5 data-[state=checked]:bg-amber-600 data-[state=checked]:border-amber-600"
+                      className="mt-0.5 data-[state=checked]:bg-ds-warning data-[state=checked]:border-ds-warning"
                     />
                     <div className="grid gap-1 leading-none">
                       <label
                         htmlFor="reack-checkbox"
-                        className="text-xs font-bold text-amber-950 dark:text-amber-200 cursor-pointer flex items-center gap-1.5"
+                        className="text-xs font-bold text-ds-warning cursor-pointer flex items-center gap-1.5"
                       >
-                        <RotateCcw className="h-3.5 w-3.5 text-amber-700 dark:text-amber-400" />
+                        <RotateCcw className="h-3.5 w-3.5 text-ds-warning" />
                         {t('knowledge:require_mandatory_reack', 'Require Mandatory Re-Acknowledgment from Hotel Staff')}
                       </label>
-                      <p className="text-[11px] text-amber-900/80 dark:text-amber-300/80">
+                      <p className="text-[11px] text-ds-warning/80">
                         {t(
                           'knowledge:reack_explanation',
                           'Resets previous staff sign-offs for v{{deployedVer}} and flags this v{{masterVer}} revision as mandatory reading for assigned department employees.',
@@ -531,7 +530,7 @@ export function MasterVersionSyncModal({
             size="sm"
             onClick={handleSync}
             disabled={isSyncing || isLoadingDiff}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white gap-2 font-semibold text-xs"
+            className="bg-ds-info hover:bg-ds-info/90 text-white dark:text-ds-on-ink gap-2 font-semibold text-xs"
           >
             {isSyncing ? (
               <>
@@ -540,7 +539,7 @@ export function MasterVersionSyncModal({
               </>
             ) : (
               <>
-                <Sparkles className="h-3.5 w-3.5 text-amber-300" />
+                <Sparkles className="h-3.5 w-3.5 text-ds-warning" />
                 {t('admin:apply_master_sync', 'Synchronize to v{{version}}', { version: masterVer })}
               </>
             )}

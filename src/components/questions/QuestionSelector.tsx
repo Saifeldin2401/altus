@@ -126,9 +126,9 @@ export function QuestionSelector({
                                         </TableCell>
                                         <TableCell>
                                             <Badge variant="outline" className={
-                                                q.status === 'published' ? 'text-green-600 border-green-200' :
-                                                    q.status === 'draft' ? 'text-gray-600 border-gray-200' :
-                                                        'text-yellow-600 border-yellow-200'
+                                                q.status === 'published' ? 'text-ds-success border-ds-success/30' :
+                                                    q.status === 'draft' ? 'text-ds-ink-secondary border-ds-border' :
+                                                        'text-ds-warning border-ds-warning/30'
                                             }>
                                                 {q.status}
                                             </Badge>
@@ -139,9 +139,9 @@ export function QuestionSelector({
                                             </Badge>
                                         </TableCell>
                                         <TableCell>
-                                            <Badge variant="outline" className={`capitalize ${q.difficulty_level === 'easy' ? 'text-green-600 border-green-200' :
-                                                    q.difficulty_level === 'medium' ? 'text-yellow-600 border-yellow-200' :
-                                                        'text-red-600 border-red-200'
+                                            <Badge variant="outline" className={`capitalize ${q.difficulty_level === 'easy' ? 'text-ds-success border-ds-success/30' :
+                                                    q.difficulty_level === 'medium' ? 'text-ds-warning border-ds-warning/30' :
+                                                        'text-ds-danger border-ds-danger/30'
                                                 }`}>
                                                 {q.difficulty_level}
                                             </Badge>

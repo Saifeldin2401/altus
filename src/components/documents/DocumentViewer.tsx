@@ -102,12 +102,12 @@ export function DocumentViewer({ open, onOpenChange, document }: DocumentViewerP
           {fileType === 'pdf' && (
             <div className="flex flex-col items-center justify-center h-[80vh] text-center p-8">
               <div className="mb-4">
-                <div className="w-16 h-16 bg-red-100 rounded-lg flex items-center justify-center mx-auto">
-                  <div className="text-red-600 text-2xl font-bold">PDF</div>
+                <div className="w-16 h-16 bg-ds-danger-soft rounded-lg flex items-center justify-center mx-auto">
+                  <div className="text-ds-danger text-2xl font-bold">PDF</div>
                 </div>
               </div>
               <h3 className="text-lg font-semibold mb-2">PDF Document</h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-ds-ink-secondary mb-4">
                 This PDF document cannot be previewed inline due to security restrictions.
               </p>
               <Button onClick={handleDownload}>
@@ -130,12 +130,12 @@ export function DocumentViewer({ open, onOpenChange, document }: DocumentViewerP
           {fileType === 'word' && (
             <div className="flex flex-col items-center justify-center h-[80vh] text-center p-8">
               <div className="mb-4">
-                <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mx-auto">
-                  <div className="text-blue-600 text-2xl font-bold">DOC</div>
+                <div className="w-16 h-16 bg-ds-info-soft rounded-lg flex items-center justify-center mx-auto">
+                  <div className="text-ds-info text-2xl font-bold">DOC</div>
                 </div>
               </div>
               <h3 className="text-lg font-semibold mb-2">Word Document</h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-ds-ink-secondary mb-4">
                 This document cannot be previewed inline. Please download it to view.
               </p>
               <Button onClick={handleDownload}>
@@ -146,9 +146,9 @@ export function DocumentViewer({ open, onOpenChange, document }: DocumentViewerP
           )}
 
           {fileType === 'article' && (
-            <div className="prose prose-sm sm:prose max-w-none p-6 bg-white rounded-lg">
+            <div className="prose prose-sm sm:prose max-w-none p-6 bg-ds-surface rounded-lg">
               {document.description && (
-                <p className="text-lg text-gray-600 mb-6 italic border-s-4 border-gray-200 ps-4">
+                <p className="text-lg text-ds-ink-secondary mb-6 italic border-s-4 border-ds-border ps-4">
                   {document.description}
                 </p>
               )}
@@ -161,12 +161,12 @@ export function DocumentViewer({ open, onOpenChange, document }: DocumentViewerP
           {fileType === 'other' && (
             <div className="flex flex-col items-center justify-center h-[80vh] text-center p-8">
               <div className="mb-4">
-                <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mx-auto">
-                  <div className="text-gray-600 text-2xl font-bold">FILE</div>
+                <div className="w-16 h-16 bg-ds-surface-subtle rounded-lg flex items-center justify-center mx-auto">
+                  <div className="text-ds-ink-secondary text-2xl font-bold">FILE</div>
                 </div>
               </div>
               <h3 className="text-lg font-semibold mb-2">Preview Not Available</h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-ds-ink-secondary mb-4">
                 This content cannot be previewed inline.
               </p>
               {activeUrl && (

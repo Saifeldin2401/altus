@@ -750,9 +750,9 @@ export function TrainingBuilderProvider({ children }: { children: React.ReactNod
   // -------------------------------------------------------------------------
 
   const steps = [
-    { key: 'content' as BuilderStep, label: t('builder.steps.content', 'Course Editor'), description: t('builder.steps.contentDesc', 'Design sections, lessons, and content') },
-    { key: 'rules' as BuilderStep, label: t('builder.steps.rules', 'Rules & Settings'), description: t('builder.steps.rulesDesc', 'Passing score, certificates, and limits') },
-    { key: 'publish' as BuilderStep, label: t('builder.steps.publish', 'Review & Publish'), description: t('builder.steps.publishDesc', 'Pre-flight check and publish') }
+    { key: 'content' as BuilderStep, label: t('builder.steps.content', 'Content'), description: t('builder.steps.contentDesc', 'Add sections and lessons') },
+    { key: 'rules' as BuilderStep, label: t('builder.steps.rules', 'Rules'), description: t('builder.steps.rulesDesc', 'Passing score, certificate and attempts') },
+    { key: 'publish' as BuilderStep, label: t('builder.steps.publish', 'Review & publish'), description: t('builder.steps.publishDesc', 'Check everything, then publish') }
   ] as const
 
   const [showAuditModal, setShowAuditModal] = useState(false)
@@ -823,11 +823,11 @@ export function TrainingBuilderProvider({ children }: { children: React.ReactNod
   }
 
   const validationChecklist = [
-    { key: 'title', label: t('builder.validation.title', 'Course Title Configured'), ok: title.trim().length > 0 },
-    { key: 'category', label: t('builder.validation.category', 'Department & Category Selected'), ok: !!category },
-    { key: 'structure', label: t('builder.validation.structure', 'Learning Modules & Sections Added'), ok: sections.length > 0 },
-    { key: 'content', label: t('builder.validation.content', 'Lesson Content & SOPs Added'), ok: totalItems > 0 },
-    { key: 'rules', label: t('builder.validation.rules', 'Completion & Exam Rules Configured'), ok: rulesComplete }
+    { key: 'title', label: t('builder.validation.title', 'Course name'), ok: title.trim().length > 0 },
+    { key: 'category', label: t('builder.validation.category', 'Department'), ok: !!category },
+    { key: 'structure', label: t('builder.validation.structure', 'At least one section'), ok: sections.length > 0 },
+    { key: 'content', label: t('builder.validation.content', 'At least one lesson'), ok: totalItems > 0 },
+    { key: 'rules', label: t('builder.validation.rules', 'Passing score set'), ok: rulesComplete }
   ]
 
   // -------------------------------------------------------------------------
@@ -1193,7 +1193,7 @@ export function TrainingBuilderProvider({ children }: { children: React.ReactNod
   }, [
     title, description, category, difficultyLevel, estimatedDuration, useEstimatedDuration,
     validityPeriod, passingScore, certificateEnabled, audience, contentLanguage,
-    templatePreset, sections, activeSection
+    templatePreset, sections
   ])
 
   // -------------------------------------------------------------------------

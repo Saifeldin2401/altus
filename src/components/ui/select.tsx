@@ -22,7 +22,7 @@ const SelectTrigger = React.memo(React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 w-full items-center justify-between rounded-md border border-input bg-background ps-3 pe-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-500 dark:disabled:text-gray-400 [&>span]:line-clamp-1 text-foreground",
+      "flex h-10 w-full items-center justify-between rounded-[6px] border border-ds-border bg-ds-surface ps-3 pe-3 py-2 text-sm ring-offset-background placeholder:text-ds-muted focus:outline-none focus:border-ds-accent focus:ring-2 focus:ring-ds-accent/40 focus:ring-offset-0 disabled:cursor-not-allowed disabled:bg-ds-surface-subtle disabled:text-ds-muted [&>span]:line-clamp-1 text-ds-ink",
       className
     )}
     aria-label={ariaLabel}
@@ -82,7 +82,7 @@ const SelectContent = React.memo(React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "relative z-[11000] max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-white dark:bg-slate-900 text-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-end-2 data-[side=right]:slide-in-from-start-2 data-[side=top]:slide-in-from-bottom-2",
+        "relative z-[11000] max-h-96 min-w-[8rem] overflow-hidden rounded-[6px] border border-ds-border bg-ds-surface text-ds-ink shadow-lg shadow-black/10 dark:shadow-black/40 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-end-2 data-[side=right]:slide-in-from-start-2 data-[side=top]:slide-in-from-bottom-2",
         position === "popper" &&
         "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
         className
@@ -129,7 +129,7 @@ const SelectItem = React.memo(React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 ps-8 pe-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:bg-slate-100 dark:focus:bg-slate-800 focus:text-slate-900 dark:focus:text-slate-100 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex w-full cursor-default select-none items-center rounded-[4px] py-1.5 ps-8 pe-2 text-sm text-ds-ink outline-none focus:bg-ds-surface-subtle focus:text-ds-ink data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       className
     )}
     aria-label={ariaLabel}

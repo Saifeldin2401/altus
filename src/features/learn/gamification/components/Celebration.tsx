@@ -129,7 +129,7 @@ export function Celebration({ milestone, onClose }: { milestone: Milestone | nul
       {milestone && content && (
         <motion.div
           key={milestone.type === 'badge' ? milestone.id : `level-${milestone.level}`}
-          className="fixed inset-0 z-[80] flex items-center justify-center bg-ds-ink/50 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[80] flex items-center justify-center bg-ds-ink/50 p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -143,7 +143,7 @@ export function Celebration({ milestone, onClose }: { milestone: Milestone | nul
             aria-labelledby="celebration-title"
             aria-describedby="celebration-body"
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-sm overflow-hidden rounded-2xl border border-ds-border bg-ds-surface p-6 text-center shadow-2xl"
+            className="relative w-full max-w-sm overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface p-6 text-center shadow-2xl"
             initial={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.85, y: 16 }}
             animate={reduce ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}

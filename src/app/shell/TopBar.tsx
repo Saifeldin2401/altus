@@ -98,7 +98,7 @@ export function TopBar({ onOpenSearch, onOpenContext, onOpenMobileMenu }: TopBar
         >
           <Search aria-hidden="true" className="h-4 w-4" />
           <span className="flex-1 truncate text-start">{t('shell.searchPlaceholder', 'Search courses, articles, people…')}</span>
-          <kbd className="rounded-[3px] border border-ds-border bg-ds-surface px-1.5 font-mono text-[10px] text-ds-muted">Ctrl K</kbd>
+          <kbd className="rounded-[3px] border border-ds-border bg-ds-surface px-1.5 font-mono text-[11px] text-ds-muted">Ctrl K</kbd>
         </button>
         <button
           type="button"

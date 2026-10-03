@@ -414,9 +414,9 @@ export function AIQuestionGenerator({
         <div className={cn('space-y-6', className)}>
             {/* Generation Settings */}
             <Card>
-                <CardHeader className="bg-slate-50 border-b">
-                    <CardTitle className="flex items-center gap-2 text-hotel-navy">
-                        <Wand2 className="h-5 w-5 text-hotel-gold" />
+                <CardHeader className="bg-ds-surface-subtle border-b">
+                    <CardTitle className="flex items-center gap-2 text-ds-ink">
+                        <Wand2 className="h-5 w-5 text-ds-accent" />
                         {t('builder.aiQuestionGenerator')}
                     </CardTitle>
                     <CardDescription>
@@ -426,7 +426,7 @@ export function AIQuestionGenerator({
                 <CardContent className="space-y-6 pt-6">
                     {/* Source Selection Tabs */}
                     <div className="space-y-4">
-                        <Label className="text-sm font-semibold uppercase tracking-wider text-slate-500">Source Content</Label>
+                        <Label className="text-sm font-semibold uppercase tracking-wider text-ds-muted">Source Content</Label>
                         <Tabs value={sourceType} onValueChange={(val) => setSourceType(val as any)}>
                             <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3">
                                 <TabsTrigger value="text" className="gap-2">
@@ -448,7 +448,7 @@ export function AIQuestionGenerator({
                                     placeholder="Paste the text you want to generate questions from..."
                                     value={manualContent}
                                     onChange={e => setManualContent(e.target.value)}
-                                    className="min-h-[150px] border-slate-200 focus:ring-hotel-gold"
+                                    className="min-h-[150px] border-ds-border focus:ring-ds-accent"
                                 />
                                 <div className="flex justify-between items-center px-1">
                                     <p className="text-xs text-muted-foreground italic">
@@ -456,7 +456,7 @@ export function AIQuestionGenerator({
                                     </p>
                                     <p className={cn(
                                         "text-xs font-medium",
-                                        manualContent.trim().length >= 20 ? "text-green-600" : "text-amber-600"
+                                        manualContent.trim().length >= 20 ? "text-ds-success" : "text-ds-warning"
                                     )}>
                                         {manualContent.trim().length}/20 characters minimum
                                     </p>
@@ -465,7 +465,7 @@ export function AIQuestionGenerator({
 
                             <TabsContent value="sop" className="mt-4 space-y-4">
                                 <div className="relative">
-                                    <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                                    <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-ds-muted" />
                                     <Input
                                         placeholder="Search Knowledge Base..."
                                         className="ps-10"
@@ -491,8 +491,8 @@ export function AIQuestionGenerator({
                                                     className={cn(
                                                         "w-full text-start flex items-center justify-between p-2 rounded-md cursor-pointer transition-colors",
                                                         selectedSopId === sop.id
-                                                            ? "bg-hotel-gold/10 border-hotel-gold text-hotel-gold"
-                                                            : "hover:bg-slate-50 text-slate-700"
+                                                            ? "bg-ds-accent/10 border-ds-accent text-ds-accent"
+                                                            : "hover:bg-ds-surface-subtle text-ds-ink-secondary"
                                                     )}
                                                 >
                                                     <div className="flex items-center gap-2 overflow-hidden">
@@ -503,7 +503,7 @@ export function AIQuestionGenerator({
                                                 </button>
                                             ))}
                                             {filteredSops?.length === 0 && (
-                                                <div className="text-center py-8 text-slate-400 text-sm italic">
+                                                <div className="text-center py-8 text-ds-muted text-sm italic">
                                                     No articles found
                                                 </div>
                                             )}
@@ -513,13 +513,13 @@ export function AIQuestionGenerator({
                             </TabsContent>
 
                             <TabsContent value="file" className="mt-4 space-y-4">
-                                <div className="border-2 border-dashed border-slate-200 rounded-lg p-8 text-center space-y-4 hover:border-hotel-gold transition-colors">
-                                    <div className="w-12 h-12 bg-hotel-gold/10 rounded-full flex items-center justify-center mx-auto">
-                                        <Upload className="h-6 w-6 text-hotel-gold" />
+                                <div className="border-2 border-dashed border-ds-border rounded-lg p-8 text-center space-y-4 hover:border-ds-accent transition-colors">
+                                    <div className="w-12 h-12 bg-ds-accent/10 rounded-full flex items-center justify-center mx-auto">
+                                        <Upload className="h-6 w-6 text-ds-accent" />
                                     </div>
                                     <div>
                                         <p className="text-sm font-medium">Click to upload or drag & drop</p>
-                                        <p className="text-xs text-slate-400 uppercase mt-1">PDF, DOCX, or TXT (Max 5MB)</p>
+                                        <p className="text-xs text-ds-muted uppercase mt-1">PDF, DOCX, or TXT (Max 5MB)</p>
                                     </div>
                                     <Input
                                         type="file"
@@ -535,10 +535,10 @@ export function AIQuestionGenerator({
                                         <div className={cn(
                                             "px-3 py-2 rounded-md text-xs font-medium flex items-center justify-center gap-2 mx-auto w-fit",
                                             isExtracting
-                                                ? "bg-amber-50 text-amber-700"
+                                                ? "bg-ds-warning-soft text-ds-warning"
                                                 : extractedText
-                                                    ? "bg-emerald-50 text-emerald-700"
-                                                    : "bg-red-50 text-red-700"
+                                                    ? "bg-ds-success-soft text-ds-success"
+                                                    : "bg-ds-danger-soft text-ds-danger"
                                         )}>
                                             {isExtracting ? (
                                                 <>
@@ -571,7 +571,7 @@ export function AIQuestionGenerator({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Number of questions */}
                         <div className="space-y-2">
-                            <Label className="text-sm font-semibold text-slate-600">Number of Questions</Label>
+                            <Label className="text-sm font-semibold text-ds-ink-secondary">Number of Questions</Label>
                             <div className="flex items-center gap-3">
                                 <Input
                                     type="number"
@@ -579,15 +579,15 @@ export function AIQuestionGenerator({
                                     onChange={(e) => setCount(Math.min(10, Math.max(1, parseInt(e.target.value) || 1)))}
                                     min={1}
                                     max={10}
-                                    className="w-20 border-slate-200"
+                                    className="w-20 border-ds-border"
                                 />
-                                <span className="text-xs text-slate-500 italic">1-10 questions</span>
+                                <span className="text-xs text-ds-muted italic">1-10 questions</span>
                             </div>
                         </div>
 
                         {/* Difficulty */}
                         <div className="space-y-2">
-                            <Label className="text-sm font-semibold text-slate-600">Difficulty Level</Label>
+                            <Label className="text-sm font-semibold text-ds-ink-secondary">Difficulty Level</Label>
                             <div className="flex flex-wrap gap-2">
                                 {Object.entries(DIFFICULTY_CONFIG).map(([diff, config]) => (
                                     <button
@@ -596,8 +596,8 @@ export function AIQuestionGenerator({
                                         className={cn(
                                             'px-3 py-1.5 rounded-lg text-xs font-medium border transition-all',
                                             difficulty === diff
-                                                ? `bg-hotel-navy border-hotel-navy text-white shadow-md scale-105`
-                                                : 'bg-white border-slate-200 text-slate-600 hover:border-hotel-gold'
+                                                ? `bg-ds-ink border-ds-ink text-ds-on-ink scale-105`
+                                                : 'bg-ds-surface border-ds-border text-ds-ink-secondary hover:border-ds-accent'
                                         )}
                                     >
                                         {config.label}
@@ -609,7 +609,7 @@ export function AIQuestionGenerator({
 
                     {/* Question types */}
                     <div className="space-y-3">
-                        <Label className="text-sm font-semibold text-slate-600">Question Types</Label>
+                        <Label className="text-sm font-semibold text-ds-ink-secondary">Question Types</Label>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                             {Object.entries(QUESTION_TYPE_CONFIG).map(([type, config]) => (
                                 <button
@@ -619,12 +619,12 @@ export function AIQuestionGenerator({
                                         'flex items-center gap-2 px-3 py-2.5 rounded-md text-xs border transition-all text-start uppercase tracking-tight',
                                         selectedTypes.includes(type as QuestionType)
                                             ? `bg-${config.color}-50 border-${config.color}-300 text-${config.color}-700 shadow-sm ring-1 ring-${config.color}-200`
-                                            : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'
+                                            : 'bg-ds-surface border-ds-border text-ds-muted hover:bg-ds-surface-subtle'
                                     )}
                                 >
                                     <div className={cn(
                                         "w-2 h-2 rounded-full",
-                                        selectedTypes.includes(type as QuestionType) ? `bg-${config.color}-500` : "bg-slate-300"
+                                        selectedTypes.includes(type as QuestionType) ? `bg-${config.color}-500` : "bg-ds-border"
                                     )} />
                                     <span className="font-semibold">{config.label}</span>
                                 </button>
@@ -633,14 +633,14 @@ export function AIQuestionGenerator({
                     </div>
 
                     {/* Options */}
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 bg-slate-50 p-4 rounded-lg border border-slate-100">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 bg-ds-surface-subtle p-4 rounded-lg border border-ds-border">
                         <div className="flex items-center gap-3">
                             <Switch
                                 id="hints-toggle"
                                 checked={includeHints}
                                 onCheckedChange={setIncludeHints}
                             />
-                            <Label htmlFor="hints-toggle" className="text-sm font-medium text-slate-700">Include hints</Label>
+                            <Label htmlFor="hints-toggle" className="text-sm font-medium text-ds-ink-secondary">Include hints</Label>
                         </div>
                         <div className="flex items-center gap-3">
                             <Switch
@@ -648,7 +648,7 @@ export function AIQuestionGenerator({
                                 checked={includeExplanations}
                                 onCheckedChange={setIncludeExplanations}
                             />
-                            <Label htmlFor="explanations-toggle" className="text-sm font-medium text-slate-700">Include explanations</Label>
+                            <Label htmlFor="explanations-toggle" className="text-sm font-medium text-ds-ink-secondary">Include explanations</Label>
                         </div>
                         <div className="flex items-center gap-3">
                             <Switch
@@ -656,7 +656,7 @@ export function AIQuestionGenerator({
                                 checked={groundedOnly}
                                 onCheckedChange={setGroundedOnly}
                             />
-                            <Label htmlFor="grounded-toggle" className="text-sm font-medium text-slate-700">Use only provided content</Label>
+                            <Label htmlFor="grounded-toggle" className="text-sm font-medium text-ds-ink-secondary">Use only provided content</Label>
                         </div>
                         <div className="flex items-center gap-3">
                             <Switch
@@ -664,18 +664,18 @@ export function AIQuestionGenerator({
                                 checked={includeCitations}
                                 onCheckedChange={setIncludeCitations}
                             />
-                            <Label htmlFor="citations-toggle" className="text-sm font-medium text-slate-700">Include source snippets</Label>
+                            <Label htmlFor="citations-toggle" className="text-sm font-medium text-ds-ink-secondary">Include source snippets</Label>
                         </div>
                         <div className="flex items-center gap-2 ms-auto">
-                            <Label className="text-sm font-medium text-slate-700">Language:</Label>
-                            <div className="flex rounded-lg border border-slate-200 overflow-hidden">
+                            <Label className="text-sm font-medium text-ds-ink-secondary">Language:</Label>
+                            <div className="flex rounded-lg border border-ds-border overflow-hidden">
                                 <button
                                     onClick={() => setLanguage('en')}
                                     className={cn(
                                         "px-3 py-1.5 text-xs font-medium transition-colors",
                                         language === 'en'
-                                            ? "bg-hotel-navy text-white"
-                                            : "bg-white text-slate-600 hover:bg-slate-50"
+                                            ? "bg-ds-ink text-ds-on-ink"
+                                            : "bg-ds-surface text-ds-ink-secondary hover:bg-ds-surface-subtle"
                                     )}
                                 >
                                     English
@@ -685,8 +685,8 @@ export function AIQuestionGenerator({
                                     className={cn(
                                         "px-3 py-1.5 text-xs font-medium transition-colors",
                                         language === 'ar'
-                                            ? "bg-hotel-navy text-white"
-                                            : "bg-white text-slate-600 hover:bg-slate-50"
+                                            ? "bg-ds-ink text-ds-on-ink"
+                                            : "bg-ds-surface text-ds-ink-secondary hover:bg-ds-surface-subtle"
                                     )}
                                 >
                                     العربية
@@ -695,7 +695,7 @@ export function AIQuestionGenerator({
                         </div>
                     </div>
                 </CardContent>
-                <CardFooter className="bg-slate-50/50 border-t py-6">
+                <CardFooter className="bg-ds-surface-subtle/50 border-t py-6">
                     <Button
                         onClick={handleGenerate}
                         disabled={
@@ -707,7 +707,7 @@ export function AIQuestionGenerator({
                             (sourceType === 'file' && !extractedText)
                         }
                         size="lg"
-                        className="w-full md:w-auto min-w-[200px] bg-hotel-navy hover:bg-hotel-navy/90 text-white shadow-lg shadow-hotel-navy/20 h-12"
+                        className="w-full md:w-auto min-w-[200px] bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink shadow-lg/20 h-12"
                     >
                         {generateQuestions.isPending ? (
                             <>
@@ -716,7 +716,7 @@ export function AIQuestionGenerator({
                             </>
                         ) : (
                             <>
-                                <Sparkles className="h-5 w-5 me-2 text-hotel-gold fill-hotel-gold animate-pulse" />
+                                <Sparkles className="h-5 w-5 me-2 text-ds-accent fill-ds-accent animate-pulse" />
                                 Generate Questions
                             </>
                         )}
@@ -781,7 +781,7 @@ export function AIQuestionGenerator({
                             className={cn(
                                 'transition-all',
                                 selectedQuestions.has(index)
-                                    ? 'border-blue-300 bg-blue-50/50'
+                                    ? 'border-ds-info/30 bg-ds-info-soft/50'
                                     : 'opacity-60'
                             )}
                         >
@@ -814,7 +814,7 @@ export function AIQuestionGenerator({
                                             size="sm"
                                             onClick={() => handleDeleteQuestion(index)}
                                         >
-                                            <Trash2 className="h-4 w-4 text-red-500" />
+                                            <Trash2 className="h-4 w-4 text-ds-danger" />
                                         </Button>
                                     </div>
                                 </div>
@@ -859,15 +859,15 @@ export function AIQuestionGenerator({
                                                         key={optIdx}
                                                         className={cn(
                                                             'flex items-center gap-2 text-sm py-1',
-                                                            opt.is_correct && 'text-green-700 font-medium'
+                                                            opt.is_correct && 'text-ds-success font-medium'
                                                         )}
                                                     >
-                                                        <span className="text-gray-400">
+                                                        <span className="text-ds-muted">
                                                             {String.fromCharCode(65 + optIdx)}.
                                                         </span>
                                                         <span>{opt.text}</span>
                                                         {opt.is_correct && (
-                                                            <CheckCircle className="h-4 w-4 text-green-600" />
+                                                            <CheckCircle className="h-4 w-4 text-ds-success" />
                                                         )}
                                                     </div>
                                                 ))}
@@ -875,26 +875,26 @@ export function AIQuestionGenerator({
                                         )}
 
                                         {question.correct_answer && !question.options && (
-                                            <p className="text-sm text-green-700 mt-2">
+                                            <p className="text-sm text-ds-success mt-2">
                                                 <strong>Answer:</strong> {question.correct_answer}
                                             </p>
                                         )}
 
                                         {question.explanation && (
-                                            <p className="text-sm text-gray-600 mt-3 italic">
+                                            <p className="text-sm text-ds-ink-secondary mt-3 italic">
                                                 {question.explanation}
                                             </p>
                                         )}
 
                                         {question.hint && (
-                                            <p className="text-sm text-amber-700 mt-2">
+                                            <p className="text-sm text-ds-warning mt-2">
                                                 💡 Hint: {question.hint}
                                             </p>
                                         )}
 
                                         {(question.source_snippet || question.linked_section) && (
-                                            <div className="mt-3 border-s-2 border-slate-200 ps-3 text-xs text-slate-500">
-                                                <span className="font-medium text-slate-600">Source:</span>{' '}
+                                            <div className="mt-3 border-s-2 border-ds-border ps-3 text-xs text-ds-muted">
+                                                <span className="font-medium text-ds-ink-secondary">Source:</span>{' '}
                                                 {question.source_snippet || question.linked_section}
                                             </div>
                                         )}
@@ -909,7 +909,7 @@ export function AIQuestionGenerator({
                         <Button
                             onClick={handleSaveSelected}
                             disabled={selectedQuestions.size === 0 || saving}
-                            className="bg-green-600 hover:bg-green-700"
+                            className="bg-ds-success hover:bg-ds-success"
                         >
                             {saving ? (
                                 <>

@@ -228,7 +228,7 @@ export default function EmailTemplateEditor() {
                 )}
               >
                 {tmpl.template_key}
-                <div className="text-[10px] opacity-70 mt-0.5">v{tmpl.version || 1} • {tmpl.business_domain}</div>
+                <div className="text-[11px] opacity-70 mt-0.5">v{tmpl.version || 1} • {tmpl.business_domain}</div>
               </button>
             ))}
             {!isLoading && templates.length === 0 && (
@@ -297,7 +297,7 @@ export default function EmailTemplateEditor() {
                 </div>
               ) : (
                 <div className="flex-1 bg-ds-surface-subtle flex items-center justify-center p-6 overflow-hidden">
-                  <div className="w-full max-w-2xl h-full bg-white rounded-lg shadow-sm border overflow-hidden flex flex-col">
+                  <div className="w-full max-w-2xl h-full bg-ds-surface rounded-lg shadow-sm border overflow-hidden flex flex-col">
                     <div className="bg-ds-surface-subtle p-3 border-b text-sm text-ds-muted">
                       <strong>Subject:</strong> {subjectTemplate || 'No subject'}
                     </div>

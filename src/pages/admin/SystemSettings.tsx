@@ -1,11 +1,9 @@
-import { PageHeader } from '@/ui/components/PageHeader'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useSystemSettings, type SystemSetting } from '@/hooks/useSystemSettings'
+import { OrganizationProfileSettings } from '@/pages/admin/components/OrganizationProfileSettings'
 import { SubscriptionEntitlementsCard } from '@/pages/admin/components/SubscriptionEntitlementsCard'
 import { useTenant } from '@/contexts/TenantContext'
 import {
@@ -20,6 +18,7 @@ import {
     Users,
 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Skeleton, WorkspaceHeader } from '@/ui'
 
@@ -47,6 +46,7 @@ function SettingRow({
     onUpdate: (key: string, value: unknown) => void
     onReset?: (key: string) => void
 }) {
+    const { t } = useTranslation('admin')
     const isBool = typeof setting.value === 'boolean'
     const isNumber = typeof setting.value === 'number'
     const isObject = typeof setting.value === 'object' && setting.value !== null
@@ -76,7 +76,7 @@ function SettingRow({
                 parsed = JSON.parse(localValue)
                 setParseError(null)
             } catch (err: any) {
-                setParseError(err?.message || 'Invalid JSON format')
+                setParseError(err?.message || t('settingsPage.invalid_json', 'This value is not valid JSON.'))
                 return
             }
         }
@@ -93,23 +93,23 @@ function SettingRow({
                     </span>
                     {setting.is_override ? (
                         <div className="flex items-center gap-1.5">
-                            <Badge variant="outline" className="text-[10px] text-ds-warning bg-ds-warning-soft border-ds-warning/30">
-                                Changed from the default
+                            <Badge variant="outline" className="text-[11px] text-ds-warning bg-ds-warning-soft border-ds-warning/30">
+                                {t('settingsPage.changed', 'Changed from the default')}
                             </Badge>
                             {onReset && (
                                 <Button
                                     size="sm"
                                     variant="ghost"
-                                    className="h-5 text-[10px] text-muted-foreground hover:text-foreground gap-1 px-1.5"
+                                    className="h-5 text-[11px] text-muted-foreground hover:text-foreground gap-1 px-1.5"
                                     onClick={() => onReset(setting.key)}
-                                    title="Revert to system default"
+                                    title={t('settingsPage.use_default_hint', 'Go back to the default value')}
                                 >
-                                    <RotateCcw className="w-3 h-3" /> Use default
+                                    <RotateCcw aria-hidden="true" className="w-3 h-3" /> {t('settingsPage.use_default', 'Use default')}
                                 </Button>
                             )}
                         </div>
                     ) : (
-                        <span className="text-[11px] text-ds-muted">Default</span>
+                        <span className="text-[11px] text-ds-muted">{t('settingsPage.default', 'Default')}</span>
                     )}
                 </div>
                 {setting.description && (
@@ -127,7 +127,7 @@ function SettingRow({
                             onCheckedChange={(checked) => onUpdate(setting.key, checked)}
                             aria-label={formatKey(setting.key)}
                         />
-                        {setting.value ? 'On' : 'Off'}
+                        {setting.value ? t('settingsPage.on', 'On') : t('settingsPage.off', 'Off')}
                     </label>
                 ) : isObject ? (
                     <div className="flex flex-col gap-2 w-full sm:w-80">
@@ -142,9 +142,9 @@ function SettingRow({
                             className="w-full text-xs font-mono p-2 border rounded-md bg-ds-surface-subtle border-ds-border focus:outline-none focus:ring-1 focus:ring-ds-brass resize-y"
                         />
                         {isDirty && (
-                            <Button size="sm" variant="default" className="h-7 text-xs gap-1 self-end bg-ds-ink hover:bg-ds-ink-secondary text-white" onClick={handleSave}>
+                            <Button size="sm" className="self-end" onClick={handleSave}>
                                 <Save className="w-3.5 h-3.5" />
-                                Save Changes
+                                {t('settingsPage.save', 'Save')}
                             </Button>
                         )}
                     </div>
@@ -160,9 +160,9 @@ function SettingRow({
                             className="w-full sm:w-48 text-sm h-9"
                         />
                         {isDirty && (
-                            <Button size="sm" variant="default" className="h-9 gap-1 bg-ds-ink hover:bg-ds-ink-secondary text-white" onClick={handleSave}>
+                            <Button size="sm" onClick={handleSave}>
                                 <Save className="w-3.5 h-3.5" />
-                                Save
+                                {t('settingsPage.save', 'Save')}
                             </Button>
                         )}
                     </div>
@@ -176,6 +176,15 @@ export default function SystemSettings() {
     const { currentOrganization } = useTenant()
     const { t } = useTranslation(['admin', 'common'])
     const { groupedSettings, isLoading, updateSetting, resetSetting } = useSystemSettings()
+
+    const { hash } = useLocation()
+
+    // Links such as the Overview's "Add logo" land on a section by #id; the
+    // page renders after its settings load, so scroll once they are on screen.
+    useEffect(() => {
+        if (isLoading || !hash) return
+        document.getElementById(hash.slice(1))?.scrollIntoView({ block: 'start' })
+    }, [hash, isLoading])
 
     const handleUpdate = (key: string, value: unknown) => updateSetting.mutate({ key, value })
     const handleReset = (key: string) => resetSetting.mutate(key)
@@ -208,6 +217,11 @@ export default function SystemSettings() {
                     {/* Section index */}
                     <nav aria-label={t('admin:settingsPage.sections', 'Sections')} className="hidden lg:block">
                         <ul className="sticky top-20 space-y-0.5 border-s border-ds-border">
+                            <li>
+                                <a href="#settings-profile" className="-ms-px flex min-h-[36px] items-center border-s-2 border-transparent ps-4 text-sm text-ds-muted hover:border-ds-border-strong hover:text-ds-ink">
+                                    {t('admin:settingsPage.profile', 'Profile & branding')}
+                                </a>
+                            </li>
                             {sections.map(({ cat }) => (
                                 <li key={cat}>
                                     <a href={`#settings-${cat}`} className="-ms-px flex min-h-[36px] items-center border-s-2 border-transparent ps-4 text-sm text-ds-muted hover:border-ds-border-strong hover:text-ds-ink">
@@ -224,9 +238,14 @@ export default function SystemSettings() {
                     </nav>
 
                     <div className="min-w-0 space-y-12">
-                        {sections.length === 0 && (
-                            <p className="text-sm text-ds-muted">{t('admin:settingsPage.none', 'There are no organization settings to change yet.')}</p>
-                        )}
+                        <section id="settings-profile" aria-labelledby="settings-profile-title" className="scroll-mt-20 space-y-3">
+                            <div>
+                                <h2 id="settings-profile-title" className="text-lg font-semibold text-ds-ink">{t('admin:settingsPage.profile', 'Profile & branding')}</h2>
+                                <p className="text-sm text-ds-muted">{t('admin:settingsPage.profileHint', 'Your organization name, logo and colours, and how its emails are signed.')}</p>
+                            </div>
+                            <OrganizationProfileSettings />
+                        </section>
+
                         {sections.map(({ cat, list }) => {
                             const simple = list.filter((st) => typeof st.value !== 'object' || st.value === null)
                             const advanced = list.filter((st) => typeof st.value === 'object' && st.value !== null)

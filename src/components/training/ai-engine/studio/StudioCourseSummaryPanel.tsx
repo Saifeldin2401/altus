@@ -99,17 +99,17 @@ export function StudioCourseSummaryPanel({
     : 'MCQ, Scenario, Ordering'
 
   return (
-    <div className="w-full h-full flex flex-col bg-card/60 border-s backdrop-blur-sm">
+    <div className="w-full h-full flex flex-col bg-card/60 border-s">
       {/* Header */}
       <div className="p-4 border-b bg-muted/20">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Layers className="w-4 h-4 text-purple-600" />
+            <Layers className="w-4 h-4 text-ds-accent" />
             <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
               {t('builder.courseSummary', 'Curriculum Blueprint')}
             </h3>
           </div>
-          <Badge variant="outline" className="text-[10px] bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 border-purple-200">
+          <Badge variant="outline" className="text-[11px] bg-ds-accent-soft text-ds-accent border-ds-accent/30">
             {stats.generationMode.replace('_', ' ')}
           </Badge>
         </div>
@@ -123,27 +123,27 @@ export function StudioCourseSummaryPanel({
         <div className="grid grid-cols-2 gap-2 mb-3">
           <div
             onClick={() => onJumpToStage('design')}
-            className="p-2.5 rounded-lg border bg-card hover:border-purple-300 cursor-pointer transition-all"
+            className="p-2.5 rounded-lg border bg-card hover:border-ds-accent/30 cursor-pointer transition-all"
           >
-            <div className="flex items-center justify-between text-muted-foreground text-[10px]">
+            <div className="flex items-center justify-between text-muted-foreground text-[11px]">
               <span>{t('builder.structure', 'Structure')}</span>
               <ChevronRight className="w-3 h-3" />
             </div>
             <p className="text-sm font-extrabold text-foreground mt-0.5">
-              {stats.moduleCount} <span className="text-[10px] font-normal text-muted-foreground">Mods</span> • {totalLessons} <span className="text-[10px] font-normal text-muted-foreground">Lessons</span>
+              {stats.moduleCount} <span className="text-[11px] font-normal text-muted-foreground">Mods</span> • {totalLessons} <span className="text-[11px] font-normal text-muted-foreground">Lessons</span>
             </p>
           </div>
 
           <div
             onClick={() => onJumpToStage('design')}
-            className="p-2.5 rounded-lg border bg-card hover:border-purple-300 cursor-pointer transition-all"
+            className="p-2.5 rounded-lg border bg-card hover:border-ds-accent/30 cursor-pointer transition-all"
           >
-            <div className="flex items-center justify-between text-muted-foreground text-[10px]">
+            <div className="flex items-center justify-between text-muted-foreground text-[11px]">
               <span>{t('builder.duration', 'Est. Duration')}</span>
-              <Clock className="w-3 h-3 text-amber-500" />
+              <Clock className="w-3 h-3 text-ds-warning" />
             </div>
             <p className="text-sm font-extrabold text-foreground mt-0.5">
-              {durationString} <span className="text-[10px] font-normal text-muted-foreground">({stats.lessonDuration}m/ea)</span>
+              {durationString} <span className="text-[11px] font-normal text-muted-foreground">({stats.lessonDuration}m/ea)</span>
             </p>
           </div>
         </div>
@@ -151,25 +151,25 @@ export function StudioCourseSummaryPanel({
         {/* Section 1: Target & Pedagogical Profile */}
         <div
           onClick={() => onJumpToStage('basics')}
-          className="p-3 rounded-xl border bg-card hover:border-purple-300 cursor-pointer transition-all group space-y-1.5 mb-3"
+          className="p-3 rounded-[8px] border bg-card hover:border-ds-accent/30 cursor-pointer transition-all group space-y-1.5 mb-3"
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-foreground flex items-center gap-1.5">
-              <Target className="w-3.5 h-3.5 text-purple-600" />
+              <Target className="w-3.5 h-3.5 text-ds-accent" />
               {t('builder.targetProfile', 'Target & Language')}
             </span>
-            <span className="text-[10px] text-purple-600 font-semibold group-hover:underline">
+            <span className="text-[11px] text-ds-accent font-semibold group-hover:underline">
               {t('common.edit', 'Edit')} →
             </span>
           </div>
           <div className="flex flex-wrap gap-1 pt-1">
-            <Badge variant="secondary" className="text-[10px]">
+            <Badge variant="secondary" className="text-[11px]">
               {stats.targetLanguage}
             </Badge>
-            <Badge variant="secondary" className="text-[10px]">
+            <Badge variant="secondary" className="text-[11px]">
               {stats.difficulty}
             </Badge>
-            <Badge variant="secondary" className="text-[10px]">
+            <Badge variant="secondary" className="text-[11px]">
               {stats.targetAudience}
             </Badge>
           </div>
@@ -178,14 +178,14 @@ export function StudioCourseSummaryPanel({
         {/* Section 2: Learning Design & Depth */}
         <div
           onClick={() => onJumpToStage('content')}
-          className="p-3 rounded-xl border bg-card hover:border-purple-300 cursor-pointer transition-all group space-y-1.5 mb-3"
+          className="p-3 rounded-[8px] border bg-card hover:border-ds-accent/30 cursor-pointer transition-all group space-y-1.5 mb-3"
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-foreground flex items-center gap-1.5">
-              <FileText className="w-3.5 h-3.5 text-blue-600" />
+              <FileText className="w-3.5 h-3.5 text-ds-info" />
               {t('builder.contentMix', 'Content Depth & Mix')}
             </span>
-            <span className="text-[10px] text-blue-600 font-semibold group-hover:underline">
+            <span className="text-[11px] text-ds-info font-semibold group-hover:underline">
               {t('common.edit', 'Edit')} →
             </span>
           </div>
@@ -197,21 +197,21 @@ export function StudioCourseSummaryPanel({
         {/* Section 3: Assessments & Knowledge Checks */}
         <div
           onClick={() => onJumpToStage('assessments')}
-          className="p-3 rounded-xl border bg-card hover:border-purple-300 cursor-pointer transition-all group space-y-1.5 mb-3"
+          className="p-3 rounded-[8px] border bg-card hover:border-ds-accent/30 cursor-pointer transition-all group space-y-1.5 mb-3"
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-foreground flex items-center gap-1.5">
-              <FileQuestion className="w-3.5 h-3.5 text-emerald-600" />
+              <FileQuestion className="w-3.5 h-3.5 text-ds-success" />
               {t('builder.assessmentStrategy', 'Assessments & Quizzes')}
             </span>
-            <span className="text-[10px] text-emerald-600 font-semibold group-hover:underline">
+            <span className="text-[11px] text-ds-success font-semibold group-hover:underline">
               {t('common.edit', 'Edit')} →
             </span>
           </div>
           <p className="text-xs text-muted-foreground">
             <span className="font-semibold text-foreground">{stats.quizPlacement.replace('_', ' ')}</span> • {stats.quizQuestionCount} Qs ({stats.quizPassingScore}% Pass)
           </p>
-          <div className="flex items-center gap-1 text-[10px] text-muted-foreground truncate">
+          <div className="flex items-center gap-1 text-[11px] text-muted-foreground truncate">
             <span>{stats.selectedQuestionTypesCount} Types: {questionTypesDisplay}</span>
           </div>
         </div>
@@ -219,14 +219,14 @@ export function StudioCourseSummaryPanel({
         {/* Section 4: Visuals & AI Image Engine */}
         <div
           onClick={() => onJumpToStage('visuals')}
-          className="p-3 rounded-xl border bg-card hover:border-purple-300 cursor-pointer transition-all group space-y-1.5 mb-3"
+          className="p-3 rounded-[8px] border bg-card hover:border-ds-accent/30 cursor-pointer transition-all group space-y-1.5 mb-3"
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-foreground flex items-center gap-1.5">
-              <ImageIcon className="w-3.5 h-3.5 text-orange-600" />
+              <ImageIcon className="w-3.5 h-3.5 text-ds-warning" />
               {t('builder.visualAssets', 'Visuals & Media')}
             </span>
-            <span className="text-[10px] text-orange-600 font-semibold group-hover:underline">
+            <span className="text-[11px] text-ds-warning font-semibold group-hover:underline">
               {t('common.edit', 'Edit')} →
             </span>
           </div>
@@ -234,11 +234,11 @@ export function StudioCourseSummaryPanel({
             <div className="space-y-1">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-foreground font-semibold truncate pe-2">{imageInfo.name}</span>
-                <Badge className={cn('text-[9px] shrink-0', imageInfo.free ? 'bg-emerald-600 text-white' : 'bg-purple-600 text-white')}>
+                <Badge className={cn('text-[11px] shrink-0', imageInfo.free ? 'bg-ds-success text-white dark:text-ds-on-ink' : 'bg-ds-accent text-white dark:text-ds-on-ink')}>
                   {imageInfo.badge}
                 </Badge>
               </div>
-              <p className="text-[10px] text-muted-foreground">
+              <p className="text-[11px] text-muted-foreground">
                 Density: <span className="capitalize font-medium">{stats.imageDensity}</span> • Style: <span className="capitalize font-medium">{stats.preferredVisualStyle.replace('_', ' ')}</span>
               </p>
             </div>
@@ -250,26 +250,26 @@ export function StudioCourseSummaryPanel({
         {/* Section 5: AI Engine & Multi-Agent Orchestrator */}
         <div
           onClick={() => onJumpToStage('ai_settings')}
-          className="p-3 rounded-xl border bg-card hover:border-purple-300 cursor-pointer transition-all group space-y-1.5 mb-3"
+          className="p-3 rounded-[8px] border bg-card hover:border-ds-accent/30 cursor-pointer transition-all group space-y-1.5 mb-3"
         >
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-foreground flex items-center gap-1.5">
-              <Cpu className="w-3.5 h-3.5 text-purple-600" />
+              <Cpu className="w-3.5 h-3.5 text-ds-accent" />
               <span>AI Engine & Agents</span>
             </span>
-            <span className="text-[10px] text-purple-600 font-semibold group-hover:underline">
+            <span className="text-[11px] text-ds-accent font-semibold group-hover:underline">
               {t('common.edit', 'Edit')} →
             </span>
           </div>
           <div className="space-y-1">
             <div className="flex items-center justify-between text-xs">
               <span className="text-foreground font-semibold truncate pe-2">{modelDisplayName}</span>
-              <Badge className={cn('text-[9px] shrink-0', isModelFree ? 'bg-emerald-600 text-white' : 'bg-purple-600 text-white')}>
+              <Badge className={cn('text-[11px] shrink-0', isModelFree ? 'bg-ds-success text-white dark:text-ds-on-ink' : 'bg-ds-accent text-white dark:text-ds-on-ink')}>
                 {isModelFree ? '⚡ Free Router' : '👑 Premier Tier'}
               </Badge>
             </div>
-            <p className="text-[10px] text-muted-foreground flex items-center gap-1">
-              <ShieldCheck className="w-3 h-3 text-emerald-600 inline" />
+            <p className="text-[11px] text-muted-foreground flex items-center gap-1">
+              <ShieldCheck className="w-3 h-3 text-ds-success inline" />
               <span>KSA Safeguards • five-star QA Critic • Auto-Revision</span>
             </p>
           </div>
@@ -277,19 +277,19 @@ export function StudioCourseSummaryPanel({
 
         {/* Harmonize Action Card */}
         {hasIssues && onHarmonize && (
-          <div className="p-3 rounded-xl border border-amber-300 bg-amber-50/50 dark:bg-amber-950/20 space-y-2 mt-4">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-amber-800 dark:text-amber-300">
-              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+          <div className="p-3 rounded-[8px] border border-ds-warning/30 bg-ds-warning-soft/50 space-y-2 mt-4">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-ds-warning">
+              <Sparkles className="w-3.5 h-3.5 text-ds-warning" />
               <span>{t('builder.pedagogicalAlignment', 'Optimization Available')}</span>
             </div>
-            <p className="text-[11px] text-amber-700 dark:text-amber-400">
+            <p className="text-[11px] text-ds-warning">
               {t('builder.harmonizePrompt', 'Harmonize module count, duration, and quizzes for optimal retention.')}
             </p>
             <Button
               size="sm"
               variant="outline"
               onClick={onHarmonize}
-              className="w-full text-xs font-bold border-amber-400 text-amber-800 dark:text-amber-200 hover:bg-amber-100"
+              className="w-full text-xs font-bold border-ds-warning text-ds-warning hover:bg-ds-warning-soft"
             >
               ⚡ {t('builder.autoHarmonizeAll', 'Harmonize Settings')}
             </Button>

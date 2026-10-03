@@ -12,6 +12,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/use-toast';
 import { useTenant } from '@/contexts/TenantContext';
+import { useTranslation } from 'react-i18next';
 
 interface UserInvitation {
   id: string;
@@ -49,10 +50,16 @@ interface UseInvitationsReturn {
   refreshInvitations: () => Promise<void>;
 }
 
-export function useInvitations(): UseInvitationsReturn {
+interface UseInvitationsOptions {
+  /** Load the invitation list on mount. Off when a page only sends invitations. */
+  autoLoad?: boolean;
+}
+
+export function useInvitations({ autoLoad = true }: UseInvitationsOptions = {}): UseInvitationsReturn {
   const { currentOrganization } = useTenant();
+  const { t } = useTranslation('users');
   const [invitations, setInvitations] = useState<UserInvitation[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(autoLoad);
   const [isCreating, setIsCreating] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
@@ -84,19 +91,19 @@ export function useInvitations(): UseInvitationsReturn {
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Failed to load invitations'));
       toast({
-        title: 'Error',
-        description: 'Failed to load invitations',
+        title: t('invite.toast.error', 'Something went wrong'),
+        description: t('invite.toast.load_failed', 'Invitations could not be loaded.'),
         variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
     }
-  }, [currentOrganization?.id, toast]);
+  }, [currentOrganization?.id, toast, t]);
 
   // Load invitations on mount
   useEffect(() => {
-    void fetchInvitations();
-  }, [fetchInvitations]);
+    if (autoLoad) void fetchInvitations();
+  }, [autoLoad, fetchInvitations]);
 
   const createInvitation = useCallback(async (data: CreateInvitationData): Promise<boolean> => {
     try {
@@ -105,8 +112,8 @@ export function useInvitations(): UseInvitationsReturn {
       const orgId = currentOrganization?.id;
       if (!orgId) {
         toast({
-          title: 'Organization Required',
-          description: 'Please select an organization before sending invitations.',
+          title: t('invite.toast.org_required', 'Choose an organization first'),
+          description: t('invite.toast.org_required_body', 'Invitations are sent from inside an organization.'),
           variant: 'destructive',
         });
         return false;
@@ -123,8 +130,8 @@ export function useInvitations(): UseInvitationsReturn {
 
       if (existingInvite) {
         toast({
-          title: 'Invitation Exists',
-          description: 'This email already has a pending invitation for this organization.',
+          title: t('invite.toast.exists', 'Already invited'),
+          description: t('invite.toast.exists_body', 'This email already has an invitation waiting. You can resend it from Invitations.'),
           variant: 'destructive',
         });
         return false;
@@ -141,8 +148,8 @@ export function useInvitations(): UseInvitationsReturn {
 
       if (existingMemberships && existingMemberships.length > 0) {
         toast({
-          title: 'Member Exists',
-          description: 'A user with this email is already an active member of this organization.',
+          title: t('invite.toast.member', 'Already a member'),
+          description: t('invite.toast.member_body', 'Someone with this email is already in this organization.'),
           variant: 'destructive',
         });
         return false;
@@ -169,24 +176,23 @@ export function useInvitations(): UseInvitationsReturn {
       }
 
       toast({
-        title: 'Invitation Sent',
-        description: `An invitation has been sent to ${data.email}`,
+        title: t('invite.toast.sent', 'Invitation sent'),
+        description: t('invite.toast.sent_body', 'We emailed {{email}} a link to join.', { email: data.email }),
       });
 
-      // Refresh list
-      await fetchInvitations();
+      if (autoLoad) await fetchInvitations();
       return true;
     } catch (err) {
       toast({
-        title: 'Error',
-        description: err instanceof Error ? err.message : 'Failed to create invitation',
+        title: t('invite.toast.send_failed', 'The invitation was not sent'),
+        description: err instanceof Error ? err.message : t('invite.toast.try_again', 'Please try again.'),
         variant: 'destructive',
       });
       return false;
     } finally {
       setIsCreating(false);
     }
-  }, [fetchInvitations, toast]);
+  }, [autoLoad, currentOrganization?.id, fetchInvitations, toast, t]);
 
   const resendInvitation = useCallback(async (invitationId: string): Promise<boolean> => {
     try {
@@ -209,23 +215,23 @@ export function useInvitations(): UseInvitationsReturn {
       }
 
       toast({
-        title: 'Invitation Resent',
-        description: 'The invitation has been resent.',
+        title: t('invite.toast.resent', 'Invitation resent'),
+        description: t('invite.toast.resent_body', 'A new link is on its way.'),
       });
 
       await fetchInvitations();
       return true;
     } catch (err) {
       toast({
-        title: 'Error',
-        description: 'Failed to resend invitation',
+        title: t('invite.toast.error', 'Something went wrong'),
+        description: t('invite.toast.resend_failed', 'The invitation could not be resent.'),
         variant: 'destructive',
       });
       return false;
     } finally {
       setIsResending(false);
     }
-  }, [fetchInvitations, toast]);
+  }, [fetchInvitations, toast, t]);
 
   const cancelInvitation = useCallback(async (invitationId: string): Promise<boolean> => {
     try {
@@ -244,23 +250,23 @@ export function useInvitations(): UseInvitationsReturn {
       }
 
       toast({
-        title: 'Invitation Cancelled',
-        description: 'The invitation has been cancelled.',
+        title: t('invite.toast.cancelled', 'Invitation cancelled'),
+        description: t('invite.toast.cancelled_body', 'The link in their email no longer works.'),
       });
 
       await fetchInvitations();
       return true;
     } catch (err) {
       toast({
-        title: 'Error',
-        description: 'Failed to cancel invitation',
+        title: t('invite.toast.error', 'Something went wrong'),
+        description: t('invite.toast.cancel_failed', 'The invitation could not be cancelled.'),
         variant: 'destructive',
       });
       return false;
     } finally {
       setIsCancelling(false);
     }
-  }, [fetchInvitations, toast]);
+  }, [fetchInvitations, toast, t]);
 
   return {
     invitations,

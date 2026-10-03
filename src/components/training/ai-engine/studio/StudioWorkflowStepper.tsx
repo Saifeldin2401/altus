@@ -120,11 +120,11 @@ export function StudioWorkflowStepper({
   const progressPercent = Math.round(((currentIndex + 1) / STUDIO_STAGES.length) * 100)
 
   return (
-    <div className="w-full bg-card/90 backdrop-blur border-b px-4 py-2.5 select-none transition-all">
+    <div className="w-full bg-card/90 border-b px-4 py-2.5 select-none transition-all">
       {/* Top progress line */}
       <div className="flex items-center justify-between gap-2 mb-2">
         <div className="flex items-center gap-2">
-          <div className="flex items-center justify-center w-5 h-5 rounded-full bg-purple-600/15 text-purple-600 font-bold text-[11px]">
+          <div className="flex items-center justify-center w-5 h-5 rounded-full bg-ds-accent/15 text-ds-accent font-bold text-[11px]">
             {currentIndex + 1}
           </div>
           <span className="text-xs font-semibold text-foreground">
@@ -132,13 +132,13 @@ export function StudioWorkflowStepper({
               current: currentIndex + 1,
               total: STUDIO_STAGES.length,
             })}
-            : <span className="text-purple-600 font-bold">{t(STUDIO_STAGES[currentIndex]?.titleKey || '', STUDIO_STAGES[currentIndex]?.defaultTitle || '')}</span>
+            : <span className="text-ds-accent font-bold">{t(STUDIO_STAGES[currentIndex]?.titleKey || '', STUDIO_STAGES[currentIndex]?.defaultTitle || '')}</span>
           </span>
         </div>
 
         <div className="flex items-center gap-3">
           {issuesCount > 0 && (
-            <Badge variant="outline" className="text-[10px] bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border-amber-300">
+            <Badge variant="outline" className="text-[11px] bg-ds-warning-soft text-ds-warning border-ds-warning/30">
               ⚡ {issuesCount} {t('builder.suggestionsAvailable', 'Suggestions')}
             </Badge>
           )}
@@ -160,11 +160,11 @@ export function StudioWorkflowStepper({
               key={stage.id}
               onClick={() => onSelectStage(stage.id)}
               className={cn(
-                'group relative flex items-center gap-2 p-2 rounded-lg border text-start transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500/30',
+                'group relative flex items-center gap-2 p-2 rounded-lg border text-start transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-ds-accent/30',
                 isActive
-                  ? 'bg-purple-600/10 border-purple-500 shadow-sm'
+                  ? 'bg-ds-accent/10 border-ds-accent shadow-sm'
                   : isCompleted
-                  ? 'bg-card hover:bg-muted/60 border-border/80 hover:border-purple-300'
+                  ? 'bg-card hover:bg-muted/60 border-border/80 hover:border-ds-accent/30'
                   : 'bg-card/40 opacity-75 hover:opacity-100 hover:bg-muted/40 border-border/50'
               )}
             >
@@ -173,9 +173,9 @@ export function StudioWorkflowStepper({
                 className={cn(
                   'w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold shrink-0 transition-transform group-hover:scale-105',
                   isActive
-                    ? 'bg-purple-600 text-white shadow-sm'
+                    ? 'bg-ds-accent text-white dark:text-ds-on-ink shadow-sm'
                     : isCompleted
-                    ? 'bg-emerald-600 text-white'
+                    ? 'bg-ds-success text-white dark:text-ds-on-ink'
                     : 'bg-muted text-muted-foreground'
                 )}
               >
@@ -193,7 +193,7 @@ export function StudioWorkflowStepper({
                     className={cn(
                       'text-xs font-bold truncate leading-tight',
                       isActive
-                        ? 'text-purple-600 dark:text-purple-400'
+                        ? 'text-ds-accent'
                         : isCompleted
                         ? 'text-foreground'
                         : 'text-muted-foreground'
@@ -202,19 +202,19 @@ export function StudioWorkflowStepper({
                     {t(stage.titleKey, stage.defaultTitle)}
                   </p>
                   {stage.defaultBadge && (
-                    <span className="text-[8px] px-1 py-0.2 bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300 rounded font-bold">
+                    <span className="text-[11px] px-1 py-0.2 bg-ds-warning-soft text-ds-warning rounded font-bold">
                       {stage.defaultBadge}
                     </span>
                   )}
                 </div>
-                <p className="text-[10px] text-muted-foreground truncate leading-tight mt-0.5">
+                <p className="text-[11px] text-muted-foreground truncate leading-tight mt-0.5">
                   {t(stage.descKey, stage.defaultDesc)}
                 </p>
               </div>
 
               {/* Active Bottom Glow Indicator */}
               {isActive && (
-                <div className="absolute inset-x-2 -bottom-1 h-0.5 bg-purple-600 rounded-full" />
+                <div className="absolute inset-x-2 -bottom-1 h-0.5 bg-ds-accent rounded-full" />
               )}
             </button>
           )

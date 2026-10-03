@@ -127,5 +127,29 @@
   "page": {
     "eyebrow": "الاستوديو",
     "context": "{{total}} ملفاً · {{images}} صورة · {{videos}} فيديو. تُستخدم في الدورات والمقالات."
+  },
+  "screens": {
+    "MediaLibraryPage": {
+      "pleaseSelectAFileTo": "يرجى اختيار ملف للرفع",
+      "failedToDeleteAsset": "فشل حذف الأصل",
+      "allTypes": "جميع الأنواع",
+      "imagesOnly": "صور فقط",
+      "videos": "فيديوهات",
+      "documents": "مستندات",
+      "audio": "صوتيات",
+      "asset": "الأصل",
+      "type": "النوع",
+      "category": "الفئة",
+      "size": "حجم الملف",
+      "date": "التاريخ",
+      "actions": "الإجراءات",
+      "mimeType": "نوع الملف",
+      "securityScan": "فحص الأمان",
+      "addedDate": "تاريخ الإضافة",
+      "downloadFile": "تحميل الأصل",
+      "clickToChangeFile": "انقر لتغيير الملف",
+      "clickToBrowseFiles": "انقر لاختيار ملف من جهازك",
+      "upTo100mb": "(حتى 100 ميجابايت)"
+    }
   }
 }

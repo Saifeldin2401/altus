@@ -27,7 +27,7 @@ export function MiniStepper({ current, total, className }: MiniStepperProps) {
                             i === current
                                 ? 'w-6 bg-ds-brass'
                                 : i < current
-                                    ? 'w-1.5 bg-emerald-500'
+                                    ? 'w-1.5 bg-ds-success'
                                     : 'w-1.5 bg-border',
                         )}
                     />

@@ -32,11 +32,11 @@ const categoryIcons = {
 }
 
 const categoryColors = {
-  safety: 'bg-red-50 text-red-700 border-red-200',
-  policy: 'bg-blue-50 text-blue-700 border-blue-200',
-  skill: 'bg-green-50 text-green-700 border-green-200',
-  onboarding: 'bg-purple-50 text-purple-700 border-purple-200',
-  custom: 'bg-gray-50 text-gray-700 border-gray-200'
+  safety: 'bg-ds-danger-soft text-ds-danger border-ds-danger/30',
+  policy: 'bg-ds-info-soft text-ds-info border-ds-info/30',
+  skill: 'bg-ds-success-soft text-ds-success border-ds-success/30',
+  onboarding: 'bg-ds-accent-soft text-ds-accent border-ds-accent/30',
+  custom: 'bg-ds-surface-subtle text-ds-ink-secondary border-ds-border'
 }
 
 export function ModuleTemplateSelector({
@@ -101,7 +101,7 @@ export function ModuleTemplateSelector({
               size="sm"
               onClick={() => setSelectedCategory(cat.value)}
               className={cn(
-                selectedCategory === cat.value && "bg-hotel-gold hover:bg-hotel-gold-dark"
+                selectedCategory === cat.value && "bg-ds-accent hover:bg-ds-accent-hover"
               )}
             >
               {cat.label}
@@ -112,10 +112,10 @@ export function ModuleTemplateSelector({
         {/* Templates Grid */}
         {isLoading ? (
           <div className="flex justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-hotel-gold" />
+            <Loader2 className="h-8 w-8 animate-spin text-ds-accent" />
           </div>
         ) : isError ? (
-          <div className="flex justify-center py-12 text-sm text-red-500">
+          <div className="flex justify-center py-12 text-sm text-ds-danger">
             {t('hub.templates.error', 'Failed to load templates')}
           </div>
         ) : templates && templates.length > 0 ? (
@@ -128,7 +128,7 @@ export function ModuleTemplateSelector({
                 <Card
                   key={template.id}
                   className={cn(
-                    "cursor-pointer hover:shadow-lg transition-all border-2 hover:border-hotel-gold",
+                    "cursor-pointer hover:shadow-lg transition-all border-2 hover:border-ds-accent",
                     "text-start"
                   )}
                   onClick={() => onTemplateSelected(template)}
@@ -137,7 +137,7 @@ export function ModuleTemplateSelector({
                     <div className={cn("flex items-start justify-between gap-4")}>
                       <div className="flex-1">
                         <div className={cn("flex items-center gap-2 mb-2")}>
-                          <Icon className="h-5 w-5 text-hotel-navy" />
+                          <Icon className="h-5 w-5 text-ds-ink" />
                           <CardTitle className="text-lg">{template.name}</CardTitle>
                         </div>
                         <CardDescription className={cn("line-clamp-2", "text-start")}>
@@ -156,7 +156,7 @@ export function ModuleTemplateSelector({
                       </span>
                       <Button
                         size="sm"
-                        className={cn("bg-hotel-gold hover:bg-hotel-gold-dark")}
+                        className={cn("bg-ds-accent hover:bg-ds-accent-hover")}
                       >
                         {t('hub.templates.useTemplate')}
                       </Button>
@@ -168,8 +168,8 @@ export function ModuleTemplateSelector({
           </div>
         ) : (
           <div className="text-center py-12">
-            <Layers className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500">{t('hub.templates.noTemplates')}</p>
+            <Layers className="h-12 w-12 text-ds-muted mx-auto mb-4" />
+            <p className="text-ds-muted">{t('hub.templates.noTemplates')}</p>
           </div>
         )}
       </DialogContent>

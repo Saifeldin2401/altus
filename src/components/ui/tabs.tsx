@@ -11,7 +11,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-auto min-h-[42px] items-center justify-start rounded-lg bg-muted/80 backdrop-blur-sm p-1 text-muted-foreground max-w-full overflow-x-auto scrollbar-hide border border-border/50",
+      "inline-flex h-auto min-h-[42px] items-center justify-start rounded-[6px] bg-ds-surface-subtle p-1 text-ds-muted max-w-full overflow-x-auto scrollbar-hide border border-ds-border",
       className
     )}
     {...props}
@@ -26,7 +26,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-xs sm:text-sm font-medium ring-offset-background transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm data-[state=active]:font-semibold min-h-[36px] active:scale-[0.98]",
+      "inline-flex items-center justify-center whitespace-nowrap rounded-[4px] px-3 py-1.5 text-xs sm:text-sm font-medium ring-offset-background transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:text-ds-ink data-[state=active]:bg-ds-surface data-[state=active]:text-ds-ink data-[state=active]:shadow-[0_0_0_1px_rgb(var(--ds-border))] data-[state=active]:font-semibold min-h-[36px]",
       className
     )}
     {...props}

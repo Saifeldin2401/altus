@@ -178,7 +178,7 @@ export function TenantContextGuard({ children, resourceName }: TenantContextGuar
             <DialogContent className="sm:max-w-[480px]">
               <DialogHeader>
                 <div className="flex items-center gap-2 text-primary">
-                  <ShieldCheck className="h-5 w-5 text-amber-500" />
+                  <ShieldCheck className="h-5 w-5 text-ds-warning" />
                   <DialogTitle className="text-base font-bold">{t('admin:enter_org_env', 'Enter Organization Environment')}</DialogTitle>
                 </div>
                 <DialogDescription className="text-xs">
@@ -213,7 +213,7 @@ export function TenantContextGuard({ children, resourceName }: TenantContextGuar
                     placeholder="e.g. Master SOP deployment, Course management, Support ticket"
                     className="h-9 text-xs"
                   />
-                  <div className={`text-[10px] ${enterReason.trim().length >= 10 ? 'text-muted-foreground' : 'text-amber-600 dark:text-amber-400 font-medium'}`}>
+                  <div className={`text-[11px] ${enterReason.trim().length >= 10 ? 'text-muted-foreground' : 'text-ds-warning font-medium'}`}>
                     {enterReason.trim().length}/10 characters minimum
                   </div>
                 </div>
@@ -226,7 +226,7 @@ export function TenantContextGuard({ children, resourceName }: TenantContextGuar
                   size="sm"
                   onClick={handleConfirmEnterOrg}
                   disabled={isEntering || enterReason.trim().length < 10}
-                  className="bg-amber-600 hover:bg-amber-700 text-white gap-1.5 font-semibold text-xs"
+                  className="bg-ds-warning hover:bg-ds-warning text-white dark:text-ds-on-ink gap-1.5 font-semibold text-xs"
                 >
                   {isEntering ? <RefreshCw className="h-3.5 w-3.5 animate-spin" /> : <LogIn className="h-3.5 w-3.5" />}
                   {t('admin:confirm_enter', 'Authorize & Enter Tenant')}
@@ -250,7 +250,7 @@ export function TenantContextGuard({ children, resourceName }: TenantContextGuar
   if (account.resolveFailed) {
     return renderContainer(
       <div className="max-w-md mx-auto py-16 px-4 text-center">
-        <div className="mx-auto w-12 h-12 rounded-xl bg-destructive/15 border border-destructive/30 flex items-center justify-center mb-3">
+        <div className="mx-auto w-12 h-12 rounded-[8px] bg-destructive/15 border border-destructive/30 flex items-center justify-center mb-3">
           <ShieldAlert className="h-6 w-6 text-destructive" />
         </div>
         <h2 className="text-lg font-bold text-foreground">
@@ -277,15 +277,15 @@ export function TenantContextGuard({ children, resourceName }: TenantContextGuar
   if (isPlatformScope || isPlatformAdmin) {
     return renderContainer(
       <div className="max-w-2xl mx-auto py-12 px-4">
-        <Card className="border-amber-500/30 bg-card/95 shadow-xl backdrop-blur-xl">
+        <Card className="border-ds-warning/30 bg-card/95 shadow-xl">
           <CardHeader className="text-center pb-4">
-            <div className="mx-auto w-14 h-14 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center mb-3">
-              <Crown className="h-7 w-7 text-amber-500" />
+            <div className="mx-auto w-14 h-14 rounded-[8px] bg-ds-warning/15 border border-ds-warning/30 flex items-center justify-center mb-3">
+              <Crown className="h-7 w-7 text-ds-warning" />
             </div>
-            <Badge variant="outline" className="mx-auto border-amber-500/40 text-amber-600 dark:text-amber-400 bg-amber-500/10 mb-2">
+            <Badge variant="outline" className="mx-auto border-ds-warning/40 text-ds-warning bg-ds-warning/10 mb-2">
               {t('admin:global_saas_scope', 'Platform Control Plane')}
             </Badge>
-            <CardTitle className="text-xl font-bold font-serif">
+            <CardTitle className="text-xl font-bold">
               {t('admin:tenant_context_required', 'Tenant Context Required')}
             </CardTitle>
             <CardDescription className="text-sm mt-1">
@@ -313,24 +313,24 @@ export function TenantContextGuard({ children, resourceName }: TenantContextGuar
                     <button
                       key={org.id}
                       onClick={() => handleOrgClick(org)}
-                      className="w-full flex items-center justify-between p-3 rounded-xl border border-border/70 hover:border-hotel-gold/60 bg-muted/20 hover:bg-muted/50 transition-all text-start group"
+                      className="w-full flex items-center justify-between p-3 rounded-[8px] border border-border/70 hover:border-ds-accent/60 bg-muted/20 hover:bg-muted/50 transition-all text-start group"
                     >
                       <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-hotel-gold/15 border border-hotel-gold/30 flex items-center justify-center text-hotel-gold font-bold text-xs">
+                        <div className="w-8 h-8 rounded-lg bg-ds-accent/15 border border-ds-accent/30 flex items-center justify-center text-ds-accent font-bold text-xs">
                           {org.name.slice(0, 2).toUpperCase()}
                         </div>
                         <div>
-                          <p className="text-xs font-semibold text-foreground group-hover:text-hotel-gold transition-colors">
+                          <p className="text-xs font-semibold text-foreground group-hover:text-ds-accent transition-colors">
                             {org.name}
                           </p>
                           {org.industry && (
-                            <p className="text-[10px] text-muted-foreground capitalize">
+                            <p className="text-[11px] text-muted-foreground capitalize">
                               {org.industry}
                             </p>
                           )}
                         </div>
                       </div>
-                      <ArrowIcon className="h-4 w-4 text-muted-foreground group-hover:text-hotel-gold transition-colors" />
+                      <ArrowIcon className="h-4 w-4 text-muted-foreground group-hover:text-ds-accent transition-colors" />
                     </button>
                   ))}
                 </div>
@@ -340,7 +340,7 @@ export function TenantContextGuard({ children, resourceName }: TenantContextGuar
           <CardFooter className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
             <Button
               onClick={() => navigate('/platform/organizations')}
-              className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold gap-2"
+              className="w-full sm:w-auto bg-ds-warning hover:bg-ds-warning text-ds-ink font-semibold gap-2"
             >
               <Building2 className="h-4 w-4" />
               <span>{t('admin:view_organizations', 'Go to Organizations Hub')}</span>
@@ -363,12 +363,12 @@ export function TenantContextGuard({ children, resourceName }: TenantContextGuar
   if (organizations.length > 0) {
     return renderContainer(
       <div className="max-w-xl mx-auto py-12 px-4">
-        <Card className="border-border/70 bg-card/95 shadow-xl backdrop-blur-xl">
+        <Card className="border-border/70 bg-card/95 shadow-xl">
           <CardHeader className="text-center pb-3">
-            <div className="mx-auto w-12 h-12 rounded-xl bg-hotel-gold/15 border border-hotel-gold/30 flex items-center justify-center mb-2">
-              <Building2 className="h-6 w-6 text-hotel-gold" />
+            <div className="mx-auto w-12 h-12 rounded-[8px] bg-ds-accent/15 border border-ds-accent/30 flex items-center justify-center mb-2">
+              <Building2 className="h-6 w-6 text-ds-accent" />
             </div>
-            <CardTitle className="text-lg font-bold font-serif">
+            <CardTitle className="text-lg font-bold">
               {t('admin:select_organization', 'Select an Organization')}
             </CardTitle>
             <CardDescription className="text-xs">
@@ -380,14 +380,14 @@ export function TenantContextGuard({ children, resourceName }: TenantContextGuar
               <button
                 key={org.id}
                 onClick={() => handleOrgClick(org)}
-                className="w-full flex items-center justify-between p-3.5 rounded-xl border border-border/70 hover:border-hotel-gold/50 bg-background/60 hover:bg-muted/50 transition-all text-start group"
+                className="w-full flex items-center justify-between p-3.5 rounded-[8px] border border-border/70 hover:border-ds-accent/50 bg-background/60 hover:bg-muted/50 transition-all text-start group"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-hotel-gold/10 border border-hotel-gold/20 flex items-center justify-center text-hotel-gold font-bold text-sm">
+                  <div className="w-9 h-9 rounded-lg bg-ds-accent/10 border border-ds-accent/20 flex items-center justify-center text-ds-accent font-bold text-sm">
                     {org.name.slice(0, 2).toUpperCase()}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-foreground group-hover:text-hotel-gold transition-colors">
+                    <p className="text-sm font-semibold text-foreground group-hover:text-ds-accent transition-colors">
                       {org.name}
                     </p>
                     {org.industry && (
@@ -397,7 +397,7 @@ export function TenantContextGuard({ children, resourceName }: TenantContextGuar
                     )}
                   </div>
                 </div>
-                <ArrowIcon className="h-4 w-4 text-muted-foreground group-hover:text-hotel-gold transition-colors" />
+                <ArrowIcon className="h-4 w-4 text-muted-foreground group-hover:text-ds-accent transition-colors" />
               </button>
             ))}
           </CardContent>
@@ -409,7 +409,7 @@ export function TenantContextGuard({ children, resourceName }: TenantContextGuar
   // Case 3: User belongs to zero active organizations
   return renderContainer(
     <div className="max-w-md mx-auto py-16 px-4 text-center">
-      <div className="mx-auto w-12 h-12 rounded-xl bg-destructive/15 border border-destructive/30 flex items-center justify-center mb-3">
+      <div className="mx-auto w-12 h-12 rounded-[8px] bg-destructive/15 border border-destructive/30 flex items-center justify-center mb-3">
         <ShieldAlert className="h-6 w-6 text-destructive" />
       </div>
       <h2 className="text-lg font-bold text-foreground">

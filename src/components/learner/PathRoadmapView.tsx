@@ -103,15 +103,15 @@ export const PathRoadmapView: React.FC<PathRoadmapViewProps> = ({
         : t('pathJourney.start', 'Start the first stop')
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-ds-border bg-ds-surface">
+    <article className="overflow-hidden rounded-[8px] border border-ds-border bg-ds-surface">
       {/* Header */}
       <header className="relative">
         <CourseCover course={{ id: path.id, title: path.title }} className="absolute inset-0 h-full w-full rounded-none" />
-        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-r from-ds-ink/90 via-ds-ink/75 to-ds-ink/40 rtl:bg-gradient-to-l" />
+        <div aria-hidden="true" className="absolute inset-0 bg-ds-chrome/90" />
         <div className="relative flex flex-col gap-5 p-5 text-ds-on-ink sm:flex-row sm:items-center sm:justify-between sm:p-7">
           <div className="max-w-2xl space-y-2.5">
             <div className="flex flex-wrap gap-2 text-[11px] font-semibold">
-              <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 backdrop-blur-sm">
+              <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1">
                 <MapPin aria-hidden="true" className="h-3 w-3" />{t('pathJourney.eyebrow', 'Learning path')}
               </span>
               {path.is_mandatory && (
@@ -150,7 +150,7 @@ export const PathRoadmapView: React.FC<PathRoadmapViewProps> = ({
               disabled={isEnrolling || total === 0}
               className={cn(
                 'inline-flex min-h-[48px] items-center justify-center gap-2 rounded-lg px-5 text-sm font-semibold shadow-sm transition-transform active:scale-[0.98] disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white',
-                complete ? 'bg-ds-success text-white' : 'bg-ds-brass text-white hover:bg-ds-brass/90',
+                complete ? 'bg-ds-success text-white dark:text-ds-on-ink' : 'bg-ds-brass text-white dark:text-ds-on-ink hover:bg-ds-brass/90',
               )}
             >
               {isEnrolling ? <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" /> : complete ? <Trophy aria-hidden="true" className="h-4 w-4" /> : !isEnrolled ? <Sparkles aria-hidden="true" className="h-4 w-4" /> : <Play aria-hidden="true" className="h-4 w-4 fill-current" />}
@@ -194,8 +194,8 @@ export const PathRoadmapView: React.FC<PathRoadmapViewProps> = ({
                   <span
                     className={cn(
                       'relative flex h-12 w-12 items-center justify-center rounded-full border-4 border-ds-surface text-sm font-bold shadow',
-                      state === 'done' && 'bg-ds-success text-white',
-                      state === 'current' && 'bg-ds-brass text-white',
+                      state === 'done' && 'bg-ds-success text-white dark:text-ds-on-ink',
+                      state === 'current' && 'bg-ds-brass text-white dark:text-ds-on-ink',
                       state === 'upcoming' && 'bg-ds-surface-subtle text-ds-muted ring-1 ring-ds-border',
                     )}
                   >
@@ -215,7 +215,7 @@ export const PathRoadmapView: React.FC<PathRoadmapViewProps> = ({
                 <Link
                   to={state === 'upcoming' ? `/learn/courses/${course.id}` : `/learn/player/${course.id}`}
                   className={cn(
-                    'group flex items-center gap-3 rounded-xl border bg-ds-surface p-2.5 transition-[border-color,box-shadow,transform] hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent motion-reduce:hover:translate-y-0',
+                    'group flex items-center gap-3 rounded-[8px] border bg-ds-surface p-2.5 transition-[border-color,box-shadow,transform] hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent motion-reduce:hover:translate-y-0',
                     'md:row-start-1',
                     right ? 'md:col-start-3' : 'md:col-start-1 md:flex-row-reverse md:text-end',
                     state === 'current' ? 'border-ds-brass/60 shadow-sm' : state === 'done' ? 'border-ds-success/30' : 'border-ds-border',
@@ -223,7 +223,7 @@ export const PathRoadmapView: React.FC<PathRoadmapViewProps> = ({
                 >
                   <CourseCover course={course} className={cn('h-16 w-24', state === 'upcoming' && 'opacity-70 grayscale-[35%]')} />
                   <span className="min-w-0 flex-1">
-                    <span className={cn('block text-[10px] font-semibold uppercase tracking-[0.14em]', state === 'current' ? 'text-ds-brass' : state === 'done' ? 'text-ds-success' : 'text-ds-muted')}>
+                    <span className={cn('block text-[11px] font-semibold uppercase tracking-[0.14em]', state === 'current' ? 'text-ds-brass' : state === 'done' ? 'text-ds-success' : 'text-ds-muted')}>
                       {state === 'current'
                         ? t('pathJourney.youAreHere', 'You are here')
                         : state === 'done'
@@ -247,13 +247,13 @@ export const PathRoadmapView: React.FC<PathRoadmapViewProps> = ({
             <div className="relative z-10 flex justify-center md:col-start-2 md:row-start-1">
               <span className={cn(
                 'flex h-12 w-12 items-center justify-center rounded-full border-4 border-ds-surface shadow',
-                complete ? 'bg-ds-brass text-white' : 'bg-ds-surface-subtle text-ds-muted ring-1 ring-ds-border',
+                complete ? 'bg-ds-brass text-white dark:text-ds-on-ink' : 'bg-ds-surface-subtle text-ds-muted ring-1 ring-ds-border',
               )}>
                 {path.certificate_enabled ? <Award aria-hidden="true" className="h-5 w-5" /> : <Flag aria-hidden="true" className="h-5 w-5" />}
               </span>
             </div>
             <div className={cn(
-              'rounded-xl border p-4 md:row-start-1',
+              'rounded-[8px] border p-4 md:row-start-1',
               stops.length % 2 === 1 ? 'md:col-start-3' : 'md:col-start-1 md:text-end',
               complete ? 'border-ds-brass/50 bg-ds-brass/10' : 'border-dashed border-ds-border bg-ds-surface-subtle',
             )}>

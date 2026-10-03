@@ -1137,16 +1137,16 @@ export function TrainingAssignmentsProvider({
   const getProgressStatusMeta = useCallback((status: LearningProgress['status']) => {
     switch (status) {
       case 'completed':
-        return { badgeClass: 'border-emerald-200 bg-emerald-50 text-emerald-700', label: t('completed'), progressClass: '[&>div]:bg-emerald-600' }
+        return { badgeClass: 'border-ds-success/30 bg-ds-success-soft text-ds-success', label: t('completed'), progressClass: '[&>div]:bg-ds-success' }
       case 'in_progress':
-        return { badgeClass: 'border-sky-200 bg-sky-50 text-sky-700', label: t('inProgress'), progressClass: '[&>div]:bg-sky-600' }
+        return { badgeClass: 'border-ds-info/30 bg-ds-info-soft text-ds-info', label: t('inProgress'), progressClass: '[&>div]:bg-ds-info' }
       case 'overdue':
-        return { badgeClass: 'border-rose-200 bg-rose-50 text-rose-700', label: t('overdue'), progressClass: '[&>div]:bg-rose-600' }
+        return { badgeClass: 'border-ds-danger/30 bg-ds-danger-soft text-ds-danger', label: t('overdue'), progressClass: '[&>div]:bg-ds-danger' }
       case 'excused':
-        return { badgeClass: 'border-slate-200 bg-slate-100 text-slate-600', label: t('excused', 'Excused'), progressClass: '[&>div]:bg-slate-500' }
+        return { badgeClass: 'border-ds-border bg-ds-surface-subtle text-ds-ink-secondary', label: t('excused', 'Excused'), progressClass: '[&>div]:bg-ds-muted' }
       case 'assigned':
       default:
-        return { badgeClass: 'border-amber-200 bg-amber-50 text-amber-700', label: t('assigned'), progressClass: '[&>div]:bg-amber-500' }
+        return { badgeClass: 'border-ds-warning/30 bg-ds-warning-soft text-ds-warning', label: t('assigned'), progressClass: '[&>div]:bg-ds-warning' }
     }
   }, [t])
 

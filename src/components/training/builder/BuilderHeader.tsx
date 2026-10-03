@@ -1,20 +1,16 @@
-import { LanguageSwitcher } from '@/components/common/LanguageSwitcher'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { StatusBadge } from '@/ui/components/StatusBadge'
 import { cn } from '@/lib/utils'
 import {
   Check,
   ChevronLeft,
   Crown,
-  Edit3,
   Eye,
   Loader2,
   RotateCcw,
   RotateCw,
   Save,
-  Wand2,
+  Sparkles,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -24,6 +20,8 @@ interface BuilderHeaderProps {
   title: string
   isSaving: boolean
   hasUnsavedChanges: boolean
+  /** True once the course exists on the server (has an id). */
+  isPersisted?: boolean
   onSave: () => void
   onPreview: () => void
   onMagic: () => void
@@ -44,16 +42,25 @@ interface BuilderHeaderProps {
   canUndo?: boolean
   canRedo?: boolean
 
-  // Autosave
+  // Local draft (browser storage, not the server)
   autosaveStatus?: 'idle' | 'saving' | 'saved'
   lastAutosaveAt?: Date | null
   formatTime?: (date: Date) => string
+}
+
+const STATUS_VARIANT: Record<string, 'neutral' | 'info' | 'warning' | 'success'> = {
+  draft: 'neutral',
+  submitted: 'info',
+  under_review: 'warning',
+  approved: 'info',
+  published: 'success',
 }
 
 export const BuilderHeader = ({
   title,
   isSaving,
   hasUnsavedChanges,
+  isPersisted = false,
   onSave,
   onPreview,
   onMagic,
@@ -73,221 +80,213 @@ export const BuilderHeader = ({
   lastAutosaveAt,
   formatTime,
 }: BuilderHeaderProps) => {
-  const { t, i18n } = useTranslation('training')
-  const isRTL = i18n.dir() === 'rtl'
+  const { t } = useTranslation('training')
   const navigate = useNavigate()
 
-  const LIFECYCLE_MAP: Record<string, { label: string; variant: 'neutral' | 'info' | 'warning' | 'success' }> = {
-    draft: { label: 'Draft', variant: 'neutral' },
-    submitted: { label: 'Submitted', variant: 'info' },
-    under_review: { label: 'Under Review', variant: 'warning' },
-    approved: { label: 'Approved', variant: 'info' },
-    published: { label: 'Published', variant: 'success' },
+  const statusKey = (status || 'draft').toLowerCase()
+  const statusVariant = STATUS_VARIANT[statusKey] ?? 'neutral'
+  const backLabel = isMasterTemplate
+    ? t('builder.editor.backToMaster', 'Back to master library')
+    : t('builder.editor.back', 'Back to courses')
+
+  // One honest line about where the work is. "Saved" only after the server
+  // confirmed it; the browser-storage draft is labelled as such.
+  let saveState: { text: string; tone: 'muted' | 'warning' | 'busy' } | null = null
+  if (isSaving) {
+    saveState = { text: t('builder.editor.saveState.saving', 'Saving…'), tone: 'busy' }
+  } else if (hasUnsavedChanges) {
+    const draftNote =
+      autosaveStatus === 'saved' && lastAutosaveAt && formatTime
+        ? t('builder.editor.saveState.draftKept', {
+            time: formatTime(lastAutosaveAt),
+            defaultValue: 'Draft kept on this device at {{time}}',
+          })
+        : null
+    saveState = {
+      text: draftNote
+        ? `${t('builder.editor.saveState.unsaved', 'Unsaved changes')} · ${draftNote}`
+        : t('builder.editor.saveState.unsaved', 'Unsaved changes'),
+      tone: 'warning',
+    }
+  } else if (isPersisted) {
+    saveState = { text: t('builder.editor.saveState.saved', 'All changes saved'), tone: 'muted' }
+  } else {
+    saveState = { text: t('builder.editor.saveState.notSaved', 'Not saved yet'), tone: 'muted' }
   }
 
-  return (
-    <header className="sticky top-0 z-50 w-full border-b border-ds-border bg-ds-surface text-ds-ink shadow-none">
-      <div className={cn(
-        "px-3 lg:px-5 flex h-14 items-center justify-between gap-2.5"
-      )}>
-        {/* Left Section: Back, Title & Status */}
-        <div className={cn("flex items-center gap-2 min-w-0 max-w-[420px] xl:max-w-[480px]")}>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 shrink-0 text-ds-muted hover:text-ds-ink rounded-md"
-            onClick={() => navigate(isMasterTemplate ? '/platform/master-library' : '/studio/courses')}
-            title={isMasterTemplate ? t('builder.backToMasterLibrary', 'Back to Master Library') : t('back', 'Back to Hub')}
-          >
-            <ChevronLeft className={cn("h-4 w-4", isRTL && "rotate-180")} />
-          </Button>
+  const activeIndex = steps?.findIndex((s) => s.key === activeStep) ?? -1
 
-          <div className={cn("flex items-center gap-1.5 min-w-0 flex-1 flex-wrap sm:flex-nowrap", "text-start")}>
-            <div className={cn(
-              "relative flex items-center w-full max-w-[240px] xl:max-w-[280px] rounded-md border transition-colors duration-150",
-              !title.trim() || title === 'Untitled Module'
-                ? "border-amber-400 bg-amber-50/60 dark:bg-amber-950/30"
-                : "border-ds-border bg-ds-surface-subtle hover:border-ds-brass/40 focus-within:border-ds-brass"
-            )}>
-              <div className="ps-2 pe-1 text-ds-muted flex items-center pointer-events-none">
-                <Edit3 className="w-3.5 h-3.5 text-ds-brass shrink-0" />
-              </div>
-              <Input
-                value={title}
-                onChange={(e) => onTitleChange?.(e.target.value)}
-                placeholder={t('builder.nameYourCourse', 'Enter Course Title...')}
-                className={cn(
-                  "h-8 border-none bg-transparent shadow-none px-1 text-xs font-bold text-foreground focus-visible:ring-0 truncate",
-                  "text-start"
-                )}
-                title={t('builder.clickToRename', 'Click to edit course name')}
-              />
-            </div>
-            {/* Lifecycle Status Badge */}
-            {status && LIFECYCLE_MAP[status.toLowerCase()] ? (
-              <StatusBadge
-                size="sm"
-                variant={LIFECYCLE_MAP[status.toLowerCase()].variant}
-                label={LIFECYCLE_MAP[status.toLowerCase()].label}
-                className="shrink-0"
-              />
-            ) : (
-              <StatusBadge
-                size="sm"
-                variant="neutral"
-                label="Draft"
-                className="shrink-0"
-              />
+  return (
+    <header className="shrink-0 w-full border-b border-ds-border bg-ds-surface text-ds-ink">
+      {/* Row 1: where you are and what you can do */}
+      <div className="flex h-14 items-center gap-2 px-3 lg:px-5">
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          className="h-8 w-8 shrink-0 text-ds-muted hover:text-ds-ink"
+          onClick={() => navigate(isMasterTemplate ? '/platform/master-library' : '/studio/courses')}
+          aria-label={backLabel}
+          title={backLabel}
+        >
+          <ChevronLeft className="h-4 w-4 rtl:rotate-180" />
+        </Button>
+
+        <div className="flex min-w-0 flex-1 items-center gap-2">
+          <input
+            value={title}
+            onChange={(e) => onTitleChange?.(e.target.value)}
+            placeholder={t('builder.editor.titlePlaceholder', 'Untitled course')}
+            aria-label={t('builder.editor.titleLabel', 'Course name')}
+            className={cn(
+              'h-8 min-w-0 w-full sm:w-auto sm:min-w-[10rem] max-w-md truncate [field-sizing:content] rounded-[6px] border border-transparent bg-transparent px-2 text-sm font-semibold text-ds-ink',
+              'placeholder:font-medium placeholder:text-ds-muted',
+              'hover:border-ds-border focus:border-ds-border-strong focus:bg-ds-surface focus:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent/40'
             )}
-            {isMasterTemplate && (
-              <Badge variant="outline" className="px-2 py-0.5 min-h-[20px] text-[10px] font-semibold bg-indigo-50 text-indigo-800 dark:bg-indigo-950/70 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800 shrink-0 whitespace-nowrap flex items-center gap-1 rounded-sm">
-                <Crown className="w-3 h-3 text-indigo-600 dark:text-indigo-400 shrink-0" />
-                <span className="hidden sm:inline">{t('builder.globalMasterTemplate', 'Global Master')}</span>
-              </Badge>
-            )}
-            {hasUnsavedChanges && (
-              <Badge variant="outline" className="px-2 py-0.5 min-h-[20px] text-[9px] uppercase font-mono bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800 shrink-0 whitespace-nowrap rounded-sm">
-                {t('builder.unsaved', 'Unsaved')}
-              </Badge>
-            )}
-          </div>
+          />
+          <StatusBadge
+            size="sm"
+            variant={statusVariant}
+            label={t(`builder.editor.status.${statusKey}`, { defaultValue: statusKey })}
+            className="hidden shrink-0 sm:inline-flex"
+          />
+          {isMasterTemplate && (
+            <StatusBadge
+              size="sm"
+              variant="info"
+              icon={<Crown className="h-3 w-3" />}
+              label={t('builder.editor.masterTemplate', 'Master template')}
+              className="hidden shrink-0 md:inline-flex"
+            />
+          )}
+          {saveState && (
+            <span
+              role="status"
+              className={cn(
+                'hidden min-w-0 items-center gap-1.5 truncate text-xs lg:inline-flex',
+                saveState.tone === 'warning' ? 'text-ds-warning-text' : 'text-ds-muted'
+              )}
+            >
+              {saveState.tone === 'busy' && <Loader2 className="h-3 w-3 shrink-0 animate-spin" />}
+              {saveState.tone === 'warning' && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-ds-warning" aria-hidden />}
+              <span className="truncate">{saveState.text}</span>
+            </span>
+          )}
         </div>
 
-        {/* Center Section: Streamlined Step Navigation */}
-        {steps && steps.length > 0 && onStepChange && (
-          <nav className={cn(
-            "hidden md:flex items-center gap-1 p-1 rounded-md bg-ds-surface-subtle border border-ds-border"
-          )}>
-            {steps.map((step, index) => {
-              const isActive = activeStep === step.key
-              const isDone = stepStatus ? stepStatus[step.key] : false
-              const locked = canAccessStep ? !canAccessStep(step.key) : false
-
-              return (
-                <button
-                  key={step.key}
-                  type="button"
-                  onClick={() => onStepChange(step.key)}
-                  disabled={locked}
-                  className={cn(
-                    "flex items-center gap-1.5 rounded-sm px-2.5 py-1 text-xs font-semibold transition-colors select-none",
-                    isActive
-                      ? "bg-ds-surface text-ds-ink shadow-2xs font-bold border border-ds-border"
-                      : "text-ds-muted hover:text-ds-ink",
-                    locked && "opacity-40 cursor-not-allowed"
-                  )}
-                >
-                  <span
-                    className={cn(
-                      "flex h-4 w-4 items-center justify-center rounded-[3px] text-[10px] font-bold shrink-0 transition-colors",
-                      isDone
-                        ? "bg-ds-success text-white"
-                        : isActive
-                        ? "bg-ds-brass text-white"
-                        : "bg-ds-border text-ds-muted"
-                    )}
-                  >
-                    {isDone ? <Check className="w-2.5 h-2.5 stroke-[3]" /> : index + 1}
-                  </span>
-                  <span>{step.label}</span>
-                </button>
-              )
-            })}
-          </nav>
-        )}
-
-        {/* Right Section: Undo/Redo, Autosave, Tools & Actions */}
-        <div className={cn("flex items-center gap-1.5 shrink-0")}>
-          {/* Undo / Redo */}
+        <div className="flex shrink-0 items-center gap-1.5">
           {onUndo && onRedo && (
-            <div className={cn("hidden lg:flex items-center gap-0.5 pe-1 border-e border-ds-border")}>
+            <div className="hidden items-center gap-0.5 border-e border-ds-border pe-1.5 me-0.5 lg:flex">
               <Button
                 variant="ghost"
-                size="icon"
-                className="h-7 w-7 text-ds-muted hover:text-ds-ink disabled:opacity-30"
+                size="icon-sm"
+                className="h-8 w-8 text-ds-muted hover:text-ds-ink"
                 onClick={onUndo}
                 disabled={!canUndo}
-                title={`${t('builder.undo', 'Undo')} (Ctrl+Z)`}
+                aria-label={t('builder.editor.undo', 'Undo')}
+                title={`${t('builder.editor.undo', 'Undo')} (Ctrl+Z)`}
               >
-                <RotateCcw className="h-3.5 w-3.5" />
+                <RotateCcw className="h-3.5 w-3.5 rtl:-scale-x-100" />
               </Button>
               <Button
                 variant="ghost"
-                size="icon"
-                className="h-7 w-7 text-ds-muted hover:text-ds-ink disabled:opacity-30"
+                size="icon-sm"
+                className="h-8 w-8 text-ds-muted hover:text-ds-ink"
                 onClick={onRedo}
                 disabled={!canRedo}
-                title={`${t('builder.redo', 'Redo')} (Ctrl+Shift+Z)`}
+                aria-label={t('builder.editor.redo', 'Redo')}
+                title={`${t('builder.editor.redo', 'Redo')} (Ctrl+Shift+Z)`}
               >
-                <RotateCw className="h-3.5 w-3.5" />
+                <RotateCw className="h-3.5 w-3.5 rtl:-scale-x-100" />
               </Button>
             </div>
           )}
-
-          {/* Subtle Autosave Indicator */}
-          {autosaveStatus && (
-            <div className="hidden xl:flex items-center gap-1 text-[11px] text-muted-foreground px-1.5 select-none font-medium">
-              {autosaveStatus === 'saving' && (
-                <>
-                  <Loader2 className="w-3 h-3 animate-spin text-amber-500" />
-                  <span>{t('builder.autosaveSaving', 'Saving...')}</span>
-                </>
-              )}
-              {autosaveStatus === 'saved' && (
-                <span className="text-ds-success">
-                  {t('builder.autosaveSaved', {
-                    time: lastAutosaveAt && formatTime ? formatTime(lastAutosaveAt) : '',
-                  })}
-                </span>
-              )}
-            </div>
-          )}
-
-          <LanguageSwitcher variant="ghost" className="text-xs h-8 px-2 font-medium" />
 
           <Button
             variant="outline"
             size="sm"
             onClick={onMagic}
-            className={cn(
-              "hidden sm:flex h-8 px-2.5 text-xs font-semibold rounded-md border border-ds-brass/30 bg-ds-accent-soft text-ds-brass hover:bg-ds-brass/20",
-              isRTL && "flex-row-reverse"
-            )}
-            title="Smart Course AI Generator (Ctrl+Shift+A)"
+            className="h-8 px-2.5"
+            aria-label={t('builder.editor.ai', 'Draft with AI')}
+            title={`${t('builder.editor.ai', 'Draft with AI')} (Ctrl+Shift+A)`}
           >
-            <Wand2 className={cn("h-3.5 w-3.5 text-ds-brass", "me-1.5")} />
-            <span>{t('builder.aiAssistant', 'AI Assistant')}</span>
+            <Sparkles className="h-3.5 w-3.5 text-ds-accent" />
+            <span className="hidden md:inline">{t('builder.editor.ai', 'Draft with AI')}</span>
           </Button>
 
           <Button
             variant="outline"
             size="sm"
             onClick={onPreview}
-            className={cn("h-8 px-2.5 text-xs font-semibold rounded-md border-ds-border")}
-            title="Preview Learner View (Ctrl+Shift+P)"
+            className="h-8 px-2.5"
+            aria-label={t('builder.editor.preview', 'Preview')}
+            title={`${t('builder.editor.preview', 'Preview')} (Ctrl+Shift+P)`}
           >
-            <Eye className={cn("h-3.5 w-3.5", "me-1.5")} />
-            <span>{t('preview', 'Preview')}</span>
+            <Eye className="h-3.5 w-3.5" />
+            <span className="hidden md:inline">{t('builder.editor.preview', 'Preview')}</span>
           </Button>
 
           <Button
             size="sm"
             onClick={onSave}
             disabled={isSaving}
-            className={cn(
-              "h-8 px-3 text-xs font-semibold bg-ds-brass hover:bg-ds-accent-hover text-white rounded-md shadow-none"
-            )}
-            title="Save Draft (Ctrl+S)"
+            className="h-8 px-3"
+            title={`${t('builder.editor.save', 'Save')} (Ctrl+S)`}
           >
-            {isSaving ? (
-              <Loader2 className={cn("h-3.5 w-3.5 animate-spin", "me-1.5")} />
-            ) : (
-              <Save className={cn("h-3.5 w-3.5", "me-1.5")} />
-            )}
-            <span>{t('save', 'Save')}</span>
+            {isSaving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
+            <span>{t('builder.editor.save', 'Save')}</span>
           </Button>
         </div>
       </div>
+
+      {/* Row 2: the three steps, always visible */}
+      {steps && steps.length > 0 && onStepChange && (
+        <nav
+          aria-label={t('builder.editor.stepsLabel', 'Course setup steps')}
+          className="flex h-11 items-stretch gap-1 overflow-x-auto px-3 lg:px-5 [scrollbar-width:none]"
+        >
+          {steps.map((step, index) => {
+            const isActive = activeStep === step.key
+            const isDone = stepStatus ? stepStatus[step.key] && index < activeIndex : false
+            const locked = canAccessStep ? !canAccessStep(step.key) : false
+
+            return (
+              <div key={step.key} className="flex items-stretch">
+                {index > 0 && (
+                  <span aria-hidden className="mx-1 my-auto h-px w-4 shrink-0 bg-ds-border sm:w-8" />
+                )}
+                <button
+                  type="button"
+                  onClick={() => onStepChange(step.key)}
+                  aria-disabled={locked}
+                  aria-current={isActive ? 'step' : undefined}
+                  title={locked ? t('builder.stepLocked', 'Finish the earlier steps first') : step.description}
+                  className={cn(
+                    'relative flex shrink-0 items-center gap-2 whitespace-nowrap px-1.5 text-xs font-medium transition-colors',
+                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent/40 rounded-[6px]',
+                    isActive ? 'text-ds-ink font-semibold' : 'text-ds-muted hover:text-ds-ink',
+                    locked && 'cursor-not-allowed opacity-50 hover:text-ds-muted'
+                  )}
+                >
+                  <span
+                    className={cn(
+                      'flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-[11px] font-semibold',
+                      isDone
+                        ? 'border-ds-success bg-ds-success text-white dark:text-ds-on-ink'
+                        : isActive
+                          ? 'border-ds-ink bg-ds-ink text-ds-on-ink'
+                          : 'border-ds-border bg-ds-surface text-ds-muted'
+                    )}
+                  >
+                    {isDone ? <Check className="h-3 w-3" strokeWidth={3} /> : index + 1}
+                  </span>
+                  <span>{step.label}</span>
+                  {isActive && <span aria-hidden className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-ds-ink" />}
+                </button>
+              </div>
+            )
+          })}
+        </nav>
+      )}
     </header>
   )
 }

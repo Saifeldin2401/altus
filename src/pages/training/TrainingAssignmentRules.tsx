@@ -168,7 +168,7 @@ export default function TrainingAssignmentRules() {
                             </div>
                             <Button
                                 onClick={handleSave}
-                                className="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium shadow-xs"
+                                className="w-full"
                                 disabled={(createMutation.isPending || updateMutation.isPending) || !newRule.target_role || !newRule.training_module_id}
                             >
                                 {(createMutation.isPending || updateMutation.isPending)
@@ -187,12 +187,12 @@ export default function TrainingAssignmentRules() {
                 {isLoading ? (
                     <div className="col-span-full text-center py-12 text-ds-muted">{t('loading')}</div>
                 ) : rules?.map((rule) => (
-                    <Card key={rule.id} className={cn("bg-ds-surface border border-ds-border rounded-[8px] shadow-2xs transition-all hover:border-amber-500/40 hover:shadow-xs", !rule.is_active && "opacity-60")}>
+                    <Card key={rule.id} className={cn("bg-ds-surface border border-ds-border rounded-[8px] shadow-2xs transition-all hover:border-ds-warning/40 hover:shadow-xs", !rule.is_active && "opacity-60")}>
                         <CardHeader className="pb-2">
                             <div className="flex justify-between items-start">
                                 <div className="space-y-1">
                                     <CardTitle className="text-base font-semibold flex items-center gap-2 text-ds-ink">
-                                        <Shield className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                                        <Shield className="w-4 h-4 text-ds-warning" />
                                         {rule.target_role ? t(`common:roles.${rule.target_role}`) : t('unknown')}
                                     </CardTitle>
                                     <p className="text-xs text-ds-muted">{t('rules.auto_assigns_to')} {t('rules.by_role')}</p>
@@ -244,7 +244,7 @@ export default function TrainingAssignmentRules() {
                 {!isLoading && rules?.length === 0 && (
                     <div className="col-span-full text-center py-12 text-ds-muted border border-dashed border-ds-border rounded-[8px] bg-ds-surface-subtle/30">
                         <p>{t('rules.no_rules')}</p>
-                        <Button variant="link" onClick={() => setIsCreateOpen(true)} className="text-amber-600 dark:text-amber-400 font-semibold">{t('rules.create_first')}</Button>
+                        <Button variant="link" onClick={() => setIsCreateOpen(true)} className="text-ds-warning font-semibold">{t('rules.create_first')}</Button>
                     </div>
                 )}
             </div>

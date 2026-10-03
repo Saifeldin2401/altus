@@ -9,6 +9,7 @@ import {
     Star
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import i18n from '@/i18n/i18n'
 
 interface PlayerCelebrationModalProps {
     isOpen: boolean
@@ -142,26 +143,26 @@ export function PlayerCelebrationModal({
     const timeSpentMinutes = Math.max(1, Math.round(timeSpentSeconds / 60))
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-xl animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ds-ink/85 animate-in fade-in duration-300">
             <div
                 ref={containerRef}
-                className="w-full max-w-xl rounded-3xl bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 border border-amber-500/40 p-6 md:p-8 shadow-2xl text-center relative overflow-hidden"
+                className="w-full max-w-xl rounded-[8px] bg-ds-ink border border-ds-warning/40 p-6 md:p-8 shadow-2xl text-center relative overflow-hidden"
             >
                 {/* Background Ambient Glow */}
-                <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-ds-warning/20 rounded-full blur-3xl pointer-events-none" />
 
                 {/* Top Badge */}
                 <div className="flex justify-center mb-4">
-                    <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-amber-500/20 border border-amber-400/50 text-amber-300 text-xs font-bold uppercase tracking-widest shadow-lg shadow-amber-500/10">
+                    <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-ds-warning/20 border border-ds-warning/50 text-ds-warning text-xs font-bold uppercase tracking-widest shadow-lg">
                         <Sparkles className="h-3.5 w-3.5" />
-                        <span>{isRTL ? 'تهانينا! اكتملت الدورة بنجاح' : 'Course Completed Successfully'}</span>
+                        <span>{i18n.t('training:screens.PlayerCelebrationModal.courseCompletedSuccessfully', 'Course Completed Successfully')}</span>
                     </div>
                 </div>
 
-                <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-2 tracking-tight">
-                    {isRTL ? 'إنجاز تدريبي متميز' : 'Outstanding Achievement!'}
+                <h2 className="text-2xl md:text-3xl font-extrabold text-ds-on-ink mb-2 tracking-tight">
+                    {i18n.t('training:screens.PlayerCelebrationModal.outstandingAchievement', 'Outstanding Achievement!')}
                 </h2>
-                <p className="text-sm text-slate-300 max-w-md mx-auto mb-6">
+                <p className="text-sm text-ds-muted max-w-md mx-auto mb-6">
                     {isRTL
                         ? `لقد أتممت متطلبات دورة "${moduleTitle}" وتم توثيق شهادتك وساعاتك التدريبية في ملفك المهني.`
                         : `You have successfully completed "${moduleTitle}". Your certificate and training hours are officially logged.`}
@@ -175,30 +176,30 @@ export function PlayerCelebrationModal({
                         transform: cardTransform,
                         transition: 'transform 0.15s ease-out'
                     }}
-                    className="cursor-pointer mb-6 rounded-2xl bg-gradient-to-br from-ds-chrome via-ds-chrome-raised to-ds-chrome border-2 border-amber-500/60 p-6 text-slate-100 shadow-2xl relative group overflow-hidden"
+                    className="cursor-pointer mb-6 rounded-[8px] bg-ds-chrome border-2 border-ds-warning/60 p-6 text-ds-on-ink shadow-2xl relative group overflow-hidden"
                 >
                     {/* Gold Foil Corner Accents */}
-                    <div className="absolute top-0 start-0 w-8 h-8 border-t-2 border-s-2 border-amber-400 rounded-ss-xl m-2" />
-                    <div className="absolute top-0 end-0 w-8 h-8 border-t-2 border-e-2 border-amber-400 rounded-se-xl m-2" />
-                    <div className="absolute bottom-0 start-0 w-8 h-8 border-b-2 border-s-2 border-amber-400 rounded-es-xl m-2" />
-                    <div className="absolute bottom-0 end-0 w-8 h-8 border-b-2 border-e-2 border-amber-400 rounded-ee-xl m-2" />
+                    <div className="absolute top-0 start-0 w-8 h-8 border-t-2 border-s-2 border-ds-warning rounded-ss-xl m-2" />
+                    <div className="absolute top-0 end-0 w-8 h-8 border-t-2 border-e-2 border-ds-warning rounded-se-xl m-2" />
+                    <div className="absolute bottom-0 start-0 w-8 h-8 border-b-2 border-s-2 border-ds-warning rounded-es-xl m-2" />
+                    <div className="absolute bottom-0 end-0 w-8 h-8 border-b-2 border-e-2 border-ds-warning rounded-ee-xl m-2" />
 
                     <div className="text-center space-y-2 py-2">
-                        <div className="flex items-center justify-center gap-1.5 text-amber-400 text-xs font-semibold uppercase tracking-widest">
+                        <div className="flex items-center justify-center gap-1.5 text-ds-warning text-xs font-semibold uppercase tracking-widest">
                             <Award className="h-4 w-4" />
                             <span>ALTUS ACADEMY • CERTIFICATE OF COMPLETION</span>
                         </div>
-                        <h3 className="text-lg md:text-xl font-bold text-white tracking-wide">
+                        <h3 className="text-lg md:text-xl font-bold text-ds-on-ink tracking-wide">
                             {moduleTitle}
                         </h3>
-                        <p className="text-xs text-amber-200/90 font-medium">
-                            {isRTL ? 'ممنوحة للموظف:' : 'Awarded to:'} <span className="text-white font-bold">{recipientName}</span>
+                        <p className="text-xs text-ds-warning/90 font-medium">
+                            {i18n.t('training:screens.PlayerCelebrationModal.awardedTo', 'Awarded to:')} <span className="text-ds-on-ink font-bold">{recipientName}</span>
                         </p>
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-amber-500/30 flex items-center justify-between text-xs text-slate-400">
+                    <div className="mt-4 pt-3 border-t border-ds-warning/30 flex items-center justify-between text-xs text-ds-muted">
                         <span>{new Date().toLocaleDateString()}</span>
-                        <div className="flex items-center gap-1 text-amber-400 font-bold">
+                        <div className="flex items-center gap-1 text-ds-warning font-bold">
                             <Star className="h-3.5 w-3.5 fill-current" />
                             <span>{score !== null && score !== undefined ? `${score}% Score` : 'Certified'}</span>
                         </div>
@@ -207,27 +208,27 @@ export function PlayerCelebrationModal({
 
                 {/* Stats Row (XP, Streak, Time) */}
                 <div className="grid grid-cols-3 gap-3 mb-6">
-                    <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex flex-col items-center justify-center">
-                        <div className="flex items-center gap-1 text-amber-400 text-sm font-bold">
+                    <div className="p-3 rounded-[8px] bg-ds-ink/90 border border-ds-ink-secondary flex flex-col items-center justify-center">
+                        <div className="flex items-center gap-1 text-ds-warning text-sm font-bold">
                             <Trophy className="h-4 w-4" />
                             <span>+50 XP</span>
                         </div>
-                        <span className="text-[10px] text-slate-400 mt-0.5">{isRTL ? 'نقاط التميز' : 'Earned Points'}</span>
+                        <span className="text-[11px] text-ds-muted mt-0.5">{i18n.t('training:screens.PlayerCelebrationModal.earnedPoints', 'Earned Points')}</span>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex flex-col items-center justify-center">
-                        <div className="flex items-center gap-1 text-orange-400 text-sm font-bold">
+                    <div className="p-3 rounded-[8px] bg-ds-ink/90 border border-ds-ink-secondary flex flex-col items-center justify-center">
+                        <div className="flex items-center gap-1 text-ds-warning text-sm font-bold">
                             <Flame className="h-4 w-4 fill-current" />
                             <span>+1 Day</span>
                         </div>
-                        <span className="text-[10px] text-slate-400 mt-0.5">{isRTL ? 'سلسلة التعلم' : 'Learning Streak'}</span>
+                        <span className="text-[11px] text-ds-muted mt-0.5">{i18n.t('training:screens.PlayerCelebrationModal.learningStreak', 'Learning Streak')}</span>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 flex flex-col items-center justify-center">
-                        <div className="text-slate-200 text-sm font-bold">
-                            {timeSpentMinutes} {isRTL ? 'د' : 'min'}
+                    <div className="p-3 rounded-[8px] bg-ds-ink/90 border border-ds-ink-secondary flex flex-col items-center justify-center">
+                        <div className="text-ds-on-ink text-sm font-bold">
+                            {timeSpentMinutes} {i18n.t('training:screens.PlayerCelebrationModal.min', 'min')}
                         </div>
-                        <span className="text-[10px] text-slate-400 mt-0.5">{isRTL ? 'الوقت المستغرق' : 'Time Invested'}</span>
+                        <span className="text-[11px] text-ds-muted mt-0.5">{i18n.t('training:screens.PlayerCelebrationModal.timeInvested', 'Time Invested')}</span>
                     </div>
                 </div>
 
@@ -236,9 +237,9 @@ export function PlayerCelebrationModal({
                     <Button
                         size="lg"
                         onClick={onBackToDashboard}
-                        className="w-full sm:w-auto px-6 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold gap-2 shadow-lg shadow-amber-500/25"
+                        className="w-full sm:w-auto px-6 bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink font-bold gap-2 shadow-lg"
                     >
-                        <span>{isRTL ? 'العودة إلى مركز التدريب' : 'Back to Training Hub'}</span>
+                        <span>{i18n.t('training:screens.PlayerCelebrationModal.backToTrainingHub', 'Back to Training Hub')}</span>
                         <ArrowRight className={cn("h-4 w-4", isRTL && "rotate-180")} />
                     </Button>
                 </div>

@@ -360,10 +360,10 @@ export function AIArticleStudioModal({
       <Dialog open={isOpen} onOpenChange={(open) => !open && !isGenerating && onClose()}>
         <DialogContent className="max-w-5xl max-h-[92vh] flex flex-col p-0 overflow-hidden bg-background">
           {/* Header */}
-          <DialogHeader className="p-5 border-b bg-gradient-to-r from-purple-500/10 via-indigo-500/5 to-transparent">
+          <DialogHeader className="p-5 border-b bg-gradient-to-r from-ds-accent/10 via-ds-info/5 to-transparent">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center shadow-md">
+                <div className="w-10 h-10 rounded-[8px] bg-ds-accent text-white dark:text-ds-on-ink flex items-center justify-center">
                   <Sparkles className="w-5 h-5" />
                 </div>
                 <div>
@@ -402,7 +402,7 @@ export function AIArticleStudioModal({
                         studioMode === 'fast' ? 'bg-background shadow-xs text-foreground' : 'text-muted-foreground hover:text-foreground'
                       )}
                     >
-                      <Zap className="w-3 h-3 text-amber-500" /> Fast
+                      <Zap className="w-3 h-3 text-ds-warning" /> Fast
                     </button>
                     <button
                       type="button"
@@ -412,7 +412,7 @@ export function AIArticleStudioModal({
                         studioMode === 'advanced' ? 'bg-background shadow-xs text-foreground' : 'text-muted-foreground hover:text-foreground'
                       )}
                     >
-                      <Sliders className="w-3 h-3 text-purple-600" /> Advanced
+                      <Sliders className="w-3 h-3 text-ds-accent" /> Advanced
                     </button>
                   </div>
                 )}
@@ -423,7 +423,7 @@ export function AIArticleStudioModal({
           {/* Body Content */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             {generationError && !isGenerating && (
-              <div role="alert" className="flex items-start gap-3 rounded-xl border border-ds-danger/40 bg-ds-danger-soft p-4">
+              <div role="alert" className="flex items-start gap-3 rounded-[8px] border border-ds-danger/40 bg-ds-danger-soft p-4">
                 <AlertTriangle aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-ds-danger" />
                 <div className="min-w-0 flex-1 space-y-2">
                   <p className="text-sm font-semibold text-ds-ink">{t('studio.failedTitle', 'The article was not created')}</p>
@@ -443,7 +443,7 @@ export function AIArticleStudioModal({
                     {/* Presets Bar */}
                     <div className="space-y-2">
                       <Label className="text-xs font-bold text-muted-foreground flex items-center gap-1.5 uppercase tracking-wider">
-                        <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+                        <Sparkles className="w-3.5 h-3.5 text-ds-accent" />
                         Quick Presets & Benchmark SOPs
                       </Label>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -456,18 +456,18 @@ export function AIArticleStudioModal({
                               type="button"
                               onClick={() => handleApplyPreset(preset)}
                               className={cn(
-                                'p-2.5 rounded-xl border text-start transition-all flex items-start gap-2.5 hover:border-purple-400 hover:bg-purple-50/50 dark:hover:bg-purple-950/20',
+                                'p-2.5 rounded-[8px] border text-start transition-all flex items-start gap-2.5 hover:border-ds-accent hover:bg-ds-accent-soft/50',
                                 isSelected
-                                  ? 'border-purple-600 bg-purple-50/80 dark:bg-purple-950/40 shadow-xs ring-1 ring-purple-500'
+                                  ? 'border-ds-accent bg-ds-accent-soft/80 shadow-xs ring-1 ring-ds-accent'
                                   : 'bg-card'
                               )}
                             >
-                              <div className={cn('p-1.5 rounded-lg shrink-0 mt-0.5', isSelected ? 'bg-purple-600 text-white' : 'bg-muted text-muted-foreground')}>
+                              <div className={cn('p-1.5 rounded-lg shrink-0 mt-0.5', isSelected ? 'bg-ds-accent text-white dark:text-ds-on-ink' : 'bg-muted text-muted-foreground')}>
                                 <Icon className="w-3.5 h-3.5" />
                               </div>
                               <div className="min-w-0 flex-1">
                                 <p className="text-xs font-semibold text-foreground truncate">{preset.title}</p>
-                                <p className="text-[10px] text-muted-foreground">{preset.dept} • {preset.type.toUpperCase()}</p>
+                                <p className="text-[11px] text-muted-foreground">{preset.dept} • {preset.type.toUpperCase()}</p>
                               </div>
                             </button>
                           )
@@ -476,7 +476,7 @@ export function AIArticleStudioModal({
                     </div>
 
                     {/* Document Upload Dropzone */}
-                    <div className="p-4 rounded-xl border-2 border-dashed border-purple-200 dark:border-purple-900/50 bg-purple-50/30 dark:bg-purple-950/10 flex flex-col items-center justify-center text-center space-y-2">
+                    <div className="p-4 rounded-[8px] border-2 border-dashed border-ds-accent/30 bg-ds-accent-soft/30 flex flex-col items-center justify-center text-center space-y-2">
                       <input
                         type="file"
                         ref={fileInputRef}
@@ -484,7 +484,7 @@ export function AIArticleStudioModal({
                         accept=".pdf,.docx,.doc,.txt,.md,.json"
                         className="hidden"
                       />
-                      <div className="p-3 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300">
+                      <div className="p-3 rounded-full bg-ds-accent-soft text-ds-accent">
                         <UploadCloud className="w-5 h-5" />
                       </div>
                       <div>
@@ -509,7 +509,7 @@ export function AIArticleStudioModal({
                           onClick={() => fileInputRef.current?.click()}
                           className="h-7 text-xs font-medium"
                         >
-                          <FileUp className="w-3.5 h-3.5 me-1.5 text-purple-600" />
+                          <FileUp className="w-3.5 h-3.5 me-1.5 text-ds-accent" />
                           {uploadedFileName ? 'Change Document' : 'Browse Files'}
                         </Button>
                         {uploadedFileName && (
@@ -523,7 +523,7 @@ export function AIArticleStudioModal({
                               setSourceNotes('')
                               setFileStatus({ reading: false, error: null, words: null })
                             }}
-                            className="h-7 text-xs text-red-500 hover:text-red-600"
+                            className="h-7 text-xs text-ds-danger hover:text-ds-danger"
                           >
                             <X className="w-3.5 h-3.5 me-1" /> Clear
                           </Button>
@@ -594,9 +594,9 @@ export function AIArticleStudioModal({
                       </div>
 
                       {/* AI Visual Artwork & Photography Toggle */}
-                      <div className="md:col-span-2 p-3.5 rounded-xl border bg-muted/20 flex items-center justify-between">
+                      <div className="md:col-span-2 p-3.5 rounded-[8px] border bg-muted/20 flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="p-2 rounded-lg bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300">
+                          <div className="p-2 rounded-lg bg-ds-warning-soft text-ds-warning">
                             <ImageIcon className="w-4 h-4" />
                           </div>
                           <div>
@@ -625,10 +625,10 @@ export function AIArticleStudioModal({
                           <BookOpen className="w-3.5 h-3.5 me-1.5" /> 3. Depth & 5-Star
                         </TabsTrigger>
                         <TabsTrigger value="visuals" className="text-xs">
-                          <ImageIcon className="w-3.5 h-3.5 me-1.5 text-orange-600" /> 4. AI Visuals
+                          <ImageIcon className="w-3.5 h-3.5 me-1.5 text-ds-warning" /> 4. AI Visuals
                         </TabsTrigger>
                         <TabsTrigger value="compliance" className="text-xs">
-                          <ShieldCheck className="w-3.5 h-3.5 me-1.5 text-emerald-600" /> 5. AI Engine
+                          <ShieldCheck className="w-3.5 h-3.5 me-1.5 text-ds-success" /> 5. AI Engine
                         </TabsTrigger>
                       </TabsList>
 
@@ -645,7 +645,7 @@ export function AIArticleStudioModal({
                         </div>
 
                         {/* Dropzone */}
-                        <div className="p-4 rounded-xl border-2 border-dashed border-purple-200 dark:border-purple-900/50 bg-purple-50/30 dark:bg-purple-950/10 flex flex-col items-center justify-center text-center space-y-2">
+                        <div className="p-4 rounded-[8px] border-2 border-dashed border-ds-accent/30 bg-ds-accent-soft/30 flex flex-col items-center justify-center text-center space-y-2">
                           <input
                             type="file"
                             ref={fileInputRef}
@@ -653,7 +653,7 @@ export function AIArticleStudioModal({
                             accept=".pdf,.docx,.doc,.txt,.md,.json"
                             className="hidden"
                           />
-                          <div className="p-3 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300">
+                          <div className="p-3 rounded-full bg-ds-accent-soft text-ds-accent">
                             <UploadCloud className="w-5 h-5" />
                           </div>
                           <div>
@@ -677,7 +677,7 @@ export function AIArticleStudioModal({
                             onClick={() => fileInputRef.current?.click()}
                             className="h-7 text-xs font-medium"
                           >
-                            <FileUp className="w-3.5 h-3.5 me-1.5 text-purple-600" />
+                            <FileUp className="w-3.5 h-3.5 me-1.5 text-ds-accent" />
                             {uploadedFileName ? 'Change Document' : 'Browse Files'}
                           </Button>
                         </div>
@@ -783,27 +783,27 @@ export function AIArticleStudioModal({
                           <Label className="text-xs font-bold text-foreground">Structural Elements to Include</Label>
                           
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                            <label className="flex items-center gap-2 p-3 rounded-xl border bg-card cursor-pointer hover:bg-muted/30">
+                            <label className="flex items-center gap-2 p-3 rounded-[8px] border bg-card cursor-pointer hover:bg-muted/30">
                               <Checkbox checked={includeChecklist} onCheckedChange={(c) => setIncludeChecklist(Boolean(c))} />
                               <span>Supervisory Inspection Checklist (4-6 points)</span>
                             </label>
 
-                            <label className="flex items-center gap-2 p-3 rounded-xl border bg-card cursor-pointer hover:bg-muted/30">
+                            <label className="flex items-center gap-2 p-3 rounded-[8px] border bg-card cursor-pointer hover:bg-muted/30">
                               <Checkbox checked={includeFaq} onCheckedChange={(c) => setIncludeFaq(Boolean(c))} />
                               <span>Categorized Staff & Guest FAQs</span>
                             </label>
 
-                            <label className="flex items-center gap-2 p-3 rounded-xl border bg-card cursor-pointer hover:bg-muted/30">
+                            <label className="flex items-center gap-2 p-3 rounded-[8px] border bg-card cursor-pointer hover:bg-muted/30">
                               <Checkbox checked={includeCriticalControlPoints} onCheckedChange={(c) => setIncludeCriticalControlPoints(Boolean(c))} />
                               <span>Critical Control Points (CCPs)</span>
                             </label>
 
-                            <label className="flex items-center gap-2 p-3 rounded-xl border bg-card cursor-pointer hover:bg-muted/30">
+                            <label className="flex items-center gap-2 p-3 rounded-[8px] border bg-card cursor-pointer hover:bg-muted/30">
                               <Checkbox checked={includeLastFramework} onCheckedChange={(c) => setIncludeLastFramework(Boolean(c))} />
                               <span>LAST Service Recovery (Listen, Apologize, Solve, Thank)</span>
                             </label>
 
-                            <label className="flex items-center gap-2 p-3 rounded-xl border bg-card cursor-pointer hover:bg-muted/30 sm:col-span-2">
+                            <label className="flex items-center gap-2 p-3 rounded-[8px] border bg-card cursor-pointer hover:bg-muted/30 sm:col-span-2">
                               <Checkbox checked={includeEmergencyProtocols} onCheckedChange={(c) => setIncludeEmergencyProtocols(Boolean(c))} />
                               <span>Emergency & System Offline Contingency Fallbacks</span>
                             </label>
@@ -813,9 +813,9 @@ export function AIArticleStudioModal({
 
                       {/* Tab 4: AI Visuals & Schematics */}
                       <TabsContent value="visuals" className="mt-4 space-y-4">
-                        <div className="p-3.5 rounded-xl border bg-muted/20 flex items-center justify-between">
+                        <div className="p-3.5 rounded-[8px] border bg-muted/20 flex items-center justify-between">
                           <div className="flex items-center gap-3">
-                            <div className="p-2 rounded-lg bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300">
+                            <div className="p-2 rounded-lg bg-ds-warning-soft text-ds-warning">
                               <ImageIcon className="w-4 h-4" />
                             </div>
                             <div>
@@ -839,7 +839,7 @@ export function AIArticleStudioModal({
                                 <SelectContent className="max-h-80">
                                   <SelectItem value="auto">🤖 Automatic — best free engine (Recommended)</SelectItem>
 
-                                  <div className="px-2 py-1 text-[10px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/40 rounded-sm mt-2 mb-1">
+                                  <div className="px-2 py-1 text-[11px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/40 rounded-sm mt-2 mb-1">
                                     Cloudflare Workers AI (Free)
                                   </div>
                                   <SelectItem value="@cf/leonardo/lucid-origin">🎨 Leonardo Lucid Origin (flagship photorealism)</SelectItem>
@@ -849,12 +849,12 @@ export function AIArticleStudioModal({
                                   <SelectItem value="@cf/lykon/dreamshaper-8-lcm">🏨 DreamShaper 8 LCM (photo &amp; ambiance)</SelectItem>
                                   <SelectItem value="@cf/bytedance/stable-diffusion-xl-lightning">⚡ SDXL Lightning (fastest)</SelectItem>
 
-                                  <div className="px-2 py-1 text-[10px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/40 rounded-sm mt-2 mb-1">
+                                  <div className="px-2 py-1 text-[11px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/40 rounded-sm mt-2 mb-1">
                                     Vector (Free • instant)
                                   </div>
                                   <SelectItem value="recraft-vector">📐 Vector Schematic (SVG diagrams &amp; flowcharts)</SelectItem>
 
-                                  <div className="px-2 py-1 text-[10px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/40 rounded-sm mt-2 mb-1">
+                                  <div className="px-2 py-1 text-[11px] font-bold text-muted-foreground uppercase tracking-wider bg-muted/40 rounded-sm mt-2 mb-1">
                                     OpenRouter (Paid • needs credits)
                                   </div>
                                   <SelectItem value="google/gemini-3-pro-image">💎 Gemini 3 Pro Image (highest quality)</SelectItem>
@@ -924,8 +924,8 @@ export function AIArticleStudioModal({
                           </Select>
                         </div>
 
-                        <div className="p-4 rounded-xl border bg-emerald-50/50 dark:bg-emerald-950/20 space-y-2 text-xs">
-                          <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 font-bold">
+                        <div className="p-4 rounded-[8px] border bg-ds-success-soft/50 space-y-2 text-xs">
+                          <div className="flex items-center gap-2 text-ds-success font-bold">
                             <ShieldCheck className="w-4 h-4" />
                             KSA Regulatory Compliance Shield
                           </div>
@@ -944,8 +944,8 @@ export function AIArticleStudioModal({
             {isGenerating && (
               <div className="py-12 px-6 text-center space-y-6 max-w-lg mx-auto">
                 <div className="relative w-16 h-16 mx-auto flex items-center justify-center">
-                  <div className="absolute inset-0 rounded-full border-4 border-purple-500/20 animate-ping" />
-                  <div className="w-16 h-16 rounded-full bg-purple-600 text-white flex items-center justify-center shadow-lg">
+                  <div className="absolute inset-0 rounded-full border-4 border-ds-accent/20 animate-ping" />
+                  <div className="w-16 h-16 rounded-full bg-ds-accent text-white dark:text-ds-on-ink flex items-center justify-center shadow-lg">
                     <Loader2 className="w-8 h-8 animate-spin" />
                   </div>
                 </div>
@@ -956,7 +956,7 @@ export function AIArticleStudioModal({
                       {progressEvent?.agentName || 'Writing your document'}
                     </h3>
                     {progressEvent?.modelUsed && (
-                      <Badge variant="secondary" className="text-[10px] font-mono bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300">
+                      <Badge variant="secondary" className="text-[11px] font-mono bg-ds-accent-soft text-ds-accent">
                         <Cpu className="w-3 h-3 me-1" />
                         {progressEvent.modelUsed.split('/').pop()}
                       </Badge>
@@ -980,16 +980,16 @@ export function AIArticleStudioModal({
             {generatedResult && !isGenerating && (
               <div className="space-y-4">
                 {/* Top Score Banner */}
-                <div className="p-4 rounded-xl border border-emerald-300 bg-emerald-50/50 dark:bg-emerald-950/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="p-4 rounded-[8px] border border-ds-success/30 bg-ds-success-soft/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold shadow-xs">
+                    <div className="w-10 h-10 rounded-[8px] bg-ds-success text-white dark:text-ds-on-ink flex items-center justify-center font-bold shadow-xs">
                       <CheckCircle2 className="w-6 h-6" />
                     </div>
                     <div>
                       <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
                         <span>{generatedResult.title}</span>
                         {generatedResult.sop_code && (
-                          <Badge variant="outline" className="text-[10px] font-mono">
+                          <Badge variant="outline" className="text-[11px] font-mono">
                             {generatedResult.sop_code}
                           </Badge>
                         )}
@@ -1001,7 +1001,7 @@ export function AIArticleStudioModal({
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <Badge className="bg-emerald-600 text-white text-xs font-semibold px-2.5 py-1">
+                    <Badge className="bg-ds-success text-white dark:text-ds-on-ink text-xs font-semibold px-2.5 py-1">
                       <ShieldCheck className="w-3.5 h-3.5 me-1" />
                       {t('studio.keywordCheck', 'Keyword check')}: {generatedResult.compliance_score}/100
                     </Badge>
@@ -1018,7 +1018,7 @@ export function AIArticleStudioModal({
                       <Globe className="w-3.5 h-3.5 me-1.5" /> Arabic SOP
                     </TabsTrigger>
                     <TabsTrigger value="schematic" className="text-xs">
-                      <ImageIcon className="w-3.5 h-3.5 me-1.5 text-orange-600" /> AI Visual Asset
+                      <ImageIcon className="w-3.5 h-3.5 me-1.5 text-ds-warning" /> AI Visual Asset
                     </TabsTrigger>
                     <TabsTrigger value="checklist" className="text-xs" disabled={!generatedResult.checklist_items?.length}>
                       <FileCheck className="w-3.5 h-3.5 me-1.5" /> Checklist ({generatedResult.checklist_items?.length || 0})
@@ -1027,7 +1027,7 @@ export function AIArticleStudioModal({
                       <FileQuestion className="w-3.5 h-3.5 me-1.5" /> FAQ ({generatedResult.faq_items?.length || 0})
                     </TabsTrigger>
                     <TabsTrigger value="compliance" className="text-xs">
-                      <ShieldCheck className="w-3.5 h-3.5 me-1.5 text-emerald-600" /> QA Scorecard
+                      <ShieldCheck className="w-3.5 h-3.5 me-1.5 text-ds-success" /> QA Scorecard
                     </TabsTrigger>
                   </TabsList>
 
@@ -1035,10 +1035,10 @@ export function AIArticleStudioModal({
                   <TabsContent value="english" className="mt-3 space-y-4">
                     {/* Embedded Visual Schematic Preview */}
                     {generatedResult.visual_asset?.image_url ? (
-                      <div className="p-3 rounded-xl border bg-slate-950/90 space-y-2">
-                        <div className="flex items-center justify-between text-xs text-slate-300">
+                      <div className="p-3 rounded-[8px] border bg-ds-ink/90 space-y-2">
+                        <div className="flex items-center justify-between text-xs text-ds-muted">
                           <span className="font-bold flex items-center gap-1.5">
-                            <ImageIcon className="w-3.5 h-3.5 text-orange-400" />
+                            <ImageIcon className="w-3.5 h-3.5 text-ds-warning" />
                             {generatedResult.visual_asset.model?.includes('imagen') || generatedResult.visual_asset.model?.includes('banana') || generatedResult.visual_asset.provider === 'gemini'
                               ? '🍌 Google Imagen 3 (Nano Banana • 5-Star Luxury)'
                               : generatedResult.visual_asset.provider === 'recraft' && generatedResult.visual_asset.model === 'recraft-vector'
@@ -1049,7 +1049,7 @@ export function AIArticleStudioModal({
                             variant="outline"
                             size="sm"
                             onClick={openVisualEditorForArticle}
-                            className="h-6 text-[10px] text-slate-300 border-slate-700 bg-slate-900"
+                            className="h-6 text-[11px] text-ds-muted border-ds-ink-secondary bg-ds-ink"
                           >
                             <Palette className="w-3 h-3 me-1" /> Edit / Transform
                           </Button>
@@ -1099,16 +1099,16 @@ export function AIArticleStudioModal({
                         </div>
                       </div>
                     ) : (
-                      <div className="p-3 rounded-xl border border-dashed bg-muted/20 flex items-center justify-between">
+                      <div className="p-3 rounded-[8px] border border-dashed bg-muted/20 flex items-center justify-between">
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <ImageIcon className="w-4 h-4 text-purple-500" />
+                          <ImageIcon className="w-4 h-4 text-ds-accent" />
                           <span>No visual schematic attached to this article</span>
                         </div>
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={openVisualEditorForArticle}
-                          className="h-7 text-xs font-semibold gap-1 text-purple-600 dark:text-purple-300 border-purple-300 dark:border-purple-800"
+                          className="h-7 text-xs font-semibold gap-1 text-ds-accent border-ds-accent/30"
                         >
                           <Sparkles className="w-3.5 h-3.5" />
                           Generate Visual Guide
@@ -1117,7 +1117,7 @@ export function AIArticleStudioModal({
                     )}
 
                     <div
-                      className="p-5 rounded-xl border bg-card max-h-[380px] overflow-y-auto prose prose-sm dark:prose-invert max-w-none text-start space-y-4"
+                      className="p-5 rounded-[8px] border bg-card max-h-[380px] overflow-y-auto prose prose-sm dark:prose-invert max-w-none text-start space-y-4"
                       dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(generatedResult.content_html) }}
                     />
                   </TabsContent>
@@ -1126,12 +1126,12 @@ export function AIArticleStudioModal({
                   <TabsContent value="arabic" className="mt-3">
                     {generatedResult.content_html_ar ? (
                       <div
-                        className="p-5 rounded-xl border bg-card max-h-[380px] overflow-y-auto prose prose-sm dark:prose-invert max-w-none text-start space-y-4"
+                        className="p-5 rounded-[8px] border bg-card max-h-[380px] overflow-y-auto prose prose-sm dark:prose-invert max-w-none text-start space-y-4"
                         dir="rtl"
                         dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(generatedResult.content_html_ar) }}
                       />
                     ) : (
-                      <p className="rounded-xl border border-dashed p-5 text-sm text-muted-foreground">
+                      <p className="rounded-[8px] border border-dashed p-5 text-sm text-muted-foreground">
                         {t('studio.noArabic', 'The AI did not write an Arabic version this time. Regenerate, or add the Arabic text in the editor.')}
                       </p>
                     )}
@@ -1140,7 +1140,7 @@ export function AIArticleStudioModal({
                   {/* Vector Schematic Tab */}
                   <TabsContent value="schematic" className="mt-3">
                     {generatedResult.visual_asset?.image_url ? (
-                      <div className="p-4 rounded-xl border bg-slate-950 flex flex-col items-center justify-center space-y-3">
+                      <div className="p-4 rounded-[8px] border bg-ds-ink flex flex-col items-center justify-center space-y-3">
                         <div className="w-full max-h-[360px] flex items-center justify-center">
                           {(() => {
                             const imgUrl = generatedResult.visual_asset?.image_url || ''
@@ -1184,7 +1184,7 @@ export function AIArticleStudioModal({
                             )
                           })()}
                         </div>
-                        <div className="flex items-center justify-between w-full pt-2 text-xs text-slate-400">
+                        <div className="flex items-center justify-between w-full pt-2 text-xs text-ds-muted">
                           <p className="italic">
                             {generatedResult.visual_asset.caption || generatedResult.visual_asset.alt_text}
                           </p>
@@ -1192,7 +1192,7 @@ export function AIArticleStudioModal({
                             variant="outline"
                             size="sm"
                             onClick={openVisualEditorForArticle}
-                            className="h-7 text-xs bg-slate-900 text-slate-200 border-slate-700 font-semibold"
+                            className="h-7 text-xs bg-ds-ink text-ds-on-ink border-ds-ink-secondary font-semibold"
                           >
                             <Palette className="w-3.5 h-3.5 me-1.5" />
                             Open Visual Editor
@@ -1200,8 +1200,8 @@ export function AIArticleStudioModal({
                         </div>
                       </div>
                     ) : (
-                      <div className="p-8 text-center rounded-xl border border-dashed bg-muted/10 space-y-3 flex flex-col items-center justify-center">
-                        <div className="p-3 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300">
+                      <div className="p-8 text-center rounded-[8px] border border-dashed bg-muted/10 space-y-3 flex flex-col items-center justify-center">
+                        <div className="p-3 rounded-full bg-ds-accent-soft text-ds-accent">
                           <ImageIcon className="w-6 h-6" />
                         </div>
                         <div>
@@ -1213,7 +1213,7 @@ export function AIArticleStudioModal({
                         <Button
                           size="sm"
                           onClick={openVisualEditorForArticle}
-                          className="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold gap-1.5"
+                          className="bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink text-xs font-bold gap-1.5"
                         >
                           <Sparkles className="w-3.5 h-3.5" />
                           Generate Visual Guide
@@ -1225,16 +1225,16 @@ export function AIArticleStudioModal({
                   {/* Checklist Tab */}
                   <TabsContent value="checklist" className="mt-3 space-y-2 max-h-[380px] overflow-y-auto">
                     {generatedResult.checklist_items?.map((item, idx) => (
-                      <div key={item.id || idx} className="p-3.5 rounded-xl border bg-card flex items-center justify-between text-xs text-start gap-4">
+                      <div key={item.id || idx} className="p-3.5 rounded-[8px] border bg-card flex items-center justify-between text-xs text-start gap-4">
                         <div className="space-y-1">
                           <p className="font-semibold text-foreground flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                            <CheckCircle2 className="w-4 h-4 text-ds-success shrink-0" />
                             <span>{item.text}</span>
                           </p>
                           <p className="text-muted-foreground text-[11px] ps-6" dir="rtl">{item.text_ar}</p>
                         </div>
                         {item.category && (
-                          <Badge variant="outline" className="text-[10px] shrink-0">
+                          <Badge variant="outline" className="text-[11px] shrink-0">
                             {item.category}
                           </Badge>
                         )}
@@ -1245,11 +1245,11 @@ export function AIArticleStudioModal({
                   {/* FAQ Tab */}
                   <TabsContent value="faq" className="mt-3 space-y-3 max-h-[380px] overflow-y-auto">
                     {generatedResult.faq_items?.map((faq, idx) => (
-                      <div key={faq.id || idx} className="p-4 rounded-xl border bg-card space-y-2 text-xs text-start">
+                      <div key={faq.id || idx} className="p-4 rounded-[8px] border bg-card space-y-2 text-xs text-start">
                         <p className="font-bold text-foreground">Q: {faq.question}</p>
                         <p className="text-muted-foreground leading-relaxed">A: {faq.answer}</p>
                         <div className="pt-2 border-t mt-2" dir="rtl">
-                          <p className="font-bold text-purple-700 dark:text-purple-300">س: {faq.question_ar}</p>
+                          <p className="font-bold text-ds-accent">س: {faq.question_ar}</p>
                           <p className="text-muted-foreground text-[11px] leading-relaxed">ج: {faq.answer_ar}</p>
                         </div>
                       </div>
@@ -1258,7 +1258,7 @@ export function AIArticleStudioModal({
 
                   {/* QA & Compliance Scorecard */}
                   <TabsContent value="compliance" className="mt-3 space-y-4 max-h-[380px] overflow-y-auto">
-                    <div className="p-4 rounded-xl border bg-card space-y-2">
+                    <div className="p-4 rounded-[8px] border bg-card space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-bold text-foreground">{t('studio.keywordCheck', 'Keyword check')}</span>
                         <Badge variant="secondary" className="text-[11px] tabular-nums">
@@ -1271,7 +1271,7 @@ export function AIArticleStudioModal({
                     </div>
 
                     {generatedResult.service_benchmarks && generatedResult.service_benchmarks.length > 0 && (
-                      <div className="p-4 rounded-xl border bg-card space-y-2">
+                      <div className="p-4 rounded-[8px] border bg-card space-y-2">
                         <span className="text-xs font-bold text-foreground">{t('studio.serviceBenchmarks', 'Service standards in this article')}</span>
                         <ul className="list-disc ps-5 text-xs text-muted-foreground space-y-1">
                           {generatedResult.service_benchmarks.map((b, i) => <li key={i}>{b}</li>)}
@@ -1281,15 +1281,15 @@ export function AIArticleStudioModal({
 
                     {/* Critical Control Points */}
                     {generatedResult.critical_control_points && generatedResult.critical_control_points.length > 0 && (
-                      <div className="p-4 rounded-xl border bg-muted/20 space-y-2">
+                      <div className="p-4 rounded-[8px] border bg-muted/20 space-y-2">
                         <h5 className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                          <ShieldAlert className="w-4 h-4 text-amber-600" />
+                          <ShieldAlert className="w-4 h-4 text-ds-warning" />
                           Critical Control Points (CCPs)
                         </h5>
                         <ul className="space-y-1.5 text-xs text-muted-foreground">
                           {generatedResult.critical_control_points.map((ccp, idx) => (
                             <li key={idx} className="flex items-start gap-2">
-                              <span className="text-amber-600 font-bold">•</span>
+                              <span className="text-ds-warning font-bold">•</span>
                               <span>{ccp}</span>
                             </li>
                           ))}
@@ -1302,7 +1302,7 @@ export function AIArticleStudioModal({
                       <span className="text-muted-foreground">AI Models Utilized:</span>
                       <div className="flex items-center gap-1.5 flex-wrap justify-end">
                         {generatedResult.models_used.map((m, idx) => (
-                          <Badge key={idx} variant="outline" className="text-[10px] font-mono">
+                          <Badge key={idx} variant="outline" className="text-[11px] font-mono">
                             {m.split('/').pop()}
                           </Badge>
                         ))}
@@ -1325,7 +1325,7 @@ export function AIArticleStudioModal({
                   size="sm"
                   onClick={handleGenerate}
                   disabled={!title.trim() || isGenerating}
-                  className="bg-purple-600 hover:bg-purple-700 text-white font-bold gap-2"
+                  className="bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink font-bold gap-2"
                 >
                   {isGenerating ? (
                     <>
@@ -1357,7 +1357,7 @@ export function AIArticleStudioModal({
                 <Button
                   size="sm"
                   onClick={handleApply}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold gap-1.5"
+                  className="bg-ds-success hover:bg-ds-success text-white dark:text-ds-on-ink font-bold gap-1.5"
                 >
                   <CheckCircle2 className="w-4 h-4" />
                   Apply to Knowledge Article
@@ -1373,7 +1373,7 @@ export function AIArticleStudioModal({
         <DialogContent className="max-w-2xl max-h-[80vh] flex flex-col p-0">
           <DialogHeader className="p-5 border-b">
             <DialogTitle className="text-base font-bold flex items-center gap-2">
-              <History className="w-4 h-4 text-purple-600" />
+              <History className="w-4 h-4 text-ds-accent" />
               Generation History
             </DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground">
@@ -1384,7 +1384,7 @@ export function AIArticleStudioModal({
             {generationHistory.map((item, idx) => (
               <div
                 key={idx}
-                className="p-3.5 rounded-xl border bg-card hover:bg-muted/20 transition-all flex items-center justify-between gap-3 text-xs"
+                className="p-3.5 rounded-[8px] border bg-card hover:bg-muted/20 transition-all flex items-center justify-between gap-3 text-xs"
               >
                 <div>
                   <p className="font-bold text-foreground">{item.article.title}</p>

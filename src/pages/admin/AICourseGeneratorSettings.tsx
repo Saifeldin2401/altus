@@ -919,7 +919,7 @@ export default function AICourseGeneratorSettings() {
                   <div
                     key={mode.id}
                     onClick={() => set('routingMode', mode.id)}
-                    className={`p-3.5 rounded-xl border cursor-pointer transition-all flex flex-col justify-between space-y-2 ${
+                    className={`p-3.5 rounded-[8px] border cursor-pointer transition-all flex flex-col justify-between space-y-2 ${
  draft.routingMode === mode.id
  ? 'border-ds-accent/30 bg-ds-accent-soft shadow-sm ring-1 ring-ds-accent/30'
  : 'bg-card hover:bg-muted/20 hover:border-ds-border '
@@ -973,16 +973,16 @@ export default function AICourseGeneratorSettings() {
                 )
                 if ((agentPolicies ?? []).length === 0) return null
                 return (
-                  <div className="mt-3 rounded-xl border bg-muted/20 px-3.5 py-2.5 text-[11px] space-y-1">
+                  <div className="mt-3 rounded-[8px] border bg-muted/20 px-3.5 py-2.5 text-[11px] space-y-1">
                     <div className="flex flex-wrap items-center gap-1.5">
                       <span className="font-semibold text-muted-foreground">Per-agent overrides:</span>
-                      <Badge variant="outline" className="text-[10px]">
+                      <Badge variant="outline" className="text-[11px]">
                         {overriders.length}/{(agentPolicies ?? []).length} agents override this baseline
                       </Badge>
                       <button
                         type="button"
                         onClick={() => setActiveTab('policies')}
-                        className="text-[10px] font-semibold text-ds-accent hover:text-ds-accent underline underline-offset-2"
+                        className="text-[11px] font-semibold text-ds-accent hover:text-ds-accent underline underline-offset-2"
                       >
                         Open Agent Policies →
                       </button>
@@ -1043,10 +1043,10 @@ export default function AICourseGeneratorSettings() {
                   <CardHeader className="p-4 pb-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
-                        <div className="p-2 rounded-xl bg-muted/60">{prov.icon}</div>
+                        <div className="p-2 rounded-[8px] bg-muted/60">{prov.icon}</div>
                         <div>
                           <CardTitle className="text-xs font-bold">{prov.name}</CardTitle>
-                          <p className="text-[10px] text-muted-foreground">{providerModelCount} catalog models</p>
+                          <p className="text-[11px] text-muted-foreground">{providerModelCount} catalog models</p>
                         </div>
                       </div>
 
@@ -1066,7 +1066,7 @@ export default function AICourseGeneratorSettings() {
                     <p className="text-xs text-muted-foreground leading-relaxed">{prov.tagline}</p>
 
                     {db && (
-                      <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t text-[10px]">
+                      <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t text-[11px]">
                         <span className={`font-semibold ${healthTone}`}>
                           ● {db.health_status}
                           {cooldownActive && db.cooldown_until
@@ -1075,7 +1075,7 @@ export default function AICourseGeneratorSettings() {
                         </span>
                         <Badge
                           variant="outline"
-                          className={`text-[9px] ${
+                          className={`text-[11px] ${
                             db.key_status === 'configured'
                               ? 'bg-ds-success-soft text-ds-success border-ds-success/30'
                               : 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
@@ -1090,32 +1090,32 @@ export default function AICourseGeneratorSettings() {
                     <div className="flex items-center justify-between pt-2 border-t text-xs">
                       <div className="flex items-center gap-1.5">
                         {ping?.testing ? (
-                          <Badge variant="outline" className="text-[10px]">
+                          <Badge variant="outline" className="text-[11px]">
                             <Loader2 className="w-2.5 h-2.5 animate-spin me-1" />
                             Pinging...
                           </Badge>
                         ) : ping?.status === 'online' ? (
-                          <Badge variant="outline" className="bg-ds-success-soft text-ds-success border-ds-success/30 text-[10px]">
+                          <Badge variant="outline" className="bg-ds-success-soft text-ds-success border-ds-success/30 text-[11px]">
                             <span className="w-1.5 h-1.5 rounded-full bg-ds-success me-1 animate-pulse" />
                             {ping.latencyMs} ms
                           </Badge>
                         ) : ping?.status === 'degraded' ? (
-                          <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[10px]">
+                          <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[11px]">
                             <span className="w-1.5 h-1.5 rounded-full bg-ds-warning me-1" />
                             degraded
                           </Badge>
                         ) : ping?.status === 'error' ? (
-                          <Badge variant="outline" className="bg-ds-danger-soft text-ds-danger border-ds-danger/30 text-[10px]">
+                          <Badge variant="outline" className="bg-ds-danger-soft text-ds-danger border-ds-danger/30 text-[11px]">
                             <span className="w-1.5 h-1.5 rounded-full bg-ds-danger me-1" />
                             offline
                           </Badge>
                         ) : (
-                          <Badge variant="outline" className="text-[10px] text-muted-foreground">
+                          <Badge variant="outline" className="text-[11px] text-muted-foreground">
                             Est. {prov.avgLatencyMs} ms
                           </Badge>
                         )}
                         {prov.freeTier && (
-                          <Badge variant="secondary" className="text-[9px] bg-ds-surface-subtle">
+                          <Badge variant="secondary" className="text-[11px] bg-ds-surface-subtle">
                             Free Tier
                           </Badge>
                         )}
@@ -1126,7 +1126,7 @@ export default function AICourseGeneratorSettings() {
                         size="sm"
                         disabled={ping?.testing || !isEnabled}
                         onClick={() => handlePingProvider(prov.id)}
-                        className="h-6 text-[10px] font-semibold text-ds-accent hover:text-ds-accent hover:bg-ds-accent-soft"
+                        className="h-6 text-[11px] font-semibold text-ds-accent hover:text-ds-accent hover:bg-ds-accent-soft"
                       >
                         <Zap className="w-3 h-3 me-1" />
                         {t('ai_course_generator.gateways.ping', 'Test Ping')}
@@ -1181,7 +1181,7 @@ export default function AICourseGeneratorSettings() {
           </div>
 
           {/* Search and Filters Bar */}
-          <div className="p-4 rounded-xl border bg-card space-y-3">
+          <div className="p-4 rounded-[8px] border bg-card space-y-3">
             <div className="flex flex-col sm:flex-row items-center gap-3">
               <div className="relative flex-1 w-full">
                 <Search className="w-3.5 h-3.5 absolute start-3 top-3 text-muted-foreground" />
@@ -1228,7 +1228,7 @@ export default function AICourseGeneratorSettings() {
               <span className="text-[11px] text-muted-foreground me-1">Provider:</span>
               <Badge
                 variant={providerFilter === 'all' ? 'default' : 'outline'}
-                className="cursor-pointer text-[10px]"
+                className="cursor-pointer text-[11px]"
                 onClick={() => setProviderFilter('all')}
               >
                 All Providers ({models.length})
@@ -1237,7 +1237,7 @@ export default function AICourseGeneratorSettings() {
                 <Badge
                   key={prov.id}
                   variant={providerFilter === prov.id ? 'default' : 'outline'}
-                  className="cursor-pointer text-[10px] capitalize"
+                  className="cursor-pointer text-[11px] capitalize"
                   onClick={() => setProviderFilter(prov.id)}
                 >
                   {prov.id} ({models.filter((m) => m.provider === prov.id).length})
@@ -1268,12 +1268,12 @@ export default function AICourseGeneratorSettings() {
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
                         <CardTitle className="text-xs font-bold truncate text-foreground">{m.name}</CardTitle>
-                        <p className="text-[10px] font-mono text-muted-foreground truncate">{m.id}</p>
+                        <p className="text-[11px] font-mono text-muted-foreground truncate">{m.id}</p>
                       </div>
 
                       <Badge
                         variant="outline"
-                        className={`text-[9px] font-semibold shrink-0 ${
+                        className={`text-[11px] font-semibold shrink-0 ${
  isImage
  ? 'bg-ds-warning-soft text-ds-warning border-ds-warning/30 '
  : 'bg-ds-accent-soft text-ds-accent border-ds-accent/30 '
@@ -1286,13 +1286,13 @@ export default function AICourseGeneratorSettings() {
 
                   <CardContent className="p-3.5 pt-0 space-y-2.5">
                     {/* Metadata Pill Bar */}
-                    <div className="flex items-center gap-1.5 flex-wrap text-[10px]">
-                      <Badge variant="secondary" className="capitalize text-[9px]">
+                    <div className="flex items-center gap-1.5 flex-wrap text-[11px]">
+                      <Badge variant="secondary" className="capitalize text-[11px]">
                         {m.provider}
                       </Badge>
                       <Badge
                         variant="outline"
-                        className={`text-[9px] font-semibold ${
+                        className={`text-[11px] font-semibold ${
  m.costTier === 'free'
  ? 'text-ds-success border-ds-success/30 bg-ds-success-soft '
  : 'text-ds-warning border-ds-warning/30 bg-ds-warning-soft '
@@ -1306,7 +1306,7 @@ export default function AICourseGeneratorSettings() {
                       {dbm ? (
                         <Badge
                           variant="outline"
-                          className={`text-[9px] font-semibold ${
+                          className={`text-[11px] font-semibold ${
  dbm.availability === 'verified' && dbm.enabled
  ? 'text-ds-success border-ds-success/30 bg-ds-success-soft '
  : 'text-ds-danger border-ds-danger/30 bg-ds-danger-soft '
@@ -1317,7 +1317,7 @@ export default function AICourseGeneratorSettings() {
                             : `registry: ${dbm.enabled ? dbm.availability : 'disabled'}`}
                         </Badge>
                       ) : (
-                        <Badge variant="outline" className="text-[9px] text-muted-foreground">
+                        <Badge variant="outline" className="text-[11px] text-muted-foreground">
                           not in DB registry
                         </Badge>
                       )}
@@ -1327,7 +1327,7 @@ export default function AICourseGeneratorSettings() {
                         return (
                           <Badge
                             variant="outline"
-                            className={`text-[9px] font-semibold ${
+                            className={`text-[11px] font-semibold ${
  v.last_probe_ok
  ? 'text-ds-success border-ds-success/30 bg-ds-success-soft '
  : 'text-ds-danger border-ds-danger/30 bg-ds-danger-soft '
@@ -1342,12 +1342,12 @@ export default function AICourseGeneratorSettings() {
 
                     {/* Interactive 3-State Priority Switcher (Zero Typing!) */}
                     <div className="pt-2 border-t flex items-center justify-between">
-                      <span className="text-[10px] font-semibold text-muted-foreground">Routing Status:</span>
+                      <span className="text-[11px] font-semibold text-muted-foreground">Routing Status:</span>
                       <div className="flex items-center gap-1 bg-muted/40 p-0.5 rounded-lg border">
                         <button
                           type="button"
                           onClick={() => setModelStatus(m.id, 'auto')}
-                          className={`px-2 py-0.5 rounded text-[10px] font-medium transition-all ${
+                          className={`px-2 py-0.5 rounded text-[11px] font-medium transition-all ${
                             status === 'auto'
                               ? 'bg-background shadow-xs text-foreground font-bold'
                               : 'text-muted-foreground hover:text-foreground'
@@ -1358,7 +1358,7 @@ export default function AICourseGeneratorSettings() {
                         <button
                           type="button"
                           onClick={() => setModelStatus(m.id, 'force_enabled')}
-                          className={`px-2 py-0.5 rounded text-[10px] font-medium transition-all ${
+                          className={`px-2 py-0.5 rounded text-[11px] font-medium transition-all ${
                             status === 'force_enabled'
                               ? 'bg-ds-ink text-ds-on-ink font-bold'
                               : 'text-muted-foreground hover:text-foreground'
@@ -1369,7 +1369,7 @@ export default function AICourseGeneratorSettings() {
                         <button
                           type="button"
                           onClick={() => setModelStatus(m.id, 'disabled')}
-                          className={`px-2 py-0.5 rounded text-[10px] font-medium transition-all ${
+                          className={`px-2 py-0.5 rounded text-[11px] font-medium transition-all ${
                             status === 'disabled'
                               ? 'bg-ds-danger text-white font-bold'
                               : 'text-muted-foreground hover:text-foreground'
@@ -1405,7 +1405,7 @@ export default function AICourseGeneratorSettings() {
                   size="sm"
                   onClick={() => handleRunVerification()}
                   disabled={verifying}
-                  className="h-9 text-xs font-bold bg-ds-success hover:bg-ds-success text-white shadow-sm gap-1.5 shrink-0"
+                  className="h-9 text-xs font-bold bg-ds-success hover:bg-ds-success/90 text-white dark:text-ds-on-ink shadow-sm gap-1.5 shrink-0"
                 >
                   {verifying ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
                   <span>
@@ -1426,9 +1426,9 @@ export default function AICourseGeneratorSettings() {
                   { label: t('ai_course_generator.verification.probe_ok', 'Last probe OK'), value: verificationSummary.probedOk, tone: 'text-ds-success' },
                   { label: t('ai_course_generator.verification.probe_fail', 'Last probe failed'), value: verificationSummary.probedFail, tone: 'text-ds-danger' },
                 ].map((s) => (
-                  <div key={s.label} className="rounded-xl border bg-card p-3">
+                  <div key={s.label} className="rounded-[8px] border bg-card p-3">
                     <div className={`text-lg font-extrabold ${s.tone}`}>{s.value}</div>
-                    <div className="text-[10px] text-muted-foreground">{s.label}</div>
+                    <div className="text-[11px] text-muted-foreground">{s.label}</div>
                   </div>
                 ))}
               </div>
@@ -1443,7 +1443,7 @@ export default function AICourseGeneratorSettings() {
                 <div className="text-[11px] font-semibold text-muted-foreground mb-1.5">
                   {t('ai_course_generator.verification.recent', 'Recent probes')}
                 </div>
-                <ScrollArea className="h-64 rounded-xl border">
+                <ScrollArea className="h-64 rounded-[8px] border">
                   <div className="divide-y">
                     {(verificationQuery.data?.recent_probes ?? []).length === 0 ? (
                       <div className="p-4 text-[11px] text-muted-foreground text-center">
@@ -1464,9 +1464,9 @@ export default function AICourseGeneratorSettings() {
                             </div>
                           </div>
                           <div className="flex items-center gap-1.5 shrink-0 text-muted-foreground">
-                            <Badge variant="outline" className="text-[9px] capitalize">{p.probe_type}</Badge>
+                            <Badge variant="outline" className="text-[11px] capitalize">{p.probe_type}</Badge>
                             {p.http_status != null && (
-                              <Badge variant="outline" className="text-[9px] font-mono">{p.http_status}</Badge>
+                              <Badge variant="outline" className="text-[11px] font-mono">{p.http_status}</Badge>
                             )}
                             <span className="tabular-nums">
                               {new Date(p.probed_at).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
@@ -1574,24 +1574,24 @@ export default function AICourseGeneratorSettings() {
           </div>
 
           {/* Global baseline every "Inherit" below resolves to — kept in sync with the Strategy tab. */}
-          <div className="flex flex-wrap items-center gap-2 rounded-xl border bg-muted/20 px-3.5 py-2.5 text-[11px]">
+          <div className="flex flex-wrap items-center gap-2 rounded-[8px] border bg-muted/20 px-3.5 py-2.5 text-[11px]">
             <span className="font-semibold text-muted-foreground">Global baseline (Strategy tab):</span>
-            <Badge variant="outline" className="text-[10px] capitalize">
+            <Badge variant="outline" className="text-[11px] capitalize">
               {draft.routingMode.replace('_', '-')} mode
             </Badge>
             {draft.freeOnlyMode ? (
-              <Badge variant="outline" className="text-[10px] bg-ds-success-soft text-ds-success border-ds-success/30">
+              <Badge variant="outline" className="text-[11px] bg-ds-success-soft text-ds-success border-ds-success/30">
                 Free-Only ON — paid forced models &amp; quality/premium overrides below are skipped until it&apos;s turned off
               </Badge>
             ) : (
-              <Badge variant="outline" className="text-[10px]">Free-Only OFF — paid models allowed</Badge>
+              <Badge variant="outline" className="text-[11px]">Free-Only OFF — paid models allowed</Badge>
             )}
             {(() => {
               const overrideCount = (agentPolicies ?? []).filter(
                 (p) => p.routingModeOverride || p.forceModelId || p.capabilityOverride || !p.enabled || p.disabledModelIds.length > 0,
               ).length
               return overrideCount > 0 ? (
-                <Badge variant="outline" className="text-[10px] bg-ds-accent-soft text-ds-accent border-ds-accent/30">
+                <Badge variant="outline" className="text-[11px] bg-ds-accent-soft text-ds-accent border-ds-accent/30">
                   {overrideCount} agent{overrideCount === 1 ? '' : 's'} override the baseline
                 </Badge>
               ) : (
@@ -1630,7 +1630,7 @@ export default function AICourseGeneratorSettings() {
               />
             ))}
             {(agentPolicies ?? []).length === 0 && (
-              <div className="col-span-full text-center py-12 rounded-xl border border-dashed bg-muted/10 text-xs text-muted-foreground">
+              <div className="col-span-full text-center py-12 rounded-[8px] border border-dashed bg-muted/10 text-xs text-muted-foreground">
                 {t('ai_course_generator.policies.loading', 'Loading agent policies...')}
               </div>
             )}
@@ -1822,7 +1822,7 @@ export default function AICourseGeneratorSettings() {
                   size="sm"
                   onClick={handleRunDiagnostics}
                   disabled={diagnosticRunning}
-                  className="h-9 text-xs font-bold bg-ds-danger hover:bg-ds-danger text-white shadow-sm gap-1.5 shrink-0"
+                  className="h-9 text-xs font-bold bg-ds-danger hover:bg-ds-danger/90 text-white shadow-sm gap-1.5 shrink-0"
                 >
                   {diagnosticRunning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
                   <span>
@@ -1836,7 +1836,7 @@ export default function AICourseGeneratorSettings() {
 
             <CardContent className="space-y-4">
               {diagnosticResults.length === 0 ? (
-                <div className="text-center py-12 rounded-xl border border-dashed bg-muted/10 space-y-3">
+                <div className="text-center py-12 rounded-[8px] border border-dashed bg-muted/10 space-y-3">
                   <div className="w-10 h-10 rounded-full bg-ds-danger-soft text-ds-danger mx-auto flex items-center justify-center">
                     <Play className="w-5 h-5" />
                   </div>
@@ -1852,7 +1852,7 @@ export default function AICourseGeneratorSettings() {
                   {diagnosticResults.map((res, idx) => (
                     <div
                       key={idx}
-                      className={`p-3.5 rounded-xl border flex items-center justify-between gap-3 text-xs transition-all ${
+                      className={`p-3.5 rounded-[8px] border flex items-center justify-between gap-3 text-xs transition-all ${
  res.status === 'success'
  ? 'bg-ds-success-soft border-ds-success/30 '
  : res.status === 'error'
@@ -1879,7 +1879,7 @@ export default function AICourseGeneratorSettings() {
                       </div>
 
                       {res.latencyMs !== undefined && (
-                        <Badge variant="outline" className="text-[10px] font-mono shrink-0 bg-background">
+                        <Badge variant="outline" className="text-[11px] font-mono shrink-0 bg-background">
                           {res.latencyMs} ms
                         </Badge>
                       )}
@@ -1915,15 +1915,15 @@ function PresetCard({
   return (
     <div
       onClick={onClick}
-      className={`p-4 rounded-2xl border cursor-pointer transition-all duration-200 flex flex-col justify-between space-y-3 relative overflow-hidden ${
+      className={`p-4 rounded-[8px] border cursor-pointer transition-all duration-200 flex flex-col justify-between space-y-3 relative overflow-hidden ${
  active
- ? 'border-ds-accent/30 bg-ds-accent-soft shadow-md ring-2 ring-ds-accent/30'
+ ? 'border-ds-accent/30 bg-ds-accent-soft ring-2 ring-ds-accent/30'
  : 'bg-card hover:bg-muted/30 hover:border-ds-border '
  }`}
     >
       <div className="flex items-start justify-between">
-        <div className="p-2 rounded-xl bg-muted/60">{icon}</div>
-        <Badge variant="outline" className={`text-[10px] font-bold ${badgeColor}`}>
+        <div className="p-2 rounded-[8px] bg-muted/60">{icon}</div>
+        <Badge variant="outline" className={`text-[11px] font-bold ${badgeColor}`}>
           {badge}
         </Badge>
       </div>
@@ -1934,7 +1934,7 @@ function PresetCard({
       </div>
 
       <div className="pt-2 border-t flex items-center justify-between">
-        <span className="text-[10px] font-semibold text-ds-accent flex items-center gap-1">
+        <span className="text-[11px] font-semibold text-ds-accent flex items-center gap-1">
           {active ? (
             <>
               <Check className="w-3 h-3" /> Active Strategy
@@ -1960,7 +1960,7 @@ function ToggleRow({
   onChange: (v: boolean) => void
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 rounded-xl border bg-card p-3.5 hover:bg-muted/20 transition-all">
+    <div className="flex items-center justify-between gap-4 rounded-[8px] border bg-card p-3.5 hover:bg-muted/20 transition-all">
       <div className="space-y-0.5 min-w-0">
         <div className="text-xs font-bold text-foreground">{label}</div>
         <div className="text-[11px] text-muted-foreground leading-relaxed">{hint}</div>
@@ -1989,16 +1989,16 @@ function RoleModelSelector({
     <Card className="hover:border-ds-border transition-all">
       <CardHeader className="p-4 pb-2">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-muted/60">{icon}</div>
+          <div className="p-2 rounded-[8px] bg-muted/60">{icon}</div>
           <div>
             <CardTitle className="text-xs font-bold text-foreground">{roleName}</CardTitle>
-            <p className="text-[10px] text-muted-foreground">{roleDescription}</p>
+            <p className="text-[11px] text-muted-foreground">{roleDescription}</p>
           </div>
         </div>
       </CardHeader>
       <CardContent className="p-4 pt-2">
         <div className="space-y-1.5">
-          <Label className="text-[10px] text-muted-foreground font-semibold">Assigned Model:</Label>
+          <Label className="text-[11px] text-muted-foreground font-semibold">Assigned Model:</Label>
           <Select value={selectedModel} onValueChange={onSelect}>
             <SelectTrigger className="h-9 text-xs">
               <SelectValue />
@@ -2008,7 +2008,7 @@ function RoleModelSelector({
                 <SelectItem key={m.id} value={m.id} className="text-xs">
                   <div className="flex items-center justify-between w-full gap-2">
                     <span className="font-semibold">{m.name}</span>
-                    <span className="text-[10px] text-muted-foreground font-mono">({m.provider})</span>
+                    <span className="text-[11px] text-muted-foreground font-mono">({m.provider})</span>
                   </div>
                 </SelectItem>
               ))}
@@ -2087,27 +2087,27 @@ function AgentPolicyCard({
       <CardHeader className="p-4 pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-muted/60">
+            <div className="p-2 rounded-[8px] bg-muted/60">
               {draft.enabled ? <Bot className="w-4 h-4 text-ds-success" /> : <Ban className="w-4 h-4 text-ds-danger" />}
             </div>
             <div>
               <CardTitle className="text-xs font-bold text-foreground">
                 {ROLE_LABELS[policy.agentRole] ?? policy.agentRole}
               </CardTitle>
-              <p className="text-[10px] font-mono text-muted-foreground">{policy.agentRole}</p>
+              <p className="text-[11px] font-mono text-muted-foreground">{policy.agentRole}</p>
             </div>
           </div>
           <Switch checked={draft.enabled} onCheckedChange={(v) => patch('enabled', v)} />
         </div>
         {draft.enabled && (
-          <div className="flex flex-wrap items-center gap-1.5 pt-2 text-[10px]">
+          <div className="flex flex-wrap items-center gap-1.5 pt-2 text-[11px]">
             <span className="text-muted-foreground">Effective routing:</span>
-            <Badge variant="outline" className="text-[9px] capitalize">
+            <Badge variant="outline" className="text-[11px] capitalize">
               {effectiveMode.replace('_', '-')}
               {!draft.routingModeOverride && <span className="text-muted-foreground ms-1">(inherited)</span>}
             </Badge>
             {globalFreeOnly && (
-              <Badge variant="outline" className="text-[9px] bg-ds-success-soft text-ds-success border-ds-success/30">
+              <Badge variant="outline" className="text-[11px] bg-ds-success-soft text-ds-success border-ds-success/30">
                 Free-Only (global)
               </Badge>
             )}
@@ -2117,7 +2117,7 @@ function AgentPolicyCard({
 
       <CardContent className="p-4 pt-0 space-y-3">
         {draft.enabled && (paidModeOverridden || forcedModelBlocked) && (
-          <div className="rounded-lg border border-ds-warning/30 bg-ds-warning-soft px-2.5 py-2 text-[10px] leading-relaxed text-ds-warning space-y-0.5">
+          <div className="rounded-lg border border-ds-warning/30 bg-ds-warning-soft px-2.5 py-2 text-[11px] leading-relaxed text-ds-warning space-y-0.5">
             {paidModeOverridden && (
               <p>⚠ This agent&apos;s <strong>{draft.routingModeOverride}</strong> routing mode is ignored while the Strategy tab&apos;s <strong>Free-Only</strong> switch is on — it runs free-first until you turn Free-Only off.</p>
             )}
@@ -2128,7 +2128,7 @@ function AgentPolicyCard({
         )}
         <div className="grid grid-cols-2 gap-2.5">
           <div className="space-y-1">
-            <Label className="text-[10px] text-muted-foreground font-semibold">Routing mode</Label>
+            <Label className="text-[11px] text-muted-foreground font-semibold">Routing mode</Label>
             <Select
               value={draft.routingModeOverride ?? INHERIT}
               onValueChange={(v) => patch('routingModeOverride', v === INHERIT ? null : (v as RoutingMode))}
@@ -2151,7 +2151,7 @@ function AgentPolicyCard({
           </div>
 
           <div className="space-y-1">
-            <Label className="text-[10px] text-muted-foreground font-semibold">Capability class</Label>
+            <Label className="text-[11px] text-muted-foreground font-semibold">Capability class</Label>
             <Select
               value={draft.capabilityOverride ?? INHERIT}
               onValueChange={(v) => patch('capabilityOverride', v === INHERIT ? null : (v as AIAgentPolicy['capabilityOverride']))}
@@ -2170,7 +2170,7 @@ function AgentPolicyCard({
         </div>
 
         <div className="space-y-1">
-          <Label className="text-[10px] text-muted-foreground font-semibold">Force model (prepended to cascade)</Label>
+          <Label className="text-[11px] text-muted-foreground font-semibold">Force model (prepended to cascade)</Label>
           <Select
             value={draft.forceModelId ?? INHERIT}
             onValueChange={(v) => patch('forceModelId', v === INHERIT ? null : v)}
@@ -2181,7 +2181,7 @@ function AgentPolicyCard({
               {textModels.map((m) => (
                 <SelectItem key={m.id} value={m.id} className="text-xs">
                   <span className="font-semibold">{m.name}</span>
-                  <span className="text-[10px] text-muted-foreground font-mono ms-1">({m.provider})</span>
+                  <span className="text-[11px] text-muted-foreground font-mono ms-1">({m.provider})</span>
                 </SelectItem>
               ))}
             </SelectContent>
@@ -2189,7 +2189,7 @@ function AgentPolicyCard({
         </div>
 
         <div className="space-y-1">
-          <Label className="text-[10px] text-muted-foreground font-semibold">Exclude models</Label>
+          <Label className="text-[11px] text-muted-foreground font-semibold">Exclude models</Label>
           <Select value={INHERIT} onValueChange={toggleExcluded}>
             <SelectTrigger className="h-8 text-xs">
               <SelectValue placeholder="Add a model to exclude..." />
@@ -2209,7 +2209,7 @@ function AgentPolicyCard({
                 <Badge
                   key={id}
                   variant="outline"
-                  className="text-[9px] font-mono bg-ds-danger-soft text-ds-danger border-ds-danger/30 cursor-pointer"
+                  className="text-[11px] font-mono bg-ds-danger-soft text-ds-danger border-ds-danger/30 cursor-pointer"
                   onClick={() => toggleExcluded(id)}
                 >
                   {id} <X className="w-2.5 h-2.5 ms-1" />
@@ -2221,14 +2221,14 @@ function AgentPolicyCard({
 
         <div className="grid grid-cols-2 gap-2.5">
           <div className="space-y-1">
-            <Label className="text-[10px] text-muted-foreground font-semibold">Max retries</Label>
+            <Label className="text-[11px] text-muted-foreground font-semibold">Max retries</Label>
             <div className="flex flex-wrap gap-1">
               {retryOptions.map((o) => (
                 <Button
                   key={String(o)}
                   variant={draft.maxRetriesOverride === o ? 'default' : 'outline'}
                   size="sm"
-                  className="h-6 text-[10px] font-semibold px-1.5"
+                  className="h-6 text-[11px] font-semibold px-1.5"
                   onClick={() => patch('maxRetriesOverride', o)}
                 >
                   {o === null ? 'Inherit' : o}
@@ -2237,14 +2237,14 @@ function AgentPolicyCard({
             </div>
           </div>
           <div className="space-y-1">
-            <Label className="text-[10px] text-muted-foreground font-semibold">Temperature</Label>
+            <Label className="text-[11px] text-muted-foreground font-semibold">Temperature</Label>
             <div className="flex flex-wrap gap-1">
               {tempOptions.map((o) => (
                 <Button
                   key={String(o)}
                   variant={draft.temperatureOverride === o ? 'default' : 'outline'}
                   size="sm"
-                  className="h-6 text-[10px] font-semibold px-1.5"
+                  className="h-6 text-[11px] font-semibold px-1.5"
                   onClick={() => patch('temperatureOverride', o)}
                 >
                   {o === null ? 'Inherit' : o.toFixed(1)}
@@ -2255,7 +2255,7 @@ function AgentPolicyCard({
         </div>
 
         <div className="flex items-center justify-between pt-2 border-t">
-          <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+          <span className="text-[11px] text-muted-foreground flex items-center gap-1">
             <Clock className="w-3 h-3" />
             {dirty ? 'Unsaved changes' : 'Saved'}
           </span>
@@ -2273,7 +2273,7 @@ function AgentPolicyCard({
                 capabilityOverride: draft.capabilityOverride,
               })
             }
-            className="h-7 text-[10px] font-bold gap-1"
+            className="h-7 text-[11px] font-bold gap-1"
           >
             {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Save className="w-3 h-3" />}
             Save

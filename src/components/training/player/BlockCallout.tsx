@@ -36,17 +36,17 @@ const TAG_META: Record<
     },
     summary: {
         icon: Sparkles,
-        accent: 'text-emerald-900 dark:text-emerald-200',
-        ring: 'border-emerald-200 bg-emerald-50/70 dark:border-emerald-900/50 dark:bg-emerald-950/20',
-        iconWrap: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300',
+        accent: 'text-ds-success',
+        ring: 'border-ds-success/30 bg-ds-success-soft/70',
+        iconWrap: 'bg-ds-success-soft text-ds-success',
         defaultKey: 'moduleSummaryTitle',
         defaultText: 'Key takeaways',
     },
     checkpoints: {
         icon: Flag,
-        accent: 'text-amber-900 dark:text-amber-200',
-        ring: 'border-amber-200 bg-amber-50/70 dark:border-amber-900/50 dark:bg-amber-950/20',
-        iconWrap: 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300',
+        accent: 'text-ds-warning',
+        ring: 'border-ds-warning/30 bg-ds-warning-soft/70',
+        iconWrap: 'bg-ds-warning-soft text-ds-warning',
         defaultKey: 'moduleCheckpointsTitle',
         defaultText: 'Checkpoints',
     },
@@ -78,11 +78,11 @@ export function BlockCallout({
     return (
         <section
             dir={isRTL ? 'rtl' : undefined}
-            className={cn('rounded-2xl border p-5 sm:p-6', meta.ring, className)}
+            className={cn('rounded-[8px] border p-5 sm:p-6', meta.ring, className)}
             aria-label={heading}
         >
             <div className="flex items-center gap-3 mb-4">
-                <span className={cn('h-9 w-9 shrink-0 rounded-xl flex items-center justify-center', meta.iconWrap)}>
+                <span className={cn('h-9 w-9 shrink-0 rounded-[8px] flex items-center justify-center', meta.iconWrap)}>
                     <Icon className="h-5 w-5" />
                 </span>
                 <h3 className={cn('text-base font-bold tracking-tight', meta.accent)}>{heading}</h3>
@@ -91,7 +91,7 @@ export function BlockCallout({
             {cleanItems.length > 0 ? (
                 <ul className="space-y-2.5">
                     {cleanItems.map((entry, idx) => (
-                        <li key={idx} className="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700 dark:text-slate-200">
+                        <li key={idx} className="flex items-start gap-2.5 text-sm leading-relaxed text-ds-ink-secondary">
                             <CheckCircle2 className={cn('h-4 w-4 mt-0.5 shrink-0', meta.accent)} />
                             <span>{entry}</span>
                         </li>
@@ -107,7 +107,7 @@ export function BlockCallout({
                     {showBilingual && translatedMarkup && (
                         <div
                             dir={translationDir}
-                            className="prose prose-sm max-w-none dark:prose-invert leading-relaxed border-t border-black/5 dark:border-white/10 pt-4"
+                            className="prose prose-sm max-w-none dark:prose-invert leading-relaxed border-t border-black/5 pt-4"
                         >
                             <InlineErrorBoundary>
                                 <div dangerouslySetInnerHTML={{ __html: translatedMarkup }} />
@@ -116,7 +116,7 @@ export function BlockCallout({
                     )}
                 </div>
             ) : (
-                <p className="text-sm italic text-slate-400">{t('noContentAvailable', 'No content available.')}</p>
+                <p className="text-sm italic text-ds-muted">{t('noContentAvailable', 'No content available.')}</p>
             )}
         </section>
     )

@@ -49,10 +49,10 @@ export function VersionHistoryCard({ moduleId }: { moduleId: string | null; isRT
     if (!moduleId || !versions || versions.length === 0) return null
 
     return (
-        <Card className="shadow-sm border-slate-200">
+        <Card className="shadow-sm border-ds-border">
             <CardHeader>
                 <CardTitle className={cn("text-sm font-semibold flex items-center gap-2")}>
-                    <History className="w-4 h-4 text-slate-500" />
+                    <History className="w-4 h-4 text-ds-muted" />
                     {t('builder.versionHistory', 'Version History')}
                 </CardTitle>
             </CardHeader>
@@ -60,10 +60,10 @@ export function VersionHistoryCard({ moduleId }: { moduleId: string | null; isRT
                 {versions.map((version) => (
                     <div key={version.id} className={cn("flex items-center justify-between text-xs")}>
                         <div className="flex items-center gap-2">
-                            <Badge variant="outline" className="text-[10px]">v{version.versionNumber}</Badge>
-                            <span className="text-slate-500">{version.publishedByName || t('unknownUser', 'Unknown')}</span>
+                            <Badge variant="outline" className="text-[11px]">v{version.versionNumber}</Badge>
+                            <span className="text-ds-muted">{version.publishedByName || t('unknownUser', 'Unknown')}</span>
                         </div>
-                        <span className="text-slate-400">{format(new Date(version.createdAt), 'MMM d, yyyy')}</span>
+                        <span className="text-ds-muted">{format(new Date(version.createdAt), 'MMM d, yyyy')}</span>
                     </div>
                 ))}
             </CardContent>

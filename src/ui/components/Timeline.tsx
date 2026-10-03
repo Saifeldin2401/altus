@@ -49,7 +49,7 @@ export const Timeline: React.FC<TimelineProps> = ({ steps, className = '' }) => 
                   {step.label}
                 </span>
                 {step.date && (
-                  <span className="text-[10px] font-mono text-ds-muted">
+                  <span className="text-[11px] font-mono text-ds-muted">
                     {step.date}
                   </span>
                 )}

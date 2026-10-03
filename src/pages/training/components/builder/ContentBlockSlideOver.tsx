@@ -133,7 +133,7 @@ export function ContentBlockSlideOver({
           className="w-full sm:max-w-xl md:max-w-2xl overflow-y-auto p-6 flex flex-col justify-between"
         >
           <div>
-            <SheetHeader className="pb-4 border-b border-slate-100 dark:border-slate-800">
+            <SheetHeader className="pb-4 border-b border-ds-border">
               <SheetTitle className={cn("text-base font-bold", 'text-start')}>
                 {selectedContent ? t('builder.editContent', 'Edit Content Block') : t('builder.addContent', 'Add Content Block')}
               </SheetTitle>
@@ -145,12 +145,12 @@ export function ContentBlockSlideOver({
             {/* Validation Banner */}
             <div className={cn(
               "flex items-center gap-2 rounded-lg px-3 py-2 text-xs my-4 font-medium",
-              blockValidation.ok ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300" : "bg-amber-50 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300"
+              blockValidation.ok ? "bg-ds-success-soft text-ds-success" : "bg-ds-warning-soft text-ds-warning"
             )}>
               {blockValidation.ok ? (
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-ds-success" />
               ) : (
-                <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600" />
+                <AlertTriangle className="h-4 w-4 shrink-0 text-ds-warning" />
               )}
               <span>{blockValidation.message}</span>
             </div>
@@ -189,8 +189,8 @@ export function ContentBlockSlideOver({
 
               {/* Type: Quiz */}
               {currentBlock.type === 'quiz' && (
-                <div className={cn("bg-purple-50/70 dark:bg-purple-950/30 p-4 rounded-xl border border-purple-100 dark:border-purple-900/50 space-y-2")}>
-                  <Label className="text-xs font-bold text-purple-900 dark:text-purple-300">{t('builder.selectQuiz', 'Link Knowledge Quiz')}</Label>
+                <div className={cn("bg-ds-accent-soft/70 p-4 rounded-[8px] border border-ds-accent/30 space-y-2")}>
+                  <Label className="text-xs font-bold text-ds-accent">{t('builder.selectQuiz', 'Link Knowledge Quiz')}</Label>
                   <div className="mt-1.5 text-start">
                     <Select
                       value={(currentBlock.content_data?.quiz_id as string) || ''}
@@ -203,7 +203,7 @@ export function ContentBlockSlideOver({
                         })
                       }}
                     >
-                      <SelectTrigger className={cn("bg-white dark:bg-slate-950 border-purple-200 dark:border-purple-800 text-xs")}>
+                      <SelectTrigger className={cn("bg-ds-surface border-ds-accent/30 text-xs")}>
                         <SelectValue placeholder={t('builder.selectQuizPlaceholder', 'Choose a published quiz...')} />
                       </SelectTrigger>
                       <SelectContent>
@@ -213,7 +213,7 @@ export function ContentBlockSlideOver({
                           quizOptions.map(q => (
                             <SelectItem key={q.id} value={q.id} className={''}>
                               <span className="font-medium text-xs">{q.title}</span>
-                              <span className={cn("text-[11px] text-slate-500", "ms-2")}>
+                              <span className={cn("text-[11px] text-ds-muted", "ms-2")}>
                                 ({(q as unknown as { question_count?: number }).question_count ?? 0} {(q as unknown as { question_count?: number }).question_count === 1 ? t('builder.question', { defaultValue: 'question' }) : t('builder.questions', { defaultValue: 'questions' })})
                               </span>
                             </SelectItem>
@@ -222,7 +222,7 @@ export function ContentBlockSlideOver({
                       </SelectContent>
                     </Select>
                   </div>
-                  <p className="text-[11px] text-purple-700 dark:text-purple-400">
+                  <p className="text-[11px] text-ds-accent">
                     {t('builder.quizEmbedHint', 'Select a quiz from the Knowledge Bank to embed in this training module.')}
                   </p>
                 </div>
@@ -237,14 +237,14 @@ export function ContentBlockSlideOver({
                   : sopOptions
 
                 return (
-                  <div className={cn("bg-emerald-50/70 dark:bg-emerald-950/30 p-4 rounded-xl border border-emerald-100 dark:border-emerald-900/50 space-y-3")}>
+                  <div className={cn("bg-ds-success-soft/70 p-4 rounded-[8px] border border-ds-success/30 space-y-3")}>
                     <div className="flex items-center justify-between">
-                      <Label className="text-xs font-bold text-emerald-900 dark:text-emerald-300 flex items-center gap-1.5">
-                        <BookOpen className="h-4 w-4 text-emerald-600" />
+                      <Label className="text-xs font-bold text-ds-success flex items-center gap-1.5">
+                        <BookOpen className="h-4 w-4 text-ds-success" />
                         <span>{t('builder.selectSop', 'Link SOP Document')}</span>
                       </Label>
                       {selectedSop && (
-                        <Badge variant="outline" className="text-[10px] font-semibold bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 border-emerald-300">
+                        <Badge variant="outline" className="text-[11px] font-semibold bg-ds-success-soft text-ds-success border-ds-success/30">
                           {t('builder.sopLinked', 'SOP Selected')}
                         </Badge>
                       )}
@@ -252,13 +252,13 @@ export function ContentBlockSlideOver({
 
                     {/* Search SOP Filter */}
                     <div className="relative">
-                      <Search className={cn("absolute top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-emerald-600/70 pointer-events-none", "start-2.5")} />
+                      <Search className={cn("absolute top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-ds-success/70 pointer-events-none", "start-2.5")} />
                       <Input
                         placeholder={t('knowledgeBase.searchResources', 'Search SOPs by title...')}
                         value={sopSearchTerm}
                         onChange={(e) => setSopSearchTerm(e.target.value)}
                         className={cn(
-                          "h-8 text-xs bg-white dark:bg-slate-950 border-emerald-200 dark:border-emerald-800 shadow-xs",
+                          "h-8 text-xs bg-ds-surface border-ds-success/30 shadow-xs",
                           "ps-8 pe-7 text-start"
                         )}
                       />
@@ -266,7 +266,7 @@ export function ContentBlockSlideOver({
                         <button
                           type="button"
                           onClick={() => setSopSearchTerm('')}
-                          className={cn("absolute top-1/2 -translate-y-1/2 p-0.5 text-slate-400 hover:text-slate-600", "end-2")}
+                          className={cn("absolute top-1/2 -translate-y-1/2 p-0.5 text-ds-muted hover:text-ds-ink-secondary", "end-2")}
                         >
                           <X className="h-3 w-3" />
                         </button>
@@ -286,7 +286,7 @@ export function ContentBlockSlideOver({
                           })
                         }}
                       >
-                        <SelectTrigger className={cn("bg-white dark:bg-slate-950 border-emerald-200 dark:border-emerald-800 text-xs h-9")}>
+                        <SelectTrigger className={cn("bg-ds-surface border-ds-success/30 text-xs h-9")}>
                           <SelectValue placeholder={t('builder.selectSopPlaceholder', 'Choose a published SOP...')} />
                         </SelectTrigger>
                         <SelectContent className="max-h-56">
@@ -298,7 +298,7 @@ export function ContentBlockSlideOver({
                             filteredSops.map(s => (
                               <SelectItem key={s.id} value={s.id} className={''}>
                                 <div className="flex items-center gap-2">
-                                  <BookOpen className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                                  <BookOpen className="h-3.5 w-3.5 text-ds-success shrink-0" />
                                   <span className="font-medium text-xs truncate">{s.title}</span>
                                 </div>
                               </SelectItem>
@@ -309,15 +309,15 @@ export function ContentBlockSlideOver({
                     </div>
 
                     {selectedSop && (
-                      <div className="p-2.5 bg-white dark:bg-slate-900 rounded-lg border border-emerald-200 dark:border-emerald-800/80 flex items-center justify-between gap-2">
+                      <div className="p-2.5 bg-ds-surface rounded-lg border border-ds-success/30 flex items-center justify-between gap-2">
                         <div className="min-w-0">
-                          <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">{selectedSop.title}</p>
-                          <p className="text-[10px] text-emerald-600 dark:text-emerald-400">ID: {selectedSop.id.slice(0, 8)}...</p>
+                          <p className="text-xs font-bold text-ds-ink truncate">{selectedSop.title}</p>
+                          <p className="text-[11px] text-ds-success">ID: {selectedSop.id.slice(0, 8)}...</p>
                         </div>
                       </div>
                     )}
 
-                    <p className="text-[11px] text-emerald-700 dark:text-emerald-400">
+                    <p className="text-[11px] text-ds-success">
                       {t('builder.sopEmbedHint', 'Select a published SOP to reference. Trainees will see the live content from the SOP.')}
                     </p>
                   </div>
@@ -332,20 +332,20 @@ export function ContentBlockSlideOver({
                 const maxTurns = Number(currentBlock.content_data?.max_turns ?? 5)
 
                 return (
-                  <div className={cn("bg-amber-50/70 dark:bg-amber-950/30 p-4 rounded-xl border border-amber-200 dark:border-amber-900/50 space-y-3")}>
+                  <div className={cn("bg-ds-warning-soft/70 p-4 rounded-[8px] border border-ds-warning/30 space-y-3")}>
                     <div className="flex items-center justify-between">
-                      <Label className="text-xs font-bold text-amber-900 dark:text-amber-300 flex items-center gap-1.5">
-                        <MessageSquare className="h-4 w-4 text-amber-600" />
+                      <Label className="text-xs font-bold text-ds-warning flex items-center gap-1.5">
+                        <MessageSquare className="h-4 w-4 text-ds-warning" />
                         <span>{t('builder.roleplayConfig', 'AI Guest Roleplay Configuration')}</span>
                       </Label>
-                      <Badge variant="outline" className="text-[10px] font-semibold bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 border-amber-300">
+                      <Badge variant="outline" className="text-[11px] font-semibold bg-ds-warning-soft text-ds-warning border-ds-warning/30">
                         {selectedScenario.department.replace(/_/g, ' ')}
                       </Badge>
                     </div>
 
                     {/* Scenario Selector */}
                     <div className="space-y-1.5">
-                      <Label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300">
+                      <Label className="text-[11px] font-semibold text-ds-ink-secondary">
                         {t('builder.selectScenario', 'Hotel Dilemma Scenario')}
                       </Label>
                       <Select
@@ -365,14 +365,14 @@ export function ContentBlockSlideOver({
                           })
                         }}
                       >
-                        <SelectTrigger className="bg-white dark:bg-slate-950 border-amber-200 dark:border-amber-800 text-xs h-9">
+                        <SelectTrigger className="bg-ds-surface border-ds-warning/30 text-xs h-9">
                           <SelectValue placeholder="Choose a hotel scenario..." />
                         </SelectTrigger>
                         <SelectContent className="max-h-60">
                           {HOTEL_ROLEPLAY_SCENARIOS.map((scen) => (
                             <SelectItem key={scen.id} value={scen.id}>
                               <span className="font-medium">{scen.title}</span>
-                              <span className="text-[10px] text-muted-foreground ms-2">({scen.department.replace(/_/g, ' ')})</span>
+                              <span className="text-[11px] text-muted-foreground ms-2">({scen.department.replace(/_/g, ' ')})</span>
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -380,10 +380,10 @@ export function ContentBlockSlideOver({
                     </div>
 
                     {/* Scenario Briefing Preview */}
-                    <div className="p-2.5 rounded-lg bg-white/80 dark:bg-slate-900/80 border border-amber-200/60 dark:border-amber-800/40 text-xs space-y-1">
+                    <div className="p-2.5 rounded-lg bg-white/80 border border-ds-warning/60 text-xs space-y-1">
                       <div className="flex items-center justify-between text-[11px]">
                         <span className="font-bold text-foreground">Guest: {selectedScenario.guestName}</span>
-                        <span className="text-muted-foreground">Temperament: <strong className="text-amber-700 dark:text-amber-300">{selectedScenario.guestTemperament}</strong></span>
+                        <span className="text-muted-foreground">Temperament: <strong className="text-ds-warning">{selectedScenario.guestTemperament}</strong></span>
                       </div>
                       <p className="text-[11px] text-muted-foreground line-clamp-2">
                         {selectedScenario.scenarioContext}
@@ -393,7 +393,7 @@ export function ContentBlockSlideOver({
                     {/* Thresholds: Passing Score & Max Turns */}
                     <div className="grid grid-cols-2 gap-2 pt-1">
                       <div>
-                        <Label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300">Passing Score (%)</Label>
+                        <Label className="text-[11px] font-semibold text-ds-ink-secondary">Passing Score (%)</Label>
                         <Select
                           value={String(passingScore)}
                           onValueChange={(val) => {
@@ -407,7 +407,7 @@ export function ContentBlockSlideOver({
                             })
                           }}
                         >
-                          <SelectTrigger className="bg-white dark:bg-slate-950 border-amber-200 dark:border-amber-800 text-xs h-8 mt-1">
+                          <SelectTrigger className="bg-ds-surface border-ds-warning/30 text-xs h-8 mt-1">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
@@ -421,7 +421,7 @@ export function ContentBlockSlideOver({
                       </div>
 
                       <div>
-                        <Label className="text-[11px] font-semibold text-slate-700 dark:text-slate-300">Max Dialogue Turns</Label>
+                        <Label className="text-[11px] font-semibold text-ds-ink-secondary">Max Dialogue Turns</Label>
                         <Select
                           value={String(maxTurns)}
                           onValueChange={(val) => {
@@ -435,7 +435,7 @@ export function ContentBlockSlideOver({
                             })
                           }}
                         >
-                          <SelectTrigger className="bg-white dark:bg-slate-950 border-amber-200 dark:border-amber-800 text-xs h-8 mt-1">
+                          <SelectTrigger className="bg-ds-surface border-ds-warning/30 text-xs h-8 mt-1">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
@@ -447,7 +447,7 @@ export function ContentBlockSlideOver({
                       </div>
                     </div>
 
-                    <p className="text-[11px] text-amber-800 dark:text-amber-300">
+                    <p className="text-[11px] text-ds-warning">
                       Trainees will engage in a live roleplay in the Course Player and must score &ge; {passingScore}% on Forbes & Saudi Karam rubrics to complete this block.
                     </p>
                   </div>
@@ -465,7 +465,7 @@ export function ContentBlockSlideOver({
                       size="sm"
                       disabled={isGeneratingContent}
                       onClick={handleAIGenerateLessonContent}
-                      className="h-6 text-[11px] px-2 text-purple-700 hover:bg-purple-50"
+                      className="h-6 text-[11px] px-2 text-ds-accent hover:bg-ds-accent-soft"
                     >
                       {isGeneratingContent ? (
                         <Loader2 className="w-3 h-3 animate-spin me-1" />
@@ -475,7 +475,7 @@ export function ContentBlockSlideOver({
                       {t('builder.aiGenerateContent', 'AI Generate Lesson / SOP')}
                     </Button>
                   </div>
-                  <Suspense fallback={<div className="h-48 border rounded-lg animate-pulse bg-slate-50 mt-2" />}>
+                  <Suspense fallback={<div className="h-48 border rounded-lg animate-pulse bg-ds-surface-subtle mt-2" />}>
                     <RichTextEditor
                       value={currentBlock.content}
                       onChange={(val) => setCurrentBlock({ ...currentBlock, content: val })}
@@ -527,9 +527,9 @@ export function ContentBlockSlideOver({
                       <div className="space-y-3">
                         <div className="relative">
                           <Input type="file" accept="video/*" onChange={(e) => handleFileUpload(e, 'video')} disabled={uploading} className="hidden" id="slideover-video-upload" />
-                          <label htmlFor="slideover-video-upload" className={`flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed rounded-xl cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                            <Upload className="w-4 h-4 text-slate-500" />
-                            <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">{uploading ? t('uploading') : t('uploadVideo', 'Upload Video File')}</span>
+                          <label htmlFor="slideover-video-upload" className={`flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed rounded-[8px] cursor-pointer hover:bg-ds-surface-subtle transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                            <Upload className="w-4 h-4 text-ds-muted" />
+                            <span className="text-xs font-semibold text-ds-ink-secondary">{uploading ? t('uploading') : t('uploadVideo', 'Upload Video File')}</span>
                           </label>
                         </div>
                       </div>
@@ -576,9 +576,9 @@ export function ContentBlockSlideOver({
                       <div className="space-y-3">
                         <div className="relative">
                           <Input type="file" accept="image/*" onChange={(e) => handleFileUpload(e, 'image')} disabled={uploading} className="hidden" id="slideover-image-upload" />
-                          <label htmlFor="slideover-image-upload" className={`flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed rounded-xl cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                            <Upload className="w-4 h-4 text-slate-500" />
-                            <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">{uploading ? t('uploading') : t('uploadImage', 'Upload Image File')}</span>
+                          <label htmlFor="slideover-image-upload" className={`flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed rounded-[8px] cursor-pointer hover:bg-ds-surface-subtle transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                            <Upload className="w-4 h-4 text-ds-muted" />
+                            <span className="text-xs font-semibold text-ds-ink-secondary">{uploading ? t('uploading') : t('uploadImage', 'Upload Image File')}</span>
                           </label>
                         </div>
                       </div>
@@ -625,9 +625,9 @@ export function ContentBlockSlideOver({
                       <div className="space-y-3">
                         <div className="relative">
                           <Input type="file" accept=".pdf,.doc,.docx,.ppt,.pptx" onChange={(e) => handleFileUpload(e, 'document')} disabled={uploading} className="hidden" id="slideover-doc-upload" />
-                          <label htmlFor="slideover-doc-upload" className={`flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed rounded-xl cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                            <Upload className="w-4 h-4 text-slate-500" />
-                            <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">{uploading ? t('uploading') : t('uploadDocument', 'Upload Document File')}</span>
+                          <label htmlFor="slideover-doc-upload" className={`flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed rounded-[8px] cursor-pointer hover:bg-ds-surface-subtle transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                            <Upload className="w-4 h-4 text-ds-muted" />
+                            <span className="text-xs font-semibold text-ds-ink-secondary">{uploading ? t('uploading') : t('uploadDocument', 'Upload Document File')}</span>
                           </label>
                         </div>
                       </div>
@@ -638,9 +638,9 @@ export function ContentBlockSlideOver({
 
               {/* Type: Assignment / Practical */}
               {(currentBlock.type === 'assignment' || currentBlock.type === 'practical') && (
-                <div className={cn("space-y-4 bg-amber-50/50 dark:bg-amber-950/20 p-4 rounded-xl border border-amber-200/70 dark:border-amber-900/50")}>
+                <div className={cn("space-y-4 bg-ds-warning-soft/50 p-4 rounded-[8px] border border-ds-warning/70")}>
                   <div>
-                    <Label className="text-xs font-bold text-amber-900 dark:text-amber-300">
+                    <Label className="text-xs font-bold text-ds-warning">
                       {t('builder.assignmentPrompt', 'Assignment Instructions & Prompt')}
                     </Label>
                     <Textarea
@@ -660,7 +660,7 @@ export function ContentBlockSlideOver({
                   </div>
 
                   <div>
-                    <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    <Label className="text-xs font-semibold text-ds-ink-secondary">
                       {t('builder.evaluationRubric', 'Evaluation Rubric / Criteria')}
                     </Label>
                     <Textarea
@@ -677,7 +677,7 @@ export function ContentBlockSlideOver({
                     />
                   </div>
 
-                  <div className={cn("flex items-center justify-between pt-2 border-t border-amber-200/50")}>
+                  <div className={cn("flex items-center justify-between pt-2 border-t border-ds-warning/50")}>
                     <div>
                       <p className="text-xs font-semibold text-ds-ink">
                         {t('builder.requiresInstructorApproval', 'Requires Trainer Approval')}
@@ -701,12 +701,12 @@ export function ContentBlockSlideOver({
               )}
 
               {/* Optional Settings Collapsible */}
-              <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 overflow-hidden">
+              <div className="rounded-[8px] border border-ds-border bg-ds-surface-subtle/50 overflow-hidden">
                 <button
                   type="button"
                   onClick={() => setShowAdvancedBlockOptions(!showAdvancedBlockOptions)}
                   className={cn(
-                    "w-full px-4 py-3 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center justify-between hover:bg-slate-100/60 dark:hover:bg-slate-800/60 transition-colors",
+                    "w-full px-4 py-3 text-xs font-bold uppercase tracking-wider text-ds-ink-secondary flex items-center justify-between hover:bg-ds-surface-subtle/60 transition-colors",
                     "text-start"
                   )}
                 >
@@ -717,7 +717,7 @@ export function ContentBlockSlideOver({
                 </button>
 
                 {showAdvancedBlockOptions && (
-                  <div className={cn("p-4 space-y-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950")}>
+                  <div className={cn("p-4 space-y-4 border-t border-ds-border bg-ds-surface")}>
                     <div className="grid grid-cols-2 gap-4">
                       <div className={''}>
                         <Label className="text-xs font-semibold">{t('duration', 'Duration')}</Label>
@@ -729,7 +729,7 @@ export function ContentBlockSlideOver({
                             placeholder="10"
                             className={cn("pe-8")}
                           />
-                          <span className={cn("absolute top-2.5 text-slate-400 text-xs", "end-3")}>{t('min', 'min')}</span>
+                          <span className={cn("absolute top-2.5 text-ds-muted text-xs", "end-3")}>{t('min', 'min')}</span>
                         </div>
                       </div>
                       <div className={''}>
@@ -742,7 +742,7 @@ export function ContentBlockSlideOver({
                             placeholder="1"
                             className={cn("pe-8")}
                           />
-                          <span className={cn("absolute top-2.5 text-slate-400 text-xs", "end-3")}>{t('pts', 'pts')}</span>
+                          <span className={cn("absolute top-2.5 text-ds-muted text-xs", "end-3")}>{t('pts', 'pts')}</span>
                         </div>
                       </div>
                     </div>
@@ -755,7 +755,7 @@ export function ContentBlockSlideOver({
                           onChange={(e) => setCurrentBlock({ ...currentBlock, content: e.target.value })}
                           placeholder={t('builder.optionalNotesHint', 'Add short guidance if needed')}
                           rows={2}
-                          className={cn("mt-1.5 text-xs bg-white dark:bg-slate-950")}
+                          className={cn("mt-1.5 text-xs bg-ds-surface")}
                         />
                       </div>
                     )}
@@ -764,9 +764,9 @@ export function ContentBlockSlideOver({
               </div>
 
               {/* Mandatory Switch */}
-              <div className={cn("flex items-center justify-between rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-4 py-3")}>
+              <div className={cn("flex items-center justify-between rounded-[8px] border border-ds-border bg-ds-surface px-4 py-3")}>
                 <div>
-                  <div className="text-xs font-bold text-slate-800 dark:text-slate-200">{t('builder.mandatory', 'Mandatory Lesson')}</div>
+                  <div className="text-xs font-bold text-ds-ink">{t('builder.mandatory', 'Mandatory Lesson')}</div>
                   <div className="text-[11px] text-muted-foreground">{t('builder.mandatoryHint', 'Require completion before proceeding.')}</div>
                 </div>
                 <Switch checked={currentBlock.is_mandatory} onCheckedChange={(checked) => setCurrentBlock({ ...currentBlock, is_mandatory: checked })} />
@@ -775,15 +775,15 @@ export function ContentBlockSlideOver({
           </div>
 
           {/* Bottom Sticky Action Bar */}
-          <div className={cn("flex items-center justify-between gap-3 pt-4 mt-6 border-t border-slate-100 dark:border-slate-800")}>
-            <Button variant="ghost" size="sm" onClick={handleSaveBlockToLibrary} className="text-xs text-slate-600 hover:text-slate-900">
+          <div className={cn("flex items-center justify-between gap-3 pt-4 mt-6 border-t border-ds-border")}>
+            <Button variant="ghost" size="sm" onClick={handleSaveBlockToLibrary} className="text-xs text-ds-ink-secondary hover:text-ds-ink">
               {t('builder.saveToLibrary', 'Save to library')}
             </Button>
             <div className={cn("flex items-center gap-2")}>
               <Button variant="outline" size="sm" onClick={() => onOpenChange(false)} className="text-xs font-semibold">
                 {t('cancel', 'Cancel')}
               </Button>
-              <Button onClick={saveContent} size="sm" className="text-xs font-bold bg-ds-brass hover:bg-ds-accent-hover text-white">
+              <Button onClick={saveContent} size="sm" className="text-xs font-bold bg-ds-brass hover:bg-ds-accent-hover text-white dark:text-ds-on-ink">
                 {selectedContent ? t('save', 'Save Changes') : t('builder.addContent', 'Add to Section')}
               </Button>
             </div>

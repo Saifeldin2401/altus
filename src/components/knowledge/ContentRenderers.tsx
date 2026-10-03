@@ -144,7 +144,7 @@ function EmbeddedVideoPlayer({ videoUrl, title, isYouTube, isVimeo }: VideoPlaye
                 <Button
                     variant="ghost"
                     size="sm"
-                    className="text-xs text-gray-500 hover:text-hotel-navy"
+                    className="text-xs text-ds-muted hover:text-ds-ink"
                     onClick={() => window.open(videoUrl, '_blank')}
                 >
                     <ExternalLink className="h-3 w-3 me-2" />
@@ -516,20 +516,20 @@ export function ChecklistRenderer({ items, onCheckChange, readOnly = false }: Ch
     return (
         <div className="space-y-4">
             {/* Progress header */}
-            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-ds-surface-subtle rounded-lg">
                 <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-white border-4 border-hotel-gold flex items-center justify-center font-bold text-lg">
+                    <div className="w-12 h-12 rounded-full bg-ds-surface border-4 border-ds-accent flex items-center justify-center font-bold text-lg">
                         {Math.round(progress)}%
                     </div>
                     <div>
-                        <p className="font-semibold text-gray-900">{completedCount} of {totalCount} completed</p>
-                        <p className="text-sm text-gray-500">
+                        <p className="font-semibold text-ds-ink">{completedCount} of {totalCount} completed</p>
+                        <p className="text-sm text-ds-muted">
                             {completedCount === totalCount ? 'All done! 🎉' : 'Keep going...'}
                         </p>
                     </div>
                 </div>
                 {completedCount === totalCount && (
-                    <Badge className="bg-green-100 text-green-700 border-green-200">
+                    <Badge className="bg-ds-success-soft text-ds-success border-ds-success/30">
                         <CheckCircle2 className="h-4 w-4 me-1" />
                         Complete
                     </Badge>
@@ -546,8 +546,8 @@ export function ChecklistRenderer({ items, onCheckChange, readOnly = false }: Ch
                             className={cn(
                                 "flex items-start gap-3 p-4 rounded-lg border transition-all",
                                 isChecked
-                                    ? "bg-green-50 border-green-200"
-                                    : "bg-white border-gray-200 hover:border-gray-300",
+                                    ? "bg-ds-success-soft border-ds-success/30"
+                                    : "bg-ds-surface border-ds-border hover:border-ds-border",
                                 readOnly ? "cursor-default" : "cursor-pointer"
                             )}
                             onClick={() => !readOnly && handleCheck(item.id, !isChecked)}
@@ -571,20 +571,20 @@ export function ChecklistRenderer({ items, onCheckChange, readOnly = false }: Ch
                             <div className="flex-1">
                                 <p className={cn(
                                     "font-medium",
-                                    isChecked && "line-through text-gray-400"
+                                    isChecked && "line-through text-ds-muted"
                                 )}>
                                     {item.text || ('task' in item ? (item as { task?: string }).task : '')}
                                 </p>
                                 {(item.is_required || ('required' in item && Boolean((item as { required?: boolean }).required))) && !isChecked && (
-                                    <Badge variant="outline" className="text-xs mt-1 text-orange-600 border-orange-200">
+                                    <Badge variant="outline" className="text-xs mt-1 text-ds-warning border-ds-warning/30">
                                         Required
                                     </Badge>
                                 )}
                             </div>
                             {isChecked ? (
-                                <CheckCircle2 className="h-5 w-5 text-green-500" />
+                                <CheckCircle2 className="h-5 w-5 text-ds-success" />
                             ) : (
-                                <Circle className="h-5 w-5 text-gray-300" />
+                                <Circle className="h-5 w-5 text-ds-muted" />
                             )}
                         </div>
                     )
@@ -611,18 +611,18 @@ export function FAQAccordion({ items }: FAQAccordionProps) {
                 <AccordionItem
                     key={item.id}
                     value={item.id}
-                    className="border rounded-lg px-4 bg-white"
+                    className="border rounded-lg px-4 bg-ds-surface"
                 >
                     <AccordionTrigger className="text-start hover:no-underline py-4">
                         <div className="flex items-start gap-3">
-                            <HelpCircle className="h-5 w-5 text-hotel-gold flex-shrink-0 mt-0.5" />
-                            <span className="font-medium text-gray-900">{item.question}</span>
+                            <HelpCircle className="h-5 w-5 text-ds-accent flex-shrink-0 mt-0.5" />
+                            <span className="font-medium text-ds-ink">{item.question}</span>
                         </div>
                     </AccordionTrigger>
                     <AccordionContent className="ps-8 pb-4">
                         <InlineErrorBoundary>
                             <div
-                                className="prose prose-sm max-w-none text-gray-600"
+                                className="prose prose-sm max-w-none text-ds-ink-secondary"
                                 dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.answer) }}
                             />
                         </InlineErrorBoundary>
@@ -698,46 +698,46 @@ export function RelatedArticles({ articles, sourceId }: RelatedArticlesProps) {
     if (!articles.length) return null
 
     return (
-        <Card className="overflow-hidden border-hotel-gold/20 shadow-sm">
+        <Card className="overflow-hidden border-ds-accent/20 shadow-sm">
             <CardContent className="p-0">
-                <div className="bg-hotel-navy/5 p-4 border-b border-hotel-gold/10">
-                    <h3 className="font-semibold flex items-center gap-2 text-hotel-navy">
-                        <ArrowRight className="h-4 w-4 text-hotel-gold" />
+                <div className="bg-ds-ink/5 p-4 border-b border-ds-accent/10">
+                    <h3 className="font-semibold flex items-center gap-2 text-ds-ink">
+                        <ArrowRight className="h-4 w-4 text-ds-accent" />
                         {t('viewer.related_knowledge')}
                     </h3>
                 </div>
-                <div className="divide-y divide-hotel-gold/10">
+                <div className="divide-y divide-ds-accent/10">
                     {articles.map((article, index) => (
                         <Link
                             key={article.id}
                             to={`/knowledge/${article.id}`}
-                            className="group block p-4 hover:bg-hotel-gold/5 transition-all"
+                            className="group block p-4 hover:bg-ds-accent/5 transition-all"
                             onClick={() => handleArticleClick(article.id, index + 1)}
                         >
                             <div className="flex items-center justify-between mb-2">
                                 <div className="flex gap-2">
-                                    <Badge variant="outline" className="text-[10px] uppercase font-bold text-gray-400">
+                                    <Badge variant="outline" className="text-[11px] uppercase font-bold text-ds-muted">
                                         {article.content_type}
                                     </Badge>
                                     <div className="flex items-center gap-2">
                                     <Badge
                                             variant={getRelationLabel(article.relation_type || 'see_also', t).variant}
                                             className={cn(
-                                                "text-[10px] uppercase font-bold px-1.5 py-0",
-                                                article.relation_type === 'automated' ? "bg-hotel-gold text-white" : ""
+                                                "text-[11px] uppercase font-bold px-1.5 py-0",
+                                                article.relation_type === 'automated' ? "bg-ds-accent text-white dark:text-ds-on-ink" : ""
                                             )}
                                     >
                                         {getRelationLabel(article.relation_type || 'see_also', t).label}
                                     </Badge>
                                     </div>
                                     {article.score && (
-                                        <span className="text-[10px] text-gray-400 font-mono">
+                                        <span className="text-[11px] text-ds-muted font-mono">
                                             {Math.round(article.score)}% {t('viewer.match')}
                                         </span>
                                     )}
                                 </div>
                             </div>
-                            <p className="text-sm font-semibold text-gray-900 group-hover:text-hotel-gold leading-snug transition-colors">
+                            <p className="text-sm font-semibold text-ds-ink group-hover:text-ds-accent leading-snug transition-colors">
                                 {article.title}
                             </p>
                         </Link>
@@ -775,7 +775,7 @@ export function ImageGalleryRenderer({ images, cacheVersion }: ImageGalleryRende
 
     if (!images || images.length === 0) {
         return (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-ds-muted">
                 <p>No visual content available.</p>
             </div>
         )
@@ -802,7 +802,7 @@ export function ImageGalleryRenderer({ images, cacheVersion }: ImageGalleryRende
                         tabIndex={0}
                         aria-label={`Open image: ${image.caption || 'preview'}`}
                     >
-                        <div className="aspect-video bg-gray-100">
+                        <div className="aspect-video bg-ds-surface-subtle">
                             <img
                                 src={appendCacheVersion(image.url, cacheVersion)}
                                 alt={image.caption}
@@ -811,8 +811,8 @@ export function ImageGalleryRenderer({ images, cacheVersion }: ImageGalleryRende
                             />
                         </div>
                         {image.caption && (
-                            <div className="p-3 bg-white border-t">
-                                <p className="text-sm text-gray-700 font-medium">{image.caption}</p>
+                            <div className="p-3 bg-ds-surface border-t">
+                                <p className="text-sm text-ds-ink-secondary font-medium">{image.caption}</p>
                             </div>
                         )}
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
@@ -849,7 +849,7 @@ export function ImageGalleryRenderer({ images, cacheVersion }: ImageGalleryRende
                             </div>
                         )}
                         <button
-                            className="absolute top-4 end-4 text-white hover:text-gray-300 text-3xl font-bold"
+                            className="absolute top-4 end-4 text-white hover:text-ds-muted text-3xl font-bold"
                             onClick={() => setSelectedImage(null)}
                         >
                             ×

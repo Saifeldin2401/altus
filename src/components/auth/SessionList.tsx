@@ -207,14 +207,14 @@ export function SessionList() {
                     }`}
                   >
                     <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                        <DeviceIcon className="h-5 w-5 text-gray-600" />
+                      <div className="w-10 h-10 rounded-full bg-ds-surface-subtle flex items-center justify-center">
+                        <DeviceIcon className="h-5 w-5 text-ds-ink-secondary" />
                       </div>
                       <div>
                         <p className="font-medium flex items-center gap-2">
                           {deviceLabel}
                           {session.isCurrent && (
-                            <span className="text-xs bg-primary text-white px-2 py-0.5 rounded-full">
+                            <span className="text-xs bg-primary text-ds-on-ink px-2 py-0.5 rounded-full">
                               {t('sessions.current', { defaultValue: 'Current' })}
                             </span>
                           )}

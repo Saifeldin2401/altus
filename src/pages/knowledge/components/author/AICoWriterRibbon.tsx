@@ -21,9 +21,9 @@ export function AICoWriterRibbon({
   const { t } = useTranslation(['knowledge', 'common'])
 
   return (
-    <div className="bg-gradient-to-r from-hotel-navy/5 via-hotel-gold/10 to-hotel-navy/5 dark:from-slate-900 dark:via-hotel-gold/10 dark:to-slate-900 border border-hotel-gold/25 rounded-xl p-2.5 shadow-xs flex flex-wrap items-center justify-between gap-2.5">
+    <div className="bg-ds-ink/5 border border-ds-accent/25 rounded-[8px] p-2.5 shadow-xs flex flex-wrap items-center justify-between gap-2.5">
       <div className="flex items-center gap-2">
-        <div className="w-6 h-6 rounded-md bg-hotel-gold/20 flex items-center justify-center text-hotel-gold shrink-0">
+        <div className="w-6 h-6 rounded-md bg-ds-accent/20 flex items-center justify-center text-ds-accent shrink-0">
           <Sparkles className="w-3.5 h-3.5" />
         </div>
         <span className="text-xs font-bold text-foreground">
@@ -48,12 +48,12 @@ export function AICoWriterRibbon({
           size="sm"
           onClick={() => onGenerate('outline')}
           disabled={isGenerating}
-          className="h-7 text-xs bg-amber-50/80 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/50 text-amber-900 dark:text-amber-200 border-amber-300 dark:border-amber-800 font-semibold transition-colors"
+          className="h-7 text-xs bg-ds-warning-soft/80 hover:bg-ds-warning-soft text-ds-warning border-ds-warning/30 font-semibold transition-colors"
         >
           {isGenerating ? (
-            <Loader2 className="h-3.5 w-3.5 animate-spin me-1 text-amber-600" />
+            <Loader2 className="h-3.5 w-3.5 animate-spin me-1 text-ds-warning" />
           ) : (
-            <Wand2 className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400 me-1" />
+            <Wand2 className="h-3.5 w-3.5 text-ds-warning me-1" />
           )}
           <span>{t('editor.outline', 'Outline')}</span>
         </Button>
@@ -64,9 +64,9 @@ export function AICoWriterRibbon({
           size="sm"
           onClick={() => onGenerate('expand')}
           disabled={isGenerating || !hasContent}
-          className="h-7 text-xs bg-blue-50/80 hover:bg-blue-100 dark:bg-blue-950/40 dark:hover:bg-blue-900/50 text-blue-900 dark:text-blue-200 border-blue-300 dark:border-blue-800 font-semibold transition-colors"
+          className="h-7 text-xs bg-ds-info-soft/80 hover:bg-ds-info-soft text-ds-info border-ds-info/30 font-semibold transition-colors"
         >
-          <RefreshCw className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400 me-1" />
+          <RefreshCw className="h-3.5 w-3.5 text-ds-info me-1" />
           <span>{t('editor.expand', 'Expand')}</span>
         </Button>
 
@@ -76,9 +76,9 @@ export function AICoWriterRibbon({
           size="sm"
           onClick={() => onGenerate('improve')}
           disabled={isGenerating || !hasContent}
-          className="h-7 text-xs bg-emerald-50/80 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:hover:bg-emerald-900/50 text-emerald-900 dark:text-emerald-200 border-emerald-300 dark:border-emerald-800 font-semibold transition-colors"
+          className="h-7 text-xs bg-ds-success-soft/80 hover:bg-ds-success-soft text-ds-success border-ds-success/30 font-semibold transition-colors"
         >
-          <Sparkles className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 me-1" />
+          <Sparkles className="h-3.5 w-3.5 text-ds-success me-1" />
           <span>{t('editor.improve', 'Polish')}</span>
         </Button>
 
@@ -88,9 +88,9 @@ export function AICoWriterRibbon({
           size="sm"
           onClick={() => onGenerate('checklist')}
           disabled={isGenerating}
-          className="h-7 text-xs bg-orange-50/80 hover:bg-orange-100 dark:bg-orange-950/40 dark:hover:bg-orange-900/50 text-orange-900 dark:text-orange-200 border-orange-300 dark:border-orange-800 font-semibold transition-colors"
+          className="h-7 text-xs bg-ds-warning-soft/80 hover:bg-ds-warning-soft text-ds-warning border-ds-warning/30 font-semibold transition-colors"
         >
-          <CheckSquare className="h-3.5 w-3.5 text-orange-600 dark:text-orange-400 me-1" />
+          <CheckSquare className="h-3.5 w-3.5 text-ds-warning me-1" />
           <span>AI Checklist</span>
         </Button>
 
@@ -100,9 +100,9 @@ export function AICoWriterRibbon({
           size="sm"
           onClick={() => onGenerate('faqs')}
           disabled={isGenerating}
-          className="h-7 text-xs bg-purple-50/80 hover:bg-purple-100 dark:bg-purple-950/40 dark:hover:bg-purple-900/50 text-purple-900 dark:text-purple-200 border-purple-300 dark:border-purple-800 font-semibold transition-colors"
+          className="h-7 text-xs bg-ds-accent-soft/80 hover:bg-ds-accent-soft text-ds-accent border-ds-accent/30 font-semibold transition-colors"
         >
-          <HelpCircle className="h-3.5 w-3.5 text-purple-600 dark:text-purple-400 me-1" />
+          <HelpCircle className="h-3.5 w-3.5 text-ds-accent me-1" />
           <span>AI FAQs</span>
         </Button>
       </div>

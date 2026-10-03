@@ -53,19 +53,19 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
       const sopTitle = (block.content_data as Record<string, unknown>)?.sop_title as string | undefined
       return (
         <div className={cn(
-          'flex items-center gap-3 p-3 bg-emerald-50/60 dark:bg-emerald-950/30 rounded-lg border border-emerald-200/60 dark:border-emerald-800/40'
+          'flex items-center gap-3 p-3 bg-ds-success-soft/60 rounded-lg border border-ds-success/60'
         )}>
-          <BookOpen className="w-4 h-4 text-emerald-600 shrink-0" />
+          <BookOpen className="w-4 h-4 text-ds-success shrink-0" />
           <div className={cn('flex-1 min-w-0', 'text-start')}>
-            <p className="text-sm font-medium text-emerald-900 dark:text-emerald-200 truncate">
+            <p className="text-sm font-medium text-ds-success truncate">
               {sopTitle || block.title || t('builder.inlinePreview.sopReference', 'Knowledge Base SOP')}
             </p>
-            <p className="text-xs text-emerald-700/70 dark:text-emerald-400/70">
+            <p className="text-xs text-ds-success/70">
               {t('builder.inlinePreview.linkedSOP', 'Linked from Knowledge Base')}
             </p>
           </div>
           {block.content_url && (
-            <a href={block.content_url} target="_blank" rel="noopener noreferrer" className="shrink-0 text-emerald-600 hover:text-emerald-800">
+            <a href={block.content_url} target="_blank" rel="noopener noreferrer" className="shrink-0 text-ds-success hover:text-ds-success">
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           )}
@@ -85,7 +85,7 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
       <InlineErrorBoundary>
         <div
           className={cn(
-            'prose prose-sm dark:prose-invert max-w-none text-slate-800 dark:text-slate-200',
+            'prose prose-sm dark:prose-invert max-w-none text-ds-ink',
             'max-h-[300px] overflow-y-auto px-3 py-2',
             '[&_h2]:text-base [&_h2]:font-bold [&_h2]:mt-3 [&_h2]:mb-1.5',
             '[&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-2 [&_h3]:mb-1',
@@ -95,8 +95,8 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
             '[&_table]:text-xs [&_th]:p-1.5 [&_td]:p-1.5',
             '[&_blockquote]:text-xs [&_blockquote]:border-s-2 [&_blockquote]:ps-3 [&_blockquote]:italic',
             '[&_.callout]:text-xs [&_.callout]:p-2 [&_.callout]:rounded-md [&_.callout]:my-2',
-            '[&_.callout-info]:bg-blue-50 [&_.callout-info]:dark:bg-blue-950/30 [&_.callout-info]:border [&_.callout-info]:border-blue-200',
-            '[&_.callout-warning]:bg-amber-50 [&_.callout-warning]:dark:bg-amber-950/30 [&_.callout-warning]:border [&_.callout-warning]:border-amber-200',
+            '[&_.callout-info]:bg-ds-info-soft [&_.callout-info]: [&_.callout-info]:border [&_.callout-info]:border-ds-info/30',
+            '[&_.callout-warning]:bg-ds-warning-soft [&_.callout-warning]: [&_.callout-warning]:border [&_.callout-warning]:border-ds-warning/30',
             'text-start'
           )}
           dangerouslySetInnerHTML={{ __html: sanitizeHtml(block.content) }}
@@ -131,15 +131,15 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
     if (!block.content_url) {
       return (
         <div className={cn(
-          'flex items-center gap-3 p-4 bg-rose-50/50 dark:bg-rose-950/20 rounded-lg border border-dashed border-rose-200/60'
+          'flex items-center gap-3 p-4 bg-ds-danger-soft/50 rounded-lg border border-dashed border-ds-danger/60'
         )}>
-          <Video className="w-5 h-5 text-rose-400" />
+          <Video className="w-5 h-5 text-ds-danger" />
           <span className="text-xs text-muted-foreground italic">{t('builder.inlinePreview.noVideo', 'No video URL added yet')}</span>
         </div>
       )
     }
     return (
-      <div className="rounded-lg overflow-hidden bg-black/5 dark:bg-white/5 border border-slate-200 dark:border-slate-700">
+      <div className="rounded-lg overflow-hidden bg-black/5 border border-ds-border">
         <div className="aspect-video">
           <iframe
             src={block.content_url}
@@ -158,15 +158,15 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
     if (!block.content_url) {
       return (
         <div className={cn(
-          'flex items-center gap-3 p-4 bg-blue-50/50 dark:bg-blue-950/20 rounded-lg border border-dashed border-blue-200/60'
+          'flex items-center gap-3 p-4 bg-ds-info-soft/50 rounded-lg border border-dashed border-ds-info/60'
         )}>
-          <ImageIcon className="w-5 h-5 text-blue-400" />
+          <ImageIcon className="w-5 h-5 text-ds-info" />
           <span className="text-xs text-muted-foreground italic">{t('builder.inlinePreview.noImage', 'No image uploaded yet')}</span>
         </div>
       )
     }
     return (
-      <div className="rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+      <div className="rounded-lg overflow-hidden bg-ds-surface-subtle border border-ds-border">
         <img
           src={block.content_url}
           alt={block.title || 'Preview'}
@@ -182,9 +182,9 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
     if (!block.content_url) {
       return (
         <div className={cn(
-          'flex items-center gap-3 p-4 bg-cyan-50/50 dark:bg-cyan-950/20 rounded-lg border border-dashed border-cyan-200/60'
+          'flex items-center gap-3 p-4 bg-ds-info-soft/50 rounded-lg border border-dashed border-ds-info/60'
         )}>
-          <Headphones className="w-5 h-5 text-cyan-400" />
+          <Headphones className="w-5 h-5 text-ds-info" />
           <span className="text-xs text-muted-foreground italic">{t('builder.inlinePreview.noAudio', 'No audio file added yet')}</span>
         </div>
       )
@@ -202,13 +202,13 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
   if (block.type === 'document_link') {
     return (
       <div className={cn(
-        'flex items-center gap-3 p-3 bg-amber-50/60 dark:bg-amber-950/20 rounded-lg border border-amber-200/60 dark:border-amber-800/40'
+        'flex items-center gap-3 p-3 bg-ds-warning-soft/60 rounded-lg border border-ds-warning/60'
       )}>
-        <div className="w-8 h-8 rounded-lg bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-700 flex items-center justify-center shrink-0">
-          <FileText className="w-4 h-4 text-amber-600" />
+        <div className="w-8 h-8 rounded-lg bg-ds-surface border border-ds-warning/30 flex items-center justify-center shrink-0">
+          <FileText className="w-4 h-4 text-ds-warning" />
         </div>
         <div className={cn('flex-1 min-w-0', 'text-start')}>
-          <p className="text-sm font-medium text-amber-900 dark:text-amber-200 truncate">
+          <p className="text-sm font-medium text-ds-warning truncate">
             {block.title || t('builder.inlinePreview.document', 'Document')}
           </p>
           {block.content_url && (
@@ -216,7 +216,7 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
               href={block.content_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-amber-600 hover:text-amber-800 hover:underline flex items-center gap-1"
+              className="text-xs text-ds-warning hover:text-ds-warning hover:underline flex items-center gap-1"
             >
               <Link className="w-3 h-3" />
               {t('builder.inlinePreview.openDocument', 'Open document')}
@@ -235,24 +235,24 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
 
     return (
       <div className={cn(
-        'p-3.5 bg-amber-50/60 dark:bg-amber-950/20 rounded-xl border border-amber-200/80 dark:border-amber-900/50 space-y-2.5',
+        'p-3.5 bg-ds-warning-soft/60 rounded-[8px] border border-ds-warning/80 space-y-2.5',
         'text-start'
       )}>
         <div className={cn("flex items-center justify-between gap-2")}>
           <div className="flex items-center gap-2">
-            <FileCheck className="w-4 h-4 text-amber-600 shrink-0" />
-            <span className="text-xs font-bold text-amber-950 dark:text-amber-200">
+            <FileCheck className="w-4 h-4 text-ds-warning shrink-0" />
+            <span className="text-xs font-bold text-ds-warning">
               {block.title || t('practicalAssignment', 'Practical Assignment')}
             </span>
           </div>
           {requiresApproval && (
-            <span className="text-[10px] bg-amber-200/80 text-amber-900 px-2 py-0.5 rounded-full font-medium shrink-0">
+            <span className="text-[11px] bg-ds-warning-soft text-ds-warning px-2 py-0.5 rounded-full font-medium shrink-0">
               {t('requiresInstructorReview', 'Requires Trainer Review')}
             </span>
           )}
         </div>
         {prompt ? (
-          <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap">
+          <p className="text-xs text-ds-ink-secondary leading-relaxed whitespace-pre-wrap">
             {prompt}
           </p>
         ) : (
@@ -261,7 +261,7 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
           </p>
         )}
         {rubric && (
-          <div className="pt-2 border-t border-amber-200/60 text-[11px] text-slate-600 dark:text-slate-400">
+          <div className="pt-2 border-t border-ds-warning/60 text-[11px] text-ds-ink-secondary">
             <span className="font-semibold">{t('evaluationRubric', 'Rubric')}: </span>
             <span>{rubric}</span>
           </div>
@@ -279,29 +279,29 @@ export function InlineBlockPreview({ block, isRTL, onRegenerateQuiz }: InlineBlo
 
     return (
       <div className={cn(
-        'p-3.5 bg-amber-50/70 dark:bg-amber-950/20 rounded-xl border border-amber-200 dark:border-amber-900/50 space-y-2.5',
+        'p-3.5 bg-ds-warning-soft/70 rounded-[8px] border border-ds-warning/30 space-y-2.5',
         'text-start'
       )}>
         <div className={cn("flex items-center justify-between gap-2")}>
           <div className="flex items-center gap-2">
-            <MessageSquare className="w-4 h-4 text-amber-600 shrink-0" />
-            <span className="text-xs font-bold text-amber-950 dark:text-amber-200">
+            <MessageSquare className="w-4 h-4 text-ds-warning shrink-0" />
+            <span className="text-xs font-bold text-ds-warning">
               {block.title || scenario.title}
             </span>
           </div>
-          <span className="text-[10px] bg-amber-200/80 text-amber-900 px-2 py-0.5 rounded-full font-bold shrink-0">
+          <span className="text-[11px] bg-ds-warning-soft text-ds-warning px-2 py-0.5 rounded-full font-bold shrink-0">
             Pass Threshold: {passingScore}%
           </span>
         </div>
 
-        <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+        <p className="text-xs text-ds-ink-secondary leading-relaxed">
           {scenario.scenarioContext}
         </p>
 
-        <div className="pt-2 border-t border-amber-200/60 dark:border-amber-900/40 flex flex-wrap items-center justify-between gap-2 text-[11px] text-muted-foreground">
+        <div className="pt-2 border-t border-ds-warning/60 flex flex-wrap items-center justify-between gap-2 text-[11px] text-muted-foreground">
           <span>Guest: <strong className="text-foreground">{scenario.guestName}</strong> ({scenario.guestTemperament})</span>
           <span>Max Turns: <strong className="text-foreground">{maxTurns}</strong></span>
-          <span className="text-amber-700 dark:text-amber-300 font-medium">Forbes 5-Star & Saudi Karam Rubrics</span>
+          <span className="text-ds-warning font-medium">Forbes 5-Star & Saudi Karam Rubrics</span>
         </div>
       </div>
     )

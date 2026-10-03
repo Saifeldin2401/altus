@@ -20,7 +20,7 @@ export function YourProgressCard({ stats, isLoading }: { stats: LearningStats | 
   const fmt = (n: number) => n.toLocaleString(locale)
 
   return (
-    <section aria-labelledby="your-progress" className="rounded-2xl border border-ds-border bg-ds-surface p-5 shadow-[0_12px_32px_rgb(21_33_46/0.04)]">
+    <section aria-labelledby="your-progress" className="rounded-[8px] border border-ds-border bg-ds-surface p-5 shadow-[0_12px_32px_rgb(21_33_46/0.04)]">
       <div className="flex items-center justify-between">
         <h2 id="your-progress" className="font-editorial text-[21px] font-semibold text-ds-ink">{t('myDay.yourProgress', 'Your progress')}</h2>
         <Link to="/learn/achievements" className="inline-flex items-center gap-1 text-xs font-semibold text-ds-accent hover:underline">
@@ -39,7 +39,7 @@ export function YourProgressCard({ stats, isLoading }: { stats: LearningStats | 
             <div className="mt-4 flex items-center gap-5">
               <ProgressRing value={level.percent} size={96} stroke={8} tone="text-ds-brass" label={t('game.levelProgress', 'Level progress')}>
                 <span className="flex flex-col items-center leading-none">
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-ds-muted">{t('myDay.lvl', 'Lvl')}</span>
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ds-muted">{t('myDay.lvl', 'Lvl')}</span>
                   <span className="font-editorial text-[30px] font-semibold text-ds-ink">{level.level}</span>
                 </span>
               </ProgressRing>
@@ -99,7 +99,7 @@ export function TodaysFocusCard({ urgentTitle, urgentHref, streak }: { urgentTit
       </span>
     </>
   )
-  const cls = 'flex items-start gap-4 rounded-2xl border border-ds-brass/30 bg-ds-brass/10 p-5'
+  const cls = 'flex items-start gap-4 rounded-[8px] border border-ds-brass/30 bg-ds-brass/10 p-5'
   return urgentHref
     ? <Link to={urgentHref} className={`${cls} hover:border-ds-brass/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent`}>{body}</Link>
     : <section className={cls}>{body}</section>

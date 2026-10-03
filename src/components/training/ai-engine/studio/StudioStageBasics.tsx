@@ -157,7 +157,7 @@ export function StudioStageBasics({
       desc_ar: 'دورة تدريبية متكاملة متعددة الوحدات مع دروس تفاعلية واختبارات تقييمية.',
       icon: Layers,
       badge: 'Popular',
-      color: 'border-purple-500 bg-purple-50/50 dark:bg-purple-950/20 text-purple-600',
+      color: 'border-ds-accent bg-ds-accent-soft/50 text-ds-accent',
     },
     {
       id: 'document_based',
@@ -167,7 +167,7 @@ export function StudioStageBasics({
       desc_ar: 'تحويل السياسات وإجراءات العمل إلى وحدات تدريبية واضحة.',
       icon: FileText,
       badge: 'Grounded',
-      color: 'border-blue-500 bg-blue-50/50 dark:bg-blue-950/20 text-blue-600',
+      color: 'border-ds-info bg-ds-info-soft/50 text-ds-info',
     },
     {
       id: 'topic_based',
@@ -176,7 +176,7 @@ export function StudioStageBasics({
       desc: 'Fast tailored microlearning tailored to specific hotel department roles & luxury standards.',
       desc_ar: 'تدريب سريع ومخصص لأدوار فندقية محددة.',
       icon: Target,
-      color: 'border-amber-500 bg-amber-50/50 dark:bg-amber-950/20 text-amber-600',
+      color: 'border-ds-warning bg-ds-warning-soft/50 text-ds-warning',
     },
     {
       id: 'outline_only',
@@ -185,7 +185,7 @@ export function StudioStageBasics({
       desc: 'High-speed synthesis of terminal objectives, lesson roadmaps, and Bloom tags.',
       desc_ar: 'توليد سريع لخطة الدورة والأهداف دون محتوى الدروس التفصيلي.',
       icon: ListOrdered,
-      color: 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 text-emerald-600',
+      color: 'border-ds-success bg-ds-success-soft/50 text-ds-success',
     },
     {
       id: 'module_generation',
@@ -194,7 +194,7 @@ export function StudioStageBasics({
       desc: 'Generate a focused multi-lesson module ready to attach to an existing course.',
       desc_ar: 'توليد وحدة تدريبية مركزة متعددة الدروس.',
       icon: FileCheck,
-      color: 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-950/20 text-indigo-600',
+      color: 'border-ds-info bg-ds-info-soft/50 text-ds-info',
     },
     {
       id: 'lesson_generation',
@@ -203,7 +203,7 @@ export function StudioStageBasics({
       desc: 'Create an in-depth lesson with step procedures, scripts, and checkpoints.',
       desc_ar: 'إنشاء درس تفصيلي مع الإجراءات والسيناريوهات.',
       icon: BookOpen,
-      color: 'border-cyan-500 bg-cyan-50/50 dark:bg-cyan-950/20 text-cyan-600',
+      color: 'border-ds-info bg-ds-info-soft/50 text-ds-info',
     },
     {
       id: 'assessment_generation',
@@ -212,7 +212,7 @@ export function StudioStageBasics({
       desc: 'Standalone quiz pools, scenario dilemmas, and final exams with scoring rubrics.',
       desc_ar: 'توليد بنك أسئلة واختبارات نهائية متقدمة.',
       icon: FileQuestion,
-      color: 'border-rose-500 bg-rose-50/50 dark:bg-rose-950/20 text-rose-600',
+      color: 'border-ds-danger bg-ds-danger-soft/50 text-ds-danger',
     },
     {
       id: 'course_remix',
@@ -221,7 +221,7 @@ export function StudioStageBasics({
       desc: 'Upgrade existing material, expand depth, add KSA localization, or modernize.',
       desc_ar: 'تحديث المحتوى الحالي وإعادة صياغته لمعايير أحدث.',
       icon: RotateCw,
-      color: 'border-teal-500 bg-teal-50/50 dark:bg-teal-950/20 text-teal-600',
+      color: 'border-ds-info bg-ds-info-soft/50 text-ds-info',
     },
   ]
 
@@ -316,14 +316,14 @@ export function StudioStageBasics({
         <div className="flex items-center justify-between">
           <div>
             <Label className="text-sm font-bold text-foreground flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-purple-600" />
+              <Sparkles className="w-4 h-4 text-ds-accent" />
               <span>{t('builder.selectGenerationMode', 'Choose Authoring Mode')}</span>
             </Label>
             <p className="text-xs text-muted-foreground mt-0.5">
               {t('builder.selectGenerationModeDesc', 'Select the pedagogical objective for this AI generation session.')}
             </p>
           </div>
-          <Badge variant="outline" className="text-xs font-semibold bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 border-purple-200">
+          <Badge variant="outline" className="text-xs font-semibold bg-ds-accent-soft text-ds-accent border-ds-accent/30">
             {MODES.find((m) => m.id === generationMode)?.title}
           </Badge>
         </div>
@@ -338,10 +338,10 @@ export function StudioStageBasics({
                 key={mode.id}
                 onClick={() => onSelectMode(mode.id)}
                 className={cn(
-                  'cursor-pointer transition-all duration-200 border text-start relative overflow-hidden group hover:shadow-md',
+                  'cursor-pointer transition-all duration-200 border text-start relative overflow-hidden group',
                   isSelected
-                    ? 'border-purple-600 bg-purple-50/60 dark:bg-purple-950/40 ring-1 ring-purple-500 shadow-sm'
-                    : 'bg-card hover:border-purple-300'
+                    ? 'border-ds-accent bg-ds-accent-soft/60 ring-1 ring-ds-accent shadow-sm'
+                    : 'bg-card hover:border-ds-accent/30'
                 )}
               >
                 <CardContent className="p-3.5 space-y-2">
@@ -349,13 +349,13 @@ export function StudioStageBasics({
                     <div
                       className={cn(
                         'w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold transition-transform group-hover:scale-110',
-                        isSelected ? 'bg-purple-600 text-white' : 'bg-muted text-foreground'
+                        isSelected ? 'bg-ds-accent text-white dark:text-ds-on-ink' : 'bg-muted text-foreground'
                       )}
                     >
                       <Icon className="w-4 h-4" />
                     </div>
                     {mode.badge && (
-                      <Badge className="bg-purple-600 text-white text-[9px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
+                      <Badge className="bg-ds-accent text-white dark:text-ds-on-ink text-[11px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
                         {mode.badge}
                       </Badge>
                     )}
@@ -377,17 +377,17 @@ export function StudioStageBasics({
       </div>
 
       {/* 2. Course Topic & Grounding Source Hub */}
-      <div className="space-y-4 p-4 rounded-xl border bg-card/80 backdrop-blur-sm shadow-sm">
+      <div className="space-y-4 p-4 rounded-[8px] border bg-card/80 shadow-sm">
         <div className="space-y-2">
           <Label className="text-xs font-bold text-foreground flex items-center gap-1.5">
-            <BookOpen className="w-3.5 h-3.5 text-purple-600" />
-            <span>{t('builder.courseTopic', 'Course Title or Core Subject')} <span className="text-rose-500">*</span></span>
+            <BookOpen className="w-3.5 h-3.5 text-ds-accent" />
+            <span>{t('builder.courseTopic', 'Course Title or Core Subject')} <span className="text-ds-danger">*</span></span>
           </Label>
           <Input
             value={courseTopic}
             onChange={(e) => onChangeTopic(e.target.value)}
             placeholder={t('builder.courseTopicPlaceholder', 'e.g. 5-Star VIP Arrival & Concierge Protocol, Front Desk Opera PMS Check-in...')}
-            className="text-sm font-medium focus-visible:ring-purple-500"
+            className="text-sm font-medium focus-visible:ring-ds-accent"
           />
         </div>
 
@@ -396,9 +396,9 @@ export function StudioStageBasics({
           <div className="flex items-center justify-between">
             <div>
               <Label className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                <FileText className="w-3.5 h-3.5 text-blue-600" />
+                <FileText className="w-3.5 h-3.5 text-ds-info" />
                 <span>{t('builder.groundingHub', 'Grounding SOP Source & Documentation')}</span>
-                <Badge variant="outline" className="text-[9px] bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 border-blue-200">
+                <Badge variant="outline" className="text-[11px] bg-ds-info-soft text-ds-info border-ds-info/30">
                   {selectedDocObj || uploadedFileInfo ? 'Grounded ✓' : 'Optional Grounding'}
                 </Badge>
               </Label>
@@ -412,7 +412,7 @@ export function StudioStageBasics({
                 variant="ghost"
                 size="sm"
                 onClick={handleClearGrounding}
-                className="h-7 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50"
+                className="h-7 text-xs text-ds-danger hover:text-ds-danger hover:bg-ds-danger-soft"
               >
                 ✕ {t('common.clearSelection', 'Clear Grounding')}
               </Button>
@@ -421,10 +421,10 @@ export function StudioStageBasics({
 
           {/* Hero Card if a Knowledge Base Article or Library Document is selected */}
           {selectedDocObj && !uploadedFileInfo ? (
-            <div className="p-3.5 rounded-xl border border-blue-300/80 bg-gradient-to-r from-blue-50/80 via-indigo-50/40 to-purple-50/60 dark:from-blue-950/40 dark:via-indigo-950/20 dark:to-purple-950/30 space-y-2 shadow-xs">
+            <div className="p-3.5 rounded-[8px] border border-ds-info/80 bg-ds-info-soft/80 space-y-2 shadow-xs">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold shrink-0">
+                  <div className="w-8 h-8 rounded-lg bg-ds-info text-white dark:text-ds-on-ink flex items-center justify-center font-bold shrink-0">
                     <FileCheck className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
@@ -432,11 +432,11 @@ export function StudioStageBasics({
                       <p className="text-xs font-bold text-foreground truncate">
                         {selectedDocObj.title}
                       </p>
-                      <Badge className="bg-blue-600 text-white text-[9px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
+                      <Badge className="bg-ds-info text-white dark:text-ds-on-ink text-[11px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
                         {selectedDocObj.content_type || selectedDocObj.file_type || 'SOP Document'}
                       </Badge>
                       {selectedDocObj.department?.name && (
-                        <Badge variant="outline" className="text-[9px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
+                        <Badge variant="outline" className="text-[11px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
                           {selectedDocObj.department.name}
                         </Badge>
                       )}
@@ -453,7 +453,7 @@ export function StudioStageBasics({
                     variant="outline"
                     size="sm"
                     onClick={() => onChangeTopic(selectedDocObj.title)}
-                    className="h-7 text-xs font-semibold text-blue-700 dark:text-blue-300 border-blue-300 hover:bg-blue-100/50"
+                    className="h-7 text-xs font-semibold text-ds-info border-ds-info/30 hover:bg-ds-info-soft/50"
                   >
                     ⚡ Set as Title
                   </Button>
@@ -472,10 +472,10 @@ export function StudioStageBasics({
             </div>
           ) : uploadedFileInfo ? (
             /* Hero Card if a File was Uploaded */
-            <div className="p-3.5 rounded-xl border border-emerald-300 bg-emerald-50/60 dark:bg-emerald-950/30 space-y-2 shadow-xs">
+            <div className="p-3.5 rounded-[8px] border border-ds-success/30 bg-ds-success-soft/60 space-y-2 shadow-xs">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold shrink-0">
+                  <div className="w-8 h-8 rounded-lg bg-ds-success text-white dark:text-ds-on-ink flex items-center justify-center font-bold shrink-0">
                     <FileUp className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
@@ -483,10 +483,10 @@ export function StudioStageBasics({
                       <p className="text-xs font-bold text-foreground truncate">
                         {uploadedFileInfo.name}
                       </p>
-                      <Badge className="bg-emerald-600 text-white text-[9px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
+                      <Badge className="bg-ds-success text-white dark:text-ds-on-ink text-[11px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
                         Uploaded Document ({(uploadedFileInfo.size / 1024).toFixed(1)} KB)
                       </Badge>
-                      <Badge variant="outline" className="text-[9px] px-1.5 py-0.5 shrink-0 whitespace-nowrap border-emerald-300 text-emerald-700 dark:text-emerald-300">
+                      <Badge variant="outline" className="text-[11px] px-1.5 py-0.5 shrink-0 whitespace-nowrap border-ds-success/30 text-ds-success">
                         {uploadedFileInfo.wordCount} words extracted
                       </Badge>
                     </div>
@@ -502,7 +502,7 @@ export function StudioStageBasics({
                     variant="outline"
                     size="sm"
                     onClick={() => onChangeTopic(uploadedFileInfo.name.replace(/\.[^/.]+$/, ''))}
-                    className="h-7 text-xs font-semibold text-emerald-700 dark:text-emerald-300 border-emerald-300 hover:bg-emerald-100/50"
+                    className="h-7 text-xs font-semibold text-ds-success border-ds-success/30 hover:bg-ds-success-soft/50"
                   >
                     ⚡ Set as Title
                   </Button>
@@ -552,7 +552,7 @@ export function StudioStageBasics({
                     value={docSearchQuery}
                     onChange={(e) => setDocSearchQuery(e.target.value)}
                     placeholder={t('builder.searchSOPs', 'Search 100+ hotel SOP articles by title, policy, department, or procedure...')}
-                    className="ps-9 text-xs h-9 bg-card focus-visible:ring-purple-500"
+                    className="ps-9 text-xs h-9 bg-card focus-visible:ring-ds-accent"
                   />
                   {docSearchQuery && (
                     <button
@@ -567,7 +567,7 @@ export function StudioStageBasics({
 
                 {/* Instant Search Results Dropdown Overlay / List */}
                 {docSearchQuery.trim().length > 0 && (
-                  <div className="rounded-xl border bg-card/95 backdrop-blur shadow-md max-h-56 overflow-y-auto divide-y divide-border/60">
+                  <div className="rounded-[8px] border bg-card/95 max-h-56 overflow-y-auto divide-y divide-border/60">
                     {filteredDocs.length > 0 ? (
                       filteredDocs.slice(0, 10).map((doc: any) => (
                         <div
@@ -577,25 +577,25 @@ export function StudioStageBasics({
                             if (!courseTopic.trim()) onChangeTopic(doc.title)
                             setDocSearchQuery('')
                           }}
-                          className="p-2.5 hover:bg-purple-50/70 dark:hover:bg-purple-950/40 cursor-pointer flex items-center justify-between gap-2 transition-colors group"
+                          className="p-2.5 hover:bg-ds-accent-soft/70 cursor-pointer flex items-center justify-between gap-2 transition-colors group"
                         >
                           <div className="min-w-0 flex items-center gap-2">
-                            <FileText className="w-3.5 h-3.5 text-purple-600 shrink-0" />
+                            <FileText className="w-3.5 h-3.5 text-ds-accent shrink-0" />
                             <div className="min-w-0">
-                              <p className="text-xs font-bold text-foreground truncate group-hover:text-purple-600">
+                              <p className="text-xs font-bold text-foreground truncate group-hover:text-ds-accent">
                                 {doc.title}
                               </p>
-                              <p className="text-[10px] text-muted-foreground truncate">
+                              <p className="text-[11px] text-muted-foreground truncate">
                                 {doc.summary || doc.description || `${doc.content_type || 'SOP'} Document`}
                               </p>
                             </div>
                           </div>
 
                           <div className="flex items-center gap-1.5 shrink-0">
-                            <Badge variant="outline" className="text-[9px] uppercase">
+                            <Badge variant="outline" className="text-[11px] uppercase">
                               {doc.content_type || 'SOP'}
                             </Badge>
-                            <span className="text-[10px] text-purple-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span className="text-[11px] text-ds-accent font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
                               Select →
                             </span>
                           </div>
@@ -637,10 +637,10 @@ export function StudioStageBasics({
                               onChangeTopic(preset.title)
                               onChangeTargetDepartment(preset.dept)
                             }}
-                            className="px-2.5 py-1 rounded-lg border bg-card hover:bg-purple-50 hover:border-purple-300 dark:hover:bg-purple-950/30 text-[11px] font-medium text-foreground transition-all flex items-center gap-1.5 group"
+                            className="px-2.5 py-1 rounded-lg border bg-card hover:bg-ds-accent-soft hover:border-ds-accent/30 text-[11px] font-medium text-foreground transition-all flex items-center gap-1.5 group"
                           >
                             <span>{preset.icon}</span>
-                            <span className="group-hover:text-purple-600">{preset.title}</span>
+                            <span className="group-hover:text-ds-accent">{preset.title}</span>
                           </button>
                         )
                       })}
@@ -657,7 +657,7 @@ export function StudioStageBasics({
                     value={libSearchQuery}
                     onChange={(e) => setLibSearchQuery(e.target.value)}
                     placeholder="Search documents from hotel library by title, folder, or file type..."
-                    className="ps-9 text-xs h-9 bg-card focus-visible:ring-purple-500"
+                    className="ps-9 text-xs h-9 bg-card focus-visible:ring-ds-accent"
                   />
                   {libSearchQuery && (
                     <button
@@ -670,7 +670,7 @@ export function StudioStageBasics({
                   )}
                 </div>
 
-                <div className="rounded-xl border bg-card max-h-56 overflow-y-auto divide-y divide-border/60">
+                <div className="rounded-[8px] border bg-card max-h-56 overflow-y-auto divide-y divide-border/60">
                   {filteredLibDocs.length > 0 ? (
                     filteredLibDocs.slice(0, 15).map((doc: any) => (
                       <div
@@ -680,15 +680,15 @@ export function StudioStageBasics({
                           if (!courseTopic.trim()) onChangeTopic(doc.title)
                           setLibSearchQuery('')
                         }}
-                        className="p-2.5 hover:bg-purple-50/70 dark:hover:bg-purple-950/40 cursor-pointer flex items-center justify-between gap-2 transition-colors group"
+                        className="p-2.5 hover:bg-ds-accent-soft/70 cursor-pointer flex items-center justify-between gap-2 transition-colors group"
                       >
                         <div className="min-w-0 flex items-center gap-2.5">
-                          <FolderOpen className="w-4 h-4 text-blue-600 shrink-0" />
+                          <FolderOpen className="w-4 h-4 text-ds-info shrink-0" />
                           <div className="min-w-0">
-                            <p className="text-xs font-bold text-foreground truncate group-hover:text-purple-600">
+                            <p className="text-xs font-bold text-foreground truncate group-hover:text-ds-accent">
                               {doc.title}
                             </p>
-                            <p className="text-[10px] text-muted-foreground truncate">
+                            <p className="text-[11px] text-muted-foreground truncate">
                               {doc.folder?.name ? `Folder: ${doc.folder.name} • ` : ''}
                               {doc.file_type || doc.content_type || 'Document'}
                               {doc.file_size ? ` • ${(doc.file_size / 1024).toFixed(1)} KB` : ''}
@@ -697,10 +697,10 @@ export function StudioStageBasics({
                         </div>
 
                         <div className="flex items-center gap-1.5 shrink-0">
-                          <Badge variant="outline" className="text-[9px]">
+                          <Badge variant="outline" className="text-[11px]">
                             {doc.file_extension || 'PDF'}
                           </Badge>
-                          <span className="text-[10px] text-purple-600 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span className="text-[11px] text-ds-accent font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
                             Select →
                           </span>
                         </div>
@@ -725,10 +725,10 @@ export function StudioStageBasics({
                   onDrop={handleFileDrop}
                   onClick={() => fileInputRef.current?.click()}
                   className={cn(
-                    'p-6 border-2 border-dashed rounded-xl flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-200',
+                    'p-6 border-2 border-dashed rounded-[8px] flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-200',
                     isDraggingFile
-                      ? 'border-purple-500 bg-purple-50/70 dark:bg-purple-950/40 scale-[0.99]'
-                      : 'border-border/80 hover:border-purple-400 bg-card/60 hover:bg-muted/20'
+                      ? 'border-ds-accent bg-ds-accent-soft/70 scale-[0.99]'
+                      : 'border-border/80 hover:border-ds-accent bg-card/60 hover:bg-muted/20'
                   )}
                 >
                   <input
@@ -738,7 +738,7 @@ export function StudioStageBasics({
                     onChange={handleFileChange}
                     className="hidden"
                   />
-                  <div className="w-10 h-10 rounded-xl bg-purple-600/15 text-purple-600 flex items-center justify-center font-bold mb-2">
+                  <div className="w-10 h-10 rounded-[8px] bg-ds-accent/15 text-ds-accent flex items-center justify-center font-bold mb-2">
                     <UploadCloud className="w-5 h-5" />
                   </div>
                   <p className="text-xs font-bold text-foreground">
@@ -750,14 +750,14 @@ export function StudioStageBasics({
                 </div>
 
                 {isExtractingFile && (
-                  <div className="p-2.5 rounded-lg border border-blue-200 bg-blue-50 dark:bg-blue-950/30 flex items-center gap-2 text-xs text-blue-700 dark:text-blue-300">
+                  <div className="p-2.5 rounded-lg border border-ds-info/30 bg-ds-info-soft flex items-center gap-2 text-xs text-ds-info">
                     <Loader2 className="w-4 h-4 shrink-0 animate-spin" />
                     <span>Extracting text from the document…</span>
                   </div>
                 )}
 
                 {fileReadError && (
-                  <div className="p-2.5 rounded-lg border border-rose-200 bg-rose-50 dark:bg-rose-950/30 flex items-center gap-2 text-xs text-rose-700 dark:text-rose-300">
+                  <div className="p-2.5 rounded-lg border border-ds-danger/30 bg-ds-danger-soft flex items-center gap-2 text-xs text-ds-danger">
                     <AlertCircle className="w-4 h-4 shrink-0" />
                     <span>{fileReadError}</span>
                   </div>
@@ -773,7 +773,7 @@ export function StudioStageBasics({
                   rows={4}
                   className="text-xs font-mono"
                 />
-                <div className="flex justify-between text-[10px] text-muted-foreground">
+                <div className="flex justify-between text-[11px] text-muted-foreground">
                   <span>Supports markdown, numbered procedural steps, and tables</span>
                   <span>{rawSourceContent.split(/\s+/).filter(Boolean).length} words</span>
                 </div>
@@ -786,9 +786,9 @@ export function StudioStageBasics({
       {/* 3. Target Audience, Language & Hotel Operational Department */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {/* Language */}
-        <div className="space-y-1.5 p-3 rounded-xl border bg-card">
+        <div className="space-y-1.5 p-3 rounded-[8px] border bg-card">
           <Label className="text-xs font-semibold flex items-center gap-1.5">
-            <Globe className="w-3.5 h-3.5 text-purple-600" />
+            <Globe className="w-3.5 h-3.5 text-ds-accent" />
             <span>{t('builder.targetLanguage', 'Target Language')}</span>
           </Label>
           <Select value={targetLanguage} onValueChange={(v: any) => onChangeTargetLanguage(v)}>
@@ -804,9 +804,9 @@ export function StudioStageBasics({
         </div>
 
         {/* Experience Level / Difficulty */}
-        <div className="space-y-1.5 p-3 rounded-xl border bg-card">
+        <div className="space-y-1.5 p-3 rounded-[8px] border bg-card">
           <Label className="text-xs font-semibold flex items-center gap-1.5">
-            <GraduationCap className="w-3.5 h-3.5 text-emerald-600" />
+            <GraduationCap className="w-3.5 h-3.5 text-ds-success" />
             <span>{t('builder.difficultyLevel', 'Learner Level')}</span>
           </Label>
           <Select value={difficulty} onValueChange={(v: any) => onChangeDifficulty(v)}>
@@ -823,9 +823,9 @@ export function StudioStageBasics({
         </div>
 
         {/* Target Audience */}
-        <div className="space-y-1.5 p-3 rounded-xl border bg-card">
+        <div className="space-y-1.5 p-3 rounded-[8px] border bg-card">
           <Label className="text-xs font-semibold flex items-center gap-1.5">
-            <Target className="w-3.5 h-3.5 text-amber-600" />
+            <Target className="w-3.5 h-3.5 text-ds-warning" />
             <span>{t('builder.targetAudience', 'Target Audience')}</span>
           </Label>
           <Select value={targetAudience} onValueChange={(v: any) => onChangeTargetAudience(v)}>
@@ -842,9 +842,9 @@ export function StudioStageBasics({
         </div>
 
         {/* Hotel Department */}
-        <div className="space-y-1.5 p-3 rounded-xl border bg-card">
+        <div className="space-y-1.5 p-3 rounded-[8px] border bg-card">
           <Label className="text-xs font-semibold flex items-center gap-1.5">
-            <Building2 className="w-3.5 h-3.5 text-blue-600" />
+            <Building2 className="w-3.5 h-3.5 text-ds-info" />
             <span>{t('builder.targetDepartment', 'Hotel Department')}</span>
           </Label>
           <Select value={targetDepartment} onValueChange={onChangeTargetDepartment}>
@@ -867,16 +867,16 @@ export function StudioStageBasics({
       </div>
 
       {/* 4. Progressive Disclosure: Advanced Pedagogical Directives */}
-      <div className="border rounded-xl bg-muted/10 overflow-hidden">
+      <div className="border rounded-[8px] bg-muted/10 overflow-hidden">
         <button
           type="button"
           onClick={() => setShowAdvanced(!showAdvanced)}
           className="w-full px-4 py-3 flex items-center justify-between text-xs font-bold text-muted-foreground hover:text-foreground transition-colors"
         >
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-purple-600" />
+            <Sparkles className="w-4 h-4 text-ds-accent" />
             <span>{t('builder.advancedBasics', 'Advanced Course Directives & Localization')}</span>
-            <Badge variant="outline" className="text-[9px]">Optional</Badge>
+            <Badge variant="outline" className="text-[11px]">Optional</Badge>
           </div>
           {showAdvanced ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>

@@ -33,7 +33,7 @@ const TENANT_ROLES_CATALOG: RoleDefinition[] = [
     descriptionAr: 'تحكم إداري شامل، إدارة الاشتراكات، وإشراف كامل على كافة الفنادق والعمليات.',
     permissions: ['Billing & Plan', 'Full CRUD', 'Impersonation', 'Audit Trails', 'User Management', 'Content Authoring'],
     level: 1,
-    badgeColor: 'bg-purple-500/15 text-purple-600 dark:text-purple-400 border-purple-500/30'
+    badgeColor: 'bg-ds-accent-soft text-ds-accent border-ds-accent/30'
   },
   {
     role: 'organization_admin',
@@ -45,7 +45,7 @@ const TENANT_ROLES_CATALOG: RoleDefinition[] = [
     descriptionAr: 'إدارة الأقسام والأشخاص والإعدادات والبرامج التدريبية في المنظمة.',
     permissions: ['Department Management', 'User Provisioning', 'Reporting Line Control', 'LMS Admin'],
     level: 2,
-    badgeColor: 'bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/30'
+    badgeColor: 'bg-ds-surface-subtle text-ds-ink-secondary border-ds-border'
   },
   {
     role: 'training_manager',
@@ -57,7 +57,7 @@ const TENANT_ROLES_CATALOG: RoleDefinition[] = [
     descriptionAr: 'الإشراف على إنشاء الدورات التدريبية، مصفوفة المهارات، الشهادات، وتأليف المحتوى بالذكاء الاصطناعي.',
     permissions: ['Course Builder', 'AI Course Engine', 'Skills Matrix', 'Certificates Issue', 'Analytics'],
     level: 3,
-    badgeColor: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
+    badgeColor: 'bg-ds-surface-subtle text-ds-ink-secondary border-ds-border'
   },
   {
     role: 'knowledge_manager',
@@ -69,7 +69,7 @@ const TENANT_ROLES_CATALOG: RoleDefinition[] = [
     descriptionAr: 'إدارة وتوثيق أدلة التشغيل القياسية، الامتثال للسياسات، مراجعة الوثائق والجودة.',
     permissions: ['Document Approvals', 'SOP Publishing', 'Compliance Center', 'AI Translation', 'Version Control'],
     level: 3,
-    badgeColor: 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border-cyan-500/30'
+    badgeColor: 'bg-ds-surface-subtle text-ds-ink-secondary border-ds-border'
   },
   {
     role: 'brand_admin',
@@ -81,7 +81,7 @@ const TENANT_ROLES_CATALOG: RoleDefinition[] = [
     descriptionAr: 'إدارة المحتوى والمعايير الخاصة بعلامة تجارية واحدة.',
     permissions: ['Brand Scope LMS', 'Brand Documents', 'Brand Standards'],
     level: 4,
-    badgeColor: 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30'
+    badgeColor: 'bg-ds-surface-subtle text-ds-ink-secondary border-ds-border'
   },
   {
     role: 'department_manager',
@@ -93,7 +93,7 @@ const TENANT_ROLES_CATALOG: RoleDefinition[] = [
     descriptionAr: 'المشرف المباشر على الفريق، الموافقات، الجداول التشغيلية، ومتابعة إتمام التدريبات.',
     permissions: ['Approval Requests', 'Department Shift Roster', 'Member Tracking', 'SOP Acknowledgment'],
     level: 6,
-    badgeColor: 'bg-orange-500/15 text-orange-600 dark:text-orange-400 border-orange-500/30'
+    badgeColor: 'bg-ds-surface-subtle text-ds-ink-secondary border-ds-border'
   },
   {
     role: 'instructor',
@@ -105,7 +105,7 @@ const TENANT_ROLES_CATALOG: RoleDefinition[] = [
     descriptionAr: 'تقديم الجلسات التدريبية المباشرة، تصحيح الاختبارات التفاعلية، وتسجيل الحضور.',
     permissions: ['Quiz Grading', 'Attendance Logging', 'Live Sessions', 'Feedback Submissions'],
     level: 7,
-    badgeColor: 'bg-teal-500/15 text-teal-600 dark:text-teal-400 border-teal-500/30'
+    badgeColor: 'bg-ds-surface-subtle text-ds-ink-secondary border-ds-border'
   },
   {
     role: 'learner',
@@ -117,7 +117,7 @@ const TENANT_ROLES_CATALOG: RoleDefinition[] = [
     descriptionAr: 'موظف الخطوط الأمامية للوصول إلى التدريب المصغر، أدلة التشغيل، المهام والشهادات.',
     permissions: ['Take Courses', 'View Knowledge', 'Complete Tasks', 'Earn Certificates', 'Self Service'],
     level: 8,
-    badgeColor: 'bg-slate-500/15 text-slate-600 dark:text-slate-400 border-slate-500/30'
+    badgeColor: 'bg-ds-surface-subtle text-ds-ink-secondary border-ds-border'
   }
 ]
 
@@ -153,12 +153,12 @@ export function RolesManagement() {
   })
 
   return (
-    <Card className="border shadow-sm">
+    <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <Shield className="h-5 w-5 text-primary" />
-            <CardTitle>{t('admin:roles_and_permissions', 'Tenant Roles & Permission Matrix')}</CardTitle>
+            <Shield aria-hidden="true" className="h-5 w-5 text-ds-accent" />
+            <CardTitle>{t('admin:roles_and_permissions', 'Organization Roles & Permission Matrix')}</CardTitle>
           </div>
           <CardDescription>
             {t('admin:roles_desc', 'Granular multi-tier role definitions governing system capabilities and scope across the enterprise.')}
@@ -193,9 +193,6 @@ export function RolesManagement() {
                           {isRtl ? item.labelAr : item.label}
                         </Badge>
                       </div>
-                      <span className="font-mono text-[10px] text-muted-foreground block mt-1">
-                        {item.role}
-                      </span>
                     </TableCell>
                     <TableCell>
                       <Badge variant="secondary" className="text-xs">
@@ -210,7 +207,7 @@ export function RolesManagement() {
                         {item.permissions.map((perm) => (
                           <span
                             key={perm}
-                            className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] bg-muted text-muted-foreground border font-medium"
+                            className="inline-flex items-center rounded-[4px] border border-ds-border bg-ds-surface-subtle px-1.5 py-0.5 text-[11px] font-medium text-ds-ink-secondary"
                           >
                             {perm}
                           </span>

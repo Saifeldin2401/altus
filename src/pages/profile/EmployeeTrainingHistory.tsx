@@ -212,7 +212,7 @@ export default function EmployeeTrainingHistory({ userId }: EmployeeTrainingHist
     return (
       <Card>
         <CardContent className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-hotel-gold" />
+          <Loader2 className="h-8 w-8 animate-spin text-ds-accent" />
         </CardContent>
       </Card>
     )
@@ -241,15 +241,15 @@ export default function EmployeeTrainingHistory({ userId }: EmployeeTrainingHist
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-xl text-hotel-navy flex items-center gap-2">
-                <BookOpen className="h-5 w-5 text-hotel-gold" />
+              <CardTitle className="text-xl text-ds-ink flex items-center gap-2">
+                <BookOpen className="h-5 w-5 text-ds-accent" />
                 {t('training:trainingHistory', 'Training History & Quiz Recordings')}
               </CardTitle>
               <CardDescription>
                 {t('training:trainingHistoryDesc', 'Detailed module completions, scores, and recorded question answers')}
               </CardDescription>
             </div>
-            <Badge variant="outline" className="border-hotel-gold/30 text-hotel-gold">
+            <Badge variant="outline" className="border-ds-accent/30 text-ds-accent">
               {trainingHistory.length} {trainingHistory.length === 1 ? t('training:module', 'Module') : t('training:modules', 'Modules')}
             </Badge>
           </div>
@@ -262,14 +262,14 @@ export default function EmployeeTrainingHistory({ userId }: EmployeeTrainingHist
             return (
               <div
                 key={item.id}
-                className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:border-hotel-gold/30"
+                className="rounded-[8px] border border-ds-border bg-ds-surface p-5 shadow-sm transition-all hover:border-ds-accent/30"
               >
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <h4 className="font-semibold text-hotel-navy text-base">{item.module_title}</h4>
+                      <h4 className="font-semibold text-ds-ink text-base">{item.module_title}</h4>
                       {item.module_category && (
-                        <Badge variant="secondary" className="text-[10px] capitalize">
+                        <Badge variant="secondary" className="text-[11px] capitalize">
                           {item.module_category}
                         </Badge>
                       )}
@@ -281,7 +281,7 @@ export default function EmployeeTrainingHistory({ userId }: EmployeeTrainingHist
                         </span>
                       )}
                       {item.score_percentage !== null && (
-                        <span className="font-medium text-slate-700">
+                        <span className="font-medium text-ds-ink-secondary">
                           {t('training:score', 'Score')}: {item.score_percentage}%
                         </span>
                       )}
@@ -300,7 +300,7 @@ export default function EmployeeTrainingHistory({ userId }: EmployeeTrainingHist
                       )}
                     </Badge>
                     {item.passed !== null && (
-                      <Badge variant={item.passed ? 'outline' : 'destructive'} className={item.passed ? 'border-green-500 text-green-700' : ''}>
+                      <Badge variant={item.passed ? 'outline' : 'destructive'} className={item.passed ? 'border-ds-success text-ds-success' : ''}>
                         {item.passed ? t('training:passed', 'Passed') : t('training:failed', 'Failed')}
                       </Badge>
                     )}
@@ -309,7 +309,7 @@ export default function EmployeeTrainingHistory({ userId }: EmployeeTrainingHist
                         variant="ghost"
                         size="sm"
                         onClick={() => setExpandedQuizId(isExpanded ? null : item.id)}
-                        className="text-xs text-hotel-gold hover:text-hotel-gold-dark gap-1"
+                        className="text-xs text-ds-accent hover:text-ds-accent-hover gap-1"
                       >
                         <FileQuestion className="h-3.5 w-3.5" />
                         {isExpanded ? t('training:hideAnswers', 'Hide Answers') : t('training:viewAnswers', 'View Q&A')}
@@ -331,16 +331,16 @@ export default function EmployeeTrainingHistory({ userId }: EmployeeTrainingHist
 
                 {/* Expandable Quiz Recordings */}
                 {isExpanded && item.quiz_results.length > 0 && (
-                  <div className="mt-5 pt-4 border-t border-slate-100 space-y-4">
-                    <h5 className="text-xs uppercase tracking-wider font-semibold text-slate-500">
+                  <div className="mt-5 pt-4 border-t border-ds-border space-y-4">
+                    <h5 className="text-xs uppercase tracking-wider font-semibold text-ds-muted">
                       {t('training:questionRecordings', 'Recorded Quiz Responses')}
                     </h5>
 
                     {item.quiz_results.map((quiz, qIdx) => (
-                      <div key={quiz.quizId || qIdx} className="rounded-lg bg-slate-50 border border-slate-200 p-4 space-y-3">
+                      <div key={quiz.quizId || qIdx} className="rounded-lg bg-ds-surface-subtle border border-ds-border p-4 space-y-3">
                         <div className="flex items-center justify-between">
-                          <div className="font-medium text-sm text-slate-800 flex items-center gap-2">
-                            <Award className="h-4 w-4 text-hotel-gold" />
+                          <div className="font-medium text-sm text-ds-ink flex items-center gap-2">
+                            <Award className="h-4 w-4 text-ds-accent" />
                             {quiz.quizTitle}
                           </div>
                           <div className="flex items-center gap-2 text-xs">
@@ -362,16 +362,16 @@ export default function EmployeeTrainingHistory({ userId }: EmployeeTrainingHist
                             {quiz.reviewItems.map((rev, revIdx) => (
                               <div
                                 key={rev.questionId || revIdx}
-                                className="rounded-md bg-white border border-slate-200/80 p-3 text-xs space-y-1.5"
+                                className="rounded-md bg-ds-surface border border-ds-border/80 p-3 text-xs space-y-1.5"
                               >
                                 <div className="flex items-start justify-between gap-2">
-                                  <span className="font-medium text-slate-900 flex-1">
+                                  <span className="font-medium text-ds-ink flex-1">
                                     {revIdx + 1}. {rev.questionText}
                                   </span>
                                   {rev.correct !== undefined && (
                                     <Badge
                                       variant={rev.correct ? 'default' : 'destructive'}
-                                      className="text-[10px] shrink-0"
+                                      className="text-[11px] shrink-0"
                                     >
                                       {rev.correct ? (
                                         <CheckCircle2 className="h-3 w-3 me-1 inline" />
@@ -382,9 +382,9 @@ export default function EmployeeTrainingHistory({ userId }: EmployeeTrainingHist
                                     </Badge>
                                   )}
                                 </div>
-                                <div className="text-slate-600">
-                                  <span className="font-medium text-slate-700">{t('training:learnerAnswer', 'Answer given')}: </span>
-                                  <span className={rev.correct ? 'text-green-700 font-medium' : 'text-red-700 font-medium'}>
+                                <div className="text-ds-ink-secondary">
+                                  <span className="font-medium text-ds-ink-secondary">{t('training:learnerAnswer', 'Answer given')}: </span>
+                                  <span className={rev.correct ? 'text-ds-success font-medium' : 'text-ds-danger font-medium'}>
                                     {rev.selectedAnswer || '—'}
                                   </span>
                                 </div>

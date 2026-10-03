@@ -195,7 +195,7 @@ export function BrandsManagement() {
   }
 
   return (
-    <Card className="border shadow-sm">
+    <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
           <div className="flex items-center gap-2">

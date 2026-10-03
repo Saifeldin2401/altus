@@ -195,13 +195,13 @@ function NavButton({ to, isActive, onClick, icon, label, badge }: NavButtonProps
         {badge !== undefined && badge > 0 && (
           <Badge
             variant="destructive"
-            className="absolute -top-1.5 -end-2 h-4 min-w-4 px-1 text-[9px] font-mono font-bold flex items-center justify-center bg-ds-danger text-white"
+            className="absolute -top-1.5 -end-2 h-4 min-w-4 px-1 text-[11px] font-mono font-bold flex items-center justify-center bg-ds-danger text-white"
           >
             {badge > 99 ? '99+' : badge}
           </Badge>
         )}
       </div>
-      <span className="text-[10px] leading-tight">
+      <span className="text-[11px] leading-tight">
         {label}
       </span>
     </Link>
@@ -233,13 +233,13 @@ function ActionButton({ onClick, icon, label, badge }: ActionButtonProps) {
         {badge !== undefined && badge > 0 && (
           <Badge
             variant="destructive"
-            className="absolute -top-1.5 -end-2 h-4 min-w-4 px-1 text-[9px] font-mono font-bold flex items-center justify-center bg-ds-danger text-white"
+            className="absolute -top-1.5 -end-2 h-4 min-w-4 px-1 text-[11px] font-mono font-bold flex items-center justify-center bg-ds-danger text-white"
           >
             {badge > 99 ? '99+' : badge}
           </Badge>
         )}
       </div>
-      <span className="text-[10px] leading-tight">
+      <span className="text-[11px] leading-tight">
         {label}
       </span>
     </button>

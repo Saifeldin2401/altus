@@ -66,18 +66,18 @@ export class ErrorBoundary extends Component<Props, State> {
         <div className="min-h-screen flex items-center justify-center p-4">
           <Card className="w-full max-w-md">
             <CardHeader className="text-center">
-              <div className="mx-auto w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
-                <AlertTriangle className="h-6 w-6 text-red-600" />
+              <div className="mx-auto w-12 h-12 bg-ds-danger-soft rounded-full flex items-center justify-center mb-4">
+                <AlertTriangle className="h-6 w-6 text-ds-danger" />
               </div>
-              <CardTitle className="text-red-600">Something went wrong</CardTitle>
+              <CardTitle className="text-ds-danger">Something went wrong</CardTitle>
             </CardHeader>
             <CardContent className="text-center space-y-4">
-              <p className="text-gray-600">
+              <p className="text-ds-ink-secondary">
                 We're sorry, but something unexpected happened. The error has been logged and our team will look into it.
               </p>
 
               {isDev && this.state.error && (
-                <details className="text-start bg-gray-50 p-3 rounded text-sm">
+                <details className="text-start bg-ds-surface-subtle p-3 rounded text-sm">
                   <summary className="cursor-pointer font-medium">Error Details</summary>
                   <pre className="mt-2 text-xs overflow-auto">
                     {this.state.error.toString()}

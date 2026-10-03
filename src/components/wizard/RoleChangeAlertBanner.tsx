@@ -14,10 +14,10 @@ export const RoleChangeAlertBanner: React.FC = () => {
   }
 
   return (
-    <div className="bg-amber-500/10 border-b border-amber-500/20 text-foreground px-4 py-2.5 transition-all duration-200">
+    <div className="bg-ds-warning/10 border-b border-ds-warning/20 text-foreground px-4 py-2.5 transition-all duration-200">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 flex-wrap text-sm">
         <div className="flex items-center gap-2.5 flex-1 min-w-[280px]">
-          <div className="h-7 w-7 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+          <div className="h-7 w-7 rounded-full bg-ds-warning/20 text-ds-warning flex items-center justify-center shrink-0">
             <ShieldAlert className="h-4 w-4" />
           </div>
 
@@ -25,7 +25,7 @@ export const RoleChangeAlertBanner: React.FC = () => {
             <span className="font-medium text-xs sm:text-sm">
               {t('role_change.banner_title', 'Your organizational role has been updated:')}
             </span>
-            <Badge variant="outline" className="text-xs bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-300 font-semibold">
+            <Badge variant="outline" className="text-xs bg-ds-warning/10 border-ds-warning/30 text-ds-warning font-semibold">
               {blueprint.roleName}
             </Badge>
             {previousRole && (
@@ -40,7 +40,7 @@ export const RoleChangeAlertBanner: React.FC = () => {
           <Button 
             size="sm" 
             onClick={openWhatCanIDo}
-            className="h-7 text-xs bg-amber-600 hover:bg-amber-700 text-white gap-1.5 shadow-sm"
+            className="h-7 text-xs bg-ds-warning hover:bg-ds-warning text-white dark:text-ds-on-ink gap-1.5 shadow-sm"
           >
             {t('role_change.view_guide', 'View Role Guide')}
             <ArrowRight className="h-3 w-3" />

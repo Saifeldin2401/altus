@@ -72,7 +72,7 @@ export function DocumentRecommendations({ className }: { className?: string } = 
     <Card className={cn(className)}>
       <CardHeader>
         <CardTitle className="text-lg flex items-center gap-2">
-          <Star className="h-5 w-5 text-yellow-500" />
+          <Star className="h-5 w-5 text-ds-warning" />
           Recommended for You
         </CardTitle>
       </CardHeader>
@@ -89,9 +89,9 @@ export function DocumentRecommendations({ className }: { className?: string } = 
             </div>
             <div className="flex items-center gap-1 flex-shrink-0">
               {doc.visibility === 'all_properties' ? (
-                <Star className="h-3 w-3 text-yellow-500" />
+                <Star className="h-3 w-3 text-ds-warning" />
               ) : (
-                <Building2 className="h-3 w-3 text-blue-500" />
+                <Building2 className="h-3 w-3 text-ds-info" />
               )}
               <Badge variant="secondary" className="text-xs">
                 {getRecommendationReason(doc)}

@@ -113,7 +113,7 @@ export function TenantEmailPreviewModal({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2 border-primary/30 text-primary hover:bg-primary/5">
+        <Button variant="outline" size="sm">
           <Eye className="h-4 w-4" />
           {t('admin:preview_emails', 'Live Email Preview')}
         </Button>
@@ -122,8 +122,8 @@ export function TenantEmailPreviewModal({
         <DialogHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-amber-500" />
-              <DialogTitle>{t('admin:tenant_email_preview', 'Tenant Branded Email Preview')}</DialogTitle>
+              <Sparkles aria-hidden="true" className="h-5 w-5 text-ds-accent" />
+              <DialogTitle>{t('admin:tenant_email_preview', 'Organization Branded Email Preview')}</DialogTitle>
             </div>
             <div className="flex items-center gap-2 me-6">
               <Button

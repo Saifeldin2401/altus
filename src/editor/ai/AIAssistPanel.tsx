@@ -154,9 +154,9 @@ function AIAssistPanel({
   if (!open) return null
 
   return (
-    <Card className="border-hotel-gold/30 shadow-lg" dir={direction}>
+    <Card className="border-ds-accent/30 shadow-lg" dir={direction}>
       <CardHeader className="pb-3 px-4 pt-4">
-        <CardTitle className="flex items-center gap-2 text-sm font-semibold text-hotel-gold">
+        <CardTitle className="flex items-center gap-2 text-sm font-semibold text-ds-accent">
           <Sparkles className="h-4 w-4" />
           AI Assist
         </CardTitle>
@@ -197,7 +197,7 @@ function AIAssistPanel({
             onClick={runAssist}
             disabled={isLoading || !editor}
             size="sm"
-            className="gap-2 bg-hotel-gold text-white hover:bg-hotel-gold/90 h-9"
+            className="gap-2 bg-ds-accent text-white dark:text-ds-on-ink hover:bg-ds-accent/90 h-9"
           >
             {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
             Generate Preview
@@ -205,7 +205,7 @@ function AIAssistPanel({
           <Button variant="outline" size="sm" onClick={closePanel} className="h-9">
             Close
           </Button>
-          <p className="text-[10px] text-muted-foreground flex-grow">
+          <p className="text-[11px] text-muted-foreground flex-grow">
             Replaces selection, or processes entire document if nothing is selected.
           </p>
         </div>
@@ -223,24 +223,24 @@ function AIAssistPanel({
               <InlineErrorBoundary>
                 {/* SECURITY: Content was pre-sanitized in validateAiResponse() */}
                 <div
-                  className="max-h-64 overflow-auto rounded-lg border bg-muted/30 p-3 text-sm prose prose-sm max-w-none shadow-inner"
+                  className="max-h-64 overflow-auto rounded-lg border bg-muted/30 p-3 text-sm prose prose-sm max-w-none"
                   dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(replacement.originalHtml || '') }}
                 />
               </InlineErrorBoundary>
             </div>
             <div className="space-y-2">
-              <Label className="text-[10px] font-bold uppercase tracking-wider text-hotel-gold">AI Suggestion</Label>
+              <Label className="text-[11px] font-bold uppercase tracking-wider text-ds-accent">AI Suggestion</Label>
               <InlineErrorBoundary>
                 {/* SECURITY: Content was pre-sanitized in validateAiResponse() */}
                 <div
-                  className="max-h-64 overflow-auto rounded-lg border-emerald-500/30 bg-emerald-500/5 p-3 text-sm prose prose-sm max-w-none shadow-inner ring-1 ring-emerald-500/20"
+                  className="max-h-64 overflow-auto rounded-lg border-ds-success/30 bg-ds-success/5 p-3 text-sm prose prose-sm max-w-none ring-1 ring-ds-success/20"
                   dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(replacement.suggestedHtml || '') }}
                 />
               </InlineErrorBoundary>
             </div>
 
-            <div className="flex gap-2 md:col-span-2 pt-2 border-t border-hotel-gold/10">
-              <Button size="sm" onClick={acceptSuggestion} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+            <div className="flex gap-2 md:col-span-2 pt-2 border-t border-ds-accent/10">
+              <Button size="sm" onClick={acceptSuggestion} className="bg-ds-success hover:bg-ds-success text-white dark:text-ds-on-ink">
                 Accept Suggestion
               </Button>
               <Button size="sm" variant="outline" onClick={() => setReplacement(null)}>

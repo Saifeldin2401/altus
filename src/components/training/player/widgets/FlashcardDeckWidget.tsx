@@ -10,6 +10,7 @@ import {
     Shuffle
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import i18n from '@/i18n/i18n'
 
 interface FlashcardItem {
     id: string
@@ -77,33 +78,33 @@ export function FlashcardDeckWidget({
     const backText = isRTL && currentCard.back_ar ? currentCard.back_ar : currentCard.back
 
     return (
-        <div className="my-6 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 border border-amber-500/20 p-5 shadow-2xl">
+        <div className="my-6 rounded-[8px] bg-ds-ink border border-ds-warning/20 p-5 shadow-2xl">
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-lg bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-400">
+                    <div className="h-8 w-8 rounded-lg bg-ds-warning/20 border border-ds-warning/30 flex items-center justify-center text-ds-warning">
                         <Sparkles className="h-4 w-4" />
                     </div>
                     <div>
-                        <h4 className="text-sm font-bold text-white">
-                            {title || (isRTL ? 'بطاقات الذاكرة التفاعلية' : 'Interactive Flashcards')}
+                        <h4 className="text-sm font-bold text-ds-on-ink">
+                            {title || (i18n.t('training:screens.FlashcardDeckWidget.interactiveFlashcards', 'Interactive Flashcards'))}
                         </h4>
-                        <span className="text-[11px] text-slate-400">
-                            {isRTL ? 'انقر على البطاقة لقلبها واختبار معلوماتك' : 'Click the card to flip and test your knowledge'}
+                        <span className="text-[11px] text-ds-muted">
+                            {i18n.t('training:screens.FlashcardDeckWidget.clickTheCardToFlip', 'Click the card to flip and test your knowledge')}
                         </span>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs bg-slate-800 text-amber-300 border-slate-700">
+                    <Badge variant="outline" className="text-xs bg-ds-ink text-ds-warning border-ds-ink-secondary">
                         {currentIndex + 1} / {cards.length}
                     </Badge>
                     <Button
                         variant="ghost"
                         size="sm"
                         onClick={handleShuffle}
-                        title={isRTL ? 'خلط البطاقات' : 'Shuffle'}
-                        className="h-8 w-8 p-0 text-slate-400 hover:text-white"
+                        title={i18n.t('training:screens.FlashcardDeckWidget.shuffle', 'Shuffle')}
+                        className="h-8 w-8 p-0 text-ds-muted hover:text-ds-on-ink"
                     >
                         <Shuffle className="h-3.5 w-3.5" />
                     </Button>
@@ -117,10 +118,10 @@ export function FlashcardDeckWidget({
             >
                 <div
                     className={cn(
-                        "w-full h-full rounded-xl transition-transform duration-500 transform-style-3d shadow-xl relative border",
+                        "w-full h-full rounded-[8px] transition-transform duration-500 transform-style-3d shadow-xl relative border",
                         isFlipped
-                            ? "rotate-y-180 bg-slate-900 border-amber-500/40 text-amber-200"
-                            : "bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 text-white"
+                            ? "rotate-y-180 bg-ds-ink border-ds-warning/40 text-ds-warning"
+                            : "bg-ds-ink border-ds-ink-secondary text-ds-on-ink"
                     )}
                     style={{
                         transformStyle: 'preserve-3d',
@@ -136,14 +137,14 @@ export function FlashcardDeckWidget({
                         )}
                         style={{ backfaceVisibility: 'hidden' }}
                     >
-                        <div className="flex items-center justify-between text-xs text-amber-400/80 font-semibold tracking-wider uppercase">
-                            <span>{currentCard.category || (isRTL ? 'سؤال / معيار' : 'Standard / Question')}</span>
-                            <span className="text-[10px] bg-slate-950/60 px-2 py-0.5 rounded-full border border-slate-800 flex items-center gap-1">
-                                <RotateCw className="h-3 w-3" /> {isRTL ? 'انقر للقلب' : 'Click to flip'}
+                        <div className="flex items-center justify-between text-xs text-ds-warning/80 font-semibold tracking-wider uppercase">
+                            <span>{currentCard.category || (i18n.t('training:screens.FlashcardDeckWidget.standardQuestion', 'Standard / Question'))}</span>
+                            <span className="text-[11px] bg-ds-ink/60 px-2 py-0.5 rounded-full border border-ds-ink-secondary flex items-center gap-1">
+                                <RotateCw className="h-3 w-3" /> {i18n.t('training:screens.FlashcardDeckWidget.clickToFlip', 'Click to flip')}
                             </span>
                         </div>
 
-                        <p className="text-base md:text-lg font-medium text-center leading-relaxed text-slate-100">
+                        <p className="text-base md:text-lg font-medium text-center leading-relaxed text-ds-on-ink">
                             {frontText}
                         </p>
 
@@ -153,12 +154,12 @@ export function FlashcardDeckWidget({
                                 className={cn(
                                     "flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border transition-all",
                                     isMastered
-                                        ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
-                                        : "bg-slate-900/60 text-slate-400 border-slate-700 hover:text-white"
+                                        ? "bg-ds-success/20 text-ds-success border-ds-success/40"
+                                        : "bg-ds-ink/60 text-ds-muted border-ds-ink-secondary hover:text-ds-on-ink"
                                 )}
                             >
                                 <CheckCircle2 className="h-3.5 w-3.5" />
-                                <span>{isMastered ? (isRTL ? 'تم الإتقان' : 'Mastered') : (isRTL ? 'أتقنتها' : 'Mark Mastered')}</span>
+                                <span>{isMastered ? (i18n.t('training:screens.FlashcardDeckWidget.mastered', 'Mastered')) : (i18n.t('training:screens.FlashcardDeckWidget.markMastered', 'Mark Mastered'))}</span>
                             </button>
                         </div>
                     </div>
@@ -174,14 +175,14 @@ export function FlashcardDeckWidget({
                             transform: 'rotateY(180deg)'
                         }}
                     >
-                        <div className="flex items-center justify-between text-xs text-amber-400 font-semibold tracking-wider uppercase">
-                            <span>{isRTL ? 'الإجابة والمعيار المعتمد' : 'Standard Answer / Key Rule'}</span>
-                            <span className="text-[10px] bg-slate-950/60 px-2 py-0.5 rounded-full border border-slate-800 flex items-center gap-1">
-                                <RotateCw className="h-3 w-3" /> {isRTL ? 'قلب' : 'Flip'}
+                        <div className="flex items-center justify-between text-xs text-ds-warning font-semibold tracking-wider uppercase">
+                            <span>{i18n.t('training:screens.FlashcardDeckWidget.standardAnswerKeyRule', 'Standard Answer / Key Rule')}</span>
+                            <span className="text-[11px] bg-ds-ink/60 px-2 py-0.5 rounded-full border border-ds-ink-secondary flex items-center gap-1">
+                                <RotateCw className="h-3 w-3" /> {i18n.t('training:screens.FlashcardDeckWidget.flip', 'Flip')}
                             </span>
                         </div>
 
-                        <p className="text-sm md:text-base font-normal text-center leading-relaxed text-amber-100 whitespace-pre-wrap">
+                        <p className="text-sm md:text-base font-normal text-center leading-relaxed text-ds-warning whitespace-pre-wrap">
                             {backText}
                         </p>
 
@@ -191,12 +192,12 @@ export function FlashcardDeckWidget({
                                 className={cn(
                                     "flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border transition-all",
                                     isMastered
-                                        ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
-                                        : "bg-slate-950/80 text-slate-300 border-slate-700 hover:text-white"
+                                        ? "bg-ds-success/20 text-ds-success border-ds-success/40"
+                                        : "bg-ds-ink/80 text-ds-muted border-ds-ink-secondary hover:text-ds-on-ink"
                                 )}
                             >
                                 <CheckCircle2 className="h-3.5 w-3.5" />
-                                <span>{isMastered ? (isRTL ? 'تم الإتقان' : 'Mastered') : (isRTL ? 'أتقنتها' : 'Mark Mastered')}</span>
+                                <span>{isMastered ? (i18n.t('training:screens.FlashcardDeckWidget.mastered', 'Mastered')) : (i18n.t('training:screens.FlashcardDeckWidget.markMastered', 'Mark Mastered'))}</span>
                             </button>
                         </div>
                     </div>
@@ -209,10 +210,10 @@ export function FlashcardDeckWidget({
                     variant="outline"
                     size="sm"
                     onClick={handlePrev}
-                    className="h-8 border-slate-800 text-slate-300 hover:bg-slate-800 text-xs gap-1"
+                    className="h-8 border-ds-ink-secondary text-ds-muted hover:bg-ds-ink text-xs gap-1"
                 >
                     <ChevronLeft className={cn("h-4 w-4", isRTL && "rotate-180")} />
-                    <span>{isRTL ? 'السابق' : 'Previous'}</span>
+                    <span>{i18n.t('training:screens.FlashcardDeckWidget.previous', 'Previous')}</span>
                 </Button>
 
                 <div className="flex items-center gap-1">
@@ -222,10 +223,10 @@ export function FlashcardDeckWidget({
                             className={cn(
                                 "h-1.5 rounded-full transition-all duration-300",
                                 i === currentIndex
-                                    ? "w-6 bg-amber-400"
+                                    ? "w-6 bg-ds-warning"
                                     : masteredIds.has(c.id)
-                                        ? "w-2 bg-emerald-400"
-                                        : "w-2 bg-slate-800"
+                                        ? "w-2 bg-ds-success"
+                                        : "w-2 bg-ds-ink"
                             )}
                         />
                     ))}
@@ -235,9 +236,9 @@ export function FlashcardDeckWidget({
                     variant="outline"
                     size="sm"
                     onClick={handleNext}
-                    className="h-8 border-slate-800 text-slate-300 hover:bg-slate-800 text-xs gap-1"
+                    className="h-8 border-ds-ink-secondary text-ds-muted hover:bg-ds-ink text-xs gap-1"
                 >
-                    <span>{isRTL ? 'التالي' : 'Next'}</span>
+                    <span>{i18n.t('training:screens.FlashcardDeckWidget.next', 'Next')}</span>
                     <ChevronRight className={cn("h-4 w-4", isRTL && "rotate-180")} />
                 </Button>
             </div>

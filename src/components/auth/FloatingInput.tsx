@@ -91,7 +91,7 @@ function FloatingInputComponent({
         aria-invalid={ariaInvalid ?? (valid === false && value.length > 0)}
         placeholder=" "
         className={cn(
-          'peer w-full h-12 pt-4 pb-1.5 bg-white focus:bg-white border rounded-lg outline-none transition-all duration-200 text-ds-ink font-normal text-sm',
+          'peer w-full h-12 pt-4 pb-1.5 bg-ds-surface focus:bg-ds-surface border rounded-lg outline-none transition-all duration-200 text-ds-ink font-normal text-sm',
           '[&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_white] [&:-webkit-autofill]:[-webkit-text-fill-color:rgb(var(--ds-ink))]',
           'ps-10 text-start',
           rightElement ? 'pe-11' : '',
@@ -102,7 +102,7 @@ function FloatingInputComponent({
             : 'border-ds-border hover:border-ds-border-strong',
           valid === true && 'border-ds-success',
           valid === false && value && 'border-ds-danger',
-          disabled && 'opacity-50 cursor-not-allowed bg-slate-50'
+          disabled && 'opacity-50 cursor-not-allowed bg-ds-surface-subtle'
         )}
       />
 
@@ -136,8 +136,8 @@ function FloatingInputComponent({
           'absolute pointer-events-none transition-all duration-200 tracking-normal',
           'start-10',
           isActive
-            ? 'top-1.5 text-[10px] font-semibold uppercase tracking-wider text-ds-brass'
-            : 'top-1/2 -translate-y-1/2 text-xs text-ds-muted font-normal peer-focus:top-1.5 peer-focus:text-[10px] peer-focus:font-semibold peer-focus:uppercase peer-focus:tracking-wider peer-focus:text-ds-brass peer-[:not(:placeholder-shown)]:top-1.5 peer-[:not(:placeholder-shown)]:text-[10px] peer-[:not(:placeholder-shown)]:font-semibold peer-[:not(:placeholder-shown)]:uppercase peer-[:not(:placeholder-shown)]:tracking-wider peer-[:not(:placeholder-shown)]:text-ds-brass peer-autofill:top-1.5 peer-autofill:text-[10px] peer-autofill:font-semibold peer-autofill:uppercase peer-autofill:tracking-wider peer-autofill:text-ds-brass'
+            ? 'top-1.5 text-[11px] font-semibold uppercase tracking-wider text-ds-brass'
+            : 'top-1/2 -translate-y-1/2 text-xs text-ds-muted font-normal peer-focus:top-1.5 peer-focus:text-[11px] peer-focus:font-semibold peer-focus:uppercase peer-focus:tracking-wider peer-focus:text-ds-brass peer-[:not(:placeholder-shown)]:top-1.5 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:font-semibold peer-[:not(:placeholder-shown)]:uppercase peer-[:not(:placeholder-shown)]:tracking-wider peer-[:not(:placeholder-shown)]:text-ds-brass peer-autofill:top-1.5 peer-autofill:text-[11px] peer-autofill:font-semibold peer-autofill:uppercase peer-autofill:tracking-wider peer-autofill:text-ds-brass'
         )}
       >
         {label}

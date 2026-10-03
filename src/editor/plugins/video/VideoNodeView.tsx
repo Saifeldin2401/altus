@@ -10,9 +10,9 @@ export function VideoNodeView({ node, deleteNode, selected }: NodeViewProps) {
   if (!src) {
     return (
       <NodeViewWrapper className="my-4">
-        <div className="flex items-center justify-between p-3 rounded-lg border border-dashed border-rose-300 bg-rose-50/50 dark:bg-rose-950/20 text-xs text-rose-800 dark:text-rose-300">
+        <div className="flex items-center justify-between p-3 rounded-lg border border-dashed border-ds-danger/30 bg-ds-danger-soft/50 text-xs text-ds-danger">
           <div className="flex items-center gap-2">
-            <Video className="w-4 h-4 text-rose-500" />
+            <Video className="w-4 h-4 text-ds-danger" />
             <span>Empty video element</span>
           </div>
           <Button
@@ -20,7 +20,7 @@ export function VideoNodeView({ node, deleteNode, selected }: NodeViewProps) {
             variant="ghost"
             size="sm"
             onClick={deleteNode}
-            className="h-7 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-100 dark:hover:bg-rose-900/30"
+            className="h-7 text-xs text-ds-danger hover:text-ds-danger hover:bg-ds-danger-soft"
           >
             <Trash2 className="w-3.5 h-3.5 me-1" /> Remove
           </Button>
@@ -32,20 +32,20 @@ export function VideoNodeView({ node, deleteNode, selected }: NodeViewProps) {
   return (
     <NodeViewWrapper className="my-4">
       <div
-        className={`group relative rounded-xl border bg-card shadow-sm transition-all overflow-hidden ${
-          selected ? 'border-primary ring-2 ring-primary/30 shadow-md' : 'border-border hover:border-primary/40'
+        className={`group relative rounded-[8px] border bg-card shadow-sm transition-all overflow-hidden ${
+          selected ? 'border-primary ring-2 ring-primary/30' : 'border-border hover:border-primary/40'
         }`}
       >
         {/* Header Bar */}
         <div className="flex items-center justify-between px-3 py-2 border-b bg-muted/40 text-xs">
           <div className="flex items-center gap-2 overflow-hidden">
-            <div className="w-6 h-6 rounded-md bg-rose-500/10 text-rose-600 flex items-center justify-center shrink-0">
+            <div className="w-6 h-6 rounded-md bg-ds-danger/10 text-ds-danger flex items-center justify-center shrink-0">
               <Video className="w-3.5 h-3.5" />
             </div>
             <span className="font-semibold text-foreground">Video Asset</span>
             <Badge
               variant="outline"
-              className="text-[10px] px-1.5 py-0 bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-medium"
+              className="text-[11px] px-1.5 py-0 bg-ds-success/10 border-ds-success/30 text-ds-success font-medium"
             >
               ✓ Linked
             </Badge>
@@ -69,7 +69,7 @@ export function VideoNodeView({ node, deleteNode, selected }: NodeViewProps) {
               type="button"
               variant="ghost"
               size="sm"
-              className="h-7 px-2 text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/40"
+              className="h-7 px-2 text-xs text-ds-danger hover:text-ds-danger hover:bg-ds-danger-soft"
               onClick={deleteNode}
               title="Remove video from article"
             >
@@ -89,7 +89,7 @@ export function VideoNodeView({ node, deleteNode, selected }: NodeViewProps) {
         </div>
 
         {/* Footer info */}
-        <div className="flex items-center justify-between px-3 py-1.5 bg-muted/20 border-t text-[10px] text-muted-foreground">
+        <div className="flex items-center justify-between px-3 py-1.5 bg-muted/20 border-t text-[11px] text-muted-foreground">
           <span>✓ Interactive Preview · Full player controls active</span>
           <span>Viewers will see this video inline</span>
         </div>

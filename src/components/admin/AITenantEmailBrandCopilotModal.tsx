@@ -203,8 +203,8 @@ Respond ONLY with a valid JSON object matching this exact schema:
     onApply(generatedData)
     setIsOpen(false)
     toast({
-      title: t('common:applied', 'Settings Applied'),
-      description: t('admin:brand_settings_applied', 'Email sender details, footers, and brand colors have been loaded. Click "Save Changes" to persist.')
+      title: t('admin:brand_settings_applied_title', 'Suggestions added to the form'),
+      description: t('admin:brand_settings_applied', 'Review them, then select Save changes.')
     })
   }
 
@@ -215,30 +215,26 @@ Respond ONLY with a valid JSON object matching this exact schema:
           variant="outline"
           size="sm"
           disabled={disabled}
-          className="text-xs h-8 gap-1.5 border-amber-500/30 hover:border-amber-500 hover:bg-amber-500/5 text-amber-900 dark:text-amber-300 font-semibold shadow-sm"
         >
-          <Sparkles className="h-3.5 w-3.5 text-amber-500 animate-pulse" />
-          <span>{t('admin:ai_brand_copilot_btn', 'AI Brand & Email Copilot')}</span>
+          <Sparkles aria-hidden="true" className="text-ds-accent" />
+          <span>{t('admin:ai_brand_copilot_btn', 'Suggest with AI')}</span>
         </Button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[760px] max-h-[90vh] flex flex-col p-0 overflow-hidden">
         {/* Modal Header */}
-        <div className="p-5 bg-gradient-to-r from-amber-500/10 via-primary/5 to-transparent border-b">
+        <div className="border-b border-ds-border p-5 pe-14">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="h-9 w-9 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-600 dark:text-amber-400">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[6px] bg-ds-accent-soft text-ds-accent">
                 <Sparkles className="h-5 w-5" />
               </div>
               <div>
-                <DialogTitle className="text-base font-bold flex items-center gap-2">
-                  {t('admin:ai_brand_copilot_title', 'AI Tenant Email & Brand Setup Copilot')}
-                  <Badge variant="secondary" className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 text-[10px]">
-                    GPT-4o & Claude 3.5
-                  </Badge>
+                <DialogTitle className="text-base">
+                  {t('admin:ai_brand_copilot_title', 'Suggest branding with AI')}
                 </DialogTitle>
-                <DialogDescription className="text-xs text-muted-foreground">
-                  {t('admin:ai_brand_copilot_desc', 'Automatically synthesize sender identities, bilingual KSA legal footers, and luxury color harmony.')}
+                <DialogDescription className="text-xs">
+                  {t('admin:ai_brand_copilot_desc', 'Get a suggested sender name, email footers in English and Arabic, and colours. Nothing changes until you apply and save.')}
                 </DialogDescription>
               </div>
             </div>
@@ -248,7 +244,7 @@ Respond ONLY with a valid JSON object matching this exact schema:
         {/* Modal Body */}
         <div className="flex-1 overflow-y-auto p-5 space-y-5">
           {/* Controls Bar */}
-          <div className="bg-muted/40 p-3.5 rounded-xl border grid grid-cols-1 sm:grid-cols-3 gap-3 items-center">
+          <div className="grid grid-cols-1 items-end gap-3 rounded-[8px] border border-ds-border bg-ds-surface-subtle p-3.5 sm:grid-cols-3">
             <div className="space-y-1">
               <Label className="text-[11px] font-semibold text-muted-foreground flex items-center gap-1">
                 <Building className="h-3 w-3" /> Hospitality Tier
@@ -286,17 +282,17 @@ Respond ONLY with a valid JSON object matching this exact schema:
               <Button
                 onClick={handleGenerate}
                 disabled={isGenerating}
-                className="w-full h-8 text-xs font-semibold gap-1.5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white shadow-sm"
+                className="w-full"
               >
                 {isGenerating ? (
                   <>
                     <RefreshCw className="h-3.5 w-3.5 animate-spin" />
-                    <span>Synthesizing Brand...</span>
+                    <span>{t('admin:ai_brand_generating', 'Generating...')}</span>
                   </>
                 ) : (
                   <>
                     <Sparkles className="h-3.5 w-3.5" />
-                    <span>{generatedData ? 'Re-Generate with AI' : 'Generate Identity with AI'}</span>
+                    <span>{generatedData ? t('admin:ai_brand_regenerate', 'Try again') : t('admin:ai_brand_generate', 'Suggest branding')}</span>
                   </>
                 )}
               </Button>
@@ -307,10 +303,10 @@ Respond ONLY with a valid JSON object matching this exact schema:
           {generatedData ? (
             <div className="space-y-4">
               {/* Brand Harmony Banner */}
-              <div className="p-3.5 rounded-xl border bg-card flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="p-3.5 rounded-[8px] border bg-card flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <div className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                    <ShieldCheck className="h-4 w-4 text-emerald-500" />
+                    <ShieldCheck className="h-4 w-4 text-ds-success" />
                     <span>{generatedData.brandPersonality}</span>
                   </div>
                   <p className="text-[11px] text-muted-foreground font-arabic mt-0.5" dir="rtl">
@@ -472,14 +468,14 @@ Respond ONLY with a valid JSON object matching this exact schema:
                 </TabsContent>
 
                 <TabsContent value="email_preview" className="pt-2">
-                  <div className="rounded-xl border overflow-hidden bg-muted/30">
+                  <div className="rounded-[8px] border overflow-hidden bg-muted/30">
                     <div className="p-2.5 bg-muted/70 border-b text-[11px] font-mono text-muted-foreground flex items-center justify-between">
                       <span>From: {generatedData.emailSenderName} &lt;notifications@altus-lms.com&gt;</span>
                       <span>Reply-To: {generatedData.emailReplyTo}</span>
                     </div>
 
                     <div className="p-4" dir={previewLang === 'ar' ? 'rtl' : 'ltr'}>
-                      <div className="max-w-[480px] mx-auto rounded-xl border bg-card shadow-sm overflow-hidden text-xs">
+                      <div className="max-w-[480px] mx-auto rounded-[8px] border bg-card shadow-sm overflow-hidden text-xs">
                         <div
                           className="p-4 text-white flex items-center justify-between"
                           style={{
@@ -528,8 +524,8 @@ Respond ONLY with a valid JSON object matching this exact schema:
               </Tabs>
             </div>
           ) : (
-            <div className="py-12 text-center border rounded-xl bg-muted/10 border-dashed space-y-3">
-              <div className="h-12 w-12 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto">
+            <div className="py-12 text-center border rounded-[8px] bg-muted/10 border-dashed space-y-3">
+              <div className="h-12 w-12 rounded-full bg-ds-warning/10 text-ds-warning flex items-center justify-center mx-auto">
                 <Sparkles className="h-6 w-6" />
               </div>
               <div className="space-y-1">

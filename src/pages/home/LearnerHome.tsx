@@ -206,7 +206,7 @@ export default function LearnerHome() {
                         ) : assignmentsQuery.isError ? (
                             <ErrorState message={t('training:myDay.loadError', 'Your assignments could not be loaded.')} onRetry={() => void assignmentsQuery.refetch()} />
                         ) : requiredCount === 0 ? (
-                            <p className="flex items-center gap-2 rounded-xl border border-ds-border bg-ds-surface px-4 py-5 text-sm text-ds-ink-secondary">
+                            <p className="flex items-center gap-2 rounded-[8px] border border-ds-border bg-ds-surface px-4 py-5 text-sm text-ds-ink-secondary">
                                 <CheckCircle2 aria-hidden="true" className="h-5 w-5 text-ds-success" />
                                 {t('training:myDay.nothingRequiredHint', 'You have no overdue or mandatory training.')}
                             </p>
@@ -277,7 +277,7 @@ export default function LearnerHome() {
                         urgentHref={required[0] ? assignmentHref(required[0]) : undefined}
                         streak={statsQuery.data?.streak_current}
                     />
-                    <section aria-labelledby="my-day-board" className="space-y-3 rounded-2xl border border-ds-border bg-ds-surface p-5 shadow-[0_12px_32px_rgb(21_33_46/0.04)]">
+                    <section aria-labelledby="my-day-board" className="space-y-3 rounded-[8px] border border-ds-border bg-ds-surface p-5 shadow-[0_12px_32px_rgb(21_33_46/0.04)]">
                         <div className="flex items-center justify-between">
                             <h2 id="my-day-board" className="font-editorial text-[21px] font-semibold text-ds-ink">{t('training:game.board.title', 'Leaderboard')}</h2>
                             <Link to="/learn/achievements" className="inline-flex items-center gap-1 text-xs font-semibold text-ds-accent hover:underline">

@@ -16,13 +16,13 @@ interface PlayerContextRailProps {
 
 const STATE_META: Record<LessonRailItemState, { className: string }> = {
     current: { className: 'text-ds-chrome-accent' },
-    completed: { className: 'text-emerald-400' },
+    completed: { className: 'text-ds-success' },
     available: { className: 'text-ds-chrome-muted' },
     locked: { className: 'text-ds-chrome-muted/50' },
-    failed: { className: 'text-amber-400' },
-    retry: { className: 'text-amber-400' },
-    'pending-review': { className: 'text-sky-400' },
-    exempted: { className: 'text-emerald-400/70' },
+    failed: { className: 'text-ds-warning' },
+    retry: { className: 'text-ds-warning' },
+    'pending-review': { className: 'text-ds-info' },
+    exempted: { className: 'text-ds-success/70' },
     skipped: { className: 'text-ds-chrome-muted/60' },
 }
 
@@ -30,14 +30,14 @@ function StateIcon({ state }: { state: LessonRailItemState }) {
     switch (state) {
         case 'completed':
         case 'exempted':
-            return <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+            return <CheckCircle2 className="h-4 w-4 text-ds-success" />
         case 'locked':
             return <Lock className="h-4 w-4 text-ds-chrome-muted/50" />
         case 'failed':
         case 'retry':
-            return <AlertCircle className="h-4 w-4 text-amber-400" />
+            return <AlertCircle className="h-4 w-4 text-ds-warning" />
         case 'pending-review':
-            return <Clock className="h-4 w-4 text-sky-400" />
+            return <Clock className="h-4 w-4 text-ds-info" />
         default:
             return <Circle className="h-4 w-4 text-ds-chrome-muted/40" />
     }
@@ -60,7 +60,7 @@ export function PlayerContextRail({
             className={cn('flex h-full w-full flex-col bg-ds-chrome text-ds-chrome-text', className)}
         >
             <div className="border-b border-ds-chrome-border p-5">
-                <h2 className="mb-3 line-clamp-2 font-serif text-base font-bold leading-tight">{moduleTitle}</h2>
+                <h2 className="mb-3 line-clamp-2 text-base font-bold leading-tight">{moduleTitle}</h2>
                 <div className="mb-1.5 flex items-center justify-between text-[11px]">
                     <span className="font-semibold uppercase tracking-widest text-ds-chrome-muted">{t('player.progress', 'Progress')}</span>
                     <span className="font-bold text-ds-chrome-accent">{rounded}%</span>
@@ -89,7 +89,7 @@ export function PlayerContextRail({
                                 aria-current={isActive ? 'step' : undefined}
                                 aria-disabled={isLocked || undefined}
                                 className={cn(
-                                    'group flex w-full items-start gap-3 rounded-xl p-3 text-start text-sm transition-colors',
+                                    'group flex w-full items-start gap-3 rounded-[8px] p-3 text-start text-sm transition-colors',
                                     isActive
                                         ? 'bg-ds-chrome-accent/20 ring-1 ring-ds-chrome-accent/40'
                                         : 'hover:bg-ds-chrome-raised',
@@ -99,7 +99,7 @@ export function PlayerContextRail({
                                     <span
                                         className={cn(
                                             'w-5 text-center font-mono text-xs font-bold',
-                                            isActive ? 'text-ds-chrome-accent' : item.state === 'completed' ? 'text-emerald-400' : 'text-ds-chrome-muted/70',
+                                            isActive ? 'text-ds-chrome-accent' : item.state === 'completed' ? 'text-ds-success' : 'text-ds-chrome-muted/70',
                                         )}
                                     >
                                         {String(item.index + 1).padStart(2, '0')}
@@ -116,7 +116,7 @@ export function PlayerContextRail({
                                         {item.title}
                                     </span>
                                     {item.subtitle && (
-                                        <span className={cn('mt-0.5 block font-mono text-[10px] uppercase tracking-wider', STATE_META[item.state].className, 'opacity-90')}>
+                                        <span className={cn('mt-0.5 block font-mono text-[11px] uppercase tracking-wider', STATE_META[item.state].className, 'opacity-90')}>
                                             {item.subtitle}
                                         </span>
                                     )}

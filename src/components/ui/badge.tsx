@@ -9,21 +9,21 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          "border-transparent bg-hotel-navy text-white hover:bg-hotel-navy-light shadow-sm",
+          "border-transparent bg-ds-ink text-ds-on-ink",
         secondary:
-          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "border-ds-border bg-ds-surface-subtle text-ds-ink-secondary",
         destructive:
-          "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm",
-        outline: "border-border text-foreground bg-transparent",
-        gold: "border-transparent bg-hotel-gold text-white hover:bg-hotel-gold-dark shadow-sm",
-        navy: "border-transparent bg-hotel-navy text-white hover:bg-hotel-navy-light shadow-sm",
-        copper: "border-transparent bg-altus-copper text-white hover:bg-altus-copper/90 shadow-sm",
-        emerald: "border-transparent bg-altus-emerald text-white hover:bg-altus-emerald/90 shadow-sm",
-        sand: "border-altus-sand/40 bg-altus-sand/20 text-hotel-navy dark:text-altus-sand-light font-semibold",
-        "outline-gold": "text-hotel-gold border-hotel-gold/40 hover:bg-hotel-gold/10",
-        "outline-copper": "text-altus-copper border-altus-copper/40 hover:bg-altus-copper/10",
-        success: "border-success/20 bg-success/15 text-success dark:text-success-foreground font-semibold",
-        warning: "border-warning/20 bg-warning/15 text-warning dark:text-warning-foreground font-semibold",
+          "border-ds-danger/30 bg-ds-danger-soft text-ds-danger",
+        outline: "border-ds-border text-ds-ink-secondary bg-transparent",
+        gold: "border-ds-accent/30 bg-ds-accent-soft text-ds-accent",
+        navy: "border-transparent bg-ds-ink text-ds-on-ink",
+        copper: "border-ds-warning/30 bg-ds-warning-soft text-ds-warning",
+        emerald: "border-ds-success/30 bg-ds-success-soft text-ds-success",
+        sand: "border-ds-accent/20 bg-ds-accent-soft text-ds-ink",
+        "outline-gold": "text-ds-accent border-ds-accent/40",
+        "outline-copper": "text-ds-warning border-ds-warning/40",
+        success: "border-ds-success/30 bg-ds-success-soft text-ds-success",
+        warning: "border-ds-warning/30 bg-ds-warning-soft text-ds-warning",
       },
       size: {
         sm: "px-2 py-0.5 text-[11px]",

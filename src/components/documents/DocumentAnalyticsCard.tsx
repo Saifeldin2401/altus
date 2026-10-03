@@ -103,7 +103,7 @@ const CustomTooltip = ({ active, payload, label }: AnalyticsTooltipProps) => {
     }
 
     return (
-      <div className="bg-white dark:bg-slate-900 p-3 rounded-lg border shadow-lg">
+      <div className="bg-ds-surface p-3 rounded-lg border shadow-lg">
         <p className="text-sm font-medium mb-2">{formattedLabel}</p>
         {payload.map((entry, index: number) => (
           <div key={`${entry?.name ?? 'series'}-${entry?.dataKey ?? index}`} className="flex items-center gap-2 text-sm">
@@ -211,8 +211,8 @@ export function DocumentAnalyticsCard({
               <div
                 className={cn(
                   "flex items-center gap-1 text-xs font-medium",
-                  viewsTrend.direction === "up" && "text-green-600",
-                  viewsTrend.direction === "down" && "text-red-600",
+                  viewsTrend.direction === "up" && "text-ds-success",
+                  viewsTrend.direction === "down" && "text-ds-danger",
                   viewsTrend.direction === "neutral" && "text-muted-foreground"
                 )}
               >
@@ -236,8 +236,8 @@ export function DocumentAnalyticsCard({
               <div
                 className={cn(
                   "flex items-center gap-1 text-xs font-medium",
-                  downloadsTrend.direction === "up" && "text-green-600",
-                  downloadsTrend.direction === "down" && "text-red-600",
+                  downloadsTrend.direction === "up" && "text-ds-success",
+                  downloadsTrend.direction === "down" && "text-ds-danger",
                   downloadsTrend.direction === "neutral" && "text-muted-foreground"
                 )}
               >
@@ -340,7 +340,7 @@ export function DocumentAnalyticsCard({
                   </span>
                   <Avatar className="w-8 h-8">
                     <AvatarImage src={user.avatar} />
-                    <AvatarFallback className="text-xs bg-ds-ink text-white">
+                    <AvatarFallback className="text-xs bg-ds-ink text-ds-on-ink">
                       {user.name
                         .split(" ")
                         .map((n) => n[0])

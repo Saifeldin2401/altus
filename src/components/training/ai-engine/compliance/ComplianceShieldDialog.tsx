@@ -99,17 +99,17 @@ export function ComplianceShieldDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col p-0 overflow-hidden bg-white dark:bg-slate-950">
-        <DialogHeader className="p-6 pb-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
+      <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col p-0 overflow-hidden bg-ds-surface">
+        <DialogHeader className="p-6 pb-4 border-b border-ds-border bg-ds-surface-subtle/50">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-600/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+              <div className="w-10 h-10 rounded-[8px] bg-ds-success/10 text-ds-success flex items-center justify-center font-bold">
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <div>
                 <DialogTitle className="text-lg font-bold flex items-center gap-2">
                   <span>{t('complianceShield.title', 'KSA Hospitality & Regulatory Compliance Shield')}</span>
-                  <Badge variant="outline" className="text-xs bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300 border-emerald-200">
+                  <Badge variant="outline" className="text-xs bg-ds-success-soft text-ds-success border-ds-success/30">
                     KSA Vision 2030 Ready
                   </Badge>
                 </DialogTitle>
@@ -126,20 +126,20 @@ export function ComplianceShieldDialog({
         </DialogHeader>
 
         {/* Score & Metrics Bar */}
-        <div className="p-6 py-4 bg-slate-50/70 dark:bg-slate-900/70 border-b border-slate-100 dark:border-slate-800 grid grid-cols-4 gap-4">
+        <div className="p-6 py-4 bg-ds-surface-subtle/70 border-b border-ds-border grid grid-cols-4 gap-4">
           <div className="col-span-2 space-y-1.5">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-semibold text-slate-700 dark:text-slate-300">
+              <span className="font-semibold text-ds-ink-secondary">
                 {t('complianceShield.complianceHealth', 'Regulatory Compliance Score')}
               </span>
               <span
                 className={cn(
                   'font-bold text-sm',
                   auditReport.score >= 90
-                    ? 'text-emerald-600'
+                    ? 'text-ds-success'
                     : auditReport.score >= 70
-                    ? 'text-amber-600'
-                    : 'text-rose-600'
+                    ? 'text-ds-warning'
+                    : 'text-ds-danger'
                 )}
               >
                 {auditReport.score}%
@@ -150,22 +150,22 @@ export function ComplianceShieldDialog({
               className={cn(
                 'h-2',
                 auditReport.score >= 90
-                  ? '[&>div]:bg-emerald-500'
+                  ? '[&>div]:bg-ds-success'
                   : auditReport.score >= 70
-                  ? '[&>div]:bg-amber-500'
-                  : '[&>div]:bg-rose-500'
+                  ? '[&>div]:bg-ds-warning'
+                  : '[&>div]:bg-ds-danger'
               )}
             />
           </div>
 
-          <div className="flex flex-col justify-center border-s ps-4 border-slate-200 dark:border-slate-700">
+          <div className="flex flex-col justify-center border-s ps-4 border-ds-border">
             <span className="text-[11px] text-muted-foreground">{t('complianceShield.criticalIssues', 'Critical Violations')}</span>
-            <span className="text-sm font-bold text-rose-600">{auditReport.criticalCount}</span>
+            <span className="text-sm font-bold text-ds-danger">{auditReport.criticalCount}</span>
           </div>
 
-          <div className="flex flex-col justify-center border-s ps-4 border-slate-200 dark:border-slate-700">
+          <div className="flex flex-col justify-center border-s ps-4 border-ds-border">
             <span className="text-[11px] text-muted-foreground">{t('complianceShield.passedCount', 'Rules Passed')}</span>
-            <span className="text-sm font-bold text-emerald-600">
+            <span className="text-sm font-bold text-ds-success">
               {auditReport.passedCount} / {auditReport.totalRulesChecked}
             </span>
           </div>
@@ -176,10 +176,10 @@ export function ComplianceShieldDialog({
           <div className="space-y-4">
             {auditReport.findings.length === 0 ? (
               <div className="text-center py-12 space-y-3">
-                <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-ds-success-soft text-ds-success mx-auto flex items-center justify-center">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
-                <h4 className="font-bold text-slate-800 dark:text-slate-200">
+                <h4 className="font-bold text-ds-ink">
                   {t('complianceShield.allClearTitle', '100% KSA Regulatory Compliance')}
                 </h4>
                 <p className="text-xs text-muted-foreground max-w-md mx-auto">
@@ -193,34 +193,34 @@ export function ComplianceShieldDialog({
               auditReport.findings.map((finding) => (
                 <div
                   key={finding.id}
-                  className="rounded-xl border border-slate-200 dark:border-slate-800 p-4 bg-white dark:bg-slate-900 shadow-xs space-y-3"
+                  className="rounded-[8px] border border-ds-border p-4 bg-ds-surface shadow-xs space-y-3"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-2.5">
                       {finding.severity === 'CRITICAL' ? (
-                        <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                        <ShieldAlert className="w-4 h-4 text-ds-danger shrink-0 mt-0.5" />
                       ) : (
-                        <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                        <AlertTriangle className="w-4 h-4 text-ds-warning shrink-0 mt-0.5" />
                       )}
                       <div>
                         <div className="flex items-center gap-2">
-                          <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                          <h4 className="text-xs font-bold text-ds-ink">
                             {isRTL ? finding.titleAr : finding.title}
                           </h4>
                           <Badge
                             variant="outline"
                             className={cn(
-                              'text-[10px] font-semibold uppercase',
+                              'text-[11px] font-semibold uppercase',
                               finding.severity === 'CRITICAL'
-                                ? 'bg-rose-50 text-rose-700 border-rose-200'
-                                : 'bg-amber-50 text-amber-700 border-amber-200'
+                                ? 'bg-ds-danger-soft text-ds-danger border-ds-danger/30'
+                                : 'bg-ds-warning-soft text-ds-warning border-ds-warning/30'
                             )}
                           >
                             {finding.severity}
                           </Badge>
                         </div>
                         <p className="text-[11px] text-muted-foreground flex items-center gap-1.5 mt-0.5">
-                          <Building2 className="w-3 h-3 text-slate-400" />
+                          <Building2 className="w-3 h-3 text-ds-muted" />
                           <span>{finding.authorityName}</span>
                           <span>•</span>
                           <span>Section: {finding.sectionTitle}</span>
@@ -232,7 +232,7 @@ export function ComplianceShieldDialog({
                       <Button
                         size="sm"
                         variant="default"
-                        className="h-7 text-xs bg-emerald-600 hover:bg-emerald-700 text-white gap-1"
+                        className="h-7 text-xs bg-ds-success hover:bg-ds-success text-white dark:text-ds-on-ink gap-1"
                         disabled={remediatingId !== null}
                         onClick={() => handleFixFinding(finding)}
                       >
@@ -242,8 +242,8 @@ export function ComplianceShieldDialog({
                     )}
                   </div>
 
-                  <div className="bg-slate-50 dark:bg-slate-800/60 rounded-lg p-3 text-xs text-slate-700 dark:text-slate-300">
-                    <span className="font-semibold text-emerald-700 dark:text-emerald-400 block mb-1">
+                  <div className="bg-ds-surface-subtle rounded-lg p-3 text-xs text-ds-ink-secondary">
+                    <span className="font-semibold text-ds-success block mb-1">
                       💡 {t('complianceShield.standardDirective', 'Mandatory KSA Standard')}:
                     </span>
                     <p className="leading-relaxed">{isRTL ? finding.recommendationAr : finding.recommendation}</p>
@@ -256,7 +256,7 @@ export function ComplianceShieldDialog({
 
         {/* Footer with 1-Click Fix All */}
         {auditReport.findings.length > 0 && (
-          <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-between">
+          <div className="p-4 border-t border-ds-border bg-ds-surface-subtle/50 flex items-center justify-between">
             <span className="text-xs text-muted-foreground">
               {t('complianceShield.foundViolations', '{{count}} compliance alignment(s) detected', {
                 count: auditReport.findings.length,
@@ -268,7 +268,7 @@ export function ComplianceShieldDialog({
               </Button>
               <Button
                 size="sm"
-                className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5 shadow-sm"
+                className="bg-ds-success hover:bg-ds-success text-white dark:text-ds-on-ink gap-1.5 shadow-sm"
                 disabled={remediatingId !== null}
                 onClick={handleFixAll}
               >

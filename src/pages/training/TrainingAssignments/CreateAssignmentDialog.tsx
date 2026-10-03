@@ -30,7 +30,6 @@ import {
   Briefcase,
   Users,
   UserCheck,
-  ShieldAlert,
   Calendar,
   Clock,
   Sparkles,
@@ -283,7 +282,7 @@ export function AssignmentCreateDialog({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto p-0 gap-0 border shadow-2xl bg-card">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto p-0 gap-0">
           {/* Header Banner */}
           <div className="p-6 border-b">
             <div className="flex items-center justify-between">
@@ -302,14 +301,11 @@ export function AssignmentCreateDialog({
 
               {/* Caller Scope Badge */}
               <div className="hidden sm:flex flex-col items-end">
-                <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[11px] font-semibold">
-                  <ShieldAlert className="h-3 w-3 me-1" />
-                  {callerScopes?.is_platform_admin
-                    ? 'Platform Global Operator'
-                    : callerScopes?.can_assign_org
-                    ? `Org Admin: ${currentOrganization?.name}`
-                    : 'Department Manager'}
-                </Badge>
+                <span className="text-xs text-ds-muted">
+                  {callerScopes?.is_platform_admin || callerScopes?.can_assign_org
+                    ? t('training:assignFlow.scopeOrg', 'You can assign across {{org}}', { org: currentOrganization?.name ?? '' })
+                    : t('training:assignFlow.scopeDept', 'You can assign within your departments')}
+                </span>
               </div>
             </div>
           </div>
@@ -331,7 +327,7 @@ export function AssignmentCreateDialog({
                   {modules.map((mod) => (
                     <SelectItem key={mod.id} value={mod.id} className="text-xs py-2">
                       <div className="flex items-center justify-between w-full gap-4">
-                        <span className="font-semibold text-ds-ink dark:text-white truncate">{mod.title}</span>
+                        <span className="font-semibold text-ds-ink truncate">{mod.title}</span>
                         <span className="text-[11px] text-muted-foreground shrink-0">
                           {mod.estimated_duration_minutes || 30} mins • Pass: {mod.passing_score_percentage || 80}%
                         </span>
@@ -364,7 +360,7 @@ export function AssignmentCreateDialog({
                   type="button"
                   disabled={!callerScopes?.is_platform_admin && !callerScopes?.can_assign_org}
                   onClick={() => setScopeType('organization')}
-                  className={`p-3 rounded-xl border text-start transition-all flex flex-col gap-1 ${
+                  className={`p-3 rounded-[8px] border text-start transition-all flex flex-col gap-1 ${
  scopeType === 'organization'
  ? 'border-ds-warning/30 bg-ds-warning-soft ring-1 ring-ds-warning/30'
  : 'border-ds-border hover:border-ds-border bg-card'
@@ -377,7 +373,7 @@ export function AssignmentCreateDialog({
                     )}
                   </div>
                   <span className="text-xs font-bold mt-1">Entire Organization</span>
-                  <span className="text-[10px] text-muted-foreground">Everyone in the organization</span>
+                  <span className="text-[11px] text-muted-foreground">Everyone in the organization</span>
                 </button>
 
                 {/* Brand-wide */}
@@ -385,7 +381,7 @@ export function AssignmentCreateDialog({
                   type="button"
                   disabled={!callerScopes?.is_platform_admin && !callerScopes?.can_assign_org && !callerScopes?.can_assign_brand}
                   onClick={() => setScopeType('brand')}
-                  className={`p-3 rounded-xl border text-start transition-all flex flex-col gap-1 ${
+                  className={`p-3 rounded-[8px] border text-start transition-all flex flex-col gap-1 ${
  scopeType === 'brand'
  ? 'border-ds-warning/30 bg-ds-warning-soft ring-1 ring-ds-warning/30'
  : 'border-ds-border hover:border-ds-border bg-card'
@@ -398,14 +394,14 @@ export function AssignmentCreateDialog({
                     )}
                   </div>
                   <span className="text-xs font-bold mt-1">Brand Portfolio</span>
-                  <span className="text-[10px] text-muted-foreground">Everyone in one brand</span>
+                  <span className="text-[11px] text-muted-foreground">Everyone in one brand</span>
                 </button>
 
                 {/* Department */}
                 <button
                   type="button"
                   onClick={() => setScopeType('department')}
-                  className={`p-3 rounded-xl border text-start transition-all flex flex-col gap-1 ${
+                  className={`p-3 rounded-[8px] border text-start transition-all flex flex-col gap-1 ${
  scopeType === 'department'
  ? 'border-ds-warning/30 bg-ds-warning-soft ring-1 ring-ds-warning/30'
  : 'border-ds-border hover:border-ds-border bg-card'
@@ -415,14 +411,14 @@ export function AssignmentCreateDialog({
                     <Briefcase className={`h-4 w-4 ${scopeType === 'department' ? 'text-ds-warning' : 'text-ds-muted'}`} />
                   </div>
                   <span className="text-xs font-bold mt-1">Department</span>
-                  <span className="text-[10px] text-muted-foreground">Front Office, F&B, etc.</span>
+                  <span className="text-[11px] text-muted-foreground">Front Office, F&B, etc.</span>
                 </button>
 
                 {/* Role / Job Title */}
                 <button
                   type="button"
                   onClick={() => setScopeType('role')}
-                  className={`p-3 rounded-xl border text-start transition-all flex flex-col gap-1 ${
+                  className={`p-3 rounded-[8px] border text-start transition-all flex flex-col gap-1 ${
  scopeType === 'role'
  ? 'border-ds-warning/30 bg-ds-warning-soft ring-1 ring-ds-warning/30'
  : 'border-ds-border hover:border-ds-border bg-card'
@@ -432,14 +428,14 @@ export function AssignmentCreateDialog({
                     <Users className={`h-4 w-4 ${scopeType === 'role' ? 'text-ds-warning' : 'text-ds-muted'}`} />
                   </div>
                   <span className="text-xs font-bold mt-1">Target Role</span>
-                  <span className="text-[10px] text-muted-foreground">By job rank & role</span>
+                  <span className="text-[11px] text-muted-foreground">By job rank & role</span>
                 </button>
 
                 {/* Individual Learners */}
                 <button
                   type="button"
                   onClick={() => setScopeType('individual')}
-                  className={`p-3 rounded-xl border text-start transition-all flex flex-col gap-1 ${
+                  className={`p-3 rounded-[8px] border text-start transition-all flex flex-col gap-1 ${
  scopeType === 'individual'
  ? 'border-ds-warning/30 bg-ds-warning-soft ring-1 ring-ds-warning/30'
  : 'border-ds-border hover:border-ds-border bg-card'
@@ -449,18 +445,18 @@ export function AssignmentCreateDialog({
                     <UserCheck className={`h-4 w-4 ${scopeType === 'individual' ? 'text-ds-warning' : 'text-ds-muted'}`} />
                   </div>
                   <span className="text-xs font-bold mt-1">Individual Learners</span>
-                  <span className="text-[10px] text-muted-foreground">Pick specific people</span>
+                  <span className="text-[11px] text-muted-foreground">Pick specific people</span>
                 </button>
               </div>
             </div>
 
             {/* Step 3: Hierarchical Cascading Filter Controls */}
-            <div className="p-4 rounded-2xl bg-ds-surface-subtle border space-y-4">
+            <div className="p-4 rounded-[8px] bg-ds-surface-subtle border space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-ds-ink">
                   Target Hierarchy & Filter Parameters
                 </span>
-                <span className="text-[10px] text-muted-foreground">
+                <span className="text-[11px] text-muted-foreground">
                   Hierarchically scoped to your permissions
                 </span>
               </div>
@@ -550,7 +546,7 @@ export function AssignmentCreateDialog({
                     </div>
                   </div>
 
-                  <ScrollArea className="h-44 rounded-xl border bg-background p-2">
+                  <ScrollArea className="h-44 rounded-[8px] border bg-background p-2">
                     {isFetchingLearners ? (
                       <div className="flex items-center justify-center h-32 gap-2 text-xs text-muted-foreground">
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -579,8 +575,8 @@ export function AssignmentCreateDialog({
                                 <Checkbox checked={isSelected} onCheckedChange={() => toggleLearnerSelection(learner.id)} />
                                 <div className="truncate">
                                   <div className="font-semibold truncate">{learner.full_name}</div>
-                                  <div className="text-[10px] text-muted-foreground truncate">
-                                    {learner.department_name || 'No department'}
+                                  <div className="text-[11px] text-muted-foreground truncate">
+                                    {learner.department_name || t('training:assignFlow.noDepartment', 'No department')}
                                   </div>
                                 </div>
                               </div>
@@ -595,18 +591,18 @@ export function AssignmentCreateDialog({
             </div>
 
             {/* Recipient Footprint Summary Pill */}
-            <div className="p-3.5 rounded-2xl bg-ds-warning-soft border border-ds-warning/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="p-3.5 rounded-[8px] bg-ds-warning-soft border border-ds-warning/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-lg bg-ds-warning-soft flex items-center justify-center text-ds-warning shrink-0">
                   <UserCheck className="h-4 w-4" />
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-ds-ink dark:text-white flex items-center gap-2">
+                  <div className="text-xs font-bold text-ds-ink flex items-center gap-2">
                     <span>
                       {isFetchingCount ? 'Calculating population...' : `${recipientCount} Eligible Learners`}
                     </span>
                     {recipientCount > 0 && (
-                      <Badge variant="outline" className="bg-ds-success-soft text-ds-success border-ds-success/30 text-[10px]">
+                      <Badge variant="outline" className="bg-ds-success-soft text-ds-success border-ds-success/30 text-[11px]">
                         <CheckCircle2 className="h-2.5 w-2.5 me-1" /> Ready
                       </Badge>
                     )}
@@ -618,7 +614,7 @@ export function AssignmentCreateDialog({
               </div>
 
               {isHighRiskBroadAssignment && (
-                <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[10px] self-start sm:self-center">
+                <Badge variant="outline" className="bg-ds-warning-soft text-ds-warning border-ds-warning/30 text-[11px] self-start sm:self-center">
                   <AlertTriangle className="h-3 w-3 me-1 text-ds-warning" />
                   Broad High-Volume Scope
                 </Badge>
@@ -641,9 +637,9 @@ export function AssignmentCreateDialog({
                       variant={dueDatePreset === preset ? 'default' : 'outline'}
                       size="sm"
                       onClick={() => setDueDatePreset(preset)}
-                      className={`h-8 text-xs font-semibold ${dueDatePreset === preset ? 'bg-ds-warning hover:bg-ds-warning text-white' : ''}`}
+                      className="h-8 text-xs"
                     >
-                      {preset === '7d' ? '7 Days' : preset === '14d' ? '14 Days' : preset === '30d' ? '30 Days' : 'Custom'}
+                      {preset === 'custom' ? t('training:assignFlow.customDate', 'Pick a date') : t('training:assignFlow.inDays', '{{count}} days', { count: parseInt(preset, 10) })}
                     </Button>
                   ))}
                 </div>
@@ -690,18 +686,18 @@ export function AssignmentCreateDialog({
 
             {/* Toggles */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t text-xs">
-              <div className="flex items-center justify-between p-2 rounded-xl border">
+              <div className="flex items-center justify-between p-2 rounded-[8px] border">
                 <div>
                   <div className="font-semibold">Requires Learner Acknowledgment</div>
-                  <div className="text-[10px] text-muted-foreground">Learner must accept SOP terms</div>
+                  <div className="text-[11px] text-muted-foreground">Learner must accept SOP terms</div>
                 </div>
                 <Switch checked={requiresAcknowledgement} onCheckedChange={setRequiresAcknowledgement} />
               </div>
 
-              <div className="flex items-center justify-between p-2 rounded-xl border">
+              <div className="flex items-center justify-between p-2 rounded-[8px] border">
                 <div>
                   <div className="font-semibold">Automated Due Reminders</div>
-                  <div className="text-[10px] text-muted-foreground">Notify 7d, 3d, 1d before due date</div>
+                  <div className="text-[11px] text-muted-foreground">Notify 7d, 3d, 1d before due date</div>
                 </div>
                 <Switch checked={notifyOnDue} onCheckedChange={setNotifyOnDue} />
               </div>
@@ -771,7 +767,7 @@ export function AssignmentCreateDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="p-3.5 rounded-xl bg-ds-surface-subtle border text-xs space-y-1.5">
+          <div className="p-3.5 rounded-[8px] bg-ds-surface-subtle border text-xs space-y-1.5">
             <div className="flex justify-between">
               <span className="text-muted-foreground">{t('training:assignFlow.course', 'Course')}</span>
               <span className="font-semibold truncate max-w-[200px]">{selectedModule?.title}</span>
@@ -802,7 +798,6 @@ export function AssignmentCreateDialog({
               size="sm"
               onClick={handleExecuteAssignment}
               disabled={isSubmitting}
-              className="bg-ds-warning hover:bg-ds-warning text-white font-bold"
             >
               {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin me-2" aria-hidden="true" /> : null}
               {t('training:assignFlow.assignTo', { count: recipientCount, defaultValue: 'Assign to {{count}} learners' })}

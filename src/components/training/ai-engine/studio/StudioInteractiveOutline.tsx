@@ -132,22 +132,22 @@ export function StudioInteractiveOutline({
   return (
     <div className="w-full space-y-3 select-none">
       {/* Course Root Header */}
-      <div className="p-3.5 rounded-xl border bg-card/90 backdrop-blur shadow-2xs flex items-center justify-between">
+      <div className="p-3.5 rounded-[8px] border bg-card/90 shadow-2xs flex items-center justify-between">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center font-bold">
+          <div className="w-8 h-8 rounded-lg bg-ds-accent text-white dark:text-ds-on-ink flex items-center justify-center font-bold">
             <BookOpen className="w-4 h-4" />
           </div>
           <div className="min-w-0">
             <p className="text-xs font-bold text-foreground truncate" title={blueprint.title}>
               {blueprint.title}
             </p>
-            <p className="text-[10px] text-muted-foreground">
+            <p className="text-[11px] text-muted-foreground">
               {blueprint.modules.length} Modules • {blueprint.modules.reduce((s, m) => s + m.lessons.length, 0)} Lessons Total
             </p>
           </div>
         </div>
 
-        <Badge variant="outline" className="text-[10px] bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 border-purple-200">
+        <Badge variant="outline" className="text-[11px] bg-ds-accent-soft text-ds-accent border-ds-accent/30">
           QA Score: {blueprint.qualityScore || 92}%
         </Badge>
       </div>
@@ -160,7 +160,7 @@ export function StudioInteractiveOutline({
           return (
             <div
               key={mod.id}
-              className="rounded-xl border bg-card/60 backdrop-blur overflow-hidden transition-all shadow-2xs"
+              className="rounded-[8px] border bg-card/60 overflow-hidden transition-all shadow-2xs"
             >
               {/* Module Header Bar */}
               <div className="p-2.5 bg-muted/30 flex items-center justify-between gap-2 border-b">
@@ -171,13 +171,13 @@ export function StudioInteractiveOutline({
                   <Button variant="ghost" size="sm" className="w-5 h-5 p-0 text-muted-foreground">
                     {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
                   </Button>
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 font-mono">
+                  <span className="text-[11px] font-bold px-1.5 py-0.5 rounded bg-ds-accent-soft text-ds-accent font-mono">
                     M{mIdx + 1}
                   </span>
                   <span className="text-xs font-bold text-foreground truncate">
                     {mod.title}
                   </span>
-                  <span className="text-[10px] text-muted-foreground hidden sm:inline">
+                  <span className="text-[11px] text-muted-foreground hidden sm:inline">
                     ({mod.lessons.length} {mod.lessons.length === 1 ? 'lesson' : 'lessons'})
                   </span>
                 </div>
@@ -218,7 +218,7 @@ export function StudioInteractiveOutline({
                     size="sm"
                     disabled={blueprint.modules.length <= 1}
                     onClick={() => handleDeleteModule(mod.id)}
-                    className="w-6 h-6 p-0 text-rose-500 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+                    className="w-6 h-6 p-0 text-ds-danger hover:text-ds-danger hover:bg-ds-danger-soft"
                     title="Delete Module"
                   >
                     <Trash2 className="w-3 h-3" />
@@ -239,19 +239,19 @@ export function StudioInteractiveOutline({
                         className={cn(
                           'flex items-center justify-between p-2 rounded-lg border text-xs cursor-pointer transition-all duration-150 group',
                           isSelected
-                            ? 'border-purple-500 bg-purple-50/70 dark:bg-purple-950/40 font-bold shadow-2xs'
-                            : 'border-border/60 hover:border-purple-200 bg-card'
+                            ? 'border-ds-accent bg-ds-accent-soft/70 font-bold shadow-2xs'
+                            : 'border-border/60 hover:border-ds-accent/30 bg-card'
                         )}
                       >
                         <div className="flex items-center gap-2 min-w-0 flex-1">
-                          <span className="text-[10px] font-mono text-muted-foreground">
+                          <span className="text-[11px] font-mono text-muted-foreground">
                             {mIdx + 1}.{lIdx + 1}
                           </span>
                           <span className="text-xs text-foreground truncate">
                             {lesson.title}
                           </span>
                           {Boolean((lesson.visualAssets && lesson.visualAssets.length > 0) || (lesson as any).visualAsset) && (
-                            <Badge variant="outline" className="text-[9px] px-1.5 py-0.5 bg-orange-50 text-orange-700 dark:bg-orange-950/50 dark:text-orange-300 border-orange-200 gap-0.5 shrink-0 whitespace-nowrap">
+                            <Badge variant="outline" className="text-[11px] px-1.5 py-0.5 bg-ds-warning-soft text-ds-warning border-ds-warning/30 gap-0.5 shrink-0 whitespace-nowrap">
                               <ImageIcon className="w-2.5 h-2.5 shrink-0" /> Visual
                             </Badge>
                           )}
@@ -266,7 +266,7 @@ export function StudioInteractiveOutline({
                               e.stopPropagation()
                               onRegenerateLessonPromptClick(lesson)
                             }}
-                            className="h-6 px-1.5 text-[10px] text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                            className="h-6 px-1.5 text-[11px] text-ds-accent hover:text-ds-accent hover:bg-ds-accent-soft"
                             title="Regenerate Lesson with Custom AI Prompt"
                           >
                             <Wand2 className="w-3 h-3 me-1" />
@@ -315,7 +315,7 @@ export function StudioInteractiveOutline({
                               e.stopPropagation()
                               handleDeleteLesson(mod.id, lesson.id)
                             }}
-                            className="w-5 h-5 p-0 text-rose-500"
+                            className="w-5 h-5 p-0 text-ds-danger"
                           >
                             <Trash2 className="w-2.5 h-2.5" />
                           </Button>
@@ -326,14 +326,14 @@ export function StudioInteractiveOutline({
 
                   {/* Module Quiz Checkpoint Row */}
                   {mod.moduleQuiz && (
-                    <div className="flex items-center justify-between p-2 rounded-lg border border-dashed border-emerald-300 bg-emerald-50/40 dark:bg-emerald-950/20 text-xs">
+                    <div className="flex items-center justify-between p-2 rounded-lg border border-dashed border-ds-success/30 bg-ds-success-soft/40 text-xs">
                       <div className="flex items-center gap-2 min-w-0">
-                        <FileQuestion className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                        <span className="font-semibold text-emerald-900 dark:text-emerald-300 truncate">
+                        <FileQuestion className="w-3.5 h-3.5 text-ds-success shrink-0" />
+                        <span className="font-semibold text-ds-success truncate">
                           {mod.moduleQuiz.title || `Module ${mIdx + 1} Knowledge Check`}
                         </span>
                       </div>
-                      <Badge className="bg-emerald-600 text-white text-[9px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
+                      <Badge className="bg-ds-success text-white dark:text-ds-on-ink text-[11px] px-1.5 py-0.5 shrink-0 whitespace-nowrap">
                         {mod.moduleQuiz.questions?.length || 0} Questions ({mod.moduleQuiz.passingScore || 80}% Pass)
                       </Badge>
                     </div>
@@ -346,21 +346,21 @@ export function StudioInteractiveOutline({
 
         {/* Final Comprehensive Exam Card (if present) */}
         {blueprint.finalAssessment && (
-          <div className="p-3 rounded-xl border border-amber-300 bg-amber-50/50 dark:bg-amber-950/20 flex items-center justify-between text-xs">
+          <div className="p-3 rounded-[8px] border border-ds-warning/30 bg-ds-warning-soft/50 flex items-center justify-between text-xs">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-amber-500 text-white flex items-center justify-center">
+              <div className="w-7 h-7 rounded-lg bg-ds-warning text-white dark:text-ds-on-ink flex items-center justify-center">
                 <Award className="w-4 h-4" />
               </div>
               <div>
-                <p className="font-bold text-amber-900 dark:text-amber-300">
+                <p className="font-bold text-ds-warning">
                   {blueprint.finalAssessment.title || `${blueprint.title} Final Comprehensive Exam`}
                 </p>
-                <p className="text-[10px] text-amber-700 dark:text-amber-400">
+                <p className="text-[11px] text-ds-warning">
                   {blueprint.finalAssessment.questions?.length || 20} Certification Questions • {blueprint.finalAssessment.passingScore || 85}% Passing Threshold
                 </p>
               </div>
             </div>
-            <Badge className="bg-amber-600 text-white text-[10px]">
+            <Badge className="bg-ds-warning text-white dark:text-ds-on-ink text-[11px]">
               Final Certification
             </Badge>
           </div>

@@ -335,7 +335,7 @@ export default function KnowledgeReview() {
                 )
             case KNOWLEDGE_STATUS.PENDING_REVIEW:
                 return (
-                    <Badge className="bg-ds-warning text-white border-ds-warning/30 font-bold text-[11px] h-6 px-2.5 shadow-xs animate-pulse">
+                    <Badge className="bg-ds-warning text-white dark:text-ds-on-ink border-ds-warning/30 font-bold text-[11px] h-6 px-2.5 shadow-xs animate-pulse">
                         <Clock className="h-3 w-3 me-1" />
                         {t('review_queue.status.pending_review', 'Pending Review')}
                     </Badge>
@@ -349,7 +349,7 @@ export default function KnowledgeReview() {
                 )
             case KNOWLEDGE_STATUS.PUBLISHED:
                 return (
-                    <Badge className="bg-ds-success text-white border-ds-success/30 font-bold text-[11px] h-6 px-2.5 shadow-xs">
+                    <Badge className="bg-ds-success text-white dark:text-ds-on-ink border-ds-success/30 font-bold text-[11px] h-6 px-2.5 shadow-xs">
                         <ShieldCheck className="h-3 w-3 me-1" />
                         {t('review_queue.status.published', 'Published')}
                     </Badge>
@@ -406,10 +406,10 @@ export default function KnowledgeReview() {
             ) : pendingArticles?.length === 0 ? (
                 <Card className="border-ds-border shadow-xs">
                     <CardContent className="py-16 text-center max-w-md mx-auto">
-                        <div className="w-16 h-16 rounded-2xl bg-ds-success-soft text-ds-success flex items-center justify-center mx-auto mb-4 border border-ds-success/30">
+                        <div className="w-16 h-16 rounded-[8px] bg-ds-success-soft text-ds-success flex items-center justify-center mx-auto mb-4 border border-ds-success/30">
                             <CheckCircle2 className="h-8 w-8" />
                         </div>
-                        <h3 className="text-lg font-serif font-bold text-ds-ink">{t('review_queue.empty_state.title', 'Governance queue is clear')}</h3>
+                        <h3 className="text-lg font-bold text-ds-ink">{t('review_queue.empty_state.title', 'Governance queue is clear')}</h3>
                         <p className="text-sm text-ds-muted mt-1">
                             {t('review_queue.empty_state.description', 'There are no procedures currently requiring review under this filter.')}
                         </p>
@@ -420,23 +420,23 @@ export default function KnowledgeReview() {
                     {pendingArticles?.map(article => (
                         <Card
                             key={article.id}
-                            className="border-ds-border hover:border-ds-accent/60 transition-all duration-200 cursor-pointer shadow-2xs hover:shadow-md bg-white rounded-xl overflow-hidden"
+                            className="border-ds-border hover:border-ds-accent/60 transition-all duration-200 cursor-pointer shadow-2xs bg-ds-surface rounded-[8px] overflow-hidden"
                             onClick={() => handleSelectArticle(article)}
                         >
                             <CardContent className="p-5">
                                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                     <div className="flex items-start gap-4 flex-1 min-w-0">
-                                        <div className="p-3 rounded-xl bg-ds-ink/5 text-ds-ink shrink-0 border border-ds-ink/10">
+                                        <div className="p-3 rounded-[8px] bg-ds-ink/5 text-ds-ink shrink-0 border border-ds-ink/10">
                                             <FileText className="h-6 w-6" />
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                                                <h3 className="font-serif font-bold text-ds-ink text-base truncate hover:text-ds-ink">
+                                                <h3 className=" font-bold text-ds-ink text-base truncate hover:text-ds-ink">
                                                     {article.title}
                                                 </h3>
                                                 {getStatusBadge(article.status)}
                                                 {article.content_type && (
-                                                    <Badge variant="outline" className="text-[10px] uppercase font-mono tracking-wider">
+                                                    <Badge variant="outline" className="text-[11px] uppercase font-mono tracking-wider">
                                                         {article.content_type}
                                                     </Badge>
                                                 )}
@@ -454,7 +454,7 @@ export default function KnowledgeReview() {
                                                     {formatDistanceToNow(new Date(article.updated_at), { addSuffix: true, locale })}
                                                 </span>
                                                 {article.department?.name && (
-                                                    <Badge variant="outline" className="text-[10px] px-2 py-0.5 shrink-0 whitespace-nowrap bg-ds-surface-subtle text-ds-muted border-ds-border">
+                                                    <Badge variant="outline" className="text-[11px] px-2 py-0.5 shrink-0 whitespace-nowrap bg-ds-surface-subtle text-ds-muted border-ds-border">
                                                         <Briefcase className="h-2.5 w-2.5 me-1 text-ds-muted shrink-0" />
                                                         {article.department.name}
                                                     </Badge>
@@ -479,7 +479,7 @@ export default function KnowledgeReview() {
                                         </Button>
                                         <Button
                                             size="sm"
-                                            className="bg-ds-ink hover:bg-ds-ink/90 text-white font-bold text-xs h-9 shadow-xs"
+                                            className="bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink font-bold text-xs h-9 shadow-xs"
                                             onClick={(e) => {
                                                 e.stopPropagation()
                                                 handleSelectArticle(article)
@@ -503,7 +503,7 @@ export default function KnowledgeReview() {
                             <span className="text-xs font-bold uppercase tracking-wider text-ds-accent">Governance Review</span>
                             {selectedArticle && getStatusBadge(selectedArticle.status)}
                         </div>
-                        <DialogTitle className="font-serif text-xl sm:text-2xl font-bold text-ds-ink">
+                        <DialogTitle className=" text-xl sm:text-2xl font-bold text-ds-ink">
                             {selectedArticle?.title}
                         </DialogTitle>
                         <DialogDescription className="text-xs text-ds-muted">
@@ -529,7 +529,7 @@ export default function KnowledgeReview() {
 
                         {/* General Approval Tab */}
                         <TabsContent value="review" className="space-y-4 pt-4">
-                            <div className="p-4 bg-ds-surface-subtle rounded-xl border border-ds-border">
+                            <div className="p-4 bg-ds-surface-subtle rounded-[8px] border border-ds-border">
                                 <h4 className="text-xs font-bold uppercase tracking-wider text-ds-muted mb-1">Document Summary</h4>
                                 <p className="text-sm text-ds-ink font-medium">
                                     {selectedArticle?.summary || selectedArticle?.description || 'No executive summary provided.'}
@@ -586,8 +586,8 @@ export default function KnowledgeReview() {
                         {/* Side-by-Side Diff View */}
                         <TabsContent value="diff" className="space-y-4 pt-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="p-4 rounded-xl border border-ds-border bg-white">
-                                    <Badge variant="outline" className="mb-2 text-[10px] font-bold uppercase bg-ds-surface-subtle">
+                                <div className="p-4 rounded-[8px] border border-ds-border bg-ds-surface">
+                                    <Badge variant="outline" className="mb-2 text-[11px] font-bold uppercase bg-ds-surface-subtle">
                                         English (Primary)
                                     </Badge>
                                     <h4 className="font-bold text-sm text-ds-ink mb-1">{selectedArticle?.title}</h4>
@@ -597,8 +597,8 @@ export default function KnowledgeReview() {
                                     </div>
                                 </div>
 
-                                <div className="p-4 rounded-xl border border-ds-border bg-white" dir="rtl">
-                                    <Badge variant="outline" className="mb-2 text-[10px] font-bold uppercase bg-ds-accent-soft text-ds-accent">
+                                <div className="p-4 rounded-[8px] border border-ds-border bg-ds-surface" dir="rtl">
+                                    <Badge variant="outline" className="mb-2 text-[11px] font-bold uppercase bg-ds-accent-soft text-ds-accent">
                                         العربية (Arabic Translation)
                                     </Badge>
                                     <h4 className="font-bold text-sm text-ds-ink mb-1 font-arabic">{translationData.title_ar || 'لم يتم تحديد عنوان عربي'}</h4>
@@ -636,7 +636,7 @@ export default function KnowledgeReview() {
                                         dir="rtl"
                                         className="text-xs font-arabic"
                                     />
-                                    <p className="text-[10px] text-ds-muted mt-1">{t_ext('english', 'English: ')} {selectedArticle?.title}</p>
+                                    <p className="text-[11px] text-ds-muted mt-1">{t_ext('english', 'English: ')} {selectedArticle?.title}</p>
                                 </div>
 
                                 <div>
@@ -649,7 +649,7 @@ export default function KnowledgeReview() {
                                         dir="rtl"
                                         className="text-xs font-arabic"
                                     />
-                                    <p className="text-[10px] text-ds-muted mt-1">{t_ext('english', 'English: ')} {selectedArticle?.description}</p>
+                                    <p className="text-[11px] text-ds-muted mt-1">{t_ext('english', 'English: ')} {selectedArticle?.description}</p>
                                 </div>
 
                                 <div>
@@ -678,7 +678,7 @@ export default function KnowledgeReview() {
                                             <Button
                                                 onClick={() => handleReview('approve')}
                                                 disabled={reviewMutation.isPending}
-                                                className="bg-ds-success hover:bg-ds-success text-white font-bold text-xs h-9 shadow-sm"
+                                                className="bg-ds-success hover:bg-ds-success text-white dark:text-ds-on-ink font-bold text-xs h-9 shadow-sm"
                                             >
                                                 {reviewMutation.isPending && reviewAction === 'approve' ? (
                                                     <Loader2 className="h-4 w-4 animate-spin me-1.5" />
@@ -722,7 +722,7 @@ export default function KnowledgeReview() {
                                         <Button
                                             onClick={() => handleReview('approve')}
                                             disabled={reviewMutation.isPending}
-                                            className="bg-ds-success hover:bg-ds-success text-white font-bold text-xs h-9 shadow-sm"
+                                            className="bg-ds-success hover:bg-ds-success text-white dark:text-ds-on-ink font-bold text-xs h-9 shadow-sm"
                                         >
                                             {reviewMutation.isPending && reviewAction === 'approve' ? (
                                                 <Loader2 className="h-4 w-4 animate-spin me-1.5" />

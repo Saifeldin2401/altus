@@ -82,7 +82,7 @@ export function GenerationHistoryDialog({
       <DialogContent className="sm:max-w-3xl max-h-[85vh] flex flex-col p-0">
         <DialogHeader className="p-6 border-b bg-muted/20">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300">
+            <div className="p-2.5 rounded-[8px] bg-ds-accent-soft text-ds-accent">
               <History className="w-5 h-5" />
             </div>
             <div>
@@ -100,12 +100,12 @@ export function GenerationHistoryDialog({
           {isLoading ? (
             <div className="space-y-3">
               {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className="h-24 w-full rounded-xl" />
+                <Skeleton key={i} className="h-24 w-full rounded-[8px]" />
               ))}
             </div>
           ) : !history || history.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground text-sm space-y-2">
-              <Sparkles className="w-8 h-8 mx-auto text-purple-400 opacity-60" />
+              <Sparkles className="w-8 h-8 mx-auto text-ds-accent opacity-60" />
               <p>{t('builder.noHistoryYet', 'No AI generation history recorded yet.')}</p>
             </div>
           ) : (
@@ -126,25 +126,25 @@ export function GenerationHistoryDialog({
                 )
 
                 return (
-                  <Card key={job.id} className="p-4 hover:shadow-md transition-shadow">
+                  <Card key={job.id} className="p-4 transition-shadow">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div className="space-y-1.5 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="text-sm font-bold text-foreground">
                             {title}
                           </span>
-                          <Badge variant="outline" className="text-[10px] font-semibold uppercase">
+                          <Badge variant="outline" className="text-[11px] font-semibold uppercase">
                             {job.mode.replace('_', ' ')}
                           </Badge>
                           {job.blueprint?.qualityScore && (
-                            <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 text-[10px] font-bold">
+                            <Badge className="bg-ds-success-soft text-ds-success text-[11px] font-bold">
                               QA {job.blueprint.qualityScore}%
                             </Badge>
                           )}
                           {(job.status === 'interrupted' || job.status === 'failed') && (
                             <Badge
                               variant="outline"
-                              className="text-[10px] font-semibold uppercase border-amber-400 text-amber-700 dark:text-amber-300"
+                              className="text-[11px] font-semibold uppercase border-ds-warning text-ds-warning"
                             >
                               {job.status === 'interrupted'
                                 ? t('builder.jobInterrupted', 'Interrupted')
@@ -163,12 +163,12 @@ export function GenerationHistoryDialog({
                           </span>
                           {job.duration_ms && (
                             <span className="flex items-center gap-1">
-                              <Zap className="w-3.5 h-3.5 text-amber-500" />
+                              <Zap className="w-3.5 h-3.5 text-ds-warning" />
                               {(job.duration_ms / 1000).toFixed(1)}s
                             </span>
                           )}
                           <span className="flex items-center gap-1">
-                            <Cpu className="w-3.5 h-3.5 text-purple-500" />
+                            <Cpu className="w-3.5 h-3.5 text-ds-accent" />
                             {job.models_used?.[0]?.split('/')[1] || job.models_used?.[0] || 'Auto Multi-Model'}
                           </span>
                         </div>
@@ -191,7 +191,7 @@ export function GenerationHistoryDialog({
                         {onResumeJob && isResumable(job) && (
                           <Button
                             size="sm"
-                            className="text-xs h-8 bg-amber-600 hover:bg-amber-700 text-white"
+                            className="text-xs h-8 bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink"
                             onClick={() => {
                               onResumeJob(job)
                               onOpenChange(false)
@@ -209,7 +209,7 @@ export function GenerationHistoryDialog({
                         {restoreHandler && job.blueprint && (
                           <Button
                             size="sm"
-                            className="text-xs h-8 bg-purple-600 hover:bg-purple-700 text-white"
+                            className="text-xs h-8 bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink"
                             onClick={() => {
                               restoreHandler(job)
                               onOpenChange(false)

@@ -447,7 +447,7 @@ export default function AssessmentBuilder() {
                             ) : (
                                 <div className="space-y-2">
                                     {questions.map((q) => (
-                                        <div key={q.id} className="flex items-center gap-4 p-4 bg-white border rounded-lg group">
+                                        <div key={q.id} className="flex items-center gap-4 p-4 bg-ds-surface border rounded-lg group">
                                             <div className="cursor-move text-muted-foreground">
                                                 <GripVertical className="h-5 w-5" />
                                             </div>

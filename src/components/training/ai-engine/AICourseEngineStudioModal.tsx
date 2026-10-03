@@ -1129,10 +1129,10 @@ export function AICourseEngineStudioModal({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="max-w-7xl max-h-[94vh] flex flex-col p-0 overflow-hidden shadow-2xl">
           {/* Header */}
-          <DialogHeader className="p-4 border-b bg-card/90 backdrop-blur shrink-0 select-none">
+          <DialogHeader className="p-4 border-b bg-card/90 shrink-0 select-none">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-700 text-white shadow-md">
+                <div className="p-2 rounded-[8px] bg-ds-accent text-white dark:text-ds-on-ink">
                   <BrainCircuit className="w-5 h-5" />
                 </div>
                 <div>
@@ -1161,7 +1161,7 @@ export function AICourseEngineStudioModal({
                         studioMode === 'quick' ? 'bg-background shadow-xs text-foreground' : 'text-muted-foreground hover:text-foreground'
                       )}
                     >
-                      <Zap className="w-3 h-3 text-amber-500" /> {t('builder.modeQuick', 'Quick')}
+                      <Zap className="w-3 h-3 text-ds-warning" /> {t('builder.modeQuick', 'Quick')}
                     </button>
                     <button
                       type="button"
@@ -1171,7 +1171,7 @@ export function AICourseEngineStudioModal({
                         studioMode === 'advanced' ? 'bg-background shadow-xs text-foreground' : 'text-muted-foreground hover:text-foreground'
                       )}
                     >
-                      <Layers className="w-3 h-3 text-purple-600" /> {t('builder.modeAdvanced', 'Advanced')}
+                      <Layers className="w-3 h-3 text-ds-accent" /> {t('builder.modeAdvanced', 'Advanced')}
                     </button>
                   </div>
                 )}
@@ -1200,10 +1200,10 @@ export function AICourseEngineStudioModal({
                       variant="outline"
                       size="sm"
                       onClick={() => setDocIngestionModalOpen(true)}
-                      className="h-8 text-xs font-semibold gap-1.5 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800 bg-purple-50/50 dark:bg-purple-950/30"
+                      className="h-8 text-xs font-semibold gap-1.5 text-ds-accent border-ds-accent/30 bg-ds-accent-soft/50"
                       title="Multimodal Document-to-Course Ingestion"
                     >
-                      <UploadCloud className="w-3.5 h-3.5 text-purple-600" />
+                      <UploadCloud className="w-3.5 h-3.5 text-ds-accent" />
                       <span className="hidden md:inline">{t('docIngestion.title', 'Doc Ingestion')}</span>
                     </Button>
 
@@ -1211,10 +1211,10 @@ export function AICourseEngineStudioModal({
                       variant="outline"
                       size="sm"
                       onClick={() => setComplianceDialogOpen(true)}
-                      className="h-8 text-xs font-semibold gap-1.5 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/30"
+                      className="h-8 text-xs font-semibold gap-1.5 text-ds-success border-ds-success/30 bg-ds-success-soft/50"
                       title="KSA Regulatory & Brand Standard Compliance Shield"
                     >
-                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                      <ShieldCheck className="w-3.5 h-3.5 text-ds-success" />
                       <span className="hidden md:inline">{t('complianceShield.title', 'KSA Shield')}</span>
                     </Button>
                   </>
@@ -1515,7 +1515,7 @@ export function AICourseEngineStudioModal({
               </div>
 
               {/* Sticky Bottom Action Bar */}
-              <div className="p-3.5 border-t bg-card/90 backdrop-blur flex items-center justify-between gap-3 shrink-0">
+              <div className="p-3.5 border-t bg-card/90 flex items-center justify-between gap-3 shrink-0">
                 <div className="flex items-center gap-2">
                   <Button
                     type="button"
@@ -1534,7 +1534,7 @@ export function AICourseEngineStudioModal({
                       variant="outline"
                       size="sm"
                       onClick={handleAutoHarmonize}
-                      className="h-9 text-xs font-bold text-amber-700 border-amber-300 hover:bg-amber-50 gap-1.5"
+                      className="h-9 text-xs font-bold text-ds-warning border-ds-warning/30 hover:bg-ds-warning-soft gap-1.5"
                     >
                       <Sparkles className="w-3.5 h-3.5" />
                       <span>{t('builder.autoHarmonize', 'Harmonize')}</span>
@@ -1560,7 +1560,7 @@ export function AICourseEngineStudioModal({
                       type="button"
                       size="sm"
                       onClick={handleNextStage}
-                      className="h-9 px-5 text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white shadow-sm"
+                      className="h-9 px-5 text-xs font-bold bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink shadow-sm"
                     >
                       {t('common.next', 'Next Stage')}
                       <ArrowRight className="w-3.5 h-3.5 ms-1" />
@@ -1571,7 +1571,7 @@ export function AICourseEngineStudioModal({
                       size="sm"
                       onClick={() => handleStartGeneration()}
                       disabled={executePipeline.isPending}
-                      className="h-9 px-6 text-xs font-extrabold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-md"
+                      className="h-9 px-6 text-xs font-extrabold bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink"
                     >
                       <Rocket className="w-3.5 h-3.5 me-1.5" />
                       {t('builder.generateCourseCTA', 'Create course')}
@@ -1620,9 +1620,9 @@ export function AICourseEngineStudioModal({
                     variant="outline"
                     size="sm"
                     onClick={() => setQaInspectorOpen(true)}
-                    className="h-8 text-xs font-bold text-purple-700 border-purple-300 hover:bg-purple-50 gap-1.5"
+                    className="h-8 text-xs font-bold text-ds-accent border-ds-accent/30 hover:bg-ds-accent-soft gap-1.5"
                   >
-                    <Award className="w-3.5 h-3.5 text-purple-600" />
+                    <Award className="w-3.5 h-3.5 text-ds-accent" />
                     {t('builder.inspectQA', 'Inspect QA & Standards (Score: {{score}}%)', {
                       score: generatedBlueprint.qualityScore || 92,
                     })}
@@ -1635,7 +1635,7 @@ export function AICourseEngineStudioModal({
                       size="sm"
                       onClick={handleApplyToCurrentBuilder}
                       disabled={applyingToBuilder}
-                      className="h-8 text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white shadow-sm"
+                      className="h-8 text-xs font-bold bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink shadow-sm"
                     >
                       <Sparkles className="w-3.5 h-3.5 me-1.5" />
                       {applyingToBuilder ? t('common.applying', 'Applying...') : t('builder.applyToBuilder', 'Apply to Course Builder')}
@@ -1646,7 +1646,7 @@ export function AICourseEngineStudioModal({
                     size="sm"
                     onClick={handleSaveToLCMS}
                     disabled={saveBlueprint.isPending}
-                    className="h-8 text-xs font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-sm"
+                    className="h-8 text-xs font-extrabold bg-ds-success hover:bg-ds-success text-white dark:text-ds-on-ink shadow-sm"
                   >
                     <Save className="w-3.5 h-3.5 me-1.5" />
                     {saveBlueprint.isPending ? t('common.saving', 'Saving...') : t('builder.saveToLCMS', 'Save to Course Library')}
@@ -1684,7 +1684,7 @@ export function AICourseEngineStudioModal({
                           <h3 className="text-sm font-bold text-foreground truncate">
                             {activeLesson.title}
                           </h3>
-                          <p className="text-[10px] text-muted-foreground">
+                          <p className="text-[11px] text-muted-foreground">
                             Template: {activeLesson.templateType} • Est. Time: {activeLesson.durationMinutes || 15}m
                           </p>
                         </div>
@@ -1707,7 +1707,7 @@ export function AICourseEngineStudioModal({
                               setTargetRefineLesson(activeLesson)
                               setRefineModalOpen(true)
                             }}
-                            className="h-7 text-xs font-bold text-purple-600 border-purple-300 gap-1"
+                            className="h-7 text-xs font-bold text-ds-accent border-ds-accent/30 gap-1"
                           >
                             <Wand2 className="w-3 h-3" />
                             Refine with AI
@@ -1731,10 +1731,10 @@ export function AICourseEngineStudioModal({
                           const modelDisplay = (asset?.model || asset?.imageModel || 'Recraft Vector').split('/').pop()
 
                           return (
-                            <div className="mb-6 p-3 rounded-xl border bg-muted/20 space-y-2">
+                            <div className="mb-6 p-3 rounded-[8px] border bg-muted/20 space-y-2">
                               <div className="flex items-center justify-between">
                                 <span className="text-xs font-bold flex items-center gap-1.5 text-foreground">
-                                  <ImageIcon className="w-3.5 h-3.5 text-orange-600" />
+                                  <ImageIcon className="w-3.5 h-3.5 text-ds-warning" />
                                   Visual Guide & Schematic ({modelDisplay})
                                 </span>
                                 <Button
@@ -1744,14 +1744,14 @@ export function AICourseEngineStudioModal({
                                     setSelectedAssetForEditor(asset)
                                     setVisualEditorOpen(true)
                                   }}
-                                  className="h-6 text-[10px] font-semibold"
+                                  className="h-6 text-[11px] font-semibold"
                                 >
                                   Edit / Transform
                                 </Button>
                               </div>
 
                               {imageUrl ? (
-                                <div className="relative rounded-lg overflow-hidden border max-h-85 bg-slate-950/90 flex items-center justify-center">
+                                <div className="relative rounded-lg overflow-hidden border max-h-85 bg-ds-ink/90 flex items-center justify-center">
                                   {(() => {
                                     // If imageUrl is SVG data URI or raw SVG, render directly to DOM
                                     let rawSvg: string | null = null
@@ -1801,7 +1801,7 @@ export function AICourseEngineStudioModal({
                             </div>
                           )
                         })() : (
-                          <div className="mb-6 p-3 rounded-xl border border-dashed bg-muted/10 flex items-center justify-between">
+                          <div className="mb-6 p-3 rounded-[8px] border border-dashed bg-muted/10 flex items-center justify-between">
                             <span className="text-xs text-muted-foreground flex items-center gap-1.5">
                               <ImageIcon className="w-3.5 h-3.5 text-muted-foreground" />
                               No visual guide attached to this lesson
@@ -1840,9 +1840,9 @@ export function AICourseEngineStudioModal({
                                 setSelectedAssetForEditor(draftAsset)
                                 setVisualEditorOpen(true)
                               }}
-                              className="h-6 text-[10px] font-semibold gap-1 text-purple-600 dark:text-purple-300 border-purple-300 dark:border-purple-800"
+                              className="h-6 text-[11px] font-semibold gap-1 text-ds-accent border-ds-accent/30"
                             >
-                              <Sparkles className="w-3 h-3 text-purple-500" />
+                              <Sparkles className="w-3 h-3 text-ds-accent" />
                               Generate Visual Guide
                             </Button>
                           </div>
@@ -1850,7 +1850,7 @@ export function AICourseEngineStudioModal({
 
                         {/* Rendered HTML or Raw Source */}
                         {viewRawHtml ? (
-                          <pre className="p-4 rounded-xl bg-muted/60 font-mono text-xs text-foreground overflow-x-auto whitespace-pre-wrap">
+                          <pre className="p-4 rounded-[8px] bg-muted/60 font-mono text-xs text-foreground overflow-x-auto whitespace-pre-wrap">
                             {activeLesson.renderedHtml}
                           </pre>
                         ) : (
@@ -1895,7 +1895,7 @@ export function AICourseEngineStudioModal({
             <Button variant="outline" size="sm" onClick={() => setSavePresetDialogOpen(false)}>
               {t('common.cancel', 'Cancel')}
             </Button>
-            <Button size="sm" onClick={handleSavePreset} disabled={!presetNameInput.trim()} className="bg-purple-600 text-white font-bold">
+            <Button size="sm" onClick={handleSavePreset} disabled={!presetNameInput.trim()} className="bg-ds-accent text-white dark:text-ds-on-ink font-bold">
               {t('common.save', 'Save Preset')}
             </Button>
           </DialogFooter>
@@ -1907,7 +1907,7 @@ export function AICourseEngineStudioModal({
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle className="text-base font-bold flex items-center gap-2">
-              <Wand2 className="w-4 h-4 text-purple-600" />
+              <Wand2 className="w-4 h-4 text-ds-accent" />
               <span>Refine Lesson with AI</span>
             </DialogTitle>
             <DialogDescription className="text-xs">
@@ -1968,7 +1968,7 @@ export function AICourseEngineStudioModal({
               size="sm"
               onClick={() => handleApplyLessonRefinement('custom', refineCustomPrompt)}
               disabled={!refineCustomPrompt.trim() || refineMutation.isPending}
-              className="bg-purple-600 text-white font-bold"
+              className="bg-ds-accent text-white dark:text-ds-on-ink font-bold"
             >
               {refineMutation.isPending ? 'Refining...' : 'Apply AI Refinement'}
             </Button>

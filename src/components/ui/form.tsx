@@ -154,7 +154,7 @@ const FormMessage = forwardRef<
       id={formMessageId}
       className={cn(
         'text-sm',
-        variant === 'error' ? 'text-destructive' : 'text-green-600',
+        variant === 'error' ? 'text-destructive' : 'text-ds-success',
         className
       )}
       {...props}
@@ -177,7 +177,7 @@ const FormSuccess = forwardRef<
   return (
     <p
       ref={ref}
-      className={cn('text-sm text-green-600', className)}
+      className={cn('text-sm text-ds-success', className)}
       {...props}
     >
       {children}
@@ -225,7 +225,7 @@ const FormSubmitButton = forwardRef<HTMLButtonElement, FormSubmitButtonProps>(
         type="submit"
         disabled={disabled || currentlySubmitting}
         className={cn(
-          'inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-hotel-navy h-10 px-4 py-2',
+          'inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-ds-ink h-10 px-4 py-2',
           className
         )}
         {...props}

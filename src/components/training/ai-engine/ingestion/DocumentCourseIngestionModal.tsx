@@ -103,16 +103,16 @@ export function DocumentCourseIngestionModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col p-0 overflow-hidden bg-white dark:bg-slate-950">
-        <DialogHeader className="p-6 pb-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/70">
+      <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col p-0 overflow-hidden bg-ds-surface">
+        <DialogHeader className="p-6 pb-4 border-b border-ds-border bg-ds-surface-subtle/70">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-[8px] bg-ds-accent/10 text-ds-accent flex items-center justify-center font-bold">
               <UploadCloud className="w-5 h-5" />
             </div>
             <div>
               <DialogTitle className="text-base font-bold flex items-center gap-2">
                 <span>{t('docIngestion.title', 'Multimodal Document-to-Course Ingestion')}</span>
-                <Badge variant="outline" className="text-xs bg-purple-50 text-purple-700 dark:bg-purple-950 dark:text-purple-300 border-purple-200">
+                <Badge variant="outline" className="text-xs bg-ds-accent-soft text-ds-accent border-ds-accent/30">
                   AI OCR & Vision
                 </Badge>
               </DialogTitle>
@@ -128,12 +128,12 @@ export function DocumentCourseIngestionModal({
             <>
               {/* File Upload / Drag Zone */}
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <Label className="text-xs font-semibold text-ds-ink-secondary">
                   {t('docIngestion.uploadLabel', 'Upload Document (PDF, DOCX, TXT, Markdown)')}
                 </Label>
-                <div className="border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl p-6 text-center hover:border-purple-400 transition-colors bg-slate-50/50 dark:bg-slate-900/50">
-                  <FileText className="w-8 h-8 mx-auto text-purple-500 mb-2" />
-                  <p className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                <div className="border-2 border-dashed border-ds-border rounded-[8px] p-6 text-center hover:border-ds-accent transition-colors bg-ds-surface-subtle/50">
+                  <FileText className="w-8 h-8 mx-auto text-ds-accent mb-2" />
+                  <p className="text-xs font-medium text-ds-ink-secondary">
                     {fileName || t('docIngestion.dragPrompt', 'Click to browse or drag & drop hotel SOP manual')}
                   </p>
                   <p className="text-[11px] text-muted-foreground mt-1">
@@ -157,13 +157,13 @@ export function DocumentCourseIngestionModal({
                     </Button>
                   </label>
                   {fileExtractError && (
-                    <p className="mt-2 text-[11px] text-rose-600 dark:text-rose-400">{fileExtractError}</p>
+                    <p className="mt-2 text-[11px] text-ds-danger">{fileExtractError}</p>
                   )}
                   {ingestError && (
-                    <p role="alert" className="mt-2 text-[11px] text-rose-600 dark:text-rose-400">{ingestError}</p>
+                    <p role="alert" className="mt-2 text-[11px] text-ds-danger">{ingestError}</p>
                   )}
                   {fileName && !fileExtractError && documentText && (
-                    <p className="mt-2 text-[11px] text-emerald-600 dark:text-emerald-400">
+                    <p className="mt-2 text-[11px] text-ds-success">
                       {documentText.split(/\s+/).filter(Boolean).length.toLocaleString()} words extracted
                     </p>
                   )}
@@ -172,7 +172,7 @@ export function DocumentCourseIngestionModal({
 
               {/* Direct Paste Fallback */}
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <Label className="text-xs font-semibold text-ds-ink-secondary">
                   {t('docIngestion.pasteLabel', 'Or Paste Document Text Directly')}
                 </Label>
                 <Textarea
@@ -183,7 +183,7 @@ export function DocumentCourseIngestionModal({
                       ? 'الصق نص السياسة، دليل التشغيل، أو إجراءات العمل القياسية هنا...'
                       : 'Paste hotel brand standard text, SOP guidelines, or onboarding notes here...'
                   }
-                  className="text-xs h-28 bg-white dark:bg-slate-900"
+                  className="text-xs h-28 bg-ds-surface"
                 />
               </div>
 
@@ -192,7 +192,7 @@ export function DocumentCourseIngestionModal({
                 <div className="space-y-1.5">
                   <Label className="text-xs font-semibold">{t('docIngestion.department', 'Target Department')}</Label>
                   <Select value={targetDepartment} onValueChange={setTargetDepartment}>
-                    <SelectTrigger className="h-8 text-xs bg-white dark:bg-slate-900">
+                    <SelectTrigger className="h-8 text-xs bg-ds-surface">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -208,7 +208,7 @@ export function DocumentCourseIngestionModal({
                 <div className="space-y-1.5">
                   <Label className="text-xs font-semibold">{t('docIngestion.level', 'Learner Level')}</Label>
                   <Select value={targetLevel} onValueChange={(v: any) => setTargetLevel(v)}>
-                    <SelectTrigger className="h-8 text-xs bg-white dark:bg-slate-900">
+                    <SelectTrigger className="h-8 text-xs bg-ds-surface">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -223,10 +223,10 @@ export function DocumentCourseIngestionModal({
           ) : (
             /* Ingestion Success Review Screen */
             <div className="space-y-4">
-              <div className="bg-purple-50/50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800 rounded-xl p-4 space-y-2">
+              <div className="bg-ds-accent-soft/50 border border-ds-accent/30 rounded-[8px] p-4 space-y-2">
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-purple-600" />
-                  <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                  <CheckCircle2 className="w-5 h-5 text-ds-accent" />
+                  <h4 className="text-sm font-bold text-ds-ink">
                     {ingestionResult.blueprint.title}
                   </h4>
                 </div>
@@ -234,13 +234,13 @@ export function DocumentCourseIngestionModal({
                   {isRTL ? ingestionResult.summaryAr : ingestionResult.summary}
                 </p>
                 <div className="flex items-center gap-2 pt-1">
-                  <Badge variant="outline" className="text-[10px] bg-white">
+                  <Badge variant="outline" className="text-[11px] bg-ds-surface">
                     {ingestionResult.wordCount} words parsed
                   </Badge>
-                  <Badge variant="outline" className="text-[10px] bg-white">
+                  <Badge variant="outline" className="text-[11px] bg-ds-surface">
                     ⏱️ ~{ingestionResult.estimatedReadingMinutes} min course
                   </Badge>
-                  <Badge variant="outline" className="text-[10px] bg-white">
+                  <Badge variant="outline" className="text-[11px] bg-ds-surface">
                     {ingestionResult.blueprint.sections.length} module sections
                   </Badge>
                 </div>
@@ -248,7 +248,7 @@ export function DocumentCourseIngestionModal({
 
               {/* Extracted Topics */}
               <div className="space-y-2">
-                <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <Label className="text-xs font-semibold text-ds-ink-secondary">
                   {t('docIngestion.topicsExtracted', 'Synthesized Learning Modules & Topics')}:
                 </Label>
                 <div className="flex flex-wrap gap-1.5">
@@ -262,25 +262,25 @@ export function DocumentCourseIngestionModal({
 
               {/* Sections Preview List */}
               <div className="space-y-2">
-                <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                <Label className="text-xs font-semibold text-ds-ink-secondary">
                   {t('docIngestion.sectionsPreview', 'Curriculum Outline Preview')}:
                 </Label>
                 <div className="space-y-2">
                   {ingestionResult.blueprint.sections.map((sec, idx) => (
                     <div
                       key={sec.id || idx}
-                      className="rounded-lg border border-slate-200 dark:border-slate-800 p-3 bg-white dark:bg-slate-900 text-xs flex items-center justify-between"
+                      className="rounded-lg border border-ds-border p-3 bg-ds-surface text-xs flex items-center justify-between"
                     >
                       <div className="flex items-center gap-2">
-                        <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-[10px]">
+                        <span className="w-5 h-5 rounded-full bg-ds-surface-subtle text-ds-ink-secondary flex items-center justify-center font-bold text-[11px]">
                           {idx + 1}
                         </span>
                         <div>
-                          <p className="font-semibold text-slate-800 dark:text-slate-200">{sec.title}</p>
-                          <p className="text-[10px] text-muted-foreground">{sec.lessons.length} lesson(s) with checkpoint quiz</p>
+                          <p className="font-semibold text-ds-ink">{sec.title}</p>
+                          <p className="text-[11px] text-muted-foreground">{sec.lessons.length} lesson(s) with checkpoint quiz</p>
                         </div>
                       </div>
-                      <Layers className="w-3.5 h-3.5 text-slate-400" />
+                      <Layers className="w-3.5 h-3.5 text-ds-muted" />
                     </div>
                   ))}
                 </div>
@@ -290,7 +290,7 @@ export function DocumentCourseIngestionModal({
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-between">
+        <div className="p-4 border-t border-ds-border bg-ds-surface-subtle/50 flex items-center justify-between">
           <Button size="sm" variant="ghost" onClick={() => onOpenChange(false)}>
             {t('common:actions.cancel', 'Cancel')}
           </Button>
@@ -298,7 +298,7 @@ export function DocumentCourseIngestionModal({
           {!ingestionResult ? (
             <Button
               size="sm"
-              className="bg-purple-600 hover:bg-purple-700 text-white gap-1.5 shadow-sm"
+              className="bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink gap-1.5 shadow-sm"
               disabled={isProcessing || !documentText.trim()}
               onClick={handleIngest}
             >
@@ -308,7 +308,7 @@ export function DocumentCourseIngestionModal({
           ) : (
             <Button
               size="sm"
-              className="bg-purple-600 hover:bg-purple-700 text-white gap-1.5 shadow-sm"
+              className="bg-ds-accent hover:bg-ds-accent text-white dark:text-ds-on-ink gap-1.5 shadow-sm"
               onClick={handleApplyToStudio}
             >
               <BookOpen className="w-3.5 h-3.5" />

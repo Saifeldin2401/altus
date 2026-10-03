@@ -65,7 +65,7 @@ function AuthMotionVisualComponent({
   return (
     <div
       className={cn(
-        'relative w-full h-full max-h-screen flex flex-col justify-between overflow-hidden bg-white text-ds-ink p-6 lg:p-8 xl:p-10 select-none',
+        'relative w-full h-full max-h-screen flex flex-col justify-between overflow-hidden bg-ds-surface text-ds-ink p-6 lg:p-8 xl:p-10 select-none',
         className
       )}
       dir={isRTL ? 'rtl' : 'ltr'}
@@ -82,15 +82,15 @@ function AuthMotionVisualComponent({
             <span className="block text-base sm:text-lg font-semibold tracking-tight text-ds-ink leading-none">
               Altus Connect
             </span>
-            <span className="block text-[10px] font-medium tracking-widest uppercase text-ds-brass mt-1">
+            <span className="block text-[11px] font-medium tracking-widest uppercase text-ds-brass mt-1">
               Hospitality Learning Platform
             </span>
           </div>
         </div>
 
         {/* Small restrained indicator */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-ds-border bg-slate-50/80 backdrop-blur-sm text-[11px] text-ds-muted shadow-xs">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-ds-border bg-ds-surface-subtle/80 text-[11px] text-ds-muted shadow-xs">
+          <span className="w-2 h-2 rounded-full bg-ds-success animate-pulse" />
           <span className="font-medium">Enterprise Ready</span>
         </div>
       </div>
@@ -99,7 +99,7 @@ function AuthMotionVisualComponent({
       <div className="relative z-10 max-w-lg mx-auto w-full my-auto flex-1 min-h-0 flex flex-col justify-center py-2 space-y-3">
         <div className="space-y-1.5 shrink-0">
           {badgeText && (
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-ds-brass/30 bg-ds-brass/10 text-ds-brass text-xs font-medium backdrop-blur-xs mb-1">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-ds-brass/30 bg-ds-brass/10 text-ds-brass text-xs font-medium mb-1">
               <ShieldCheck className="w-3.5 h-3.5 shrink-0 text-ds-brass" />
               <span>{badgeText}</span>
             </div>
@@ -123,7 +123,7 @@ function AuthMotionVisualComponent({
               <MotionLottie isPaused={prefersReducedMotion} />
             </Suspense>
           ) : shouldUseVideo ? (
-            <div className="w-full h-full rounded-2xl overflow-hidden border border-ds-border shadow-md">
+            <div className="w-full h-full rounded-[8px] overflow-hidden border border-ds-border">
               <MotionVideo
                 webmSrc={webmSrc}
                 mp4Src={mp4Src}

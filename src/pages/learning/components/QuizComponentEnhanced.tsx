@@ -215,7 +215,7 @@ function FeedbackOverlay({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 z-20 flex items-center justify-center rounded-[inherit] bg-slate-950/55 p-4 backdrop-blur-sm"
+            className="absolute inset-0 z-20 flex items-center justify-center rounded-[inherit] bg-ds-ink/55 p-4"
             onClick={onAdvance}
         >
             <m.div
@@ -223,8 +223,8 @@ function FeedbackOverlay({
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
                 className={cn(
-                    "max-h-[calc(100%-2rem)] w-full max-w-lg overflow-y-auto rounded-3xl p-8 text-center shadow-2xl",
-                    isCorrect ? "bg-gradient-to-br from-emerald-500 to-emerald-600 text-white" : "bg-gradient-to-br from-slate-700 to-slate-800 text-white"
+                    "max-h-[calc(100%-2rem)] w-full max-w-lg overflow-y-auto rounded-[8px] p-8 text-center shadow-2xl",
+                    isCorrect ? "bg-ds-success text-ds-on-ink" : "bg-ds-ink text-ds-on-ink"
                 )}
                 onClick={e => e.stopPropagation()}
             >
@@ -234,18 +234,18 @@ function FeedbackOverlay({
                             initial={{ scale: 0.95, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                            className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6"
+                            className="w-24 h-24 bg-ds-on-ink/20 rounded-full flex items-center justify-center mx-auto mb-6"
                         >
                             <CheckCircle2 className="h-12 w-12" />
                         </m.div>
                         <h3 className="text-3xl font-bold mb-2">Correct!</h3>
                         {streak > 1 && (
                             <div className="flex items-center justify-center gap-2 mb-4">
-                                <Flame className="h-5 w-5 text-orange-300" />
+                                <Flame className="h-5 w-5 text-ds-warning" />
                                 <span className="text-lg font-semibold">{streak} in a row!</span>
                             </div>
                         )}
-                        <p className="text-white/80 mb-6">+10 points</p>
+                        <p className="text-ds-on-ink/80 mb-6">+10 points</p>
                     </>
                 ) : (
                     <>
@@ -253,24 +253,24 @@ function FeedbackOverlay({
                             initial={{ x: -10 }}
                             animate={{ x: [0, 10, -10, 10, 0] }}
                             transition={{ duration: 0.4 }}
-                            className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6"
+                            className="w-24 h-24 bg-ds-on-ink/10 rounded-full flex items-center justify-center mx-auto mb-6"
                         >
                             <XCircle className="h-12 w-12" />
                         </m.div>
                         <h3 className="text-3xl font-bold mb-2">Not quite</h3>
-                        <p className="text-white/70 mb-6">Don't worry, keep learning!</p>
+                        <p className="text-ds-on-ink/70 mb-6">Don't worry, keep learning!</p>
                     </>
                 )}
 
                 {explanation && (
-                    <div className="bg-white/10 rounded-xl p-4 mb-6 text-start">
-                        <p className="text-sm text-white/60 mb-1">Explanation:</p>
+                    <div className="bg-ds-on-ink/10 rounded-[8px] p-4 mb-6 text-start">
+                        <p className="text-sm text-ds-on-ink/60 mb-1">Explanation:</p>
                         <p className="text-sm">{explanation}</p>
                     </div>
                 )}
                 {sourceSnippet && (
-                    <div className="bg-white/10 rounded-xl p-4 mb-6 text-start">
-                        <p className="text-sm text-white/60 mb-1">Source:</p>
+                    <div className="bg-ds-on-ink/10 rounded-[8px] p-4 mb-6 text-start">
+                        <p className="text-sm text-ds-on-ink/60 mb-1">Source:</p>
                         <p className="text-sm">{sourceSnippet}</p>
                     </div>
                 )}
@@ -278,10 +278,10 @@ function FeedbackOverlay({
                 <Button
                     onClick={onAdvance}
                     className={cn(
-                        "px-8 py-6 rounded-xl font-bold text-lg",
+                        "px-8 py-6 rounded-[8px] font-bold text-lg",
                         isCorrect
-                            ? "bg-white text-emerald-600 hover:bg-white/90"
-                            : "bg-white text-slate-700 hover:bg-white/90"
+                            ? "bg-ds-surface text-ds-success hover:bg-ds-on-ink/90"
+                            : "bg-ds-surface text-ds-ink-secondary hover:bg-ds-on-ink/90"
                     )}
                 >
                     Continue
@@ -1317,24 +1317,24 @@ export function QuizComponentEnhanced({
                     className="text-center space-y-4"
                 >
                     <div className="relative">
-                        <div className="w-16 h-16 border-4 border-hotel-gold/20 border-t-hotel-gold rounded-full animate-spin" />
-                        <Brain className="h-6 w-6 text-hotel-gold absolute top-1/2 start-1/2 -translate-x-1/2 -translate-y-1/2" />
+                        <div className="w-16 h-16 border-4 border-ds-accent/20 border-t-ds-accent rounded-full animate-spin" />
+                        <Brain className="h-6 w-6 text-ds-accent absolute top-1/2 start-1/2 -translate-x-1/2 -translate-y-1/2" />
                     </div>
-                    <p className="text-slate-500 font-medium">{t('training:quizzes.player.loading')}</p>
+                    <p className="text-ds-muted font-medium">{t('training:quizzes.player.loading')}</p>
                 </m.div>
             </div>
         )
     } else if (loadError || !quiz) {
         mainContent = (
             <div className="min-h-[50vh] flex items-center justify-center">
-                <Card className="max-w-xl border-red-200 bg-red-50 shadow-sm">
+                <Card className="max-w-xl border-ds-danger/30 bg-ds-danger-soft shadow-sm">
                     <CardContent className="space-y-4 p-6 text-center">
-                        <XCircle className="mx-auto h-10 w-10 text-red-600" />
+                        <XCircle className="mx-auto h-10 w-10 text-ds-danger" />
                         <div className="space-y-2">
-                            <h2 className="text-lg font-semibold text-red-700">
+                            <h2 className="text-lg font-semibold text-ds-danger">
                                 {t('training:quizzes.player.load_error')}
                             </h2>
-                            <p className="text-sm text-red-700/80">
+                            <p className="text-sm text-ds-danger/80">
                                 {t('quizConfigurationIssue', 'This quiz is not available to learners right now. Please contact an administrator to review the quiz configuration.')}
                             </p>
                         </div>
@@ -1350,14 +1350,14 @@ export function QuizComponentEnhanced({
     } else if (!quiz.questions || quiz.questions.length === 0 || !currentQuestion || !currentQuestion.question || !displayQuestionText) {
         mainContent = (
             <div className="min-h-[50vh] flex items-center justify-center">
-                <Card className="max-w-xl border-amber-200 bg-amber-50 shadow-sm">
+                <Card className="max-w-xl border-ds-warning/30 bg-ds-warning-soft shadow-sm">
                     <CardContent className="space-y-4 p-6 text-center">
-                        <AlertCircle className="mx-auto h-10 w-10 text-amber-600" />
+                        <AlertCircle className="mx-auto h-10 w-10 text-ds-warning" />
                         <div className="space-y-2">
-                            <h2 className="text-lg font-semibold text-amber-700">
+                            <h2 className="text-lg font-semibold text-ds-warning">
                                 {t('quizUnavailableTitle', 'Quiz unavailable')}
                             </h2>
-                            <p className="text-sm text-amber-700/80">
+                            <p className="text-sm text-ds-warning/80">
                                 {t('quizUnavailableDesc', 'This quiz contains unpublished, deleted, or incomplete questions. Ask an administrator to review the quiz before learners continue.')}
                             </p>
                         </div>
@@ -1407,14 +1407,14 @@ export function QuizComponentEnhanced({
                 animate={{ opacity: 1, y: 0 }}
                 className="flex flex-wrap items-center justify-between gap-4"
             >
-                <div className={cn("space-y-1", isRTL && "text-end")}>
-                    <p className="text-[10px] font-bold tracking-[0.2em] text-hotel-gold-dark uppercase">
+                <div className={cn("space-y-1")}>
+                    <p className="text-[11px] font-bold tracking-[0.2em] text-ds-accent-hover uppercase">
                         {t('training:quizzes.player.question_counter', {
                             current: currentQuestionIndex + 1,
                             total: quiz.questions?.length
                         })}
                     </p>
-                    <h1 className="text-xl md:text-2xl font-bold text-hotel-navy">{quiz.title}</h1>
+                    <h1 className="text-xl md:text-2xl font-bold text-ds-ink">{quiz.title}</h1>
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -1423,7 +1423,7 @@ export function QuizComponentEnhanced({
                         <m.div
                             initial={{ scale: 0.95, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
-                            className="flex items-center gap-2 px-3 py-2 bg-orange-500 text-white rounded-xl font-bold"
+                            className="flex items-center gap-2 px-3 py-2 bg-ds-warning text-white dark:text-ds-on-ink rounded-[8px] font-bold"
                         >
                             <Flame className="h-4 w-4" />
                             {streak}
@@ -1433,15 +1433,15 @@ export function QuizComponentEnhanced({
                     {/* Luxury Countdown Timer Badge */}
                     {timeLeft !== null && (
                         <div className={cn(
-                            "flex items-center gap-2 px-3.5 py-1.5 rounded-2xl border font-mono font-bold text-xs sm:text-sm shadow-sm transition-all",
+                            "flex items-center gap-2 px-3.5 py-1.5 rounded-[8px] border font-mono font-bold text-xs sm:text-sm shadow-sm transition-all",
                             timeLeft < 60
                                 ? 'border-destructive/40 text-destructive bg-destructive/10 animate-pulse'
-                                : 'border-amber-500/30 text-foreground bg-card',
-                            timeFrozen && "border-blue-500/40 text-blue-600 bg-blue-500/10"
+                                : 'border-ds-warning/30 text-foreground bg-card',
+                            timeFrozen && "border-ds-info/40 text-ds-info bg-ds-info/10"
                         )}>
-                            <Clock className={cn("h-4 w-4", timeLeft < 60 ? "text-destructive" : "text-amber-500")} />
+                            <Clock className={cn("h-4 w-4", timeLeft < 60 ? "text-destructive" : "text-ds-warning")} />
                             <span>{formatTime(timeLeft)}</span>
-                            {timeFrozen && <Badge variant="outline" className="text-[9px] px-1 py-0 border-blue-400 text-blue-600">FROZEN</Badge>}
+                            {timeFrozen && <Badge variant="outline" className="text-[11px] px-1 py-0 border-ds-info text-ds-info">FROZEN</Badge>}
                         </div>
                     )}
 
@@ -1473,7 +1473,7 @@ export function QuizComponentEnhanced({
                     <span>
                         Question <strong className="text-foreground">{currentQuestionIndex + 1}</strong> of {quiz.questions?.length || 1}
                     </span>
-                    <span className="font-bold text-amber-600 dark:text-amber-400">
+                    <span className="font-bold text-ds-warning">
                         {Math.round(((currentQuestionIndex + 1) / (quiz.questions?.length || 1)) * 100)}%
                     </span>
                 </div>
@@ -1494,9 +1494,9 @@ export function QuizComponentEnhanced({
                                 className={cn(
                                     "flex-1 min-w-[20px] max-w-[40px] h-2 rounded-full transition-all duration-300 relative before:absolute before:-inset-y-3 before:-inset-x-0.5 before:content-['']",
                                     isCurrent
-                                        ? "h-2.5 bg-amber-500 shadow-sm shadow-amber-500/40"
+                                        ? "h-2.5 bg-ds-warning shadow-sm"
                                         : isAnswered
-                                            ? "bg-emerald-500 hover:bg-emerald-600"
+                                            ? "bg-ds-success hover:bg-ds-success"
                                             : "bg-muted hover:bg-muted-foreground/30"
                                 )}
                                 title={`Question ${idx + 1}`}
@@ -1515,7 +1515,7 @@ export function QuizComponentEnhanced({
                             variant="outline"
                             size="sm"
                             onClick={() => activatePowerUp(powerUp.type)}
-                            className="gap-2 border-hotel-gold/30 hover:bg-hotel-gold/10"
+                            className="gap-2 border-ds-accent/30 hover:bg-ds-accent/10"
                             disabled={showFeedback}
                         >
                             {powerUp.icon}
@@ -1536,19 +1536,19 @@ export function QuizComponentEnhanced({
                         exit={{ opacity: 0, x: isRTL ? 30 : -30 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <Card className="border-none shadow-xl bg-white rounded-2xl overflow-hidden">
+                        <Card className="border-none shadow-xl bg-ds-surface rounded-[8px] overflow-hidden">
                             <CardContent className="p-6 md:p-10 space-y-6">
                                 {/* Question */}
-                                <div className={cn("space-y-4", isRTL && "text-end")}>
-                                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-hotel-navy text-white rounded-full text-[10px] font-bold tracking-widest uppercase">
+                                <div className={cn("space-y-4")}>
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-ds-ink text-ds-on-ink rounded-full text-[11px] font-bold tracking-widest uppercase">
                                         <HelpCircle className="h-3 w-3" />
                                         Question {currentQuestionIndex + 1}
                                     </div>
-                                    <h2 className="text-xl md:text-2xl font-bold text-hotel-navy leading-tight">
+                                    <h2 className="text-xl md:text-2xl font-bold text-ds-ink leading-tight">
                                         {displayQuestionText}
                                     </h2>
                                     {showBilingual && translationTarget && translatedCurrent?.text && (
-                                        <p className="text-sm text-slate-500">{currentQuestion.question?.question_text}</p>
+                                        <p className="text-sm text-ds-muted">{currentQuestion.question?.question_text}</p>
                                     )}
                                 </div>
 
@@ -1557,11 +1557,11 @@ export function QuizComponentEnhanced({
                                     <m.div
                                         initial={{ opacity: 0, height: 0 }}
                                         animate={{ opacity: 1, height: 'auto' }}
-                                        className="bg-amber-50 border border-amber-200 rounded-xl p-4"
+                                        className="bg-ds-warning-soft border border-ds-warning/30 rounded-[8px] p-4"
                                     >
                                         <div className="flex items-start gap-3">
-                                            <Lightbulb className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
-                                            <p className="text-sm text-amber-800">{displayExplanation}</p>
+                                            <Lightbulb className="h-5 w-5 text-ds-warning shrink-0 mt-0.5" />
+                                            <p className="text-sm text-ds-warning">{displayExplanation}</p>
                                         </div>
                                     </m.div>
                                 )}
@@ -1588,10 +1588,10 @@ export function QuizComponentEnhanced({
                                                             whileHover={{ scale: 1.01 }}
                                                             whileTap={{ scale: 0.99 }}
                                                             className={cn(
-                                                                "group flex items-center gap-4 border-2 p-4 rounded-2xl transition-all duration-200 cursor-pointer",
+                                                                "group flex items-center gap-4 border-2 p-4 rounded-[8px] transition-all duration-200 cursor-pointer",
                                                                 isSelected
-                                                                    ? 'bg-amber-500/[0.06] border-amber-500 ring-2 ring-amber-500/20 shadow-md'
-                                                                    : 'bg-card border-border/60 hover:border-amber-500/40 hover:bg-muted/30'
+                                                                    ? 'bg-ds-accent-soft/60 border-ds-accent ring-2 ring-ds-accent/20'
+                                                                    : 'bg-card border-border/60 hover:border-ds-border-strong hover:bg-muted/30'
                                                             )}
                                                             onClick={() => setAnswers({ ...answers, [currentQuestion.question_id]: opt.id })}
                                                             role="radio"
@@ -1606,7 +1606,7 @@ export function QuizComponentEnhanced({
                                                         >
                                                             <div className={cn(
                                                                 "h-6 w-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-all",
-                                                                isSelected ? "border-amber-500 bg-amber-500 text-slate-950 font-bold shadow-sm" : "border-muted-foreground/30 bg-transparent"
+                                                                isSelected ? "border-ds-ink bg-ds-ink text-ds-on-ink" : "border-muted-foreground/30 bg-transparent"
                                                             )}>
                                                                 {isSelected ? (
                                                                     <CheckCircle2 className="h-4 w-4" />
@@ -1617,7 +1617,6 @@ export function QuizComponentEnhanced({
                                                             <span className={cn(
                                                                 "flex-1 text-sm sm:text-base font-sans transition-colors",
                                                                 isSelected ? "text-foreground font-bold" : "text-muted-foreground group-hover:text-foreground",
-                                                                isRTL && "text-end"
                                                             )}>
                                                                 {translatedOption}
                                                             </span>
@@ -1626,7 +1625,7 @@ export function QuizComponentEnhanced({
                                                 })}
                                             </RadioGroup>
                                         ) : (
-                                            <p className="rounded-xl border-2 border-dashed border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                                            <p className="rounded-[8px] border-2 border-dashed border-ds-danger/30 bg-ds-danger-soft p-4 text-sm text-ds-danger">
                                                 {t('training:quizzes.player.no_options')}
                                             </p>
                                         )
@@ -1645,10 +1644,10 @@ export function QuizComponentEnhanced({
                                                             whileHover={{ scale: 1.01 }}
                                                             whileTap={{ scale: 0.99 }}
                                                             className={cn(
-                                                                "group flex items-center gap-4 border-2 p-4 rounded-2xl transition-all duration-200 cursor-pointer",
+                                                                "group flex items-center gap-4 border-2 p-4 rounded-[8px] transition-all duration-200 cursor-pointer",
                                                                 isSelected
-                                                                    ? 'bg-amber-500/[0.06] border-amber-500 ring-2 ring-amber-500/20 shadow-md'
-                                                                    : 'bg-card border-border/60 hover:border-amber-500/40 hover:bg-muted/30'
+                                                                    ? 'bg-ds-accent-soft/60 border-ds-accent ring-2 ring-ds-accent/20'
+                                                                    : 'bg-card border-border/60 hover:border-ds-border-strong hover:bg-muted/30'
                                                             )}
                                                             onClick={() => {
                                                                 const next = isSelected
@@ -1671,14 +1670,13 @@ export function QuizComponentEnhanced({
                                                         >
                                                             <div className={cn(
                                                                 "h-6 w-6 rounded-lg border-2 flex items-center justify-center shrink-0 transition-all",
-                                                                isSelected ? "border-amber-500 bg-amber-500 text-slate-950 font-bold shadow-sm" : "border-muted-foreground/30 bg-transparent"
+                                                                isSelected ? "border-ds-ink bg-ds-ink text-ds-on-ink" : "border-muted-foreground/30 bg-transparent"
                                                             )}>
                                                                 {isSelected && <CheckCircle2 className="h-4 w-4" />}
                                                             </div>
                                                             <span className={cn(
                                                                 "flex-1 text-sm sm:text-base font-sans transition-colors",
                                                                 isSelected ? "text-foreground font-bold" : "text-muted-foreground group-hover:text-foreground",
-                                                                isRTL && "text-end"
                                                             )}>
                                                                 {translatedOption}
                                                             </span>
@@ -1687,7 +1685,7 @@ export function QuizComponentEnhanced({
                                                 })}
                                             </div>
                                         ) : (
-                                            <p className="rounded-xl border-2 border-dashed border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                                            <p className="rounded-[8px] border-2 border-dashed border-ds-danger/30 bg-ds-danger-soft p-4 text-sm text-ds-danger">
                                                 {t('training:quizzes.player.no_options')}
                                             </p>
                                         )
@@ -1704,22 +1702,22 @@ export function QuizComponentEnhanced({
                                                         whileTap={{ scale: 0.98 }}
                                                         onClick={() => setAnswers({ ...answers, [currentQuestion.question_id]: option })}
                                                         className={cn(
-                                                            "flex flex-col items-center justify-center p-6 rounded-2xl border-2 transition-all gap-3 cursor-pointer shadow-sm",
+                                                            "flex flex-col items-center justify-center p-6 rounded-[8px] border-2 transition-all gap-3 cursor-pointer shadow-sm",
                                                             isSelected
-                                                                ? 'bg-amber-500/[0.08] border-amber-500 ring-2 ring-amber-500/20 text-foreground font-bold'
-                                                                : 'bg-card border-border/60 text-muted-foreground hover:border-amber-500/40 hover:bg-muted/30'
+                                                                ? 'bg-ds-warning/[0.08] border-ds-warning ring-2 ring-ds-warning/20 text-foreground font-bold'
+                                                                : 'bg-card border-border/60 text-muted-foreground hover:border-ds-border-strong hover:bg-muted/30'
                                                         )}
                                                     >
                                                         <div className={cn(
-                                                            "h-12 w-12 rounded-2xl flex items-center justify-center border-2 transition-all",
+                                                            "h-12 w-12 rounded-[8px] flex items-center justify-center border-2 transition-all",
                                                             isSelected
-                                                                ? "border-amber-500 bg-amber-500 text-slate-950 shadow-md"
+                                                                ? "border-ds-ink bg-ds-ink text-ds-on-ink"
                                                                 : "border-border bg-background"
                                                         )}>
                                                             {option === 'true' ? <CheckCircle2 className="h-6 w-6" /> : <XCircle className="h-6 w-6" />}
                                                         </div>
                                                         <span className="text-base font-bold uppercase tracking-wider font-mono">
-                                                            {option === 'true' ? (isRTL ? 'صحيح' : 'True') : (isRTL ? 'خطأ' : 'False')}
+                                                            {option === 'true' ? (t('screens.QuizComponentEnhanced.true', 'True')) : (t('screens.QuizComponentEnhanced.false', 'False'))}
                                                         </span>
                                                     </m.button>
                                                 )
@@ -1732,7 +1730,7 @@ export function QuizComponentEnhanced({
                                             value={typeof answers[currentQuestion.question_id] === 'string' ? answers[currentQuestion.question_id] as string : ''}
                                             onChange={(e) => setAnswers({ ...answers, [currentQuestion.question_id]: e.target.value })}
                                             placeholder="Type your answer..."
-                                            className="text-lg p-6 h-auto rounded-xl border-2"
+                                            className="text-lg p-6 h-auto rounded-[8px] border-2"
                                         />
                                     )}
 
@@ -1756,10 +1754,10 @@ export function QuizComponentEnhanced({
                                                             whileHover={{ scale: 1.01 }}
                                                             whileTap={{ scale: 0.99 }}
                                                             className={cn(
-                                                                "group flex items-center gap-4 border-2 p-4 rounded-2xl transition-all duration-200 cursor-pointer",
+                                                                "group flex items-center gap-4 border-2 p-4 rounded-[8px] transition-all duration-200 cursor-pointer",
                                                                 isSelected
-                                                                    ? 'bg-amber-500/[0.06] border-amber-500 ring-2 ring-amber-500/20 shadow-md'
-                                                                    : 'bg-card border-border/60 hover:border-amber-500/40 hover:bg-muted/30'
+                                                                    ? 'bg-ds-accent-soft/60 border-ds-accent ring-2 ring-ds-accent/20'
+                                                                    : 'bg-card border-border/60 hover:border-ds-border-strong hover:bg-muted/30'
                                                             )}
                                                             onClick={() => setAnswers({ ...answers, [currentQuestion.question_id]: opt.id })}
                                                             role="radio"
@@ -1774,7 +1772,7 @@ export function QuizComponentEnhanced({
                                                         >
                                                             <div className={cn(
                                                                 "h-6 w-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-all",
-                                                                isSelected ? "border-amber-500 bg-amber-500 text-slate-950 font-bold shadow-sm" : "border-muted-foreground/30 bg-transparent"
+                                                                isSelected ? "border-ds-ink bg-ds-ink text-ds-on-ink" : "border-muted-foreground/30 bg-transparent"
                                                             )}>
                                                                 {isSelected ? (
                                                                     <CheckCircle2 className="h-4 w-4" />
@@ -1785,7 +1783,6 @@ export function QuizComponentEnhanced({
                                                             <span className={cn(
                                                                 "flex-1 text-sm sm:text-base font-sans transition-colors",
                                                                 isSelected ? "text-foreground font-bold" : "text-muted-foreground group-hover:text-foreground",
-                                                                isRTL && "text-end"
                                                             )}>
                                                                 {translatedOption}
                                                             </span>
@@ -1798,7 +1795,7 @@ export function QuizComponentEnhanced({
                                                 value={typeof answers[currentQuestion.question_id] === 'string' ? answers[currentQuestion.question_id] as string : ''}
                                                 onChange={(e) => setAnswers({ ...answers, [currentQuestion.question_id]: e.target.value })}
                                                 placeholder="Type your answer..."
-                                                className="text-lg p-6 h-auto rounded-xl border-2"
+                                                className="text-lg p-6 h-auto rounded-[8px] border-2"
                                             />
                                         )
                                     )}
@@ -1820,19 +1817,19 @@ export function QuizComponentEnhanced({
 
                                             return (
                                                 <div className="space-y-2">
-                                                    <p className="text-sm text-slate-500">{t('training:quizzes.player.ordering_hint', 'Arrange these in the correct order:')}</p>
+                                                    <p className="text-sm text-ds-muted">{t('training:quizzes.player.ordering_hint', 'Arrange these in the correct order:')}</p>
                                                     {currentOrder.map((optionId, index) => {
                                                         const opt = optionsById.get(optionId)
                                                         if (!opt) return null
                                                         return (
                                                             <div
                                                                 key={optionId}
-                                                                className="flex items-center gap-3 border-2 border-slate-100 bg-white p-4 rounded-xl"
+                                                                className="flex items-center gap-3 border-2 border-ds-border bg-ds-surface p-4 rounded-[8px]"
                                                             >
-                                                                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-hotel-navy/5 font-bold text-hotel-navy">
+                                                                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ds-ink/5 font-bold text-ds-ink">
                                                                     {index + 1}
                                                                 </span>
-                                                                <span className={cn("flex-1 text-base text-slate-700", isRTL && "text-end")}>
+                                                                <span className={cn("flex-1 text-base text-ds-ink-secondary")}>
                                                                     {displayOptionText(opt.id, opt.option_text)}
                                                                 </span>
                                                                 <div className="flex flex-col gap-1">
@@ -1865,7 +1862,7 @@ export function QuizComponentEnhanced({
                                                 </div>
                                             )
                                         })() : (
-                                            <p className="rounded-xl border-2 border-dashed border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                                            <p className="rounded-[8px] border-2 border-dashed border-ds-danger/30 bg-ds-danger-soft p-4 text-sm text-ds-danger">
                                                 {t('training:quizzes.player.no_options')}
                                             </p>
                                         )
@@ -1888,13 +1885,13 @@ export function QuizComponentEnhanced({
                                                     {(currentQuestion.question.options || []).filter(o => !!o.match_value).map((opt) => (
                                                         <div
                                                             key={opt.id}
-                                                            className="flex flex-col sm:flex-row sm:items-center gap-3 border-2 border-slate-100 bg-white p-4 rounded-xl"
+                                                            className="flex flex-col sm:flex-row sm:items-center gap-3 border-2 border-ds-border bg-ds-surface p-4 rounded-[8px]"
                                                         >
-                                                            <span className={cn("flex-1 text-base font-medium text-slate-700", isRTL && "text-end")}>
+                                                            <span className={cn("flex-1 text-base font-medium text-ds-ink-secondary")}>
                                                                 {displayOptionText(opt.id, opt.option_text)}
                                                             </span>
                                                             <select
-                                                                className="flex-1 rounded-lg border-2 border-slate-200 bg-white p-2.5 text-sm"
+                                                                className="flex-1 rounded-lg border-2 border-ds-border bg-ds-surface p-2.5 text-sm"
                                                                 value={mapping[opt.id] || ''}
                                                                 onChange={(e) => setPair(opt.id, e.target.value)}
                                                             >
@@ -1910,7 +1907,7 @@ export function QuizComponentEnhanced({
                                                 </div>
                                             )
                                         })() : (
-                                            <p className="rounded-xl border-2 border-dashed border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                                            <p className="rounded-[8px] border-2 border-dashed border-ds-danger/30 bg-ds-danger-soft p-4 text-sm text-ds-danger">
                                                 {t('training:quizzes.player.no_options')}
                                             </p>
                                         )
@@ -1925,7 +1922,7 @@ export function QuizComponentEnhanced({
             {/* Navigation — hidden when embedded (the shell action bar owns it) */}
             {!isEmbedded && (
                 <div
-                    className="sticky bottom-0 z-10 -mx-4 flex items-center justify-between gap-3 border-t border-border/60 bg-card/95 px-4 py-3 backdrop-blur-xl pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:-mx-6 sm:px-6"
+                    className="sticky bottom-0 z-10 -mx-4 flex items-center justify-between gap-3 border-t border-border/60 bg-card/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:-mx-6 sm:px-6"
                 >
                     <Button
                         variant="ghost"
@@ -1939,7 +1936,7 @@ export function QuizComponentEnhanced({
                     <Button
                         onClick={isLastQuestion ? requestFinalSubmit : () => { void handleAnswerSubmit() }}
                         disabled={!hasAnswer(currentQuestion?.question_id) || showFeedback || attemptLimitReached}
-                        className="h-11 sm:h-12 min-w-[7rem] sm:min-w-[10rem] bg-hotel-navy px-4 sm:px-8 font-bold text-white hover:bg-hotel-navy-dark"
+                        className="h-11 sm:h-12 min-w-[7rem] sm:min-w-[10rem] bg-ds-ink px-4 sm:px-8 font-bold text-ds-on-ink hover:bg-ds-ink"
                     >
                         {isLastQuestion ? t('submitQuiz', 'Submit quiz') : t('training:quizzes.player.submit_answer', 'Submit answer')}
                         <CheckCircle2 className="ms-2 h-5 w-5" />
@@ -1948,7 +1945,7 @@ export function QuizComponentEnhanced({
             )}
 
             {attemptLimitReached && (
-                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+                <div className="rounded-[8px] border border-ds-danger/30 bg-ds-danger-soft px-4 py-3 text-sm font-medium text-ds-danger">
                     {t('training:quizzes.player.limit_reached_desc', { count: quiz.max_attempts || 0 })}
                 </div>
             )}
@@ -2032,17 +2029,17 @@ function QuizResultsScreen({
         >
             {/* Main Result Card */}
             <Card className={cn(
-                "text-center p-8 sm:p-10 border-2 rounded-3xl shadow-2xl overflow-hidden relative backdrop-blur-xl",
+                "text-center p-8 sm:p-10 border-2 rounded-[8px] shadow-2xl overflow-hidden relative",
                 result.passed
-                    ? "border-emerald-500/40 bg-gradient-to-br from-card via-card/95 to-emerald-500/[0.06]"
+                    ? "border-ds-success/40 bg-gradient-to-br from-card via-card/95 to-ds-success/[0.06]"
                     : "border-destructive/40 bg-gradient-to-br from-card via-card/95 to-destructive/[0.06]"
             )}>
                 {/* Decorative top accent bar */}
                 <div className={cn(
                     "absolute top-0 start-0 end-0 h-1.5",
                     result.passed
-                        ? "bg-gradient-to-r from-emerald-500 via-amber-400 to-emerald-600"
-                        : "bg-gradient-to-r from-destructive via-orange-500 to-destructive"
+                        ? "bg-ds-success"
+                        : "bg-destructive"
                 )} />
 
                 <CardContent className="space-y-6 pt-2">
@@ -2052,9 +2049,9 @@ function QuizResultsScreen({
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ type: "spring", stiffness: 200, damping: 15 }}
                         className={cn(
-                            "w-24 h-24 rounded-3xl flex items-center justify-center mx-auto shadow-inner border-2",
+                            "w-24 h-24 rounded-[8px] flex items-center justify-center mx-auto border-2",
                             result.passed
-                                ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-600 dark:text-emerald-400"
+                                ? "bg-ds-success/15 border-ds-success/30 text-ds-success"
                                 : "bg-destructive/15 border-destructive/30 text-destructive"
                         )}>
                         {result.passed ? (
@@ -2069,7 +2066,7 @@ function QuizResultsScreen({
                         <Badge variant="outline" className={cn(
                             "text-xs px-3 py-1 font-semibold uppercase tracking-wider",
                             result.passed
-                                ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400"
+                                ? "bg-ds-success/10 border-ds-success/30 text-ds-success"
                                 : "bg-destructive/10 border-destructive/30 text-destructive"
                         )}>
                             {result.passed ? 'Assessment Passed' : 'Assessment Incomplete'}
@@ -2107,25 +2104,25 @@ function QuizResultsScreen({
                     {/* Stats Grid */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
                         <StatCard
-                            icon={<CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />}
+                            icon={<CheckCircle2 className="h-5 w-5 text-ds-success" />}
                             value={result.correctCount}
                             label="Correct"
                             color="emerald"
                         />
                         <StatCard
-                            icon={<TrendingUp className="h-5 w-5 text-amber-600 dark:text-amber-400" />}
+                            icon={<TrendingUp className="h-5 w-5 text-ds-warning" />}
                             value={`${result.score}%`}
                             label="Final Score"
                             color="amber"
                         />
                         <StatCard
-                            icon={<Flame className="h-5 w-5 text-orange-600 dark:text-orange-400" />}
+                            icon={<Flame className="h-5 w-5 text-ds-warning" />}
                             value={result.streakAchieved}
                             label="Best Streak"
                             color="orange"
                         />
                         <StatCard
-                            icon={<Clock className="h-5 w-5 text-blue-600 dark:text-blue-400" />}
+                            icon={<Clock className="h-5 w-5 text-ds-info" />}
                             value={formatTime(result.timeSpentSeconds)}
                             label={t("common:time", "Time")}
                             color="blue"
@@ -2138,7 +2135,7 @@ function QuizResultsScreen({
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 }}
-                            className="inline-flex items-center justify-center gap-2 bg-orange-500/10 border border-orange-500/20 text-orange-600 dark:text-orange-400 px-4 py-1.5 rounded-full text-xs font-bold"
+                            className="inline-flex items-center justify-center gap-2 bg-ds-warning/10 border border-ds-warning/20 text-ds-warning px-4 py-1.5 rounded-full text-xs font-bold"
                         >
                             <Sparkles className="h-4 w-4" />
                             <span>{result.streakAchieved} Consecutive Answers Streak!</span>
@@ -2151,7 +2148,7 @@ function QuizResultsScreen({
                             <Button
                                 onClick={onExit}
                                 variant="outline"
-                                className="px-6 h-11 rounded-xl text-xs sm:text-sm font-semibold hover:bg-muted/60"
+                                className="px-6 h-11 rounded-[8px] text-xs sm:text-sm font-semibold hover:bg-muted/60"
                             >
                                 {t('training:quizzes.player.back_to_learning', 'Back to Learning Dashboard')}
                             </Button>
@@ -2159,7 +2156,7 @@ function QuizResultsScreen({
                         {!result.passed && canRetry && (
                             <Button
                                 onClick={onRetry}
-                                className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-6 h-11 rounded-xl text-xs sm:text-sm shadow-md transition-all active:scale-95"
+                                className="bg-ds-ink hover:bg-ds-ink/90 text-ds-on-ink font-bold px-6 h-11 rounded-[8px] text-xs sm:text-sm transition-all active:scale-95"
                             >
                                 {t('training:quizzes.player.retry_assessment', 'Retry quiz')}
                             </Button>
@@ -2167,7 +2164,7 @@ function QuizResultsScreen({
                         {result.passed && onContinue && (
                             <Button
                                 onClick={onContinue}
-                                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 h-11 rounded-xl text-xs sm:text-sm shadow-md transition-all active:scale-95 gap-2"
+                                className="bg-ds-success hover:bg-ds-success text-white dark:text-ds-on-ink font-bold px-8 h-11 rounded-[8px] text-xs sm:text-sm transition-all active:scale-95 gap-2"
                             >
                                 {t('continueTraining', 'Continue training')}
                                 <ArrowRight className="h-4 w-4" />
@@ -2176,14 +2173,14 @@ function QuizResultsScreen({
                         {result.passed && !onContinue && onExit && (
                             <Button
                                 onClick={onExit}
-                                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 h-11 rounded-xl text-xs sm:text-sm shadow-md transition-all active:scale-95 gap-2"
+                                className="bg-ds-success hover:bg-ds-success text-white dark:text-ds-on-ink font-bold px-8 h-11 rounded-[8px] text-xs sm:text-sm transition-all active:scale-95 gap-2"
                             >
                                 <Award className="h-4 w-4" />
                                 {t('claimCredential', 'Claim & view credential')}
                             </Button>
                         )}
                         {!result.passed && !canRetry && (
-                            <div className="rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-2 text-xs font-semibold text-destructive">
+                            <div className="rounded-[8px] border border-destructive/30 bg-destructive/10 px-4 py-2 text-xs font-semibold text-destructive">
                                 {t('training:quizzes.player.limit_reached_title', 'Maximum attempt limit reached')}
                             </div>
                         )}
@@ -2192,7 +2189,7 @@ function QuizResultsScreen({
             </Card>
 
             {/* Review Answers Card */}
-            <Card className="rounded-3xl border border-border/60 bg-card/80 backdrop-blur-md shadow-sm">
+            <Card className="rounded-[8px] border border-border/60 bg-card/80 shadow-sm">
                 <CardContent className="p-6 sm:p-8 space-y-4">
                     <div className="flex items-center justify-between border-b border-border/40 pb-4">
                         <h3 className="font-display font-bold text-lg text-foreground">
@@ -2211,17 +2208,17 @@ function QuizResultsScreen({
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: index * 0.05 }}
                                 className={cn(
-                                    "p-4 sm:p-5 rounded-2xl border-2 transition-all space-y-2",
+                                    "p-4 sm:p-5 rounded-[8px] border-2 transition-all space-y-2",
                                     item.correct
-                                        ? "bg-emerald-500/[0.04] border-emerald-500/20"
+                                        ? "bg-ds-success/[0.04] border-ds-success/20"
                                         : "bg-destructive/[0.04] border-destructive/20"
                                 )}
                             >
                                 <div className="flex items-start gap-3">
                                     <div className={cn(
-                                        "w-7 h-7 rounded-xl flex items-center justify-center shrink-0 text-xs font-mono font-bold mt-0.5",
+                                        "w-7 h-7 rounded-[8px] flex items-center justify-center shrink-0 text-xs font-mono font-bold mt-0.5",
                                         item.correct
-                                            ? "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300"
+                                            ? "bg-ds-success/20 text-ds-success"
                                             : "bg-destructive/20 text-destructive"
                                     )}>
                                         {index + 1}
@@ -2231,25 +2228,25 @@ function QuizResultsScreen({
                                         <div className="flex flex-wrap items-center gap-3 text-xs font-sans">
                                             <span className={cn(
                                                 "font-medium",
-                                                item.correct ? "text-emerald-600 dark:text-emerald-400" : "text-destructive"
+                                                item.correct ? "text-ds-success" : "text-destructive"
                                             )}>
                                                 Your response: <strong>{item.selectedAnswer}</strong>
                                             </span>
                                             {!item.correct && (
-                                                <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                                                <span className="text-ds-success font-medium">
                                                     Correct answer: <strong>{item.correctAnswer}</strong>
                                                 </span>
                                             )}
                                         </div>
                                         {item.explanation && (
-                                            <div className="text-xs text-muted-foreground p-3 rounded-xl bg-background/60 border border-border/40 font-sans mt-2">
+                                            <div className="text-xs text-muted-foreground p-3 rounded-[8px] bg-background/60 border border-border/40 font-sans mt-2">
                                                 <span className="font-semibold text-foreground block mb-0.5">SOP Guideline & Rationale:</span>
                                                 {item.explanation}
                                             </div>
                                         )}
                                     </div>
                                     {item.correct ? (
-                                        <CheckCircle2 className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+                                        <CheckCircle2 className="h-5 w-5 text-ds-success shrink-0 mt-0.5" />
                                     ) : (
                                         <XCircle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
                                     )}
@@ -2265,18 +2262,18 @@ function QuizResultsScreen({
 
 function StatCard({ icon, value, label, color }: { icon: React.ReactNode, value: string | number, label: string, color: string }) {
     const colorClasses: Record<string, string> = {
-        emerald: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400',
-        amber: 'bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400',
-        blue: 'bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400',
-        orange: 'bg-orange-500/10 border-orange-500/20 text-orange-600 dark:text-orange-400',
-        purple: 'bg-purple-500/10 border-purple-500/20 text-purple-600 dark:text-purple-400',
+        emerald: 'bg-ds-success/10 border-ds-success/20 text-ds-success',
+        amber: 'bg-ds-warning/10 border-ds-warning/20 text-ds-warning',
+        blue: 'bg-ds-info/10 border-ds-info/20 text-ds-info',
+        orange: 'bg-ds-warning/10 border-ds-warning/20 text-ds-warning',
+        purple: 'bg-ds-accent/10 border-ds-accent/20 text-ds-accent',
     }
 
     return (
-        <div className={cn("p-3.5 sm:p-4 rounded-2xl border text-center transition-all", colorClasses[color] || colorClasses.amber)}>
+        <div className={cn("p-3.5 sm:p-4 rounded-[8px] border text-center transition-all", colorClasses[color] || colorClasses.amber)}>
             <div className="flex justify-center mb-1">{icon}</div>
             <div className="font-mono text-xl sm:text-2xl font-bold text-foreground">{value}</div>
-            <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mt-0.5">{label}</div>
+            <div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mt-0.5">{label}</div>
         </div>
     )
 }

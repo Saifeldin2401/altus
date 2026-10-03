@@ -25,7 +25,7 @@ export function StreakWeek({ week }: { week: LearningStats['week'] }) {
               className={cn(
                 'flex h-8 w-8 items-center justify-center rounded-full border text-[11px] font-semibold transition-colors',
                 d.active
-                  ? 'border-transparent bg-ds-warning text-white'
+                  ? 'border-transparent bg-ds-warning text-white dark:text-ds-on-ink'
                   : today
                     ? 'border-dashed border-ds-warning/70 text-ds-warning'
                     : 'border-ds-border bg-ds-surface-subtle text-ds-muted',
