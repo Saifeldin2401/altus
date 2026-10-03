@@ -1,8 +1,9 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import {
   buildCanonicalUrl,
   canonicalizeAppUrl,
+  clearLegacyServiceWorkers,
   hasAuthRecoveryParams,
   isAuthSensitivePathname,
   normalizePathname,
@@ -43,5 +44,52 @@ describe('runtimeRecovery', () => {
   it('builds canonical URLs with the preserved route context', () => {
     expect(buildCanonicalUrl('/reset-password', '?token_hash=abc&type=recovery', '#step=1'))
       .toBe('https://phg-connect.com/reset-password?token_hash=abc&type=recovery#step=1')
+  })
+})
+
+describe('clearLegacyServiceWorkers', () => {
+  const registration = (scriptURL: string | null) => ({
+    active: scriptURL ? { scriptURL } : null,
+    waiting: null,
+    installing: null,
+    unregister: vi.fn().mockResolvedValue(true),
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    Reflect.deleteProperty(navigator, 'serviceWorker')
+  })
+
+  it('keeps the app service worker and removes only legacy ones', async () => {
+    const app = registration('https://phg-connect.com/sw.js')
+    const legacy = registration('https://phg-connect.com/registerSW.js')
+    Object.defineProperty(navigator, 'serviceWorker', {
+      configurable: true,
+      value: { getRegistrations: vi.fn().mockResolvedValue([app, legacy]) },
+    })
+    const cacheDelete = vi.fn().mockResolvedValue(true)
+    vi.stubGlobal('caches', {
+      keys: vi.fn().mockResolvedValue(['altus-v1', 'workbox-precache-v2', 'altus-intranet-old']),
+      delete: cacheDelete,
+    })
+
+    await expect(clearLegacyServiceWorkers()).resolves.toBe(true)
+
+    expect(app.unregister).not.toHaveBeenCalled()
+    expect(legacy.unregister).toHaveBeenCalledOnce()
+    expect(cacheDelete).not.toHaveBeenCalledWith('altus-v1')
+    expect(cacheDelete).toHaveBeenCalledWith('workbox-precache-v2')
+    expect(cacheDelete).toHaveBeenCalledWith('altus-intranet-old')
+  })
+
+  it('does nothing when only the app service worker is registered', async () => {
+    const app = registration('https://phg-connect.com/sw.js')
+    Object.defineProperty(navigator, 'serviceWorker', {
+      configurable: true,
+      value: { getRegistrations: vi.fn().mockResolvedValue([app]) },
+    })
+
+    await expect(clearLegacyServiceWorkers()).resolves.toBe(false)
+    expect(app.unregister).not.toHaveBeenCalled()
   })
 })

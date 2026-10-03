@@ -22,7 +22,6 @@ import { usePasswordStrength } from '@/hooks/usePasswordStrength';
 import { cn } from '@/lib/utils';
 import { showErrorToast } from '@/lib/toastHelpers';
 import { useAuth } from '@/hooks/useAuth';
-import { getRemainingAttempts } from '@/lib/authSecurityService';
 import { safeLocalStorage, safeSessionStorage } from '@/lib/storage';
 import { REMEMBER_ME_KEY } from '@/hooks/useInactivityTimeout';
 
@@ -73,7 +72,6 @@ function LoginViewComponent({ isRTL = false, onForgotPassword, onUnlockAccount }
 
   const [capsLockOn, setCapsLockOn] = useState(false);
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  const [remainingAttempts, setRemainingAttempts] = useState<number | null>(null);
   const [loginSuccess, setLoginSuccess] = useState(false);
 
   const passwordStrength = usePasswordStrength(password);
@@ -113,16 +111,6 @@ function LoginViewComponent({ isRTL = false, onForgotPassword, onUnlockAccount }
     }
   }, [isNotRegistered, emailParam, t]);
 
-  // Check remaining attempts on mount and email change
-  useEffect(() => {
-    if (email) {
-      void (async () => {
-        const remaining = await getRemainingAttempts(email);
-        setRemainingAttempts(remaining);
-      })();
-    }
-  }, [email]);
-
   // Detect Caps Lock
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -160,13 +148,6 @@ function LoginViewComponent({ isRTL = false, onForgotPassword, onUnlockAccount }
       setEmail(value);
       validateEmail(value);
       if (error) setError(null);
-
-      if (value) {
-        void (async () => {
-          const remaining = await getRemainingAttempts(value);
-          setRemainingAttempts(remaining);
-        })();
-      }
     },
     [error, validateEmail]
   );
@@ -195,8 +176,6 @@ function LoginViewComponent({ isRTL = false, onForgotPassword, onUnlockAccount }
           if (errorMessage === 'Invalid login credentials') {
             errorMessage = t('errors.invalid_credentials');
             errType = 'auth';
-            const remaining = await getRemainingAttempts(email);
-            setRemainingAttempts(remaining);
           } else if (
             errorMessage?.toLowerCase().includes('rate') ||
             errorMessage?.toLowerCase().includes('too many')
@@ -397,27 +376,6 @@ function LoginViewComponent({ isRTL = false, onForgotPassword, onUnlockAccount }
                 <AlertDescription className="text-xs font-medium text-ds-ink">
                   {t('session_timeout.expired_message', {
                     defaultValue: 'Your session expired due to inactivity. Please sign in again to continue.'
-                  })}
-                </AlertDescription>
-              </Alert>
-            </m.div>
-          )}
-        </AnimatePresence>
-
-        {/* Remaining Attempts Warning */}
-        <AnimatePresence>
-          {remainingAttempts !== null && remainingAttempts <= 3 && remainingAttempts > 0 && (
-            <m.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-            >
-              <Alert className="bg-ds-warning-soft/60 border-ds-warning/30 text-ds-ink rounded-lg p-3">
-                <AlertTriangle className="h-4 w-4 text-ds-warning shrink-0" />
-                <AlertDescription className="text-xs text-ds-ink-secondary">
-                  {t('security.remaining_attempts', {
-                    count: remainingAttempts,
-                    defaultValue: `${remainingAttempts} login attempt${remainingAttempts === 1 ? '' : 's'} remaining before temporary lockout.`,
                   })}
                 </AlertDescription>
               </Alert>

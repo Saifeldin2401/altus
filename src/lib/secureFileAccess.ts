@@ -8,6 +8,12 @@
 import { supabase } from '@/lib/supabase'
 import { sanitizeUUID } from '@/lib/utils'
 
+/**
+ * Buckets that are public on purpose: editor embeds and organization logos are
+ * stored as public URLs (the signed-out certificate page shows logos too).
+ */
+const PUBLIC_MEDIA_BUCKETS = new Set(['content-media', 'media', 'training-content'])
+
 type RpcErrorDetails = {
   code?: string
   message?: string
@@ -277,6 +283,14 @@ export async function resolveStorageUrl(
       } catch {
         // Continue to next bucket
       }
+    }
+
+    // Storage policies only let members of the owning organization sign or
+    // download through the API. Files in the public media buckets still load by
+    // their public URL, so fall back to it for the bucket the caller named.
+    if (fallbackBucket && PUBLIC_MEDIA_BUCKETS.has(fallbackBucket)) {
+      // eslint-disable-next-line no-restricted-properties -- public bucket by design (see PUBLIC_MEDIA_BUCKETS)
+      return supabase.storage.from(fallbackBucket).getPublicUrl(trimmed).data.publicUrl
     }
 
     return null

@@ -123,6 +123,44 @@ export function buildCanonicalUrl(
   return `${CANONICAL_APP_URL}${pathname}${search}${hash}`
 }
 
+/** The app's own service worker (push notifications, offline cache). */
+export const APP_SERVICE_WORKER_PATH = '/sw.js'
+
+/** Cache names used by retired builds. The app's own cache (altus-v*) is not one. */
+const LEGACY_CACHE_PREFIXES = ['prime-hotels-', 'phg-intranet-', 'altus-hotels-', 'altus-intranet-', 'workbox-']
+
+/**
+ * Removes service workers left behind by the retired PWA build, and their
+ * caches, while keeping the app's own /sw.js. Unregistering /sw.js would destroy
+ * every push subscription tied to it, and /sw.js already prunes caches other
+ * than its own when it activates.
+ */
+export async function clearLegacyServiceWorkers(): Promise<boolean> {
+  if (!('serviceWorker' in navigator)) return false
+
+  const registrations = await navigator.serviceWorker.getRegistrations()
+  const legacy = registrations.filter((registration) => {
+    const worker = registration.active || registration.waiting || registration.installing
+    if (!worker) return true
+    try {
+      return new URL(worker.scriptURL).pathname !== APP_SERVICE_WORKER_PATH
+    } catch {
+      return true
+    }
+  })
+  if (legacy.length === 0) return false
+
+  await Promise.allSettled(legacy.map((registration) => registration.unregister()))
+
+  if ('caches' in window) {
+    const cacheKeys = await caches.keys()
+    const staleCacheKeys = cacheKeys.filter((key) => LEGACY_CACHE_PREFIXES.some((prefix) => key.startsWith(prefix)))
+    await Promise.allSettled(staleCacheKeys.map((key) => caches.delete(key)))
+  }
+
+  return true
+}
+
 export async function clearAltusServiceWorkersAndCaches(): Promise<boolean> {
   let hadArtifacts = false
 

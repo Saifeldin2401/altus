@@ -20,13 +20,11 @@ import { recordAuthEvent } from '@/lib/authMonitor'
 import { queryClient } from '@/lib/queryClient'
 import { SecurityMiddleware, rateLimitConfig } from '@/lib/security-middleware'
 import {
-  getAccountLockoutStatus,
-  recordLoginAttempt,
+  recordSuccessfulLogin,
   initializeSessionSecurity,
   checkPasswordBreach,
   checkSecurityRequirements,
   logSecurityEvent,
-  getRemainingAttempts,
 } from '@/lib/authSecurityService'
 import { AuthIdentityContext } from './AuthIdentityContext'
 import { AuthSecurityContext } from './AuthSecurityContext'
@@ -95,18 +93,6 @@ export function AuthActionsProvider({ children }: { children: ReactNode }) {
       return { error: new Error('Too many sign-in attempts. Please try again later.') }
     }
 
-    const lockoutStatus = await getAccountLockoutStatus(normalizedEmail)
-    if (lockoutStatus.isLocked && lockoutStatus.lockedUntil) {
-      const remainingMinutes = Math.max(
-        1,
-        Math.ceil((lockoutStatus.lockedUntil.getTime() - Date.now()) / 60000),
-      )
-
-      return {
-        error: new Error(`Account temporarily locked. Please try again in ${remainingMinutes} minutes.`),
-      }
-    }
-
     // CAPTCHA check removed as requested
 
 
@@ -130,27 +116,15 @@ export function AuthActionsProvider({ children }: { children: ReactNode }) {
       })
 
       if (error) {
-        // Record failed attempt
-        await recordLoginAttempt(normalizedEmail, false)
+        // Throttling and lockouts are enforced by Supabase Auth, not here.
         identityContext?.setLoading(false)
         userDataContext?.setRolesLoading(false)
-
-        // Check for specific error types
-        if (error.message?.includes('Invalid login credentials')) {
-          const remaining = await getRemainingAttempts(normalizedEmail)
-          if (remaining <= 2) {
-            return {
-              error: new Error(`Invalid credentials. ${remaining} attempt${remaining === 1 ? '' : 's'} remaining before temporary lockout.`)
-            }
-          }
-        }
-
         return { error }
       }
 
       if (data.user) {
-        // Record successful attempt (clears counters)
-        await recordLoginAttempt(normalizedEmail, true)
+        // Clears failed-attempt state and stamps last_login_at.
+        await recordSuccessfulLogin(normalizedEmail)
 
         // Initialize session security (non-blocking)
         void initializeSessionSecurity().catch((err) => {
