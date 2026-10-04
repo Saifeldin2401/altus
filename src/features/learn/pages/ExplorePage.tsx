@@ -357,7 +357,7 @@ export default function ExplorePage() {
                     >
                       <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-ds-accent-soft text-ds-accent"><Layers aria-hidden="true" className="h-4 w-4" /></span>
                       <span className="min-w-0 flex-1">
-                        <span className="line-clamp-2 block text-xs font-semibold leading-snug text-ds-ink">{name}</span>
+                        <span className="line-clamp-2 text-xs font-semibold leading-snug text-ds-ink">{name}</span>
                         <span className="block text-[11px] text-ds-muted">{t('explore.count', '{{count}} courses', { count })}</span>
                       </span>
                       <ChevronRight aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-ds-muted rtl:rotate-180" />

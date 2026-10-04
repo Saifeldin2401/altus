@@ -21,7 +21,7 @@ import { EmptyState, ErrorState, ProgressBar, Skeleton } from '@/ui'
 
 import { CourseCover } from '../gamification/components/CourseCover'
 import { LearningPageHero } from '../components/LearningPageHero'
-import { FeatureCourseCard, RichCourseCard } from '../components/CourseCards'
+import { FeatureCourseCard, RichCourseCard, VerticalCourseCard } from '../components/CourseCards'
 import { selectRecommended, useCatalog } from '../catalogHooks'
 
 type Filter = 'all' | 'mandatory' | 'courses' | 'quizzes'
@@ -253,31 +253,15 @@ export default function MyLearningPage() {
           {recommended.length > 0 && (
             <section aria-labelledby="plan-recommended" className="space-y-3">
               <SectionTitle id="plan-recommended" title={t('explore.recommended', 'Recommended for you')} href="/learn/courses" linkLabel={t('myDay.viewAll', 'View all')} />
-              <ul className="grid gap-3 md:grid-cols-3">
+              <ul className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
                 {recommended.map((c) => (
                   <li key={c.id}>
-                    <Link
-                      to={`/learn/courses/${c.id}`}
-                      className="group flex h-full flex-col gap-3 rounded-[8px] border border-ds-border bg-ds-surface p-3 transition-[border-color,box-shadow] hover:border-ds-border-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ds-accent"
-                    >
-                      <span className="flex gap-3">
-                        <CourseCover course={c} className="h-20 w-24 rounded-lg" />
-                        <span className="min-w-0 space-y-1">
-                          <span className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-ds-muted">{t('myDay.course', 'Course')}</span>
-                          <span className="line-clamp-2 block text-sm font-semibold leading-snug text-ds-ink group-hover:underline">{c.title}</span>
-                          {c.description && <span className="line-clamp-2 block text-xs text-ds-ink-secondary">{c.description}</span>}
-                        </span>
-                      </span>
-                      <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ds-muted">
-                        {c.estimated_duration_minutes ? <span>{t('explore.minutes', '{{count}} min', { count: c.estimated_duration_minutes })}</span> : null}
-                        {c.difficulty_level && <span>{t(`explore.level.${c.difficulty_level.toLowerCase()}`, c.difficulty_level)}</span>}
-                        {c.certificate_enabled && <span className="text-ds-brass">{t('explore.certificate', 'Certificate')}</span>}
-                      </span>
-                      <span className="mt-auto inline-flex min-h-[40px] items-center justify-between rounded-lg bg-ds-ink px-3.5 text-sm font-semibold text-ds-on-ink">
-                        {t('explore.start', 'Start course')}
-                        <ChevronRight aria-hidden="true" className="h-4 w-4 rtl:rotate-180" />
-                      </span>
-                    </Link>
+                    <VerticalCourseCard
+                      href={`/learn/courses/${c.id}`}
+                      course={{ id: c.id, title: c.title, category: c.category, description: c.description, durationMinutes: c.estimated_duration_minutes, level: c.difficulty_level, certificate: c.certificate_enabled }}
+                      badge={{ label: t('explore.recommendedBadge', 'Recommended'), tone: 'recommended' }}
+                      actionLabel={t('explore.start', 'Start course')}
+                    />
                   </li>
                 ))}
               </ul>

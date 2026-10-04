@@ -121,7 +121,7 @@ export function CompactCourseCard({ course, href }: { course: CourseCardData; hr
       <CourseCover course={{ id: course.id, title: course.title, category: course.category, description: course.description }} className="h-16 w-20 rounded-lg" />
       <span className="min-w-0 flex-1 space-y-1">
         <span className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-ds-muted">{t('myDay.course', 'Course')}</span>
-        <span className="line-clamp-2 block text-sm font-semibold leading-snug text-ds-ink group-hover:underline">{course.title}</span>
+        <span className="line-clamp-2 text-sm font-semibold leading-snug text-ds-ink group-hover:underline">{course.title}</span>
         <CourseMeta course={{ ...course, certificate: false }} />
       </span>
       <ChevronRight aria-hidden="true" className="h-4 w-4 shrink-0 text-ds-muted rtl:rotate-180" />
